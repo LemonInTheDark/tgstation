@@ -439,7 +439,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 			h2omalus = 2  //when gas comp is above 0.55 or between 0.15 and 0.07, the engine will start to freak out (may need test on the amount of freak out)
 
 		//No less then zero, and no greater then one, we use this to do explosions and heat to power transfer
-		gasmix_power_ratio = min(max(((plasmacomp + o2comp + co2comp + h2ocomp + tritiumcomp + bzcomp - pluoxiumcomp - n2comp) / h2omalus), 0), 1)
+		gasmix_power_ratio = min(max(((plasmacomp + o2comp + co2comp + h2ocomp + tritiumcomp + bzcomp - pluoxiumcomp - n2comp) * h2omalus), 0), 1)
 		//Minimum value of 1.5, maximum value of 27.8
 		dynamic_heat_modifier = max(((plasmacomp * PLASMA_HEAT_PENALTY) + (h2ocomp * H2O_HEAT_PENALTY) + (o2comp * OXYGEN_HEAT_PENALTY)) * h2omalus + (co2comp * CO2_HEAT_PENALTY) + (tritiumcomp * TRITIUM_HEAT_PENALTY) + ((pluoxiumcomp * PLUOXIUM_HEAT_PENALTY) * pluoxiumbonus) + (n2comp * NITROGEN_HEAT_PENALTY) + (bzcomp * BZ_HEAT_PENALTY), 0.5)
 		//Value between 6 and 1
