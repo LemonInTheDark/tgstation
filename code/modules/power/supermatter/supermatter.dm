@@ -111,6 +111,12 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 
 	var/final_countdown = FALSE
 
+	var/test1 = 0
+	var/test2 = 0
+	var/test3 = 0
+	var/test4 = 0
+	var/test5 = 0
+	var/test6 = 0
 	var/damage = 0
 	var/damage_archived = 0
 	var/safe_alert = "Crystalline hyperstructure returning to safe operating parameters."
@@ -371,13 +377,22 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 	var/datum/gas_mixture/env = T.return_air()
 
 	var/datum/gas_mixture/removed
+	var/beforeTemp = env.temperature
+	var/beforePressure = env.return_pressure()
+	var/beforeMol = env.total_moles()
+	if(test5)
+		message_admins("Pressure = {[env.return_pressure()]}; Heat = {[env.temperature]}; Mols = {[env.total_moles()]};")
+		return
 	if(produces_gas)
 		//Remove gas from surrounding area
-		removed = env.remove(gasefficency * env.total_moles())
+		removed = env.remove(env.total_moles())
+		removed.garbage_collect()
 	else
-		// Pass all the gas related code an empty gas container
 		removed = new()
-
+	if(test1)		// Pass all the gas related code an empty gas container
+		message_admins("Pressure = [removed.return_pressure()]; Heat = [removed.temperature]; Mols = [removed.total_moles()]")
+	if(test2)
+		message_admins("Pressure = {[env.return_pressure()] [beforePressure]}; Heat = {[env.temperature] [beforeTemp]}; Mols = {[env.total_moles()] [beforeMol]};")
 	damage_archived = damage
 	if(!removed || !removed.total_moles() || isspaceturf(T)) //we're in space or there is no gas to process
 		if(takes_damage)
@@ -507,9 +522,15 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 		//Varies based on power, gas content, and heat
 		removed.gases[/datum/gas/oxygen][MOLES] += max(((device_energy + removed.temperature * dynamic_heat_modifier) - T0C) / OXYGEN_RELEASE_MODIFIER, 0)
 
+		if(test3)
+			message_admins("Pressure = [removed.return_pressure()]; Mols = [removed.total_moles()]")
+		if(test4)
+			message_admins("Mod = [dynamic_heat_modifier]; Heat = [device_energy]")
 		if(produces_gas)
 			env.merge(removed)
 			air_update_turf()
+		if(test6)
+			message_admins("Pressure = {[env.return_pressure()] [beforePressure]}; Heat = {[env.temperature] [beforeTemp]}; Mols = {[env.total_moles()] [beforeMol]};")
 
 	//Makes em go mad and accumulate rads.
 	for(var/mob/living/carbon/human/l in view(src, HALLUCINATION_RANGE(power))) // If they can see it without mesons on.  Bad on them.
