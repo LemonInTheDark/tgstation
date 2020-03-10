@@ -510,6 +510,10 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 		removed.gases[/datum/gas/oxygen][MOLES] += max(((device_energy + removed.temperature * dynamic_heat_modifier) - T0C) / OXYGEN_RELEASE_MODIFIER, 0)
 
 		if(produces_gas)
+			/****
+			TODO:
+			Understand atmos, look into quantize()
+			****/
 			env.merge(removed)
 			air_update_turf()
 
