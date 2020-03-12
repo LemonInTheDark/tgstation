@@ -375,7 +375,9 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 	var/datum/gas_mixture/removed
 	if(produces_gas)
 		//Remove gas from surrounding area
+		message_admins("Before removal [env.total_moles()]")
 		removed = env.remove(gasefficency * env.total_moles())
+		message_admins("After removal [env.total_moles()]")
 	else
 		// Pass all the gas related code an empty gas container
 		removed = new()
@@ -515,6 +517,9 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 			Understand atmos, look into quantize()
 			****/
 			env.merge(removed)
+			message_admins("After merge [env.total_moles()]")
+			env.garbage_collect()
+			message_admins("After GC [env.total_moles()]")
 			air_update_turf()
 
 	//Makes em go mad and accumulate rads.
