@@ -7,6 +7,7 @@ There are 2 formats we use to edit and add cards. One is made to be inerfaced by
 I'll be covering the first for now.
 
 There are a couple variables that we store. You can modify any one of these.
+
 name //A fluff term displayed to the players
 desc //A more detailed fluff term displayed to the players
 icon //The icon source of the card
@@ -49,54 +50,32 @@ They allow us to insert info from the template into the card.
 For instance:
 
 :template = Demon
-
 :name = Bloodlord
-
 :icon = icons/obj/tcg.dmi
-
 :id = 1
-
 :tags = DEMON
-
 :cardtype = monster
 
-
 :template = $Demon
-
 :name = $ Bubblegum
-
 :desc = A bloody mix of cardboard and death
-
 :icon_State = bubblegum
-
 :id = 1
-
 :power = 10
-
 :resolve = 13
-
 :tags = BLOODY&$&LAVALAND
 
 Merged:
 
 :name = Bloodlord Bubblegum
-
 :desc = A bloody mix of cardboard and death
-
 :icon = icons/obj/tcg.dmi
-
 :icon_State = bubblegum
-
 :id = 1
-
 :power = 10
-
 :resolve = 13
-
 :tags = BLOODY&DEMON&LAVALAND
-
 :cardtype = monster
-
 
 Couple things to go over here. Bubblegum referances the Demon template, and also has some instances of $
 Outside of the template def (See the first line of bubblegum's def) $ is a referance to whatever value the template has for the index.
