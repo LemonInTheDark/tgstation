@@ -86,18 +86,3 @@ def convert_line_from(outdatedJoke):
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
