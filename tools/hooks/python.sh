@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 if command -v python3 >/dev/null 2>&1; then
-	PY=python3
+	PY=py
 else
-	PY=python
+	PY=py
 fi
 PATHSEP=$($PY - <<'EOF'
 import sys, os
