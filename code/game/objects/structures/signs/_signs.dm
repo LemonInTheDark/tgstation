@@ -8,6 +8,8 @@
 	armor = list("melee" = 50, "bullet" = 0, "laser" = 0, "energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 50, "acid" = 50)
 	var/buildable_sign = 1 //unwrenchable and modifiable
 	rad_flags = RAD_PROTECT_CONTENTS | RAD_NO_CONTAMINATE
+	var/is_buildable = FALSE //This determines if you can select this sign type when using a pen on a sign backing. False by default, set to true per sign type to override.
+	var/sign_change_name = "Sign - Blank" //sign_change_name is used to make nice look, alphebetized and categorized names when you use a pen on a sign backing. It's an alternate title.
 
 /obj/structure/sign/basic
 	name = "blank sign"
@@ -30,6 +32,16 @@
 		return
 	user.examinate(src)
 
+GLOBAL_VAR(buildable_sign_types)
+/obj/structure/sign/proc/populate_buildable_sign_types() //This generates a global list of all the signs that you can set a sign backing to with a pen, the first time a pen is used on a sign.
+	GLOB.buildable_sign_types = list()
+	for(var/s in subtypesof(/obj/structure/sign))
+		var/obj/structure/sign/potential_sign = s
+		if(!initial(potential_sign.is_buildable))
+			continue
+		GLOB.buildable_sign_types[initial(potential_sign.sign_change_name)] = potential_sign ///sign_change_name is an alternate title for signs, that only appears in the list when you use a pen on a sign backing.
+	sortList(GLOB.buildable_sign_types)
+
 /obj/structure/sign/attackby(obj/item/I, mob/user, params)
 	if(I.tool_behaviour == TOOL_WRENCH && buildable_sign)
 		user.visible_message("<span class='notice'>[user] starts removing [src]...</span>", \
@@ -46,55 +58,14 @@
 			qdel(src)
 		return
 	else if(istype(I, /obj/item/pen) && buildable_sign)
-		var/list/sign_types = list("Secure Area", "Biohazard", "High Voltage", "Radiation", "Hard Vacuum Ahead", "Disposal: Leads To Space", "Danger: Fire", "No Smoking", "Medbay", "Science", "Chemistry", \
-		"Hydroponics", "Xenobiology", "Test Chamber","Firing Range", "Extreme Cold", "Extreme Heat", "Gas Mask", "Nanites Lab", "Maintenance", "Reactive Chemicals")
-		var/obj/structure/sign/sign_type
-		switch(input(user, "Select a sign type.", "Sign Customization") as null|anything in sortList(sign_types))
-			if("Blank")
-				sign_type = /obj/structure/sign/basic
-			if("Secure Area")
-				sign_type = /obj/structure/sign/warning/securearea
-			if("Biohazard")
-				sign_type = /obj/structure/sign/warning/biohazard
-			if("High Voltage")
-				sign_type = /obj/structure/sign/warning/electricshock
-			if("Radiation")
-				sign_type = /obj/structure/sign/warning/radiation
-			if("Hard Vacuum Ahead")
-				sign_type = /obj/structure/sign/warning/vacuum
-			if("Disposal: Leads To Space")
-				sign_type = /obj/structure/sign/warning/deathsposal
-			if("Danger: Fire")
-				sign_type = /obj/structure/sign/warning/fire
-			if("No Smoking")
-				sign_type = /obj/structure/sign/warning/nosmoking/circle
-			if("Test Chamber")
-				sign_type = /obj/structure/sign/warning/testchamber
-			if("Firing Range")
-				sign_type = /obj/structure/sign/warning/firingrange
-			if("Extreme Cold")
-				sign_type = /obj/structure/sign/warning/coldtemp
-			if("Extreme Heat")
-				sign_type = /obj/structure/sign/warning/hottemp
-			if("Gas Mask")
-				sign_type = /obj/structure/sign/warning/gasmask
-			if("Reactive Chemicals")
-				sign_type = /obj/structure/sign/warning/chemdiamond
-			if("Medbay")
-				sign_type = /obj/structure/sign/departments/medbay/alt
-			if("Science")
-				sign_type = /obj/structure/sign/departments/science
-			if("Chemistry")
-				sign_type = /obj/structure/sign/departments/chemistry
-			if("Hydroponics")
-				sign_type = /obj/structure/sign/departments/botany
-			if("Xenobiology")
-				sign_type = /obj/structure/sign/departments/xenobio
-			if("Nanites Lab")
-				sign_type = /obj/structure/sign/departments/nanites
-			if("Maintenance")
-				sign_type = /obj/structure/sign/departments/mait
-
+		if(!length(GLOB.buildable_sign_types))
+			populate_buildable_sign_types()
+			if(!length(GLOB.buildable_sign_types))
+				CRASH("GLOB.buildable_sign_types failed to populate")
+		var/choice = input(user, "Select a sign type.", "Sign Customization") as null|anything in GLOB.buildable_sign_types
+		if(!choice)
+			return
+		var/sign_type = GLOB.buildable_sign_types[choice]
 		//Make sure user is adjacent still
 		if(!Adjacent(user))
 			return
@@ -114,7 +85,7 @@
 
 /obj/item/sign_backing
 	name = "sign backing"
-	desc = "A sign with adhesive backing. Use a pen to change the decal once installed."
+	desc = "A plastic sign with adhesive backing. Use a pen to change the decal once installed."
 	icon = 'icons/obj/decals.dmi'
 	icon_state = "backing"
 	w_class = WEIGHT_CLASS_NORMAL
