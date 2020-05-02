@@ -72,9 +72,9 @@ var/list/cardTypeLookup = list("name" = 0,
 		icon_state = "cardback"
 		flipped = 1
 	else
-		name = GLOB.card_list[id].name
-		desc = GLOB.card_list[id].desc
-		icon_state = GLOB.card_list[id].icon_state
+		name = GLOB.card_list["[id]"].name
+		desc = GLOB.card_list["[id]"].desc
+		icon_state = GLOB.card_list["[id]"].icon_state
 		flipped = 0
 
 /obj/item/tcgcard/equipped(mob/user, slot, initial)
