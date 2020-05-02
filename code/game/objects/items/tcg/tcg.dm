@@ -166,7 +166,7 @@ var/list/cardTypeLookup = list("name" = 0,
 			EXCEPTION("The guarenteed index [guarenteedRarity] of rarityTable does not exist in the supplied cardList")
 	return cards
 
-///Returns a list of card indexes of the length cardCount that match a random rarity weighted by rarityTable[]
+///Returns a list of card datums of the length cardCount that match a random rarity weighted by rarityTable[]
 /obj/item/cardpack/proc/returnCardsByRarity(cardCount, cardList)
 	var/list/datum/card/toReturn = list()
 	for(var/card in 1 to cardCount)
