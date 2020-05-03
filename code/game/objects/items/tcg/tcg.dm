@@ -126,7 +126,6 @@ var/list/cardTypeLookup = list("name" = 0,
 /obj/item/cardpack/attack_self(mob/user)
 	. = ..()
 	var/list/datum/card/cards = buildCardListWithRarity(card_count, guar_rarity, GLOB.card_list)
-
 	for(var/datum/card/template in cards)
 		//Makes a new card based of the series of the pack.
 		new /obj/item/tcgcard(get_turf(user), template)
@@ -162,7 +161,7 @@ var/list/cardTypeLookup = list("name" = 0,
 		if(forSure.len)
 			toReturn += pick(forSure)
 		else
-			EXCEPTION("The guarenteed index [guarenteedRarity] of rarityTable does not exist in the supplied cardList")
+			log_runtime("The guarenteed index [guarenteedRarity] of rarityTable does not exist in the supplied cardList")
 	toReturn += returnCardsByRarity(cardCount, readFrom)
 	return toReturn
 
@@ -190,11 +189,11 @@ var/list/cardTypeLookup = list("name" = 0,
 			toReturn += pick(cards)
 		else
 			//If we still don't find anything yell into the void. Lazy coders.
-			EXCEPTION("The index [rarity] of rarityTable does not exist in the supplied cardList")
+			log_runtime("The index [rarity] of rarityTable does not exist in the supplied cardList")
 	return toReturn
 
 ///If the card's tags contain the input data, we return true, false if not
-/proc/isCardTagsMatch(var/datum/card/template, matchBy)
+/proc/isCardTagsMatch(datum/card/template, matchBy)
 	//This is where we isolate the data actually stored.
 	//We will now loop through our options to see if either of them are an exact match
 	var/content = splittext(template.tags, "&")
@@ -308,6 +307,46 @@ var/list/cardTypeLookup = list("name" = 0,
 /proc/printAllCards()
 	for(var/card in GLOB.card_list)
 		message_admins("[GLOB.card_list[card].name]")
+
+/proc/checkCardpacks(cardPackList)
+	for(var/cardPack in cardPackList)
+		var/obj/item/cardpack/pack = new cardPack()
+		//Lets build a list of all the cards in our series
+		var/list/datum/card/cards = list()
+		for(var/index in GLOB.card_list)
+			if(isCardTagsMatch(GLOB.card_list[index], pack.series))
+				cards += GLOB.card_list[index]
+		var/list/rarityCheck = list("1" = FALSE)
+		//Lets run a check to see if all the rarities exist that we want to exist
+		for(var/I in 1 to pack.rarityTable.len)
+			rarityCheck["[I]"] = FALSE
+		for(var/datum/card/template in cards)
+			if(template.rarity <= 0 || template.rarity > pack.rarityTable.len)
+				message_admins("[pack.type] has a rarity [template.rarity] on the card [template.id] that is out of the bounds of 1 to [pack.rarityTable.len]")
+				continue
+			rarityCheck[template.rarity] = TRUE
+		for(var/I in 1 to pack.rarityTable.len)
+			if(rarityCheck["[I]"] == FALSE)
+				message_admins("[pack.type] does not have the required rarity [rarityCheck[I]] in the range 1 to [pack.rarityTable.len]")
+		qdel(pack)
+
+/proc/checkCardDistribution(cardPack, batchSize, batchCount)
+	var/totalCards = 0
+	//Gotta make this look like an associated list so the implicit "does this exist" checks work proper later
+	var/list/cardsByCount = list("" = 0)
+	var/obj/item/cardpack/pack = new cardPack()
+	for(var/index in 1 to batchCount)
+		var/list/datum/card/cards = pack.buildCardListWithRarity(batchSize, 0, GLOB.card_list)
+		for(var/datum/card/template in cards)
+			totalCards++
+			cardsByCount["[template.id]"] += 1
+	var/toSend = "Out of [totalCards] cards"
+	for(var/id in sortList(cardsByCount))
+		if(id)
+			toSend += "\nID:[id] [GLOB.card_list["[id]"].name] [(cardsByCount[id] * 100) / totalCards]% Total:[cardsByCount[id]]"
+	message_admins(toSend)
+	qdel(pack)
+
 
 /proc/reloadAllCardFiles(cardFiles, directory)
 	GLOB.card_list = list()
