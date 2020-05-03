@@ -91,7 +91,9 @@ var/list/cardTypeLookup = list("name" = 0,
 	icon_state = "cardback_nt"
 	var/series = "MEME" //Mirrors the card series.
 	var/contains_coin = -1 //Chance of the pack having a coin in it.
+	///The amount of cards each pack contains
 	var/card_count = 6
+	///The guarenteed rarity, if none set this to 0
 	var/guar_rarity = 4
 	var/list/rarityTable = list(1,
 							2,
@@ -299,15 +301,18 @@ var/list/cardTypeLookup = list("name" = 0,
 			return toReturn[1]
 	return ""
 
+///Loads all the card files
 /proc/loadAllCardFiles(cardFiles, directory)
 	var/list/templates = list()
 	for(var/cardFile in cardFiles)
 		loadCardFile(cardFile, directory, templates)
 
+///Prints all the cards names
 /proc/printAllCards()
 	for(var/card in GLOB.card_list)
 		message_admins("[GLOB.card_list[card].name]")
 
+///Checks the passed type list for missing raritys, or raritys out of bounds
 /proc/checkCardpacks(cardPackList)
 	for(var/cardPack in cardPackList)
 		var/obj/item/cardpack/pack = new cardPack()
@@ -330,6 +335,7 @@ var/list/cardTypeLookup = list("name" = 0,
 				message_admins("[pack.type] does not have the required rarity [rarityCheck[I]] in the range 1 to [pack.rarityTable.len]")
 		qdel(pack)
 
+///Used to test open a large amount of cardpacks
 /proc/checkCardDistribution(cardPack, batchSize, batchCount)
 	var/totalCards = 0
 	//Gotta make this look like an associated list so the implicit "does this exist" checks work proper later
@@ -347,11 +353,12 @@ var/list/cardTypeLookup = list("name" = 0,
 	message_admins(toSend)
 	qdel(pack)
 
-
+///Reloads all card files
 /proc/reloadAllCardFiles(cardFiles, directory)
 	GLOB.card_list = list()
 	loadAllCardFiles(cardFiles, directory)
 
+///Loads a card file and turns its contents into card datums using the currently loaded templates
 /proc/loadCardFile(filename, directory = "strings/tcg", templates)
 	//The parser for vscode doesn't like raw strings, that's why this looks fucky
 	var/regex/template = regex("^(\[^$\\|\]+\\|)")
