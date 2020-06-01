@@ -992,6 +992,11 @@
 	icon_state = "service"
 	build_path = /obj/machinery/chem_dispenser/drinks
 
+/obj/item/circuitboard/machine/chem_dispenser/drinks/diner
+	name = "Diner Soda Fountain (Machine Board)"
+	icon_state = "service"
+	build_path = /obj/machinery/chem_dispenser/drinks/diner
+
 /obj/item/circuitboard/machine/chem_dispenser/drinks/beer
 	name = "Booze Dispenser (Machine Board)"
 	icon_state = "service"

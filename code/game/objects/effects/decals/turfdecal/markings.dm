@@ -180,3 +180,18 @@
 
 /obj/effect/turf_decal/raven/nine
 	icon_state = "RAVEN9"
+
+/obj/effect/turf_decal/roadmarkings
+	icon_state = "road_side"
+
+/obj/effect/turf_decal/roadmarkings/thick
+	icon_state = "road_side_thick"
+
+/obj/effect/turf_decal/roadmarkings/stop
+	icon_state = "road_stop"
+
+/obj/effect/turf_decal/roadmarkings/corner
+	icon_state = "road_corner"
+
+/obj/effect/turf_decal/roadmarkings/corner/thick
+	icon_state = "road_corner_thick"

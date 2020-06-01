@@ -95,6 +95,13 @@
 
 	var/static/list/airlock_overlays = list()
 
+/obj/machinery/door/airlock/large
+	name = "large airlock"
+	icon = 'icons/obj/doors/airlocks/glass_large/glass_large.dmi'
+	overlays_file = 'icons/obj/doors/airlocks/glass_large/overlays.dmi'
+	assemblytype = null
+	bound_width = 64 // 2x1
+
 /obj/machinery/door/airlock/Initialize()
 	. = ..()
 	wires = new /datum/wires/airlock(src)

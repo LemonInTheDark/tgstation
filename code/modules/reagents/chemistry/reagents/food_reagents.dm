@@ -796,3 +796,10 @@
 	color = "#78280A" // rgb: 120 40, 10
 	taste_mult = 2.5 //sugar's 1.5, capsacin's 1.5, so a good middle ground.
 	taste_description = "smokey sweetness"
+
+/datum/reagent/consumable/mustard
+	name = "Mustard"
+	description = "It may be yellow, but it's certainly not mellow."
+	nutriment_factor = 5 * REAGENTS_METABOLISM
+	color = "#FFDB58" // rgb: 255, 219, 88
+	taste_description = "mustard"
