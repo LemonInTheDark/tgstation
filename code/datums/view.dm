@@ -28,8 +28,14 @@
 /datum/viewData/proc/resetFormat()//Cuck
 	winset(chief, "mapwindow.map", "zoom=[chief.prefs.pixel_size]")
 
+/datum/viewData/proc/setZoom()
+	//Let's account for the menu bar
+	cheif.prefs.menuoptions[/datum/verbs/menu/Icon/Size] = "/datum/verbs/menu/Icon/Size/verb/size[(chief.prefs.pixel_size == 1.5) ? "1_5" : chief.prefs.pixel_size]"
+	apply()
+
 /datum/viewData/proc/setZoomMode()
 	winset(chief, "mapwindow.map", "zoom-mode=[chief.prefs.scaling_method]")
+	cheif.prefs.menuoptions[/datum/verbs/menu/Icon/Scaling] = "/datum/verbs/menu/Icon/Scaling/verb/[chief.prefs.scaling_method]"
 
 /datum/viewData/proc/isZooming()
 	return (width || height)
@@ -80,6 +86,7 @@
 /datum/viewData/proc/apply()
 	chief.change_view(getView())
 	safeApplyFormat()
+	setZoomMode()
 
 /datum/viewData/proc/supress()
 	is_suppressed = TRUE

@@ -62,3 +62,70 @@ GLOBAL_LIST_EMPTY(menulist)
 	if (!(verbpath in typesof("[menutype]/verb")))
 		return
 	M.Set_checked(src, verbpath)
+
+/datum/verbs/menu/Icon/Load_checked(client/C) //So we can be lazy, we invoke the "checked" menu item on menu load.
+	var/procpath/verbpath = Get_checked(C)
+	if (!verbpath || !(verbpath in typesof("[type]/verb")))
+		return
+
+	if(verbpath.name[1] == "@")
+		var/important = copytext(verbpath.name, length(verbpath.name[1]) + 1)
+		//They hated him because he told them the truth
+		var/list/data = splittext(important, "=") //  We want the data
+		if(C && C.prefs && C.view_size)
+			C.prefs.vars[data[1]] = data[2]
+			C.view_size.apply()
+	else
+		winset(C, null, list2params(list("command" = replacetext(verbpath.name, " ", "-"))))
+
+/datum/verbs/menu/Icon/Set_checked(client/C, verbpath)
+	if (checkbox == CHECKBOX_GROUP)
+		C.prefs.menuoptions[type] = verbpath
+		C.prefs.save_preferences()
+	else if (checkbox == CHECKBOX_TOGGLE)
+		var/checked = Get_checked(C)
+		C.prefs.menuoptions[type] = !checked
+		C.prefs.save_preferences()
+		winset(C, "[verbpath]", "is-checked = [!checked]")
+
+/datum/verbs/menu/Icon/Size
+	checkbox = CHECKBOX_GROUP
+	default = /datum/verbs/menu/Icon/Size/verb/iconstretchtofit
+
+/datum/verbs/menu/Icon/Size/verb/size0()
+	set name = "@pixel_size=0"
+	set desc = "&Stretch to fit"
+
+/datum/verbs/menu/Icon/Size/verb/size3()
+	set name = "@pixel_size=3\""
+	set desc = "&Pixel Perfect (3x)"
+
+/datum/verbs/menu/Icon/Size/verb/size2()
+	set name = "@pixel_size=2\""
+	set desc = "&Pixel Perfect (2x)"
+
+/datum/verbs/menu/Icon/Size/verb/size1_5()
+	set name = "@pixel_size=1.5\""
+	set desc = "&Pixel Perfect (1.5x)"
+
+/datum/verbs/menu/Icon/Size/verb/size1()
+	set name = "@pixel_size=1\""
+	set desc = "&Pixel Perfect (1x)"
+
+
+/datum/verbs/menu/Icon/Scaling
+	checkbox = CHECKBOX_GROUP
+	name = "Scaling Mode"
+	default = /datum/verbs/menu/Icon/Scaling/verb/distort
+
+/datum/verbs/menu/Icon/Scaling/verb/distort()
+	set name = "@scaling_method=distort\""
+	set desc = "Nearest Neighbor"
+
+/datum/verbs/menu/Icon/Scaling/verb/normal()
+	set name = "@scaling_method=normal\""
+	set desc = "Point Sampling"
+
+/datum/verbs/menu/Icon/Scaling/verb/blur()
+	set name = "@scaling_method=blur\""
+	set desc = "Bilinear"
