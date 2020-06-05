@@ -1127,6 +1127,7 @@
 #include "code\game\objects\items\tanks\tank_types.dm"
 #include "code\game\objects\items\tanks\tanks.dm"
 #include "code\game\objects\items\tanks\watertank.dm"
+#include "code\game\objects\items\tcg\card_datum.dm"
 #include "code\game\objects\items\tcg\tcg.dm"
 #include "code\game\objects\items\tools\crowbar.dm"
 #include "code\game\objects\items\tools\screwdriver.dm"

@@ -8,7 +8,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	name = "Coder"
 	desc = "Wow, a mint condition coder card! Better tell the Github all about this!"
 	icon = 'icons/obj/tcg.dmi'
-	icon_state = "runtime"
+	icon_state = "base"
 	w_class = WEIGHT_CLASS_TINY
 	 //Unique ID, for use in lookups and storage, used to index the global datum list where the rest of the card's info is stored
 	var/id = "code"
@@ -33,8 +33,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 		return
 	name = temp.name
 	desc = temp.desc
-	icon = icon(temp.icon)
-	icon_state = temp.icon_state
+	overlays = temp.icon
 	id = temp.id
 	series = temp.series
 
@@ -44,12 +43,12 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	if(!flipped)
 		name = "Trading Card"
 		desc = "It's the back of a trading card... no peeking!"
-		icon_state = "cardback"
+		overlays = GLOB.cached_cards[series]["icon"]["flipped"]
 	else
 		var/datum/card/template = GLOB.cached_cards[series]["ALL"][id]
 		name = template.name
 		desc = template.desc
-		icon_state = template.icon_state
+		overlays = template.icon
 	flipped = !flipped
 
 /obj/item/tcgcard/equipped(mob/user, slot, initial)
@@ -74,20 +73,12 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	var/card_count = 5
 	///The rarity table, the set must contain at least one of each
 	var/list/rarity_table = list(
-		"common" = 900,
-		"uncommon" = 300,
-		"rare" = 100,
-		"epic" = 30,
-		"legendary" = 5,
-		"misprint" = 1)
+		"uncommon" = 1)
 	///The amount of cards to draw from the guarenteed rarity table
 	var/guaranteed_count = 1
 	///The guaranteed rarity table, acts about the same as the rarity table. it can have as many or as few raritys as you'd like
 	var/list/guar_rarity = list(
-		"legendary" = 1,
-		"epic" = 9,
-		"rare" = 30,
-		"uncommon" = 60)
+		"uncommon" = 1)
 
 /obj/item/cardpack/series_one
 	name = "Trading Card Pack: Series 1"
@@ -105,11 +96,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	series = "resinfront"
 	contains_coin = 0
 	rarity_table = list(
-		"common" = 900,
-		"uncommon" = 300,
-		"rare" = 100,
-		"epic" = 30,
-		"legendary" = 5)
+		"uncommon" = 1)
 
 /obj/item/cardpack/Initialize()
 	. = ..()
@@ -136,9 +123,10 @@ GLOBAL_LIST_EMPTY(cached_cards)
 /obj/item/cardpack/attack_self(mob/user)
 	. = ..()
 	var/list/cards = buildCardListWithRarity(card_count, guaranteed_count)
-	for(var/template in cards)
+	for(var/id in cards)
 		//Makes a new card based of the series of the pack.
-		new /obj/item/tcgcard(get_turf(user), series, template)
+		message_admins(id)
+		new /obj/item/tcgcard(get_turf(user), series, id)
 	to_chat(user, "<span_class='notice'>Wow! Check out these cards!</span>")
 	new /obj/effect/decal/cleanable/wrapping(get_turf(user))
 	playsound(loc, 'sound/items/poster_ripped.ogg', 20, TRUE)
@@ -203,124 +191,3 @@ GLOBAL_LIST_EMPTY(cached_cards)
 			log_runtime("The index [rarity] of rarity_table does not exist in the global cache")
 	return toReturn
 
-/datum/card
-	///Unique ID, for use in lookups and (eventually) for persistence. MAKE SURE THIS IS UNIQUE FOR EACH CARD IN AS SERIES, OR THE ENTIRE SYSTEM WILL BREAK, AND I WILL BE VERY DISAPPOINTED.
-	var/id = "coder"
-	var/name = "Coder"
-	var/desc = "Wow, a mint condition coder card! Better tell the Github all about this!"
-	///This handles any extra rules for the card, i.e. extra attributes, special effects, etc. If you've played any other card game, you know how this works.
-	var/rules = "There are no rules here. There is no escape. No Recall or Intervention can work in this place."
-	var/icon = "icons/obj/tcg.dmi"
-	var/icon_state = "runtime"
-	///What it costs to summon this card to the battlefield.
-	var/summoncost = -1
-	///How hard this card hits (by default)
-	var/power = 0
-	///How hard this card can get hit (by default)
-	var/resolve = 0
-	///Someone please come up with a ruleset so I can comment this
-	var/faction = "socks"
-	///Used to define the behaviour the card uses during the game.
-	var/cardtype ="C43a7u43?"
-	///An extra descriptor for the card. Combined with the cardtype for a larger card descriptor, i.e. Creature- Xenomorph, Spell- Instant, that sort of thing. For creatures, this has no effect, for spells, this is important.
-	var/cardsubtype = "Weeb"
-	///Defines the series that the card originates from, this is *very* important for spawning the cards via packs.
-	var/series = "coreset2020"
-	///The rarity of this card, determines how much (or little) it shows up in packs. Rarities are common, uncommon, rare, epic, legendary and misprint.
-	var/rarity = "uber rare to the extreme"
-
-/datum/card/New(list/data = list(), list/templates = list())
-	applyTemplates(data, templates)
-	apply(data)
-
-///For each var that the card datum and the json entry share, we set the datum var to the json entry
-/datum/card/proc/apply(list/data)
-	for(var/name in (vars & data))
-		vars[name] = data[name]
-
-///Applies a json file to a card datum
-/datum/card/proc/applyTemplates(list/data, list/templates = list())
-	apply(templates["default"])
-	apply(templates[data["template"]])
-
-///Loads all the card files
-/proc/loadAllCardFiles(cardFiles, directory)
-	var/list/templates = list()
-	for(var/cardFile in cardFiles)
-		loadCardFile(cardFile, directory, templates)
-
-///Prints all the cards names
-/proc/printAllCards()
-	for(var/card_set in GLOB.cached_cards)
-		message_admins("Printing the [card_set] set")
-		for(var/card in GLOB.cached_cards[card_set]["ALL"])
-			var/datum/card/toPrint = GLOB.cached_cards[card_set]["ALL"][card]
-			message_admins(toPrint.name)
-
-///Checks the passed type list for missing raritys, or raritys out of bounds
-/proc/checkCardpacks(cardPackList)
-	for(var/cardPack in cardPackList)
-		var/obj/item/cardpack/pack = new cardPack()
-		//Lets see if someone made a type yeah?
-		if(!GLOB.cached_cards[pack.series])
-			message_admins("[pack.series] does not have any related cards")
-			continue
-		for(var/card in GLOB.cached_cards[pack.series]["ALL"])
-			var/datum/card/template = GLOB.cached_cards[pack.series]["ALL"][card]
-			if(!(template.rarity in pack.rarity_table))
-				message_admins("[pack.type] has a rarity [template.rarity] on the card [template.id] that does not exist")
-				continue
-		//Lets run a check to see if all the rarities exist that we want to exist exist
-		for(var/I in pack.rarity_table)
-			if(!GLOB.cached_cards[pack.series][I])
-				message_admins("[pack.type] does not have the required rarity [I]")
-		qdel(pack)
-
-///Used to test open a large amount of cardpacks
-/proc/checkCardDistribution(cardPack, batchSize, batchCount, guaranteed)
-	var/totalCards = 0
-	//Gotta make this look like an associated list so the implicit "does this exist" checks work proper later
-	var/list/cardsByCount = list("" = 0)
-	var/obj/item/cardpack/pack = new cardPack()
-	for(var/index in 1 to batchCount)
-		var/list/cards = pack.buildCardListWithRarity(batchSize, guaranteed)
-		for(var/id in cards)
-			totalCards++
-			cardsByCount[id] += 1
-	var/toSend = "Out of [totalCards] cards"
-	for(var/id in sortList(cardsByCount, /proc/cmp_num_string_asc))
-		if(id)
-			var/datum/card/template = GLOB.cached_cards[pack.series]["ALL"][id]
-			toSend += "\nID:[id] [template.name] [(cardsByCount[id] * 100) / totalCards]% Total:[cardsByCount[id]]"
-	message_admins(toSend)
-	qdel(pack)
-
-///Empty the rarity cache so we can safely add new cards
-/proc/clearCards()
-	SStrading_card_game.loaded = FALSE
-	GLOB.cached_cards = list()
-
-///Reloads all card files
-/proc/reloadAllCardFiles(cardFiles, directory)
-	clearCards()
-	loadAllCardFiles(cardFiles, directory)
-	SStrading_card_game.loaded = TRUE
-
-///Loads the contents of a json file into our global card list
-/proc/loadCardFile(filename, directory = "strings/tcg")
-	var/list/json = json_decode(file2text("[directory]/[filename]"))
-	var/list/cards = json["cards"]
-	var/list/templates = list()
-	for(var/list/data in json["templates"])
-		templates[data["template"]] = data
-	for(var/list/data in cards)
-		var/datum/card/c = new(data, templates)
-		//Lets cache the id by rarity, for top speed lookup later
-		if(!GLOB.cached_cards[c.series])
-			GLOB.cached_cards[c.series] = list()
-			GLOB.cached_cards[c.series]["ALL"] = list()
-		if(!GLOB.cached_cards[c.series][c.rarity])
-			GLOB.cached_cards[c.series][c.rarity] = list()
-		GLOB.cached_cards[c.series][c.rarity] += c.id
-		//And series too, why not, it's semi cheap
-		GLOB.cached_cards[c.series]["ALL"][c.id] = c
