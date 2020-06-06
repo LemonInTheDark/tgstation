@@ -28,12 +28,12 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	var/list/L = GLOB.cached_cards[datum_series]
 	if(!L)
 		return
-	var/datum/card/temp = L["ALL"][datum_id]
+	var/datum/cardData/card/temp = L["ALL"][datum_id]
 	if(!temp)
 		return
 	name = temp.name
 	desc = temp.desc
-	overlays = temp.icon
+	icon = temp.icon
 	id = temp.id
 	series = temp.series
 
@@ -43,12 +43,12 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	if(!flipped)
 		name = "Trading Card"
 		desc = "It's the back of a trading card... no peeking!"
-		overlays = GLOB.cached_cards[series]["icon"]["flipped"]
+		icon = GLOB.cached_cards[series]["icon"]["flipped"]
 	else
-		var/datum/card/template = GLOB.cached_cards[series]["ALL"][id]
+		var/datum/cardData/card/template = GLOB.cached_cards[series]["ALL"][id]
 		name = template.name
 		desc = template.desc
-		overlays = template.icon
+		icon = template.icon
 	flipped = !flipped
 
 /obj/item/tcgcard/equipped(mob/user, slot, initial)

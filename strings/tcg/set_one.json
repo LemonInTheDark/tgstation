@@ -1,59 +1,68 @@
 {
 	"icon_defines": [
 		{
-			"for": "rarity",
+			"tag": "background",
+			"psudo": "background",
+			"color": "#33CC66"
+		},
+		{
+			"tag": "rarity_icon",
+			"psudo": "rarity_icon",
+			"source": "icons/obj/tcg.dmi",
+			"state": "rarity_icon"
+		},
+		{
+			"tag": "frame",
+			"psudo": "frame",
+			"source": "icons/obj/tcg.dmi",
+			"state": "frame"
+		},
+		{
+			"tag": "icon_back",
+			"psudo": "icon_back",
+			"source": "icons/obj/tcg.dmi",
+			"state": "icon_back"
+		},
+		{
+			"tag": "rarity_back",
+			"psudo": "rarity",
+			"source": "icons/obj/tcg.dmi",
+			"state": "rarity_back"
+		},
+		{
+			"as": "rarity",
 			"psudo": "common",
-			"color": "#B8BABB",
-			"layer": "100"
+			"color": "#B8BABB"
 		},
 		{
-			"for": "rarity",
+			"as": "rarity",
 			"psudo": "uncommon",
-			"color": "#33CC66",
-			"layer": "100"
+			"color": "#33CC66"
 		},
 		{
-			"for": "rarity",
+			"as": "rarity",
 			"psudo": "rare",
-			"color": "#0066FF",
-			"layer": "100"
+			"color": "#0066FF"
 		},
 		{
-			"for": "rarity",
+			"as": "rarity",
 			"psudo": "epic",
-			"color": "#CC00FF",
-			"layer": "100"
+			"color": "#CC00FF"
 		},
 		{
-			"for": "rarity",
+			"as": "rarity",
 			"psudo": "legendary",
-			"color": "#FFCC00",
-			"layer": "100"
+			"color": "#FFCC00"
 		}
 	],
 	"templates": [
 		{
-			"template": "default",
+			"psudo": "default",
 			"icon": [
 				{
+					"as": "background",
 					"source": "icons/obj/tcg.dmi",
-					"state": "background",
-					"color": "#FFFF00"
-				},
-				{
-					"source": "icons/obj/tcg.dmi",
-					"state": "rarity",
-					"color": "#FF0000"
-				},
-				{
-					"source": "icons/obj/tcg.dmi",
-					"state": "frame",
-					"color": "#00FF00"
-				},
-				{
-					"source": "icons/obj/tcg.dmi",
-					"state": "window_back",
-					"color": "#0000FF"
+					"state": "background"
 				}
 			]
 		}

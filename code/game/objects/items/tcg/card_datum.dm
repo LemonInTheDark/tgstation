@@ -1,4 +1,13 @@
-/datum/card
+/datum/cardData/img
+	var/tag
+	var/color = ""
+	var/source
+	var/state
+	var/x = 1
+	var/y =1
+	var/dir
+
+/datum/cardData/card
 	///Unique ID, for use in lookups and (eventually) for persistence. MAKE SURE THIS IS UNIQUE FOR EACH CARD IN AS SERIES, OR THE ENTIRE SYSTEM WILL BREAK, AND I WILL BE VERY DISAPPOINTED.
 	var/id = "coder"
 	var/name = "Coder"
@@ -23,19 +32,23 @@
 	///The rarity of this card, determines how much (or little) it shows up in packs. Rarities are common, uncommon, rare, epic, legendary and misprint.
 	var/rarity = "uber rare to the extreme"
 
-/datum/card/New(list/data = list(), list/templates = list())
+/datum/cardData/New(list/data = list(), list/templates = list())
 	applyTemplates(data, templates)
 	apply(data)
 
 ///For each var that the card datum and the json entry share, we set the datum var to the json entry
-/datum/card/proc/apply(list/data)
+/datum/cardData/proc/apply(list/data)
 	for(var/name in (vars & data))
 		vars[name] = data[name]
 
 ///Applies a json file to a card datum
-/datum/card/proc/applyTemplates(list/data, list/templates = list())
+/datum/cardData/proc/applyTemplates(list/data, list/templates = list())
+	apply(templates[data["as"]])
+
+///Applies a json file to a card datum
+/datum/cardData/card/applyTemplates(list/data, list/templates = list())
 	apply(templates["default"])
-	apply(templates[data["template"]])
+	return ..()
 
 ///Loads all the card files
 /proc/loadAllCardFiles(cardFiles, directory)
@@ -48,7 +61,7 @@
 	for(var/card_set in GLOB.cached_cards)
 		message_admins("Printing the [card_set] set")
 		for(var/card in GLOB.cached_cards[card_set]["ALL"])
-			var/datum/card/toPrint = GLOB.cached_cards[card_set]["ALL"][card]
+			var/datum/cardData/card/toPrint = GLOB.cached_cards[card_set]["ALL"][card]
 			message_admins(toPrint.name)
 
 ///Checks the passed type list for missing raritys, or raritys out of bounds
@@ -60,7 +73,7 @@
 			message_admins("[pack.series] does not have any related cards")
 			continue
 		for(var/card in GLOB.cached_cards[pack.series]["ALL"])
-			var/datum/card/template = GLOB.cached_cards[pack.series]["ALL"][card]
+			var/datum/cardData/card/template = GLOB.cached_cards[pack.series]["ALL"][card]
 			if(!(template.rarity in pack.rarity_table))
 				message_admins("[pack.type] has a rarity [template.rarity] on the card [template.id] that does not exist")
 				continue
@@ -84,34 +97,71 @@
 	var/toSend = "Out of [totalCards] cards"
 	for(var/id in sortList(cardsByCount, /proc/cmp_num_string_asc))
 		if(id)
-			var/datum/card/template = GLOB.cached_cards[pack.series]["ALL"][id]
+			var/datum/cardData/card/template = GLOB.cached_cards[pack.series]["ALL"][id]
 			toSend += "\nID:[id] [template.name] [(cardsByCount[id] * 100) / totalCards]% Total:[cardsByCount[id]]"
 	message_admins(toSend)
 	qdel(pack)
 
 /*
 TODO Dumbass:
-	make the color actually work
 	add a spawn card debug verb
-	make the filtering here simpler
-	check to make sure the filtering works properly with multipial objects
-	expand on icon system, add aliases
+	fully datumize this code
+	figure out if datums are indeed better here
+	cry
+
 	make shit clean
 	add aliases for everything we need
+	cashe aliases as icons if they are used alone without modification at least once.
+	consider caching templates as icons, is it doable/useful?
+	maybe slowly load the card icons on startup, instead of frontloading it
 	cry
 */
 
-/proc/buildCardIcon(list/data)
-	var/list/iconPackets = data
-	var/list/toStore = list()
-	for(var/list/packet in iconPackets)
-		var/image/piece
-		piece = image(packet["source"], packet["state"])
-		piece.color = packet["color"]
-		toStore += piece
-		message_admins("Applying [packet["color"]]")
+/datum/cardData/img/proc/buildCardIcon(list/data)
+	var/list/iconPackets = list()
+	var/list/stack = list()
+	var/icon/toStore = icon("icons/obj/tcg.dmi", "base")
+
+	//The most recent addition will take precedence unless specified
+	for(var/list/packet in data)
+		if(packet["dupe"])
+			if(!iconPackets[packet["tag"]]["MULTI"])
+				iconPackets[packet["tag"]]["MULTI"] = list()
+			else
+				iconPackets[packet["tag"]]["MULTI"] += packet
+		else
+			iconPackets[packet["tag"]] = packet
+		stack |= packet["tag"] //Let's preserve order
+
+	for(var/tag in stack)
+		if(iconPackets[tag]["MULTI"])
+			for(var/list/part in iconPackets[tag]["MULTI"])
+				toStore = processCardPacket(toStore, part)
+		else
+			var/list/packet = iconPackets[tag]
+			toStore = processCardPacket(toStore, packet)
 	data.Cut()
 	return toStore
+
+/proc/processCardPacket(icon/base, list/packet)
+	var/icon/piece
+	var/x = (packet["X"]) ? packet["X"] : 1
+	var/y = (packet["Y"]) ? packet["Y"] : 1
+	piece = icon(packet["source"], packet["state"], (packet["DIR"]))
+	if(packet["cut"])
+		var/icon/mask = base
+		mask.Blend("#fff", ICON_ADD) //Let's make everything white
+		piece.Blend(mask, ICON_MULTIPLY, (x == 1) ? 1 : 1-x, (y == 1) ? 1 : 1-y) //And then multiply the two to mask out the area we want. We use 1-x to bring the mask to us, as to keep the rest of the code modular
+	if(packet["color"])
+		piece.SwapColor("#FFFFFF", packet["color"])
+	base.Blend(piece, ICON_OVERLAY, x, y)
+
+/proc/expandCardPacket(list/data, list/templates)
+	message_admins("[data["as"]] [templates[data["as"]]]")
+	for(var/entry in templates[data["as"]])
+		if(!data[entry])
+			data[entry] = templates[entry]
+	return data
 
 ///Empty the rarity cache so we can safely add new cards
 /proc/clearCards()
@@ -129,10 +179,13 @@ TODO Dumbass:
 	var/list/json = json_decode(file2text("[directory]/[filename]"))
 	var/list/cards = json["cards"]
 	var/list/templates = list()
+	var/list/iconTemplates = list()
+	for(var/list/data in json["icon_defines"])
+		iconTemplates[data["psudo"]] = new /datum/cardData/img(data, iconTemplates)
 	for(var/list/data in json["templates"])
 		templates[data["template"]] = data
 	for(var/list/data in cards)
-		var/datum/card/c = new(data, templates)
+		var/datum/cardData/card = new(data, templates)
 		//Lets cache the id by rarity, for top speed lookup later
 		if(!GLOB.cached_cards[c.series])
 			GLOB.cached_cards[c.series] = list()
