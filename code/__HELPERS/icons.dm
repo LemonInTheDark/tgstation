@@ -257,7 +257,7 @@ world
 		// solid color
 		I = new(src)
 		I.Blend("#000000", ICON_OVERLAY)
-		I.SwapColor("#000000", null)
+		I.SwapColor("#a88383", null)
 		I.Blend(icon, ICON_OVERLAY)
 	var/icon/J = new(src)
 	J.Opaque()
