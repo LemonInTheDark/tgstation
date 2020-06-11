@@ -168,6 +168,8 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/reload_cards,
 	/client/proc/validate_cardpacks,
 	/client/proc/test_cardpack_distribution,
+	/client/proc/spawn_card,
+	/client/proc/spawn_all_cards,
 	/client/proc/print_cards,
 	/datum/admins/proc/create_or_modify_area,
 	)
@@ -588,6 +590,32 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	var/guar = input("Should we use the pack's guaranteed rarity? If so, how many?", "We've all been there. Man you should have seen the old system") as null|num
 	checkCardDistribution(pack, batchSize, batchCount, guar)
 
+/client/proc/spawn_card()
+	set name = "Spawn Card"
+	set category = "Debug"
+	if(!check_rights(R_DEBUG))
+		return
+	if(!SStrading_card_game.loaded)
+		message_admins("The card subsystem is not currently loaded")
+		return
+	var/obj/item/cardpack/pack = input("Which pack should we look in?", "") as null|anything in sortList(SStrading_card_game.card_packs)
+	var/id = input("Which card should we spawn?", "") as null|anything in GLOB.cached_cards[initial(pack.series)]["ALL"]
+	spawnCardInWorld(mob.loc, initial(pack.series), id)
+
+/client/proc/spawn_all_cards()
+	set name = "Spawn All Cards"
+	set category = "Debug"
+	if(!check_rights(R_DEBUG))
+		return
+	if(!SStrading_card_game.loaded)
+		message_admins("The card subsystem is not currently loaded")
+		return
+	var/list/packs = sortList(SStrading_card_game.card_packs)
+	for(var/pack in packs)
+		var/obj/item/cardpack/pac = pack
+		for(var/id in GLOB.cached_cards[initial(pac.series)]["ALL"])
+			spawnCardInWorld(mob.loc, initial(pac.series), id)
+
 /client/proc/print_cards()
 	set name = "Print Cards"
 	set category = "Debug"
@@ -656,6 +684,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	log_admin("[key_name(usr)] made [O] at [AREACOORD(O)] say \"[message]\"")
 	message_admins("<span class='adminnotice'>[key_name_admin(usr)] made [O] at [AREACOORD(O)]. say \"[message]\"</span>")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Object Say") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
 /client/proc/togglebuildmodeself()
 	set name = "Toggle Build Mode Self"
 	set category = "Admin - Events"

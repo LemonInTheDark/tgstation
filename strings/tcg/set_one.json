@@ -1,58 +1,324 @@
 {
 	"icon_defines": [
 		{
-			"tag": "background",
+			"layer": "0",
 			"psudo": "background",
+			"source": "icons/obj/tcg.dmi",
+			"state": "background"
+		},
+		{
+			"psudo": "blue_background",
+			"as": "background",
+			"color": "#5B97BC"
+		},
+		{
+			"psudo": "lightblue_background",
+			"as": "background",
+			"color": "#97D0E5"
+		},
+		{
+			"psudo": "darkblue_background",
+			"as": "background",
+			"color": "#134975"
+		},
+		{
+			"psudo": "teal_background",
+			"as": "background",
+			"color": "#1B67A5"
+		},
+		{
+			"psudo": "red_background",
+			"as": "background",
+			"color": "#E80B0B"
+		},
+		{
+			"psudo": "darkred_background",
+			"as": "background",
+			"color": "#CB0000"
+		},
+		{
+			"psudo": "pink_background",
+			"as": "background",
+			"color": "#FF00FF"
+		},
+		{
+			"psudo": "yellow_background",
+			"as": "background",
+			"color": "#F39F27"
+		},
+		{
+			"psudo": "green_background",
+			"as": "background",
+			"color": "#58C800"
+		},
+		{
+			"psudo": "black_background",
+			"as": "background",
+			"color": "#4A4951"
+		},
+		{
+			"psudo": "offblack_background",
+			"as": "background",
+			"color": "#161E21"
+		},
+		{
+			"psudo": "brown_background",
+			"as": "background",
+			"color": "#B18644"
+		},
+		{
+			"psudo": "purple_background",
+			"as": "background",
+			"color": "#C96DBF"
+		},
+		{
+			"layer": "1",
+			"psudo": "rarity",
+			"source": "icons/obj/tcg.dmi",
+			"state": "rarity"
+		},
+		{
+			"psudo": "common",
+			"as": "rarity",
+			"color": "#B8BABB"
+		},
+		{
+			"psudo": "uncommon",
+			"as": "rarity",
 			"color": "#33CC66"
 		},
 		{
-			"tag": "rarity_icon",
-			"psudo": "rarity_icon",
-			"source": "icons/obj/tcg.dmi",
-			"state": "rarity_icon"
+			"psudo": "rare",
+			"as": "rarity",
+			"color": "#0066FF"
 		},
 		{
-			"tag": "frame",
+			"psudo": "epic",
+			"as": "rarity",
+			"color": "#CC00FF"
+		},
+		{
+			"psudo": "legendary",
+			"as": "rarity",
+			"color": "#FFCC00"
+		},
+		{
+			"layer": "2",
 			"psudo": "frame",
 			"source": "icons/obj/tcg.dmi",
 			"state": "frame"
 		},
 		{
-			"tag": "icon_back",
-			"psudo": "icon_back",
-			"source": "icons/obj/tcg.dmi",
-			"state": "icon_back"
+			"psudo": "grey_frame",
+			"as": "frame",
+			"color": "#8B8B8B"
 		},
 		{
-			"tag": "rarity_back",
-			"psudo": "rarity",
+			"psudo": "blue_frame",
+			"as": "frame",
+			"color": "#417DA2"
+		},
+		{
+			"psudo": "lightblue_frame",
+			"as": "frame",
+			"color": "#4762A5"
+		},
+		{
+			"psudo": "darkblue_frame",
+			"as": "frame",
+			"color": "#0D304D"
+		},
+		{
+			"psudo": "teal_frame",
+			"as": "frame",
+			"color": "#0E4069"
+		},
+		{
+			"psudo": "pink_frame",
+			"as": "frame",
+			"color": "#CA00CA"
+		},
+		{
+			"psudo": "red_frame",
+			"as": "frame",
+			"color": "#960606"
+		},
+		{
+			"psudo": "redder_frame",
+			"as": "frame",
+			"color": "#9F2A0D"
+		},
+		{
+			"psudo": "darkred_frame",
+			"as": "frame",
+			"color": "#830000"
+		},
+		{
+			"psudo": "yellow_frame",
+			"as": "frame",
+			"color": "#F37700"
+		},
+		{
+			"psudo": "green_frame",
+			"as": "frame",
+			"color": "#3A7231"
+		},
+		{
+			"psudo": "brown_frame",
+			"as": "frame",
+			"color": "#846433"
+		},
+		{
+			"psudo": "black_frame",
+			"as": "frame",
+			"color": "#222125"
+		},
+		{
+			"psudo": "blacker_frame",
+			"as": "frame",
+			"color": "#081905"
+		},
+		{
+			"psudo": "purple_frame",
+			"as": "frame",
+			"color": "#8B308F"
+		},
+		{
+			"layer": "3",
+			"psudo": "window_back",
+			"source": "icons/obj/tcg.dmi",
+			"state": "window_back"
+		},
+		{
+			"psudo": "pink_window",
+			"as": "window_back",
+			"color": "#FF00FF"
+		},
+		{
+			"psudo": "blue_window",
+			"as": "window_back",
+			"color": "#134975"
+		},
+		{
+			"psudo": "lightblue_window",
+			"as": "window_back",
+			"color": "#5B97BC"
+		},
+		{
+			"psudo": "red_window",
+			"as": "window_back",
+			"color": "#E80B0B"
+		},
+		{
+			"psudo": "darkred_window",
+			"as": "window_back",
+			"color": "#CB0000"
+		},
+		{
+			"psudo": "yellow_window",
+			"as": "window_back",
+			"color": "#F39F27"
+		},
+		{
+			"psudo": "green_window",
+			"as": "window_back",
+			"color": "#58C800"
+		},
+		{
+			"psudo": "brown_window",
+			"as": "window_back",
+			"color": "#B18644"
+		},
+		{
+			"layer": "4",
+			"psudo": "nanotrasen_icon",
+			"source": "icons/obj/tcg.dmi",
+			"state": "nanotrasen_icon"
+		},
+		{
+			"layer": "4",
+			"psudo": "animal_icon",
+			"source": "icons/obj/tcg.dmi",
+			"state": "animal_icon"
+		},
+		{
+			"layer": "4",
+			"psudo": "ian_icon",
+			"source": "icons/obj/tcg.dmi",
+			"state": "ian_icon"
+		},
+		{
+			"layer": "4",
+			"psudo": "sindi_icon",
+			"source": "icons/obj/tcg.dmi",
+			"state": "sindi_icon"
+		},
+		{
+			"layer": "4",
+			"psudo": "job_icon",
+			"cut": "Take off the bottom",
+			"source": "icons/obj/card.dmi",
+			"X": 3,
+			"Y": -11
+		},
+		{
+			"psudo": "cap_icon",
+			"as": "job_icon",
+			"state": "idcaptain"
+		},
+		{
+			"psudo": "cmo_icon",
+			"as": "job_icon",
+			"state": "idchiefmedicalofficer"
+		},
+		{
+			"psudo": "ce_icon",
+			"as": "job_icon",
+			"state": "idchiefengineer"
+		},
+		{
+			"psudo": "hos_icon",
+			"as": "job_icon",
+			"state": "idheadofsecurity"
+		},
+		{
+			"psudo": "rd_icon",
+			"as": "job_icon",
+			"state": "idresearchdirector"
+		},
+		{
+			"psudo": "clown_icon",
+			"as": "job_icon",
+			"state": "idclown"
+		},
+		{
+			"psudo": "chap_icon",
+			"as": "job_icon",
+			"state": "idchaplain"
+		},
+		{
+			"layer": "4",
+			"psudo": "lavaland_icon",
+			"source": "icons/obj/tcg.dmi",
+			"state": "lavaland_icon"
+		},
+		{
+			"layer": "4",
+			"psudo": "swarmer_icon",
+			"source": "icons/obj/tcg.dmi",
+			"state": "swarmer_icon"
+		},
+		{
+			"layer": "4",
+			"psudo": "xeno_icon",
+			"source": "icons/obj/tcg.dmi",
+			"state": "xeno_icon"
+		},
+		{
+			"layer": "5",
+			"psudo": "rarity_icon",
 			"source": "icons/obj/tcg.dmi",
 			"state": "rarity_back"
-		},
-		{
-			"as": "rarity",
-			"psudo": "common",
-			"color": "#B8BABB"
-		},
-		{
-			"as": "rarity",
-			"psudo": "uncommon",
-			"color": "#33CC66"
-		},
-		{
-			"as": "rarity",
-			"psudo": "rare",
-			"color": "#0066FF"
-		},
-		{
-			"as": "rarity",
-			"psudo": "epic",
-			"color": "#CC00FF"
-		},
-		{
-			"as": "rarity",
-			"psudo": "legendary",
-			"color": "#FFCC00"
 		}
 	],
 	"templates": [
@@ -60,9 +326,19 @@
 			"psudo": "default",
 			"icon": [
 				{
-					"as": "background",
-					"source": "icons/obj/tcg.dmi",
-					"state": "background"
+					"as": "background"
+				},
+				{
+					"as": "rarity"
+				},
+				{
+					"as": "rarity_icon"
+				},
+				{
+					"as": "frame"
+				},
+				{
+					"as": "window_back"
 				}
 			]
 		}
@@ -80,7 +356,2547 @@
 			"cardtype": "Creature",
 			"cardsubtype": "Silicon",
 			"series": "coreset2020",
-			"rarity": "uncommon"
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "grey_frame"
+				},
+				{
+					"as": "nanotrasen_icon",
+					"color": "#004A7F"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "AIBody",
+					"layer": "0.5",
+					"Y": 2,
+					"source": "icons/mob/ai.dmi",
+					"state": "ai"
+				}
+			]
+		},
+		{
+			"id": "stickman",
+			"name": "Angry Stickman",
+			"desc": "Sure, he's flat and crudely drawn, but watch out! He's a menace!",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Construct",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "angry_stickman"
+				}
+			]
+		},
+		{
+			"id": "changeling",
+			"name": "Armoured Changeling",
+			"desc": "The strange creatures known as changelings have been known to develop natural armour as a defense mechanism when in combat.",
+			"rules": "Changeling",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Abomination",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "red_background"
+				},
+				{
+					"as": "red_frame"
+				},
+				{
+					"as": "red_window"
+				},
+				{
+					"as": "sindi_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "lingarmorhelmet"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "lingarmor"
+				}
+			]
+		},
+		{
+			"id": "assistant",
+			"name": "Staff Assistant",
+			"desc": "The lowest ladder on the Nanotrasen Employment Ladder, Staff Assistants are employed to help out with tasks deemed 'too menial for robots'.",
+			"rules": "Greytide",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Employee",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "assistant"
+				}
+			]
+		},
+		{
+			"id": "atmos_tech",
+			"name": "Atmospheric Technician",
+			"desc": "The Atmospheric Technicians are tasked with keeping the station's air clean, breathable, and, most importantly, devoid of plasma.",
+			"rules": "On Summon: Search your deck for an atmospherics card, and add it to your hand. Shuffle your deck afterward.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Engineer",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "atmos_tech"
+				}
+			]
+		},
+		{
+			"id": "bartender",
+			"name": "Bartender",
+			"desc": "Prior to the introduction of on-station psychologists, the Bartender served to alleviate many employees' woes and fears. Remember, always drink responsibly.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Employee",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "bartender"
+				}
+			]
+		},
+		{
+			"id": "botanist",
+			"name": "Botanist",
+			"desc": "The Botanist is in charge of keeping the station's food supply happy, healthy, and preferably not laced with hallucinogens.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Employee",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "botanist"
+				}
+			]
+		},
+		{
+			"id": "captain",
+			"name": "Captain",
+			"desc": "Every Captain is expected to lay down their life for their assigned station. Any Captain who returns to Centcom alive without permission is ceremonially executed before being cloned and stripped of rank.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Commander",
+			"rarity": "rare",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "captain"
+				}
+			]
+		},
+		{
+			"id": "caps_suit",
+			"name": "Apadyne Technologies Mk.2 R.I.O.T. Suit (Captain's Version)",
+			"desc": "A heavily customised Apadyne Technologies Mk.2 R.I.O.T. Suit, rebuilt and refitted to Nanotrasen's highest standards for issue to Station Captains.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "epic",
+			"icon": [
+				{
+					"as": "teal_background"
+				},
+				{
+					"as": "teal_frame"
+				},
+				{
+					"as": "cap_icon"
+				},
+				{
+					"as": "epic"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "capspace"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "caparmor"
+				}
+			]
+		},
+		{
+			"id": "cargo_tech",
+			"name": "Cargo Technician",
+			"desc": "The grunts of Cargo. Any reports that Cargo Technicians are frequently overcome by revolutionary fervour are exaggerated.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Employee",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "cargo_tech"
+				}
+			]
+		},
+		{
+			"id": "chap_plate",
+			"name": "Crusader Armour",
+			"desc": "The common war attire of chaplains. Mostly ceremonial.",
+			"rules": "Holy",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "green_background"
+				},
+				{
+					"as": "green_frame"
+				},
+				{
+					"as": "green_window"
+				},
+				{
+					"as": "chap_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "knight_templar"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "knight_templar"
+				}
+			]
+		},
+		{
+			"id": "chemist",
+			"name": "Chemist",
+			"desc": "Chemists are encouraged to not set up illicit methamphetamine factories on the company's dime.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Doctor",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "chemist"
+				}
+			]
+		},
+		{
+			"id": "CE",
+			"name": "Chief Engineer",
+			"desc": "The Chief Engineer is in charge of keeping the station powered and intact.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Engineer",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "ce"
+				}
+			]
+		},
+		{
+			"id": "ce_suit",
+			"name": "Nakamura Engineering R.I.G.Suit (Advanced)",
+			"desc": "An updated version of Nakamura Engineering's R.I.G.Suit, fitted with advanced radiation shielding and extra armour.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "yellow_background"
+				},
+				{
+					"as": "yellow_frame"
+				},
+				{
+					"as": "ce_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "head",
+					"layer": "0.5",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-white"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit-white"
+				},
+				{
+					"cut": "cloak",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/neck.dmi",
+					"state": "cecloak"
+				}
+			]
+		},
+		{
+			"id": "CMO",
+			"name": "Chief Medical Officer",
+			"desc": "Head of the medical department, the CMO is expected to maintain the standards of his underlings.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Doctor",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "cmo"
+				}
+			]
+		},
+		{
+			"id": "cmo_suit",
+			"name": "DeForest Medical Corporation 'Lifesaver' Carapace",
+			"desc": "An advanced voidsuit designed for emergency medical personnel. Features include a built-in medical HUD and advanced medical gauntlets.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "blue_background"
+				},
+				{
+					"as": "blue_frame"
+				},
+				{
+					"as": "cmo_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "head",
+					"layer": "0.5",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-medical"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit-medical"
+				},
+				{
+					"cut": "cloak",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/neck.dmi",
+					"state": "cmocloak"
+				}
+			]
+		},
+		{
+			"id": "chrono",
+			"name": "Chrono Legionnaire",
+			"desc": "Currently in the earliest stages of development, the Chrono Legionnaire project is expected to weaponise time itself.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Soldier",
+			"rarity": "epic",
+			"icon": [
+				{
+					"as": "red_background"
+				},
+				{
+					"as": "red_frame"
+				},
+				{
+					"as": "sindi_icon"
+				},
+				{
+					"as": "epic"
+				},
+				{
+					"cut": "head",
+					"layer": "0.5",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "chronohelmet"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "chronosuit"
+				}
+			]
+		},
+		{
+			"id": "sloth",
+			"name": "Citrus",
+			"desc": "Cargo's happy sloth pal. Known for his cute sweater and always getting in the way.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Sloth",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "lightblue_background"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "animal_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "sloth",
+					"layer": "0.5",
+					"Y": 10,
+					"source": "icons/mob/pets.dmi",
+					"state": "cool_sloth"
+				}
+			]
+		},
+		{
+			"id": "clown",
+			"name": "Clown",
+			"desc": "Every Nanotrasen station has a clown on board, as high command believes that a source of entertainment will reduce instances of murder-suicide on board Spinward Stations. The results of this hypothesis are, as of yet, unproven.",
+			"rules": "Taunt",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Clown",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "clown"
+				}
+			]
+		},
+		{
+			"id": "clownborg",
+			"name": "Cyborg (Clown Shell)",
+			"desc": "The clown shell is a new development in cyborg technology, designed to capture the joyous hijinks of the station clown in a notably more macabre and disturbing fashion.",
+			"rules": "Taunt, Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon Clown",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "pink_background"
+				},
+				{
+					"as": "pink_frame"
+				},
+				{
+					"as": "pink_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "clown"
+				},
+				{
+					"cut": "eye",
+					"layer": "0.6",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "clown_e"
+				}
+			]
+		},
+		{
+			"id": "clown_suit",
+			"name": "HONK Ltd. Entertainment Voidsuit",
+			"desc": "The most advanced clown suit produced by HONK Ltd. the Entertainment Voidsuit is designed to withstand extreme conditions while still maintaining the aesthetic expected of clowns.",
+			"rules": "While equipped, gives the equipped unit Taunt.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "epic",
+			"icon": [
+				{
+					"as": "pink_background"
+				},
+				{
+					"as": "pink_frame"
+				},
+				{
+					"as": "clown_icon"
+				},
+				{
+					"as": "epic"
+				},
+				{
+					"cut": "head",
+					"layer": "0.5",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-clown"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit-clown"
+				}
+			]
+		},
+		{
+			"id": "abductor_armour",
+			"name": "Abductor Combat Armour",
+			"desc": "Recovered from the strange alien species known as the Abductors, this armour is made from an extremely tough yet flexible material that has been dubbed as Alien Alloy by researchers.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "abductor_combat"
+				}
+			]
+		},
+		{
+			"id": "chef",
+			"name": "Cook",
+			"desc": "Every Nanotrasen chef is trained in 3 cuisines of their choosing upon being hired, alongside the closely guarded secret of Close Quarters Cooking.",
+			"rules": "First Strike",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Employee",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "cook"
+				}
+			]
+		},
+		{
+			"id": "wiz_suit",
+			"name": "Wizard Federation Standard Issue Hardsuit",
+			"desc": "Seemingly reverse engineered from captured engineering hardsuits, the iconic Wizard Federation Hardsuit is a spectacular melding of technology and magic.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "red_background"
+				},
+				{
+					"as": "red_frame"
+				},
+				{
+					"as": "sindi_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "head",
+					"layer": "0.5",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-wiz"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit-wiz"
+				}
+			]
+		},
+		{
+			"id": "curator",
+			"name": "Curator",
+			"desc": "In Nanotrasen polls, the Curator has ranked as the most pointless job on station, much to the ire of the Curator's union. Thankfully, we don't have to listen to them.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Worker",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "curator"
+				}
+			]
+		},
+		{
+			"id": "ianborg",
+			"name": "Borgi Ian",
+			"desc": "While Ian's cyborg costume is very convincing, we at the NTED would like to remind all employees that Ian has not been experimented on.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon Corgi",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "lightblue_background"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "ian_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"source": "icons/mob/pets.dmi",
+					"state": "corgi"
+				},
+				{
+					"cut": "suit",
+					"layer": "0.6",
+					"source": "icons/mob/corgi_back.dmi",
+					"state": "cardborg"
+				},
+				{
+					"cut": "back",
+					"layer": "0.7",
+					"source": "icons/mob/corgi_head.dmi",
+					"state": "cardborg_h"
+				}
+			]
+		},
+		{
+			"id": "deathsquad_armour",
+			"name": "Apadyne Technologies Mk.3 R.I.O.T. Carapace",
+			"desc": "The most advanced set of armour available for purchase from Apadyne Technologies, the Mk.3 R.I.O.T. Carapace is issued to Nanotrasen's most elite forces.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "epic",
+			"icon": [
+				{
+					"as": "darkblue_background"
+				},
+				{
+					"as": "darkblue_frame"
+				},
+				{
+					"as": "blue_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "epic"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "deathsquad"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "deathsquad"
+				}
+			]
+		},
+		{
+			"id": "det",
+			"name": "Detective",
+			"desc": "Nanotrasen hires nothing but the best detectives to investigate crime on our stations. A penchant for cigarettes and outdated fashion isn't mandatory, but is appreciated.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Officer",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "detective"
+				}
+			]
+		},
+		{
+			"id": "nukie_elite",
+			"name": "Elite Syndicate Nuclear Stormtrooper",
+			"desc": "The best of the best of the syndicate troops, elite stormtroopers can be distinguished by their black armour. Shoot on sight, ask questions later!",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Syndicate Soldier",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "red_background"
+				},
+				{
+					"as": "red_frame"
+				},
+				{
+					"as": "red_window"
+				},
+				{
+					"as": "window_sindi"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-syndielite"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit0-syndielite"
+				}
+			]
+		},
+		{
+			"id": "engiborg",
+			"name": "Cyborg (Engineering Shell)",
+			"desc": "A common sight on Nanotrasen Stations, Engineering Shells maintain critical station systems in hazardous conditions.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "yellow_background"
+				},
+				{
+					"as": "yellow_frame"
+				},
+				{
+					"as": "yellow_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "engineer"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "engineer_e"
+				}
+			]
+		},
+		{
+			"id": "ert_command",
+			"name": "NT P.A.V. Suit (Command)",
+			"desc": "Issued to members of Emergency Response Teams, the P.A.V. Suit gives superior protection from any threat the galaxy can throw at it. This particular model is outfitted with a sidearm holster and a sleek blue finish.",
+			"rules": "While equipped, give the equipped unit Squad Tactics.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "darkblue_background"
+				},
+				{
+					"as": "darkblue_frame"
+				},
+				{
+					"as": "blue_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-ert_commander"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "ert_command"
+				}
+			]
+		},
+		{
+			"id": "ert_engi",
+			"name": "NT P.A.V. Suit (Engineering)",
+			"desc": "Issued to members of Emergency Response Teams, the P.A.V. Suit gives superior protection from any threat the galaxy can throw at it. This particular model is outfitted with a welding screen and a flashy yellow finish.",
+			"rules": "While equipped, give the equipped unit Squad Tactics.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "darkblue_background"
+				},
+				{
+					"as": "darkblue_frame"
+				},
+				{
+					"as": "blue_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-ert_engineer"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "ert_engineer"
+				}
+			]
+		},
+		{
+			"id": "ert_med",
+			"name": "NT P.A.V. Suit (Medical)",
+			"desc": "Issued to members of Emergency Response Teams, the P.A.V. Suit gives superior protection from any threat the galaxy can throw at it. This particular model is outfitted with a sterile coating and a calming white finish.",
+			"rules": "While equipped, give the equipped unit Squad Tactics.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "darkblue_background"
+				},
+				{
+					"as": "darkblue_frame"
+				},
+				{
+					"as": "blue_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-ert_medical"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "ert_medical"
+				}
+			]
+		},
+		{
+			"id": "ert_sec",
+			"name": "NT P.A.V. Suit (Security)",
+			"desc": "Issued to members of Emergency Response Teams, the P.A.V. Suit gives superior protection from any threat the galaxy can throw at it. This particular model is outfitted with bulletproof padding and an intimidating red finish.",
+			"rules": "While equipped, give the equipped unit Squad Tactics.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "darkblue_background"
+				},
+				{
+					"as": "darkblue_frame"
+				},
+				{
+					"as": "blue_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-ert_security"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "ert_security"
+				}
+			]
+		},
+		{
+			"id": "explorer",
+			"name": "Explorer",
+			"desc": "The Nanotrasen Explorers Corps boldly goes where humanity has never gone before. Or would, if they weren't buried under mounds of bureaucracy.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Explorer",
+			"rarity": "legendary",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "explorer"
+				}
+			]
+		},
+		{
+			"id": "borg",
+			"name": "Cyborg",
+			"desc": "Created as part of humanity's first foray into artificial intelligence, the original cyborg models used organic parts in lieu of sophisticated artificial brains.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "grey_frame"
+				},
+				{
+					"as": "nanotrasen_icon",
+					"color": "#004A7F"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"source": "icons/mob/robots.dmi",
+					"state": "robot"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"source": "icons/mob/robots.dmi",
+					"state": "robot_e"
+				}
+			]
+		},
+		{
+			"id": "geneticist",
+			"name": "Geneticist",
+			"desc": "Geneticists are tasked with manipulating human DNA to produce special effects. Nanotrasen maintains a strict 'no superhero' policy for mutations, following the Superhero Civil War of 2150.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Scientist",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "geneticist"
+				}
+			]
+		},
+		{
+			"id": "med_geneticist",
+			"name": "Geneticist",
+			"desc": "Geneticists are tasked with manipulating human DNA to produce special effects. Nanotrasen maintains a strict 'no superhero' policy for mutations, following the Superhero Civil War of 2150.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Doctor",
+			"rarity": "misprint",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "geneticist_med"
+				}
+			]
+		},
+		{
+			"id": "spookian",
+			"name": "Ghost Ian",
+			"desc": "Oh my god! Ian's dead!",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Spirit Corgi",
+			"rarity": "epic",
+			"icon": [
+				{
+					"as": "lightblue_background"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "ian_icon"
+				},
+				{
+					"as": "epic"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"source": "icons/mob/pets.dmi",
+					"state": "corgi"
+				},
+				{
+					"cut": "back",
+					"layer": "0.7",
+					"source": "icons/mob/corgi_head.dmi",
+					"state": "sheet"
+				}
+			]
+		},
+		{
+			"id": "HOP",
+			"name": "Head of Personnel",
+			"desc": "The head of the Cargo and Service Departments, guardian of all access, and Ian's lovable, yet dumb, sidekick.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Commander",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "hop"
+				}
+			]
+		},
+		{
+			"id": "HOS",
+			"name": "Head of Security",
+			"desc": "Nanotrasen hires most heads of staff based on their qualifications as being amicable, good at conflict resolution, ability to handle high-stakes situations, humanity, and desire to learn. Heads of Security only need a highschool degree.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Officer",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "hos"
+				}
+			]
+		},
+		{
+			"id": "hos_suit",
+			"name": "Apadyne Technologies 'Tyrant' Class Hardshell",
+			"desc": "The distinctive shape of the Tyrant Class Hardshell is caused, in part, by the large amount of kevlar reinforcement and the ablative armour layer. Perhaps more importantly, it also looks rad.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "darkred_background"
+				},
+				{
+					"as": "darkred_frame"
+				},
+				{
+					"as": "hos_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "head",
+					"layer": "0.5",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-hos"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit-hos"
+				},
+				{
+					"cut": "cloak",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/neck.dmi",
+					"state": "hoscloak"
+				}
+			]
+		},
+		{
+			"id": "ian",
+			"name": "Ian",
+			"desc": "This adorable corgi has become the defacto mascot of the Spinward Stations to many. He comes in many forms, many sizes, and many shapes, but he's still just as lovable. Hand wash only.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Corgi",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "lightblue_background"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "ian_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"source": "icons/mob/pets.dmi",
+					"state": "corgi"
+				}
+			]
+		},
+		{
+			"id": "inquisitor_suit",
+			"name": "Inquisitor's Hardsuit",
+			"desc": "Nanotrasen officially doesn't believe in ghosts, magic, or anything that can't be solved with science. When you see someone show up in one of these, let that remind you of that fact.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "epic",
+			"icon": [
+				{
+					"as": "darkblue_background"
+				},
+				{
+					"as": "darkblue_frame"
+				},
+				{
+					"as": "blue_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "epic"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit0-inqy"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit-inq"
+				}
+			]
+		},
+		{
+			"id": "intern",
+			"name": "Intern",
+			"desc": "All Nanotrasen interns come with 3 things: A resume, a desire to learn, and vague promises that they're getting paid at some point. So don't be too rough on them.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Human",
+			"cardsubtype": "Human Employee",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "intern"
+				}
+			]
+		},
+		{
+			"id": "jannie",
+			"name": "Janitor",
+			"desc": "A true testament to futility, they clean and they clean and they clean, knowing that there's no way they can clean it all. Yet, they perservere, knowing that without them, the crew would simply give in to their base animalistic nature.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Human",
+			"cardsubtype": "Human Employee",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "janitor"
+				}
+			]
+		},
+		{
+			"id": "serviceborg",
+			"name": "Cyborg (Custodial Shell)",
+			"desc": "A powerful, state of the act cleaning machine. They exist to eradicate stains, snag garbage, and replace lights, forever. We are legally obligated by the Janitor's Union to state that these machines are no replacement for a flesh-and-blood janitor.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "green_background"
+				},
+				{
+					"as": "green_frame"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "janitor"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "janitor_e"
+				}
+			]
+		},
+		{
+			"id": "lawer",
+			"name": "Lawyer",
+			"desc": "Nanotrasen knows the value of a good lawyer. That's why they're all working hard at our home offices defending us from frivolous labor suits from lazy no-good employees who should be working hard instead of slacking off reading trading cards.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Employee",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "lawyer"
+				}
+			]
+		},
+		{
+			"id": "legion",
+			"name": "Legion",
+			"desc": "They are the cursed, damned souls of civilizations born and lost in the flames of Indecipheres, conglomerated into a lump of emaciated bodies, wandering the realms they used to rule... or something along those lines, anyway.",
+			"rules": "When Legion is destroyed, search your deck for a human card, and summon it to the battlefield. Shuffle your deck afterward.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Abomination",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "offblack_background"
+				},
+				{
+					"as": "redder_frame"
+				},
+				{
+					"as": "lavaland_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"source": "icons/mob/lavaland/lavaland_monsters.dmi",
+					"state": "legion"
+				}
+			]
+		},
+		{
+			"id": "medborg",
+			"name": "Cyborg (Medical Shell)",
+			"desc": "A state of the art medical shell, for when biological life just can't take care of itself. Comes equipped with built-in surgical equipment and all the medicated lollipops you could ever want.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon Doctor",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "blue_background"
+				},
+				{
+					"as": "blue_frame"
+				},
+				{
+					"as": "lightblue_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "medical"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "medical_e"
+				}
+			]
+		},
+		{
+			"id": "doc",
+			"name": "Medical Doctor",
+			"desc": "Nanotrasen's doctors are well known for their ability to treat almost any ailment known to mankind... as well as causing a fair few in the process.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Doctor",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "md"
+				}
+			]
+		},
+		{
+			"id": "mime",
+			"name": "Mime",
+			"desc": "Si vous regardez attentivement dans les yeux d'un mime, vous pouvez voir le tourment sans fin derrière leur façade silencieuse. C'est vraiment tragique.",
+			"rules": "Silence",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Mime",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "mime"
+				}
+			]
+		},
+		{
+			"id": "miningborg",
+			"name": "Cyborg (Mining Shell)",
+			"desc": "Fitted with a drill and tracks, the Mining Shell is designed to hold up to the rigours of mining, be that on the hellish surface of Indecipheres, or in the silent vacuum of the asteroid belt.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon Miner",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "brown_background"
+				},
+				{
+					"as": "brown_frame"
+				},
+				{
+					"as": "brown_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "minerOLD"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "miner_e"
+				}
+			]
+		},
+		{
+			"id": "monkey",
+			"name": "Monkey",
+			"desc": "Nanotrasen seeks to phase out animal testing by 2570, in accordance with new TerraGov legislation. This will be replaced with more ethical solutions, such as computer simulations, or experimentation on Staff Assistants.",
+			"rules": "Greytide",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Primate",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "lightblue_background"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"as": "animal_icon"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"source": "icons/mob/monkey.dmi",
+					"state": "monkey1"
+				}
+			]
+		},
+		{
+			"id": "nukeop",
+			"name": "Nuclear Operative",
+			"desc": "The frontline grunts of the syndicate army, Nuclear Operatives are typically well trained and equipped for their grim duty.",
+			"rules": "Squad Tactics",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Syndicate Soldier",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "red_background"
+				},
+				{
+					"as": "red_frame"
+				},
+				{
+					"as": "red_window"
+				},
+				{
+					"as": "sindi_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-syndi"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit1-syndi"
+				}
+			]
+		},
+		{
+			"id": "paramed",
+			"name": "Paramedic",
+			"desc": "Nanotrasen encourages all paramedics to think of others before themselves- if this means running through a plasma fire to save a colleague, so be it.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Doctor",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "paramedic"
+				}
+			]
+		},
+		{
+			"id": "peaceborg",
+			"name": "Cyborg (Peacekeeper Shell)",
+			"desc": "After the unilateral phasing out of Security Shells in 2554 following mass reports of cyborg-on-human violence, the Peacekeeper Shell was introduced as a stopgap solution until the problems could be resolved.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon Officer",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "darkred_background"
+				},
+				{
+					"as": "darkred_frame"
+				},
+				{
+					"as": "darkred_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "peace"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"X": 9,
+					"source": "icons/mob/robots.dmi",
+					"state": "peace_e"
+				}
+			]
+		},
+		{
+			"id": "plasma_engi",
+			"name": "Station Engineer (Plasmaman)",
+			"desc": "The ever industrious plasmamen are well suited to engineering work, due to their natural radiation resistance.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Plasmaman Engineer",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "engi_plasma"
+				}
+			]
+		},
+		{
+			"id": "QM",
+			"name": "Quartermaster",
+			"desc": "Every Nanotrasen station has a Quartermaster, who controls the flow of cargo to and from the station, and by extension to and from the hands of the crew. He's not given the distinction of being a head, though. His job isn't hard enough.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Employee",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "qm"
+				}
+			]
+		},
+		{
+			"id": "qm_head",
+			"name": "Quartermaster",
+			"desc": "Every Nanotrasen station has a Quartermaster, who controls the flow of cargo to and from the station, and by extension to and from the hands of the crew.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Employee",
+			"rarity": "misprint",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "qm_head"
+				}
+			]
+		},
+		{
+			"id": "rabbit_pai",
+			"name": "Personal AI Device (Rabbit Shell)",
+			"desc": "Personal AI Devices are able to take the form of many household pets, to provide a homely sense of comfort and companionship to their owners.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon Rabbit",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "lightblue_background"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "pai_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"source": "icons/mob/pai.dmi",
+					"state": "rabbit"
+				}
+			]
+		},
+		{
+			"id": "drone_pai",
+			"name": "Personal AI Device (Drone Shell)",
+			"desc": "The most basic Personal AI shell, the Drone Shell resembles the old maintainance drones used on Nanotrasen Stations prior to 'the incident', and is perfect for the tech-savvy AI-owner.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon Drone",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "lightblue_background"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "pai_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"source": "icons/mob/pai.dmi",
+					"state": "repairbot"
+				}
+			]
+		},
+		{
+			"id": "RD",
+			"name": "Research Director",
+			"desc": "The Research Director is the head of the Science Division, and is responsible for, shockingly, directing research.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Scientist",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "rd"
+				}
+			]
+		},
+		{
+			"id": "rd_suit",
+			"name": "Nakamura Engineering B.O.M.B.Suit",
+			"desc": "The Nakamura Engineering B.O.M.B.Suit is an innovative combination of a R.I.G.Suit and a bomb suit, perfect for toxins research.",
+			"rules": "Reduces all spell damage to the equipped creature by 2.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "purple_background"
+				},
+				{
+					"as": "purple_frame"
+				},
+				{
+					"as": "rd_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "head",
+					"layer": "0.5",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "hardsuit1-rd"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "hardsuit-rd"
+				},
+				{
+					"cut": "cloak",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/neck.dmi",
+					"state": "rdcloak"
+				}
+			]
+		},
+		{
+			"id": "roboticist",
+			"name": "Roboticist",
+			"desc": "The roboticist's work is as close as Nanotrasen legally allows its employees to come to necromancy.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Scientist",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "roboticist"
+				}
+			]
+		},
+		{
+			"id": "runtime",
+			"name": "Runtime",
+			"desc": "Runtime is the CMO's personal feline companion, and is well known for her laziness. It's said that opening a tin of tuna anywhere on the station will bring her running.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Cat",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "lightblue_background"
+				},
+				{
+					"as": "lightblue_frame"
+				},
+				{
+					"as": "animal_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"Y": 8,
+					"source": "icons/mob/pets.dmi",
+					"state": "cat"
+				}
+			]
+		},
+		{
+			"id": "scientist",
+			"name": "Scientist",
+			"desc": "Rumours that Nanotrasen hires 'mad scientists' are greatly exaggerated. Scientists are regularly screened to ensure that their insanity remains within acceptable limits.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Scientist",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "scientist"
+				}
+			]
+		},
+		{
+			"id": "secborg",
+			"name": "Cyborg (Security Shell)",
+			"desc": "Following an incident in 2554, the Security Cyborg Shell was unilaterally phased out and replaced by the Peacekeeper. Nonetheless, many units remain in service with various other organisations such as private militaries.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon Officer",
+			"rarity": "epic",
+			"icon": [
+				{
+					"as": "darkred_background"
+				},
+				{
+					"as": "darkred_frame"
+				},
+				{
+					"as": "darkred_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "epic"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"X": 6,
+					"source": "icons/mob/robots.dmi",
+					"state": "sec"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"X": 6,
+					"source": "icons/mob/robots.dmi",
+					"state": "sec_e"
+				}
+			]
+		},
+		{
+			"id": "sec_officer",
+			"name": "Security Officer",
+			"desc": "Nanotrasen would like to remind all employees to support their station security team; remember, the boys in red keep you safe!",
+			"rules": "Squad Tactics",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Officer",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "sec"
+				}
+			]
+		},
+		{
+			"id": "ratvar_armor",
+			"name": "Ratvarian Clockwork Cuirass",
+			"desc": "Fashioned from paranormally reinforced brass, the Ratvar Cult's clockwork armour is as beautiful as it is heretical.",
+			"rules": "While equipped, give the equipped unit Clockwork.",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Equipment",
+			"cardsubtype": "Armour",
+			"rarity": "epic",
+			"icon": [
+				{
+					"as": "red_background"
+				},
+				{
+					"as": "red_frame"
+				},
+				{
+					"as": "red_window"
+				},
+				{
+					"as": "sindi_icon"
+				},
+				{
+					"as": "epic"
+				},
+				{
+					"cut": "head",
+					"layer": "0.6",
+					"Y": 0,
+					"source": "icons/mob/clothing/head.dmi",
+					"state": "clockwork_helmet"
+				},
+				{
+					"cut": "shoulders",
+					"layer": "0.7",
+					"Y": 0,
+					"source": "icons/mob/clothing/suit.dmi",
+					"state": "clockwork_cuirass"
+				}
+			]
+		},
+		{
+			"id": "beercanborg",
+			"name": "Cyborg (Service Shell- Beercan)",
+			"desc": "Despite being based on the Medical Shell, this particular Service Shell is tasked with destroying livers, rather than healing them.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"as": "green_background"
+				},
+				{
+					"as": "green_frame"
+				},
+				{
+					"as": "green_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "uncommon"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"Y": 0,
+					"source": "icons/mob/robots.dmi",
+					"state": "kent"
+				}
+			]
+		},
+		{
+			"id": "flamboyantborg",
+			"name": "Cyborg (Service Shell- Flamboyant)",
+			"desc": "Sometimes a cyborg just needs to show a bit of flamboyance, you know?",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "green_background"
+				},
+				{
+					"as": "green_frame"
+				},
+				{
+					"as": "green_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"Y": 2,
+					"source": "icons/mob/robots.dmi",
+					"state": "brobot"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"Y": 2,
+					"source": "icons/mob/robots.dmi",
+					"state": "service_e"
+				}
+			]
+		},
+		{
+			"id": "skirtborg",
+			"name": "Cyborg (Service Shell- Skirted)",
+			"desc": "The Service Shell is intended to be the most human of the Cyborg Shells, due to its outwardly social role- none exemplify this better than the Skirted Shell, showing that even robots can't escape fashion norms.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "green_background"
+				},
+				{
+					"as": "green_frame"
+				},
+				{
+					"as": "green_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"Y": 2,
+					"source": "icons/mob/robots.dmi",
+					"state": "service_f"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"Y": 2,
+					"source": "icons/mob/robots.dmi",
+					"state": "service_e"
+				}
+			]
+		},
+		{
+			"id": "classicborg",
+			"name": "Cyborg (Service Shell- Classic)",
+			"desc": "The classic Service Shell, the Classic Shell is what most crewmembers think of when they think of a 'useless robot that serves drinks'.",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "green_background"
+				},
+				{
+					"as": "green_frame"
+				},
+				{
+					"as": "green_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"Y": 2,
+					"source": "icons/mob/robots.dmi",
+					"state": "service_m"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"Y": 2,
+					"source": "icons/mob/robots.dmi",
+					"state": "service_e"
+				}
+			]
+		},
+		{
+			"id": "stylinborg",
+			"name": "Cyborg (Service Shell- Ritzy)",
+			"desc": "Ooh, isn't this robot one cool cat?",
+			"rules": "Asimov",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Silicon",
+			"rarity": "common",
+			"icon": [
+				{
+					"as": "green_background"
+				},
+				{
+					"as": "green_frame"
+				},
+				{
+					"as": "green_window"
+				},
+				{
+					"as": "nanotrasen_icon"
+				},
+				{
+					"as": "common"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"Y": 2,
+					"source": "icons/mob/robots.dmi",
+					"state": "tophat"
+				},
+				{
+					"cut": "eye? kinda",
+					"layer": "0.6",
+					"Y": 2,
+					"source": "icons/mob/robots.dmi",
+					"state": "service_e"
+				}
+			]
+		},
+		{
+			"id": "miner",
+			"name": "Shaft Miner",
+			"desc": "When the station needs materials, these are the guys who risk their lives, bravely pioneering the wastes of Indecipheres, to bring them in.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Miner",
+			"rarity": "rare",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "miner"
+				}
+			]
+		},
+		{
+			"id": "engi",
+			"name": "Station Engineer",
+			"desc": "Station Engineers maintain the intricate and delicate web of machinery that keeps you, and everyone else aboard your station, alive. No pressure there, then.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Engineer",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "engi"
+				}
+			]
+		},
+		{
+			"id": "swarmer",
+			"name": "Swarmer",
+			"desc": "Leading researchers theorise that Swarmers were designed as some kind of vanguard for an alien invasion force, which seemingly has never materialised.",
+			"rules": "Greytide",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Robot",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "blacker_frame"
+				},
+				{
+					"as": "swarmer_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"X": 2,
+					"Y": 3,
+					"source": "icons/mob/swarmer.dmi",
+					"state": "swarmer"
+				}
+			]
+		},
+		{
+			"id": "viro",
+			"name": "Virologist",
+			"desc": "Officially, the virologist is present on station to deal with novel diseases and ailments that originate from deep space. As everyone knows, this is not what the virologist actually does.",
+			"rules": "",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Doctor",
+			"rarity": "common",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "viro"
+				}
+			]
+		},
+		{
+			"id": "warden",
+			"name": "Warden",
+			"desc": "The Warden is tasked with the herculean (and futile) feat of defending the armory and brig, and never leaving his post, no matter the situation.",
+			"rules": "Squad Tactics, Defender",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Human Officer",
+			"rarity": "uncommon",
+			"icon": [
+				{
+					"override": "thing",
+					"source":"icons/obj/tcg.dmi",
+					"state": "warden"
+				}
+			]
+		},
+		{
+			"id": "xeno",
+			"name": "Xenomorph Hunter (2560 Core Set)",
+			"desc": "This particular strain of Xenomorph is capable of semi-transparency, allowing it to strike from the shadows.",
+			"rules": "Hivemind",
+			"power": 0,
+			"resolve": 0,
+			"faction": "",
+			"summoncost": 1,
+			"cardtype": "Creature",
+			"cardsubtype": "Xenomorph",
+			"rarity": "rare",
+			"icon": [
+				{
+					"as": "black_background"
+				},
+				{
+					"as": "black_frame"
+				},
+				{
+					"as": "xeno_icon"
+				},
+				{
+					"as": "rare"
+				},
+				{
+					"cut": "body",
+					"layer": "0.5",
+					"Y": 3,
+					"source": "icons/mob/alien.dmi",
+					"state": "alienh"
+				}
+			]
 		}
 	]
 }

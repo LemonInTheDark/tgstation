@@ -19,7 +19,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 
 /obj/item/tcgcard/Initialize(mapload, datum_series, datum_id)
 	. = ..()
-	transform = matrix(0.3,0,0,0,0.3,0)
+	//transform = matrix(0.3,0,0,0,0.3,0)
 	//If they are passed as null let's replace them with the vars on the card. this also means we can allow for map loaded ccards
 	if(!datum_series)
 		datum_series = series
@@ -28,7 +28,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	var/list/L = GLOB.cached_cards[datum_series]
 	if(!L)
 		return
-	var/datum/cardData/card/temp = L["ALL"][datum_id]
+	var/datum/card/temp = L["ALL"][datum_id]
 	if(!temp)
 		return
 	name = temp.name
@@ -43,9 +43,10 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	if(!flipped)
 		name = "Trading Card"
 		desc = "It's the back of a trading card... no peeking!"
-		icon = GLOB.cached_cards[series]["icon"]["flipped"]
+		icon = initial(icon)
+		icon_state = "cardback"
 	else
-		var/datum/cardData/card/template = GLOB.cached_cards[series]["ALL"][id]
+		var/datum/card/template = GLOB.cached_cards[series]["ALL"][id]
 		name = template.name
 		desc = template.desc
 		icon = template.icon
@@ -57,7 +58,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 
 /obj/item/tcgcard/dropped(mob/user, silent)
 	. = ..()
-	transform = matrix(0.3,0,0,0,0.3,0)
+	//transform = matrix(0.3,0,0,0,0.3,0)
 
 /obj/item/cardpack
 	name = "Trading Card Pack: Coder"
@@ -73,12 +74,20 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	var/card_count = 5
 	///The rarity table, the set must contain at least one of each
 	var/list/rarity_table = list(
-		"uncommon" = 1)
+		"common" = 900,
+		"uncommon" = 300,
+		"rare" = 100,
+		"epic" = 30,
+		"legendary" = 5,
+		"misprint" = 1)
 	///The amount of cards to draw from the guarenteed rarity table
 	var/guaranteed_count = 1
 	///The guaranteed rarity table, acts about the same as the rarity table. it can have as many or as few raritys as you'd like
 	var/list/guar_rarity = list(
-		"uncommon" = 1)
+		"legendary" = 1,
+		"epic" = 9,
+		"rare" = 30,
+		"uncommon" = 60)
 
 /obj/item/cardpack/series_one
 	name = "Trading Card Pack: Series 1"
@@ -96,7 +105,11 @@ GLOBAL_LIST_EMPTY(cached_cards)
 	series = "resinfront"
 	contains_coin = 0
 	rarity_table = list(
-		"uncommon" = 1)
+		"common" = 900,
+		"uncommon" = 300,
+		"rare" = 100,
+		"epic" = 30,
+		"legendary" = 5)
 
 /obj/item/cardpack/Initialize()
 	. = ..()

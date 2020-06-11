@@ -1,13 +1,4 @@
-/datum/cardData/img
-	var/tag
-	var/color = ""
-	var/source
-	var/state
-	var/x = 1
-	var/y =1
-	var/dir
-
-/datum/cardData/card
+/datum/card
 	///Unique ID, for use in lookups and (eventually) for persistence. MAKE SURE THIS IS UNIQUE FOR EACH CARD IN AS SERIES, OR THE ENTIRE SYSTEM WILL BREAK, AND I WILL BE VERY DISAPPOINTED.
 	var/id = "coder"
 	var/name = "Coder"
@@ -32,23 +23,26 @@
 	///The rarity of this card, determines how much (or little) it shows up in packs. Rarities are common, uncommon, rare, epic, legendary and misprint.
 	var/rarity = "uber rare to the extreme"
 
-/datum/cardData/New(list/data = list(), list/templates = list())
+/datum/card/New(list/data = list(), list/templates = list())
 	applyTemplates(data, templates)
 	apply(data)
 
 ///For each var that the card datum and the json entry share, we set the datum var to the json entry
-/datum/cardData/proc/apply(list/data)
+/datum/card/proc/apply(list/data)
 	for(var/name in (vars & data))
-		vars[name] = data[name]
+		if(islist(data[name]))
+			var/list/pack = data[name]
+			if(vars[name])
+				vars[name] += pack
+			else
+				vars[name] = pack.Copy()
+		else
+			vars[name] = data[name]
 
 ///Applies a json file to a card datum
-/datum/cardData/proc/applyTemplates(list/data, list/templates = list())
-	apply(templates[data["as"]])
-
-///Applies a json file to a card datum
-/datum/cardData/card/applyTemplates(list/data, list/templates = list())
+/datum/card/proc/applyTemplates(list/data, list/templates = list())
 	apply(templates["default"])
-	return ..()
+	apply(templates[data["template"]])
 
 ///Loads all the card files
 /proc/loadAllCardFiles(cardFiles, directory)
@@ -61,7 +55,7 @@
 	for(var/card_set in GLOB.cached_cards)
 		message_admins("Printing the [card_set] set")
 		for(var/card in GLOB.cached_cards[card_set]["ALL"])
-			var/datum/cardData/card/toPrint = GLOB.cached_cards[card_set]["ALL"][card]
+			var/datum/card/toPrint = GLOB.cached_cards[card_set]["ALL"][card]
 			message_admins(toPrint.name)
 
 ///Checks the passed type list for missing raritys, or raritys out of bounds
@@ -73,7 +67,7 @@
 			message_admins("[pack.series] does not have any related cards")
 			continue
 		for(var/card in GLOB.cached_cards[pack.series]["ALL"])
-			var/datum/cardData/card/template = GLOB.cached_cards[pack.series]["ALL"][card]
+			var/datum/card/template = GLOB.cached_cards[pack.series]["ALL"][card]
 			if(!(template.rarity in pack.rarity_table))
 				message_admins("[pack.type] has a rarity [template.rarity] on the card [template.id] that does not exist")
 				continue
@@ -97,70 +91,74 @@
 	var/toSend = "Out of [totalCards] cards"
 	for(var/id in sortList(cardsByCount, /proc/cmp_num_string_asc))
 		if(id)
-			var/datum/cardData/card/template = GLOB.cached_cards[pack.series]["ALL"][id]
+			var/datum/card/template = GLOB.cached_cards[pack.series]["ALL"][id]
 			toSend += "\nID:[id] [template.name] [(cardsByCount[id] * 100) / totalCards]% Total:[cardsByCount[id]]"
 	message_admins(toSend)
 	qdel(pack)
 
+/proc/spawnCardInWorld(loc, series, id)
+	new /obj/item/tcgcard/(loc, series, id)
 /*
 TODO Dumbass:
-	add a spawn card debug verb
-	fully datumize this code
-	figure out if datums are indeed better here
+	figure out if datums are indeed better here (They're not dumbass)
 	cry
 
-	make shit clean
 	add aliases for everything we need
 	cashe aliases as icons if they are used alone without modification at least once.
 	consider caching templates as icons, is it doable/useful?
 	maybe slowly load the card icons on startup, instead of frontloading it
 	cry
+	**It works**
 */
 
-/datum/cardData/img/proc/buildCardIcon(list/data)
+/proc/buildCardIcon(list/data, list/templates)
 	var/list/iconPackets = list()
-	var/list/stack = list()
 	var/icon/toStore = icon("icons/obj/tcg.dmi", "base")
 
-	//The most recent addition will take precedence unless specified
 	for(var/list/packet in data)
-		if(packet["dupe"])
-			if(!iconPackets[packet["tag"]]["MULTI"])
-				iconPackets[packet["tag"]]["MULTI"] = list()
-			else
-				iconPackets[packet["tag"]]["MULTI"] += packet
-		else
-			iconPackets[packet["tag"]] = packet
-		stack |= packet["tag"] //Let's preserve order
+		expandCardPacket(packet, templates)
+		if(packet["override"])
+			iconPackets = list()
+		iconPackets[packet["layer"]] = packet //Let's preserve order
+	//Lets sort by layer. Oh and we use this to avoid a copy operation, we do not care about data or iconPackets past this
+	sortTim(iconPackets, /proc/cmp_num_string_asc)
 
-	for(var/tag in stack)
-		if(iconPackets[tag]["MULTI"])
-			for(var/list/part in iconPackets[tag]["MULTI"])
-				toStore = processCardPacket(toStore, part)
-		else
-			var/list/packet = iconPackets[tag]
-			toStore = processCardPacket(toStore, packet)
+	for(var/layer in iconPackets)
+		toStore = processCardPacket(toStore, iconPackets[layer])
 	data.Cut()
+	iconPackets.Cut()
 	return toStore
 
 /proc/processCardPacket(icon/base, list/packet)
-	var/icon/piece
-	var/x = (packet["X"]) ? packet["X"] : 1
-	var/y = (packet["Y"]) ? packet["Y"] : 1
-	piece = icon(packet["source"], packet["state"], (packet["DIR"]))
-	if(packet["cut"])
-		var/icon/mask = base
+	var/x = (packet["X"] != null) ? packet["X"] : 1
+	var/y = (packet["Y"] != null) ? packet["Y"] : 1
+	var/frame = (packet["frame"]) ? packet["frame"] : 1
+	var/icon/piece = icon(packet["source"], packet["state"], (packet["DIR"]), frame)
+	if(packet["color"])
+		//This is basic recoloring, if you want more complex stuff, add a flag for it and use Blend(), we're not doing that here because this seems to be cheaper
+		piece.SwapColor("#FFFFFF", packet["color"])
+	if(packet["rotate"])
+		//Account for x,y here ya dumbass
+		piece.Turn(packet["rotate"])
+	if(packet["scale"])
+		//Account for x,y here boomer
+		piece.Scale(packet["scale"][1] * piece.Width(), packet["scale"][2] * piece.Height())
+	//We do this at the end so all other visual effects take place
+	if(packet["cut"] != null)
+		var/icon/mask = icon(base)
 		mask.Blend("#fff", ICON_ADD) //Let's make everything white
 		piece.Blend(mask, ICON_MULTIPLY, (x == 1) ? 1 : 1-x, (y == 1) ? 1 : 1-y) //And then multiply the two to mask out the area we want. We use 1-x to bring the mask to us, as to keep the rest of the code modular
-	if(packet["color"])
-		piece.SwapColor("#FFFFFF", packet["color"])
+	if(packet["override"] != null)
+		base = piece
+		return base
 	base.Blend(piece, ICON_OVERLAY, x, y)
+	return base
 
 /proc/expandCardPacket(list/data, list/templates)
-	message_admins("[data["as"]] [templates[data["as"]]]")
 	for(var/entry in templates[data["as"]])
-		if(!data[entry])
-			data[entry] = templates[entry]
+		if(data[entry] || (entry == "as" && entry == "psudo"))
+			continue
+		data[entry] = templates[data["as"]][entry]
 	return data
 
 ///Empty the rarity cache so we can safely add new cards
@@ -181,23 +179,20 @@ TODO Dumbass:
 	var/list/templates = list()
 	var/list/iconTemplates = list()
 	for(var/list/data in json["icon_defines"])
-		iconTemplates[data["psudo"]] = new /datum/cardData/img(data, iconTemplates)
+		iconTemplates[data["psudo"]] = expandCardPacket(data, iconTemplates)
 	for(var/list/data in json["templates"])
 		templates[data["template"]] = data
 	for(var/list/data in cards)
-		var/datum/cardData/card = new(data, templates)
+		var/datum/card/c = new(data, templates)
 		//Lets cache the id by rarity, for top speed lookup later
 		if(!GLOB.cached_cards[c.series])
 			GLOB.cached_cards[c.series] = list()
 			GLOB.cached_cards[c.series]["ALL"] = list()
 			GLOB.cached_cards[c.series]["icon"] = list()
-			if(templates["flipped"])
-				GLOB.cached_cards[c.series]["icon"]["flipped"] = buildCardIcon(templates["flipped"])
 		if(!GLOB.cached_cards[c.series][c.rarity])
 			GLOB.cached_cards[c.series][c.rarity] = list()
 		GLOB.cached_cards[c.series][c.rarity] += c.id
 		//And series too, why not, it's semi cheap
 		GLOB.cached_cards[c.series]["ALL"][c.id] = c
 		//Build the icon
-		c.icon = buildCardIcon(c.icon)
-		message_admins("Loaded [c.id]")
+		c.icon = buildCardIcon(c.icon, iconTemplates)
