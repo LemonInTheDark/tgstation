@@ -3,7 +3,7 @@
 		{
 			"layer": "0",
 			"psudo": "background",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/misc.dmi",
 			"state": "background"
 		},
 		{
@@ -74,7 +74,7 @@
 		{
 			"layer": "1",
 			"psudo": "rarity",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "rarity"
 		},
 		{
@@ -105,7 +105,7 @@
 		{
 			"layer": "2",
 			"psudo": "frame",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/misc.dmi",
 			"state": "frame"
 		},
 		{
@@ -186,7 +186,7 @@
 		{
 			"layer": "3",
 			"psudo": "window_back",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/misc.dmi",
 			"state": "window_back"
 		},
 		{
@@ -232,31 +232,31 @@
 		{
 			"layer": "4",
 			"psudo": "nanotrasen_icon",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "nanotrasen_icon"
 		},
 		{
 			"layer": "4",
 			"psudo": "animal_icon",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "animal_icon"
 		},
 		{
 			"layer": "4",
 			"psudo": "ian_icon",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "ian_icon"
 		},
 		{
 			"layer": "4",
 			"psudo": "sindi_icon",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "sindi_icon"
 		},
 		{
 			"layer": "4",
 			"psudo": "job_icon",
-			"cut": "Take off the bottom",
+			"cut": "background",
 			"source": "icons/obj/card.dmi",
 			"X": 3,
 			"Y": -11
@@ -299,25 +299,25 @@
 		{
 			"layer": "4",
 			"psudo": "lavaland_icon",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "lavaland_icon"
 		},
 		{
 			"layer": "4",
 			"psudo": "swarmer_icon",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "swarmer_icon"
 		},
 		{
 			"layer": "4",
 			"psudo": "xeno_icon",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "xeno_icon"
 		},
 		{
 			"layer": "5",
 			"psudo": "rarity_icon",
-			"source": "icons/obj/tcg.dmi",
+			"source": "icons/obj/tcg/tcg.dmi",
 			"state": "rarity_back"
 		}
 	],
@@ -369,7 +369,7 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "AIBody",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 2,
 					"source": "icons/mob/ai.dmi",
@@ -392,7 +392,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "angry_stickman"
 				}
 			]
@@ -426,14 +426,14 @@
 					"as": "rare"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "lingarmorhelmet"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -456,7 +456,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "assistant"
 				}
 			]
@@ -476,7 +476,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "atmos_tech"
 				}
 			]
@@ -496,7 +496,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "bartender"
 				}
 			]
@@ -516,7 +516,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "botanist"
 				}
 			]
@@ -536,7 +536,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "captain"
 				}
 			]
@@ -567,14 +567,14 @@
 					"as": "epic"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "capspace"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -597,7 +597,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "cargo_tech"
 				}
 			]
@@ -631,14 +631,14 @@
 					"as": "common"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "knight_templar"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -661,7 +661,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "chemist"
 				}
 			]
@@ -681,7 +681,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "ce"
 				}
 			]
@@ -712,21 +712,21 @@
 					"as": "rare"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-white"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
 					"state": "hardsuit-white"
 				},
 				{
-					"cut": "cloak",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/neck.dmi",
@@ -749,7 +749,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "cmo"
 				}
 			]
@@ -780,21 +780,21 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-medical"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
 					"state": "hardsuit-medical"
 				},
 				{
-					"cut": "cloak",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/neck.dmi",
@@ -828,14 +828,14 @@
 					"as": "epic"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "chronohelmet"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -869,7 +869,7 @@
 					"as": "common"
 				},
 				{
-					"cut": "sloth",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 10,
 					"source": "icons/mob/pets.dmi",
@@ -892,7 +892,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "clown"
 				}
 			]
@@ -926,14 +926,14 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
 					"state": "clown"
 				},
 				{
-					"cut": "eye",
+					"cut": "background",
 					"layer": "0.6",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
@@ -967,14 +967,14 @@
 					"as": "epic"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-clown"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -997,7 +997,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "abductor_combat"
 				}
 			]
@@ -1017,7 +1017,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "cook"
 				}
 			]
@@ -1048,14 +1048,14 @@
 					"as": "rare"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-wiz"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -1078,7 +1078,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "curator"
 				}
 			]
@@ -1109,19 +1109,19 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"source": "icons/mob/pets.dmi",
 					"state": "corgi"
 				},
 				{
-					"cut": "suit",
+					"cut": "background",
 					"layer": "0.6",
 					"source": "icons/mob/corgi_back.dmi",
 					"state": "cardborg"
 				},
 				{
-					"cut": "back",
+					"cut": "background",
 					"layer": "0.7",
 					"source": "icons/mob/corgi_head.dmi",
 					"state": "cardborg_h"
@@ -1157,14 +1157,14 @@
 					"as": "epic"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "deathsquad"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -1187,7 +1187,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "detective"
 				}
 			]
@@ -1221,14 +1221,14 @@
 					"as": "rare"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-syndielite"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -1265,14 +1265,14 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
 					"state": "engineer"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
@@ -1309,14 +1309,14 @@
 					"as": "rare"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-ert_commander"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -1353,14 +1353,14 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-ert_engineer"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -1397,14 +1397,14 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-ert_medical"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -1441,14 +1441,14 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-ert_security"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -1471,7 +1471,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "explorer"
 				}
 			]
@@ -1500,13 +1500,13 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"source": "icons/mob/robots.dmi",
 					"state": "robot"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"source": "icons/mob/robots.dmi",
 					"state": "robot_e"
@@ -1528,7 +1528,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "geneticist"
 				}
 			]
@@ -1548,7 +1548,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "geneticist_med"
 				}
 			]
@@ -1579,13 +1579,13 @@
 					"as": "epic"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"source": "icons/mob/pets.dmi",
 					"state": "corgi"
 				},
 				{
-					"cut": "back",
+					"cut": "background",
 					"layer": "0.7",
 					"source": "icons/mob/corgi_head.dmi",
 					"state": "sheet"
@@ -1607,7 +1607,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "hop"
 				}
 			]
@@ -1627,7 +1627,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "hos"
 				}
 			]
@@ -1658,21 +1658,21 @@
 					"as": "rare"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-hos"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
 					"state": "hardsuit-hos"
 				},
 				{
-					"cut": "cloak",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/neck.dmi",
@@ -1706,7 +1706,7 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"source": "icons/mob/pets.dmi",
 					"state": "corgi"
@@ -1742,14 +1742,14 @@
 					"as": "epic"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit0-inqy"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -1772,7 +1772,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "intern"
 				}
 			]
@@ -1792,7 +1792,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "janitor"
 				}
 			]
@@ -1823,14 +1823,14 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
 					"state": "janitor"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
@@ -1853,7 +1853,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "lawyer"
 				}
 			]
@@ -1884,7 +1884,7 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"source": "icons/mob/lavaland/lavaland_monsters.dmi",
 					"state": "legion"
@@ -1920,14 +1920,14 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
 					"state": "medical"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
@@ -1950,7 +1950,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "md"
 				}
 			]
@@ -1970,7 +1970,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "mime"
 				}
 			]
@@ -2004,14 +2004,14 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
 					"state": "minerOLD"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
@@ -2048,7 +2048,7 @@
 					"as": "animal_icon"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"source": "icons/mob/monkey.dmi",
 					"state": "monkey1"
@@ -2084,14 +2084,14 @@
 					"as": "rare"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-syndi"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -2114,7 +2114,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "paramedic"
 				}
 			]
@@ -2148,14 +2148,14 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
 					"state": "peace"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"X": 9,
 					"source": "icons/mob/robots.dmi",
@@ -2178,7 +2178,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "engi_plasma"
 				}
 			]
@@ -2198,7 +2198,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "qm"
 				}
 			]
@@ -2218,7 +2218,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "qm_head"
 				}
 			]
@@ -2249,7 +2249,7 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"source": "icons/mob/pai.dmi",
 					"state": "rabbit"
@@ -2282,7 +2282,7 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"source": "icons/mob/pai.dmi",
 					"state": "repairbot"
@@ -2304,7 +2304,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "rd"
 				}
 			]
@@ -2335,21 +2335,21 @@
 					"as": "rare"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "hardsuit1-rd"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
 					"state": "hardsuit-rd"
 				},
 				{
-					"cut": "cloak",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/neck.dmi",
@@ -2372,7 +2372,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "roboticist"
 				}
 			]
@@ -2403,7 +2403,7 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 8,
 					"source": "icons/mob/pets.dmi",
@@ -2426,7 +2426,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "scientist"
 				}
 			]
@@ -2460,14 +2460,14 @@
 					"as": "epic"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"X": 6,
 					"source": "icons/mob/robots.dmi",
 					"state": "sec"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"X": 6,
 					"source": "icons/mob/robots.dmi",
@@ -2490,7 +2490,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "sec"
 				}
 			]
@@ -2524,14 +2524,14 @@
 					"as": "epic"
 				},
 				{
-					"cut": "head",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 0,
 					"source": "icons/mob/clothing/head.dmi",
 					"state": "clockwork_helmet"
 				},
 				{
-					"cut": "shoulders",
+					"cut": "background",
 					"layer": "0.7",
 					"Y": 0,
 					"source": "icons/mob/clothing/suit.dmi",
@@ -2568,7 +2568,7 @@
 					"as": "uncommon"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 0,
 					"source": "icons/mob/robots.dmi",
@@ -2605,14 +2605,14 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 2,
 					"source": "icons/mob/robots.dmi",
 					"state": "brobot"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 2,
 					"source": "icons/mob/robots.dmi",
@@ -2649,14 +2649,14 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 2,
 					"source": "icons/mob/robots.dmi",
 					"state": "service_f"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 2,
 					"source": "icons/mob/robots.dmi",
@@ -2693,14 +2693,14 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 2,
 					"source": "icons/mob/robots.dmi",
 					"state": "service_m"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 2,
 					"source": "icons/mob/robots.dmi",
@@ -2737,14 +2737,14 @@
 					"as": "common"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 2,
 					"source": "icons/mob/robots.dmi",
 					"state": "tophat"
 				},
 				{
-					"cut": "eye? kinda",
+					"cut": "background",
 					"layer": "0.6",
 					"Y": 2,
 					"source": "icons/mob/robots.dmi",
@@ -2767,7 +2767,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "miner"
 				}
 			]
@@ -2787,7 +2787,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "engi"
 				}
 			]
@@ -2815,7 +2815,7 @@
 					"as": "rare"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"X": 2,
 					"Y": 3,
@@ -2839,7 +2839,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "viro"
 				}
 			]
@@ -2859,7 +2859,7 @@
 			"icon": [
 				{
 					"override": "thing",
-					"source":"icons/obj/tcg.dmi",
+					"source":"icons/obj/tcg/tcg.dmi",
 					"state": "warden"
 				}
 			]
@@ -2890,7 +2890,7 @@
 					"as": "rare"
 				},
 				{
-					"cut": "body",
+					"cut": "background",
 					"layer": "0.5",
 					"Y": 3,
 					"source": "icons/mob/alien.dmi",

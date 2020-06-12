@@ -7,7 +7,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 /obj/item/tcgcard
 	name = "Coder"
 	desc = "Wow, a mint condition coder card! Better tell the Github all about this!"
-	icon = 'icons/obj/tcg.dmi'
+	icon = 'icons/obj/tcg/tcg.dmi'
 	icon_state = "base"
 	w_class = WEIGHT_CLASS_TINY
 	 //Unique ID, for use in lookups and storage, used to index the global datum list where the rest of the card's info is stored
@@ -63,7 +63,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 /obj/item/cardpack
 	name = "Trading Card Pack: Coder"
 	desc = "Contains six complete fuckups by the coders. Report this on github please!"
-	icon = 'icons/obj/tcg.dmi'
+	icon = 'icons/obj/tcg/tcg.dmi'
 	icon_state = "cardback_nt"
 	w_class = WEIGHT_CLASS_TINY
 	///The card series to look in
@@ -92,7 +92,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 /obj/item/cardpack/series_one
 	name = "Trading Card Pack: Series 1"
 	desc = "Contains six cards of varying rarity from the 2560 Core Set. Collect them all!"
-	icon = 'icons/obj/tcg.dmi'
+	icon = 'icons/obj/tcg/tcg.dmi'
 	icon_state = "cardpack_series1"
 	series = "coreset2020"
 	contains_coin = 10
@@ -151,7 +151,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 /obj/item/coin/thunderdome
 	name = "Thunderdome Flipper"
 	desc = "A Thunderdome TCG flipper, for deciding who gets to go first. Also conveniently acts as a counter, for various purposes."
-	icon = 'icons/obj/tcg.dmi'
+	icon = 'icons/obj/tcg/tcg.dmi'
 	icon_state = "coin_nanotrasen"
 	custom_materials = list(/datum/material/plastic = 400)
 	material_flags = NONE
