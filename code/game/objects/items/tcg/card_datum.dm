@@ -113,7 +113,7 @@ TODO Dumbass:
 
 /proc/buildCardIcon(list/data, list/templates)
 	var/list/iconPackets = list()
-	var/icon/toStore = icon("icons/obj/tcg/tcg.dmi", "base")
+	var/icon/toStore = icon("icons/obj/tcg/misc.dmi", "base")
 
 	for(var/list/packet in data)
 		expandCardPacket(packet, templates)
@@ -145,10 +145,8 @@ TODO Dumbass:
 		piece.Scale(packet["scale"][1] * piece.Width(), packet["scale"][2] * piece.Height())
 	//We do this at the end so all other visual effects take place
 	if(packet["cut"] != null)
-		var/icon/mask = icon("icons/obj/tcg/misc.dmi", packet["cut"])
-		var/icon/empty = icon("icons/obj/tcg/misc.dmi", "empty")//Watch this hellcraft
-		mask.Blend(empty, ICON_ADD, (x == 1) ? 1 : 1-x, (y == 1) ? 1 : 1-y) //And then multiply the two to mask out the area we want. We use 1-x to bring the mask to us, as to keep the rest of the code modular
-		piece.Blend(mask, ICON_SUBTRACT, (x == 1) ? 1 : 1-x, (y == 1) ? 1 : 1-y)
+		var/icon/mask = icon("icons/obj/tcg/misc.dmi", (packet["cut"]) ? packet["cut"] : "base")
+		piece.Blend(mask, ICON_MULTIPLY, (x == 1) ? 1 : 1-x, (y == 1) ? 1 : 1-y)
 	if(packet["override"] != null)
 		base = piece
 		return base

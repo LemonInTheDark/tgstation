@@ -74,7 +74,7 @@
 		{
 			"layer": "1",
 			"psudo": "rarity",
-			"source": "icons/obj/tcg/tcg.dmi",
+			"source": "icons/obj/tcg/misc.dmi",
 			"state": "rarity"
 		},
 		{
