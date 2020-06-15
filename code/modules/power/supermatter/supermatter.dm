@@ -96,6 +96,8 @@
 GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 
 /obj/machinery/power/supermatter_crystal
+	var/space_min = 0.2
+	var/heat_min =
 	name = "supermatter crystal"
 	desc = "A strangely translucent and iridescent crystal."
 	icon = 'icons/obj/supermatter.dmi'
@@ -422,7 +424,7 @@ GLOBAL_DATUM(main_supermatter_engine, /obj/machinery/power/supermatter_crystal)
 	damage_archived = damage
 	if(!removed || !removed.total_moles() || isspaceturf(T)) //we're in space or there is no gas to process
 		if(takes_damage)
-			damage += max((power / 1000) * DAMAGE_INCREASE_MULTIPLIER, 0.1) // always does at least some damage
+			damage += max((power / 1000) * DAMAGE_INCREASE_MULTIPLIER, 0.8) // always does at least some damage
 	else
 		if(takes_damage)
 			//causing damage
