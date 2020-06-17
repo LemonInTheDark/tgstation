@@ -7,18 +7,14 @@
 	var/steps=0
 	/// How strong it was originaly
 	var/intensity
-	/// How much contaminated material it still has
-	var/remaining_contam
 	/// Higher than 1 makes it drop off faster, 0.5 makes it drop off half etc
 	var/range_modifier
 	/// The direction of movement
 	var/move_dir
 	/// The directions to the side of the wave, stored for easy looping
 	var/list/__dirs
-	/// Whether or not this radiation wave can create contaminated objects
-	var/can_contaminate
 
-/datum/radiation_wave/New(atom/_source, dir, _intensity=0, _range_modifier=RAD_DISTANCE_COEFFICIENT, _can_contaminate=TRUE)
+/datum/radiation_wave/New(atom/_source, dir, _intensity=0, _range_modifier=RAD_DISTANCE_COEFFICIENT)
 
 	source = "[_source] \[[REF(_source)]\]"
 
@@ -30,9 +26,7 @@
 	__dirs+=turn(dir, -90)
 
 	intensity = _intensity
-	remaining_contam = intensity
 	range_modifier = _range_modifier
-	can_contaminate = _can_contaminate
 
 	START_PROCESSING(SSradiation, src)
 
@@ -100,41 +94,8 @@
 			intensity *= (1-((1-thing.rad_insulation)/width))
 
 /datum/radiation_wave/proc/radiate(list/atoms, strength)
-	var/can_contam = strength >= RAD_MINIMUM_CONTAMINATION
-	var/contamination_strength = (strength-RAD_MINIMUM_CONTAMINATION) * RAD_CONTAMINATION_STR_COEFFICIENT
-	contamination_strength = max(contamination_strength, RAD_BACKGROUND_RADIATION)
-	// It'll never reach 100% chance but the further out it gets the more likely it'll contaminate
-	var/contamination_chance = 100 - (90 / (1 + steps * 0.1))
 	for(var/k in atoms)
 		var/atom/thing = k
 		if(QDELETED(thing))
 			continue
 		thing.rad_act(strength)
-
-		// This list should only be for types which don't get contaminated but you want to look in their contents
-		// If you don't want to look in their contents and you don't want to rad_act them:
-		// modify the ignored_things list in __HELPERS/radiation.dm instead
-		var/static/list/blacklisted = typecacheof(list(
-			/turf,
-			/mob,
-			/obj/structure/cable,
-			/obj/machinery/atmospherics,
-			/obj/item/ammo_casing,
-			/obj/item/implant,
-			/obj/singularity
-			))
-		if(!can_contaminate || !can_contam || blacklisted[thing.type])
-			continue
-		if(thing.rad_flags & RAD_NO_CONTAMINATE || SEND_SIGNAL(thing, COMSIG_ATOM_RAD_CONTAMINATING, strength) & COMPONENT_BLOCK_CONTAMINATION)
-			continue
-
-		if(contamination_strength > remaining_contam)
-			contamination_strength = remaining_contam
-		if(!prob(contamination_chance))
-			continue
-		if(SEND_SIGNAL(thing, COMSIG_ATOM_RAD_CONTAMINATING, strength) & COMPONENT_BLOCK_CONTAMINATION)
-			continue
-		remaining_contam -= contamination_strength
-		if(remaining_contam < RAD_BACKGROUND_RADIATION)
-			can_contaminate = FALSE
-		thing.AddComponent(/datum/component/radioactive, contamination_strength, source)

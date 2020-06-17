@@ -10,13 +10,11 @@
 
 	var/hl3_release_date //the half-life measured in ticks
 	var/strength
-	var/can_contaminate
 
-/datum/component/radioactive/Initialize(_strength=0, _source, _half_life=RAD_HALF_LIFE, _can_contaminate=TRUE)
+/datum/component/radioactive/Initialize(_strength=0, _source, _half_life=RAD_HALF_LIFE)
 	strength = _strength
 	source = _source
 	hl3_release_date = _half_life
-	can_contaminate = _can_contaminate
 
 	if(istype(parent, /atom))
 		RegisterSignal(parent, COMSIG_PARENT_EXAMINE, .proc/rad_examine)
@@ -38,7 +36,7 @@
 /datum/component/radioactive/process()
 	if(!prob(50))
 		return
-	radiation_pulse(parent, strength, RAD_DISTANCE_COEFFICIENT*2, FALSE, can_contaminate)
+	radiation_pulse(parent, strength, RAD_DISTANCE_COEFFICIENT*2)
 
 	if(!hl3_release_date)
 		return
@@ -47,7 +45,7 @@
 		qdel(src)
 		return PROCESS_KILL
 
-/datum/component/radioactive/InheritComponent(datum/component/C, i_am_original, _strength, _source, _half_life, _can_contaminate)
+/datum/component/radioactive/InheritComponent(datum/component/C, i_am_original, _strength, _source, _half_life)
 	if(!i_am_original)
 		return
 	if(!hl3_release_date) // Permanently radioactive things don't get to grow stronger
