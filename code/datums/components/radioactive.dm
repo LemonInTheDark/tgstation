@@ -24,8 +24,6 @@
 	else
 		return COMPONENT_INCOMPATIBLE
 
-	if(strength > RAD_MINIMUM_CONTAMINATION)
-		SSradiation.warn(src)
 
 	START_PROCESSING(SSradiation, src)
 

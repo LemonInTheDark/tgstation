@@ -9,7 +9,7 @@
 	var/can_displace = TRUE //If the girder can be moved around by wrenching it
 	var/next_beep = 0 //Prevents spamming of the construction sound
 	max_integrity = 200
-	rad_flags = RAD_PROTECT_CONTENTS | RAD_NO_CONTAMINATE
+	rad_flags = RAD_PROTECT_CONTENTS
 	rad_insulation = RAD_VERY_LIGHT_INSULATION
 
 /obj/structure/girder/examine(mob/user)

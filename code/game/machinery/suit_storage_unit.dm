@@ -300,6 +300,7 @@
 				things_to_clear += occupant.GetAllContents()
 			for(var/atom/movable/AM in things_to_clear) //Scorches away blood and forensic evidence, although the SSU itself is unaffected
 				SEND_SIGNAL(AM, COMSIG_COMPONENT_CLEAN_ACT, CLEAN_STRONG)
+				//Fun fact, you can deradiate uranium
 				var/datum/component/radioactive/contamination = AM.GetComponent(/datum/component/radioactive)
 				if(contamination)
 					qdel(contamination)

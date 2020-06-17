@@ -276,7 +276,7 @@
 	if(altPatient.radiation >=1000)  //
 		rad_status = "Patient is suffering from extreme radiation poisoning. Suggested treatment: Isolation of patient, followed by repeated dosages of Pentetic Acid."
 	else if(altPatient.radiation >= 500)
-		rad_status = "Patient is suffering from alarming radiation poisoning. Suggested treatment: Heavy use of showers and decontamination of clothing. Take Pentetic Acid or Potassium Iodine."
+		rad_status = "Patient is suffering from alarming radiation poisoning. Suggested treatment: Heavy use of showers or medication. Take Pentetic Acid or Potassium Iodine."
 	else if(altPatient.radiation >= 100)
 		rad_status = "Patient has moderate radioactive signatures. Keep under showers until symptoms subside."
 
