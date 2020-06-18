@@ -346,7 +346,7 @@
 	icon_state = "yellow slime extract"
 	custom_materials = null
 	rating = 5 //self-recharge makes these desirable
-	self_recharge = 1 // Infused slime cores self-recharge, over time
+	self_recharge = 0 // Infused slime cores self-recharge, over time
 
 /*Hypercharged slime cell - located in /code/modules/research/xenobiology/crossbreeding/_misc.dm
 /obj/item/stock_parts/cell/high/slime/hypercharged */
