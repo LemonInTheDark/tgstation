@@ -5,7 +5,6 @@
 	desc = "A charging dock for energy based weaponry."
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 4
-	active_power_usage = 250
 	circuit = /obj/item/circuitboard/machine/recharger
 	pass_flags = PASSTABLE
 	var/obj/item/charging = null
@@ -44,11 +43,9 @@
 	charging = new_charging
 	if (new_charging)
 		START_PROCESSING(SSmachines, src)
-		use_power = ACTIVE_POWER_USE
 		using_power = TRUE
 		update_icon()
 	else
-		use_power = IDLE_POWER_USE
 		using_power = FALSE
 		update_icon()
 
@@ -68,36 +65,36 @@
 	if(allowed)
 		if(anchored)
 			if(charging || panel_open)
-				return 1
+				return TRUE
 
 			//Checks to make sure he's not in space doing it, and that the area got proper power.
 			var/area/a = get_area(src)
 			if(!isarea(a) || a.power_equip == 0)
 				to_chat(user, "<span class='notice'>[src] blinks red as you try to insert [G].</span>")
-				return 1
+				return TRUE
 
 			if (istype(G, /obj/item/gun/energy))
 				var/obj/item/gun/energy/E = G
 				if(!E.can_charge)
 					to_chat(user, "<span class='notice'>Your gun has no external power connector.</span>")
-					return 1
+					return TRUE
 
 			if(!user.transferItemToLoc(G, src))
-				return 1
+				return TRUE
 			setCharging(G)
 
 		else
 			to_chat(user, "<span class='notice'>[src] isn't connected to anything!</span>")
-		return 1
+		return TRUE
 
 	if(anchored && !charging)
 		if(default_deconstruction_screwdriver(user, "recharger", "recharger", G))
 			update_icon()
-			return
+			return FALSE
 
 		if(panel_open && G.tool_behaviour == TOOL_CROWBAR)
 			default_deconstruction_crowbar(G)
-			return
+			return FALSE
 
 	return ..()
 
@@ -128,8 +125,8 @@
 		var/obj/item/stock_parts/cell/C = charging.get_cell()
 		if(C)
 			if(C.charge < C.maxcharge)
-				C.give(C.chargerate * recharge_coeff)
-				use_power(250 * recharge_coeff)
+				C.give(C.chargerate * recharge_coeff * 0.9)//Use more then you gain. just a smidge
+				use_power(C.chargerate * recharge_coeff)
 				using_power = TRUE
 			update_icon()
 
