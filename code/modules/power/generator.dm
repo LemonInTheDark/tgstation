@@ -19,7 +19,6 @@
 	connect_to_network()
 	SSair.atmos_machinery += src
 	update_icon()
-	component_parts = list(new /obj/item/circuitboard/machine/generator)
 
 /obj/machinery/power/generator/ComponentInitialize()
 	. = ..()
@@ -39,9 +38,6 @@
 
 		if(hot_circ && cold_circ)
 			. += "teg-oc[lastcirc]"
-
-
-#define GENRATE 800		// generator output coefficient from Q
 
 /obj/machinery/power/generator/process_atmos()
 
