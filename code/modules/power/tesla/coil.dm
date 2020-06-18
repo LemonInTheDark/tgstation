@@ -15,7 +15,7 @@
 
 	var/zap_flags = ZAP_MOB_DAMAGE | ZAP_OBJ_DAMAGE
 	var/power_loss = 2
-	var/input_power_multiplier = 1
+	var/input_power_multiplier = 0.2
 	var/zap_cooldown = 100
 	var/last_zap = 0
 
@@ -38,7 +38,7 @@
 	for(var/obj/item/stock_parts/capacitor/C in component_parts)
 		power_multiplier += C.rating
 		zap_cooldown -= (C.rating * 20)
-	input_power_multiplier = power_multiplier
+	input_power_multiplier = power_multiplier / 5 // tier 4 should be 4/5ths, which means a tesla coil into a tesla coil is not making more then it takes in
 
 /obj/machinery/power/tesla_coil/examine(mob/user)
 	. = ..()
@@ -83,7 +83,7 @@
 		obj_flags |= BEING_SHOCKED
 		//don't lose arc power when it's not connected to anything
 		//please place tesla coils all around the station to maximize effectiveness
-		var/power_produced = powernet ? power / power_loss : power
+		var/power_produced = powernet ? power / power_loss : power // If there's no powernet the bolt power is uneffected
 		add_avail(power_produced*input_power_multiplier)
 		flick("coilhit", src)
 		var/datum/bank_account/D = SSeconomy.get_dep_account(ACCOUNT_ENG)
