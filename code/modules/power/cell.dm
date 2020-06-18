@@ -17,7 +17,7 @@
 	grind_results = list(/datum/reagent/lithium = 15, /datum/reagent/iron = 5, /datum/reagent/silicon = 5)
 	var/rigged = FALSE	// true if rigged to explode
 	var/chargerate = 100 //how much power is given every tick in a recharger
-	var/self_recharge = 0 //does it self recharge, over time, or not?
+	var/self_recharge = 0 //does it self recharge, over time, or not? Use this for admeme things only.
 	var/ratingdesc = TRUE
 	var/grown_battery = FALSE // If it's a grown that acts as a battery, add a wire overlay to it.
 
@@ -339,17 +339,17 @@
 	custom_materials = null
 	grown_battery = TRUE //it has the overlays for wires
 
-/obj/item/stock_parts/cell/high/slime
+/obj/item/stock_parts/cell/super/slime
 	name = "charged slime core"
 	desc = "A yellow slime core infused with plasma, it crackles with power."
 	icon = 'icons/mob/slimes.dmi'
 	icon_state = "yellow slime extract"
 	custom_materials = null
 	rating = 5 //self-recharge makes these desirable
-	self_recharge = 0 // Infused slime cores self-recharge, over time
+	chargerate = 5000 //1 better then bluespace cells
 
 /*Hypercharged slime cell - located in /code/modules/research/xenobiology/crossbreeding/_misc.dm
-/obj/item/stock_parts/cell/high/slime/hypercharged */
+/obj/item/stock_parts/cell/super/slime/hypercharged */
 
 /obj/item/stock_parts/cell/emproof
 	name = "\improper EMP-proof cell"
