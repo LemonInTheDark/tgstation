@@ -126,6 +126,8 @@
 	if(charging.percent() >= 100)
 		return
 	use_power(charge_rate)
-	charging.give(charge_rate)	//this is 2558, efficient batteries exist
+	charging.give(charge_rate * 0.9)	//Ineffecienceies, we need this to prevent assistant farms
+										//This also means the better the capacitor the more power we lose
+										//But I think that's funny
 
 	update_icon()
