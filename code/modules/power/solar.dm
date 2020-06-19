@@ -12,7 +12,7 @@
 	active_power_usage = 0
 	max_integrity = 150
 	integrity_failure = 0.33
-
+	var/gen_rate = SOLAR_GEN_RATE
 	var/id
 	var/obscured = FALSE
 	var/sunfrac = 0 //[0-1] measure of obscuration -- multipllier against power generation
@@ -179,7 +179,7 @@
 	if(sunfrac <= 0)
 		return
 
-	var/sgen = SOLAR_GEN_RATE * sunfrac
+	var/sgen = gen_rate * sunfrac
 	add_avail(sgen)
 	if(control)
 		control.gen += sgen
