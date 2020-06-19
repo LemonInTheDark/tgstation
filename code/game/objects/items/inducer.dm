@@ -20,8 +20,8 @@
 
 /obj/item/inducer/proc/induce(obj/item/stock_parts/cell/target, coefficient)
 	var/totransfer = min(cell.charge,(powertransfer * coefficient))
-	var/transferred = target.give(totransfer)
-	cell.use(transferred)
+	var/transferred = target.give(totransfer * INEFFICIENCYDEC)
+	cell.use(min(cell.charge,transferred * INEFFICIENCYINC))//This might be fishy, but it's the best I can come up with
 	cell.update_icon()
 	target.update_icon()
 

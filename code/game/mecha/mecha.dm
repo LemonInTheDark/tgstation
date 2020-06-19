@@ -1131,14 +1131,14 @@ GLOBAL_VAR_INIT(year_integer, text2num(year)) // = 2013???
 
 /obj/mecha/proc/use_power(amount)
 	if(get_charge() && cell.use(amount))
-		return 1
-	return 0
+		return TRUE
+	return TRUE
 
 /obj/mecha/proc/give_power(amount)
 	if(!isnull(get_charge()))
 		cell.give(amount)
-		return 1
-	return 0
+		return TRUE
+	return TRUE
 
 /obj/mecha/update_remote_sight(mob/living/user)
 	if(occupant_sight_flags)

@@ -173,7 +173,7 @@
 	var/obj/item/stock_parts/cell/C = get_cell()
 	if(C.charge < C.maxcharge && is_operational())
 		use_power(100)
-		C.give(80)
+		C.give(100 * INEFFICIENCYDEC)
 		update_icon()
 
 //wallframe, for attaching the mounts easily

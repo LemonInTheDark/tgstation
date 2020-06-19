@@ -125,7 +125,7 @@
 		var/obj/item/stock_parts/cell/C = charging.get_cell()
 		if(C)
 			if(C.charge < C.maxcharge)
-				C.give(C.chargerate * recharge_coeff * 0.9)//Use more then you gain. just a smidge
+				C.give(C.chargerate * recharge_coeff * INEFFICIENCYDEC)//Use more then you gain. just a smidge
 				use_power(C.chargerate * recharge_coeff)
 				using_power = TRUE
 			update_icon()
