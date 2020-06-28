@@ -28,6 +28,13 @@
 	//Let's make er glow
 	//This relies on parent not being a turf or something. IF YOU CHANGE THAT, CHANGE THIS
 	var/atom/movable/master = parent
+	if(!istype(master.loc, /turf/))
+		message_admins("[master.loc.type] [master.type]")
+		if(!HAS_TRAIT(master.loc, RADGLOW_TRAIT))
+			var/atom/movable/grandmaster = master.loc
+			grandmaster.add_filter("rad_glow", 2, list("type" = "outline", "color" = "#39ff1470", "size" = 2))
+		ADD_TRAIT(master.loc, RADGLOW_TRAIT, RADGLOW_SOURCE)
+
 	master.add_filter("rad_glow", 2, list("type" = "outline", "color" = "#39ff1470", "size" = 2))
 	addtimer(CALLBACK(src, .proc/glow_loop, master), rand(1,19))//Things should look uneven
 	START_PROCESSING(SSradiation, src)
@@ -36,6 +43,10 @@
 	STOP_PROCESSING(SSradiation, src)
 	var/atom/movable/master = parent
 	master.remove_filter("rad_glow")
+	REMOVE_TRAIT(master.loc, RADGLOW_TRAIT, RADGLOW_SOURCE)
+	if(!HAS_TRAIT(master.loc, RADGLOW_TRAIT))
+		var/atom/movable/grandmaster = master.loc
+		grandmaster.remove_filter("rad_glow", 2, list("type" = "outline", "color" = "#39ff1470", "size" = 2))
 	return ..()
 
 /datum/component/radioactive/process()
@@ -53,7 +64,7 @@
 	var/filter = master.get_filter("rad_glow")
 	if(filter)
 		animate(filter, alpha = 190, time = 10, loop = -1)
-		animate(alpha = 70, time = 10)
+		animate(alpha = 50, time = 10)
 
 /datum/component/radioactive/InheritComponent(datum/component/C, i_am_original, _strength, _source, _half_life, _can_contaminate)
 	if(!i_am_original)

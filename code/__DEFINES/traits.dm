@@ -302,3 +302,5 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define MADE_UNCLONEABLE "made-uncloneable"
 #define TIMESTOP_TRAIT "timestop"
 #define STICKY_NODROP "sticky-nodrop" //sticky nodrop sounds like a bad soundcloud rapper's name
+#define RADGLOW_TRAIT "radglow"
+#define RADGLOW_SOURCE "radglow-src"
