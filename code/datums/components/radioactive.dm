@@ -10,6 +10,7 @@
 	var/hl3_release_date //the half-life measured in ticks
 	var/strength
 	var/can_contaminate
+	var/atom/movable/master
 
 /datum/component/radioactive/Initialize(_strength=0, _source, _half_life=RAD_HALF_LIFE, _can_contaminate=TRUE)
 	strength = _strength
@@ -27,9 +28,9 @@
 		SSradiation.warn(src)
 	//Let's make er glow
 	//This relies on parent not being a turf or something. IF YOU CHANGE THAT, CHANGE THIS
-	var/atom/movable/master = parent
+	master = parent
 	master.add_filter("rad_glow", 2, list("type" = "outline", "color" = "#39ff1470", "size" = 2))
-	addtimer(CALLBACK(src, .proc/glow_loop, master), rand(1,19))//Things should look uneven
+	addtimer(CALLBACK(src, .proc/glow_loop), rand(1,19))//Things should look uneven
 	START_PROCESSING(SSradiation, src)
 
 /datum/component/radioactive/Destroy()
@@ -39,6 +40,7 @@
 	return ..()
 
 /datum/component/radioactive/process()
+	glow_change()
 	if(!prob(50))
 		return
 	radiation_pulse(parent, strength, RAD_DISTANCE_COEFFICIENT*2, FALSE, can_contaminate)
@@ -49,11 +51,17 @@
 		qdel(src)
 		return PROCESS_KILL
 
-/datum/component/radioactive/proc/glow_loop(atom/movable/master)
+/datum/component/radioactive/proc/glow_loop()
 	var/filter = master.get_filter("rad_glow")
 	if(filter)
 		animate(filter, alpha = 190, time = 10, loop = -1)
 		animate(alpha = 70, time = 10)
+
+/datum/component/radioactive/proc/glow_change()
+	var/filter = master.get_filter("rad_glow")
+	if(filter)
+		//Maxes out when strength is at 5000
+		animate(filter, color = hsl2rgb(110.55, min(strength / 5000, 1) * 100, 53.92), time = 5)
 
 /datum/component/radioactive/InheritComponent(datum/component/C, i_am_original, _strength, _source, _half_life, _can_contaminate)
 	if(!i_am_original)
@@ -67,7 +75,6 @@
 		strength = max(strength, _strength)
 
 /datum/component/radioactive/proc/rad_examine(datum/source, mob/user, atom/thing)
-	var/atom/master = parent
 	var/list/out = list()
 	if(get_dist(master, user) <= 1)
 		out += "The air around [master] feels warm"
