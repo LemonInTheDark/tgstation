@@ -3,7 +3,7 @@ import { flow } from 'common/fp';
 import { toFixed } from 'common/math';
 import { pureComponentHooks } from 'common/react';
 import { Component, Fragment } from 'inferno';
-import { Box, Button, Chart, ColorBox, Flex, Icon, LabeledList, ProgressBar, Section, Table } from '../components';
+import { Box, Button, Chart, ColorBox, Flex, Icon, LabeledList, ProgressBar, Section, Table, Tabs } from '../components';
 import { Window } from '../layouts';
 import { useBackend, useLocalState } from '../backend';
 
@@ -25,6 +25,102 @@ export const PowerMonitor = () => {
 };
 
 export const PowerMonitorContent = (props, context) => {
+  const [tabIndex, setTabIndex] = useLocalState(context, 'tabIndex', 1);
+  const flow = <PowerMonitorFlow />;
+  const control = <PowerMonitorControl />;
+  return (
+    <Fragment>
+      <Tabs>
+        <Tabs.Tab
+          selected={tabIndex === 1}
+          onClick={() => setTabIndex(1)}>
+          Flow Console
+        </Tabs.Tab>
+        <Tabs.Tab
+          selected={tabIndex === 2}
+          onClick={() => setTabIndex(2)}>
+          Flow Control
+        </Tabs.Tab>
+      </Tabs>
+      <Box>
+        {tabIndex === 1 && flow}
+        {tabIndex === 2 && control}
+      </Box>
+    </Fragment>
+  );
+};
+export const PowerMonitorControl = (props, context) => {
+  const { data } = useBackend(context);
+  const [
+    sortByField,
+    setSortByField,
+  ] = useLocalState(context, 'sortByField', null);
+
+  const areas = flow([
+    map((area, i) => ({
+      ...area,
+      // Generate a unique id
+      id: area.name + i,
+    })),
+  ])(data.areas);
+  return (
+    <Fragment>
+      <Box>
+        estt
+      </Box>
+      <Table>
+        <Table.Row header>
+          <Table.Cell>
+            Area
+          </Table.Cell>
+          <Table.Cell collapsing>
+            Charge
+          </Table.Cell>
+          <Table.Cell textAlign="right">
+            Draw
+          </Table.Cell>
+          <Table.Cell collapsing title="Equipment">
+            Eqp
+          </Table.Cell>
+          <Table.Cell collapsing title="Lighting">
+            Lgt
+          </Table.Cell>
+          <Table.Cell collapsing title="Environment">
+            Env
+          </Table.Cell>
+        </Table.Row>
+        {areas.map((area, i) => (
+          <tr
+            key={area.id}
+            className="Table__row candystripe">
+            <td>
+              {area.name}
+            </td>
+            <td className="Table__cell text-right text-nowrap">
+              <AreaCharge
+                charging={area.charging}
+                charge={area.charge} />
+            </td>
+            <td className="Table__cell text-right text-nowrap">
+              {area.load}
+            </td>
+            <td className="Table__cell text-center text-nowrap">
+              <AreaStatusColorBox status={area.eqp} />
+            </td>
+            <td className="Table__cell text-center text-nowrap">
+              <AreaStatusColorBox status={area.lgt} />
+            </td>
+            <td className="Table__cell text-center text-nowrap">
+              <AreaStatusColorBox status={area.env} />
+            </td>
+          </tr>
+        ))}
+      </Table>
+    </Fragment>
+  );
+};
+
+export const PowerMonitorFlow = (props, context) => {
   const { data } = useBackend(context);
   const { history } = data;
 
