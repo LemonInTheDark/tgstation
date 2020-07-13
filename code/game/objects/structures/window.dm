@@ -202,7 +202,7 @@
 
 	return ..()
 
-/obj/structure/window/setAnchored(anchorvalue)
+/obj/structure/window/setAnchored(anchorvalue, override = FALSE)
 	..()
 	air_update_turf(TRUE)
 	update_nearby_icons()

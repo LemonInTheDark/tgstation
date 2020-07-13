@@ -71,7 +71,7 @@
 	. = ..()
 	AddComponent(/datum/component/empprotection, EMP_PROTECT_SELF | EMP_PROTECT_WIRES)
 
-/obj/machinery/power/emitter/setAnchored(anchorvalue)
+/obj/machinery/power/emitter/setAnchored(anchorvalue, override = FALSE)
 	. = ..()
 	if(!anchored && welded) //make sure they're keep in sync in case it was forcibly unanchored by badmins or by a megafauna.
 		welded = FALSE

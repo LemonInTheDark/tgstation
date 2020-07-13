@@ -101,20 +101,19 @@
 						M.add_fingerprint(user)
 						qdel(src)
 				return
-			if(P.tool_behaviour == TOOL_WRENCH)
+			if(P.tool_behaviour == TOOL_WRENCH && machine_wrenchable())
 				to_chat(user, "<span class='notice'>You start [anchored ? "un" : ""]securing [src]...</span>")
 				if(P.use_tool(src, user, 40, volume=75))
-					if(state == 1)
+					if(state == 1 && setAnchored(!anchored))
 						to_chat(user, "<span class='notice'>You [anchored ? "un" : ""]secure [src].</span>")
-						setAnchored(!anchored)
 				return
 
 		if(2)
-			if(P.tool_behaviour == TOOL_WRENCH)
+			if(P.tool_behaviour == TOOL_WRENCH && machine_wrenchable())
 				to_chat(user, "<span class='notice'>You start [anchored ? "un" : ""]securing [src]...</span>")
 				if(P.use_tool(src, user, 40, volume=75))
-					to_chat(user, "<span class='notice'>You [anchored ? "un" : ""]secure [src].</span>")
-					setAnchored(!anchored)
+					if(setAnchored(!anchored))
+						to_chat(user, "<span class='notice'>You [anchored ? "un" : ""]secure [src].</span>")
 				return
 
 			if(istype(P, /obj/item/circuitboard/machine))
@@ -171,8 +170,8 @@
 			if(P.tool_behaviour == TOOL_WRENCH && !circuit.needs_anchored)
 				to_chat(user, "<span class='notice'>You start [anchored ? "un" : ""]securing [src]...</span>")
 				if(P.use_tool(src, user, 40, volume=75))
-					to_chat(user, "<span class='notice'>You [anchored ? "un" : ""]secure [src].</span>")
-					setAnchored(!anchored)
+					if(setAnchored(!anchored))
+						to_chat(user, "<span class='notice'>You [anchored ? "un" : ""]secure [src].</span>")
 				return
 
 			if(P.tool_behaviour == TOOL_SCREWDRIVER)
@@ -279,3 +278,48 @@
 			var/obj/item/I = X
 			I.forceMove(loc)
 	..()
+
+/obj/structure/frame/machine/setAnchored(anchorvalue, override = FALSE)
+	message_admins("[machine_wrenchable()] || [anchorvalue] || [override]")
+	if(machine_wrenchable() || anchorvalue || override)
+		return ..()
+	return FALSE
+
+///Checks to see if a machine should be allowed to wrench down
+/obj/proc/machine_wrenchable()
+	//Every single machine I can find that has been pixel shifted. Kill me.
+	var/static/list/let_be = typecacheof(list(/obj/machinery/atmospherics,
+									/obj/machinery/camera,
+									/obj/machinery/light,
+									/obj/machinery/firealarm,
+									/obj/machinery/airalarm,
+									/obj/machinery/button,
+									/obj/machinery/power/apc,
+									/obj/machinery/requests_console,
+									/obj/machinery/disposal,
+									/obj/machinery/computer/security/telescreen,
+									/obj/machinery/light_switch,
+									/obj/machinery/newscaster,
+									/obj/machinery/bounty_board,
+									/obj/machinery/turretid,
+									/obj/machinery/keycard_auth,
+									/obj/machinery/shower,
+									/obj/machinery/flasher,
+									/obj/machinery/gulag_item_reclaimer,
+									/obj/machinery/sparker,
+									/obj/machinery/mineral/processing_unit_console,
+									/obj/machinery/mineral/labor_points_checker,
+									/obj/machinery/mineral/labor_claim_console,
+									/obj/machinery/mineral/stacking_unit_console,
+									/obj/machinery/embedded_controller,
+									/obj/machinery/airlock_sensor,
+									/obj/machinery/air_sensor
+								))
+	var/turf/T = get_turf(src)
+	for(var/obj/machinery/thing in range(0, T))
+		if(thing.anchored && thing != src && !let_be[thing.type])
+			return FALSE
+	for(var/obj/structure/frame/machine/thing in range(0, T))
+		if(thing.anchored && thing != src && !let_be[thing.type])
+			return FALSE
+	return TRUE

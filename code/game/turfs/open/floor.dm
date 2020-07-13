@@ -291,12 +291,10 @@
 			G.anchored = TRUE
 			return TRUE
 		if(RCD_MACHINE)
-			if(locate(/obj/structure/frame/machine) in src)
-				return FALSE
 			var/obj/structure/frame/machine/M = new(src)
 			M.state = 2
 			M.icon_state = "box_1"
-			M.anchored = TRUE
+			M.setAnchored(TRUE)
 			return TRUE
 		if(RCD_COMPUTER)
 			if(locate(/obj/structure/frame/computer) in src)

@@ -24,9 +24,10 @@
 	switch(build_step)
 		if(PTURRET_UNSECURED)	//first step
 			if(I.tool_behaviour == TOOL_WRENCH && !anchored)
+				if(!setAnchored(TRUE))
+					return
 				I.play_tool_sound(src, 100)
 				to_chat(user, "<span class='notice'>You secure the external bolts.</span>")
-				setAnchored(TRUE)
 				build_step = PTURRET_BOLTED
 				return
 

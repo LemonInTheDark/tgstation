@@ -172,9 +172,10 @@
 		W.play_tool_sound(src, 100)
 
 		if (!anchored && !isinspace())
+			if(!setAnchored(TRUE))
+				return
 			to_chat(user, "<span class='notice'>[src] is now secured.</span>")
 			add_overlay("[base_state]-s")
-			setAnchored(TRUE)
 			power_change()
 			proximity_monitor.SetRange(range)
 		else

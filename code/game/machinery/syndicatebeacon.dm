@@ -70,7 +70,8 @@
 			if(!connect_to_network())
 				to_chat(user, "<span class='warning'>\The [src] must be placed over an exposed, powered cable node!</span>")
 				return
-			setAnchored(TRUE)
+			if(!setAnchored(TRUE))
+				return
 			to_chat(user, "<span class='notice'>You bolt \the [src] to the floor and attach it to the cable.</span>")
 			return
 	else if(W.tool_behaviour == TOOL_SCREWDRIVER)

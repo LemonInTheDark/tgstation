@@ -88,7 +88,7 @@ field_generator power level display
 	else
 		to_chat(user, "<span class='warning'>[src] needs to be firmly secured to the floor first!</span>")
 
-/obj/machinery/field/generator/setAnchored(anchorvalue)
+/obj/machinery/field/generator/setAnchored(anchorvalue, override = FALSE)
 	. = ..()
 	if(active)
 		turn_off()

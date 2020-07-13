@@ -483,8 +483,9 @@ Class Procs:
 		var/prev_anchored = anchored
 		//as long as we're the same anchored state and we're either on a floor or are anchored, toggle our anchored state
 		if(I.use_tool(src, user, time, extra_checks = CALLBACK(src, .proc/unfasten_wrench_check, prev_anchored, user)))
+			if(!setAnchored(!anchored))
+				return FAILED_UNFASTEN
 			to_chat(user, "<span class='notice'>You [anchored ? "un" : ""]secure [src].</span>")
-			setAnchored(!anchored)
 			playsound(src, 'sound/items/deconstruct.ogg', 50, TRUE)
 			SEND_SIGNAL(src, COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH, anchored)
 			return SUCCESSFUL_UNFASTEN
@@ -592,6 +593,16 @@ Class Procs:
 	. = ..()
 	if (AM == occupant)
 		occupant = null
+
+/obj/machinery/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
+	if(machine_wrenchable())
+		return ..()
+	return CANT_UNFASTEN
+
+/obj/machinery/setAnchored(anchorvalue, override = FALSE)
+	if(machine_wrenchable() || !anchorvalue || override) //If you wanna unwrench, go right ahead
+		return ..()
+	return FALSE
 
 /obj/machinery/proc/adjust_item_drop_location(atom/movable/AM)	// Adjust item drop location to a 3x3 grid inside the tile, returns slot id from 0 to 8
 	var/md5 = md5(AM.name)										// Oh, and it's deterministic too. A specific item will always drop from the same slot.

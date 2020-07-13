@@ -45,7 +45,7 @@
 /obj/vv_edit_var(vname, vval)
 	switch(vname)
 		if("anchored")
-			setAnchored(vval)
+			setAnchored(vval, TRUE)
 			return TRUE
 		if("obj_flags")
 			if ((obj_flags & DANGEROUS_POSSESSION) && !(vval & DANGEROUS_POSSESSION))
@@ -87,9 +87,10 @@
 	SStgui.close_uis(src)
 	. = ..()
 
-/obj/proc/setAnchored(anchorvalue)
+/obj/proc/setAnchored(anchorvalue, override = FALSE)
 	SEND_SIGNAL(src, COMSIG_OBJ_SETANCHORED, anchorvalue)
 	anchored = anchorvalue
+	return TRUE
 
 /obj/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback, force, gentle = FALSE, quickstart = TRUE)
 	..()
