@@ -355,7 +355,7 @@
 	var/need_mob_update = 0
 	for(var/reagent in cached_reagents)
 		var/datum/reagent/R = reagent
-		if(QDELETED(R.holder))
+		if(QDELETED(R.holder) || QDELETED(R))
 			continue
 
 		if(!C)
@@ -382,7 +382,7 @@
 					if(R.overdosed)
 						need_mob_update += R.overdose_process(C)
 					var/datum/reagent/addiction_type = new R.addiction_type()
-					if(is_type_in_list(addiction_type ,cached_addictions))
+					if(is_type_in_list(addiction_type, cached_addictions))
 						for(var/addiction in cached_addictions)
 							var/datum/reagent/A = addiction
 							if(istype(addiction_type, A))
