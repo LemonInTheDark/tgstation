@@ -45,7 +45,7 @@
 /obj/item/seeds/starthistle/corpse_flower/pre_attack(obj/machinery/hydroponics/I)
 	if(istype(I, /obj/machinery/hydroponics))
 		if(!I.myseed)
-			START_PROCESSING(SSobj, src)
+			START_PROCESSING(SSfastprocess, src)
 	return ..()
 
 /obj/item/seeds/starthistle/corpse_flower/process()

@@ -8,7 +8,7 @@
 	if(new_amount)
 		amount = new_amount
 
-	START_PROCESSING(SSprocessing, src)
+	START_PROCESSING(SSfastprocess, src)
 
 /datum/component/rot/process()
 	var/atom/A = parent
