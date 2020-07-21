@@ -46,7 +46,7 @@
   * * being dead (it ghosts you instead)
   *
   * Things that stop you moving as a mob living (why even have OO if you're just shoving it all
-  * in the parent proc with istype checks right?):
+  * in the parent proc with istype checks right?) (fuck you):
   * * having incorporeal_move set (calls Process_Incorpmove() instead)
   * * being grabbed
   * * being buckled  (relaymove() is called to the buckled atom instead)
@@ -187,10 +187,24 @@
 	var/mob/living/L = mob
 	switch(L.incorporeal_move)
 		if(INCORPOREAL_MOVE_BASIC)
-			var/T = get_step(L,direct)
-			if(T)
-				L.forceMove(T, FALSE)
-			L.setDir(direct)
+			var/turf/T = L.loc
+			var/sane = step(L, direct)
+			if(sane)
+				if(L.pulling.anchored)
+					L.stop_pulling()
+				else
+					var/pull_dir = get_dir(src, L.pulling)
+					//puller and pullee more than one tile away or in diagonal position
+					if(get_dist(src, L.pulling) > 1 || (L.moving_diagonally != SECOND_DIAG_STEP && ((pull_dir - 1) & pull_dir)))
+						L.pulling.moving_from_pull = src
+						L.pulling.Move(T, get_dir(L.pulling, T)) //the pullee tries to reach our previous position
+						L.pulling.moving_from_pull = null
+					L.check_pulling()
+			else
+				var/any_tile = get_step(L,direct)
+				if(T)
+					L.forceMove(any_tile, FALSE)
+				L.setDir(direct)
 		if(INCORPOREAL_MOVE_SHADOW)
 			if(prob(50))
 				var/locx
