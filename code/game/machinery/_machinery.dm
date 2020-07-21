@@ -260,7 +260,7 @@ Class Procs:
 		if(!(interaction_flags_machine & INTERACT_MACHINE_ALLOW_SILICON))
 			return FALSE
 
-	else if(isliving(user)) // If we are a living human
+	else if(isliving(user)) // If we are a living human //THING, NOT HUMAN, THING.
 		var/mob/living/L = user
 
 		if(interaction_flags_machine & INTERACT_MACHINE_REQUIRES_SILICON) // First make sure the machine doesn't require silicon interaction
@@ -274,6 +274,9 @@ Class Procs:
 		if(L.incapacitated()) // Finally make sure we aren't incapacitated
 			return FALSE
 
+		if(!L.IsAdvancedToolUser()) //If you're not dextrous, go home
+			return FALSE
+			
 	else // If we aren't a silicon, living, or admin ghost, bad!
 		return FALSE
 

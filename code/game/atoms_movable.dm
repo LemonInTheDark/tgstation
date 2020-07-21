@@ -193,6 +193,7 @@
 
 /atom/movable/proc/stop_pulling()
 	if(pulling)
+		stack_trace()
 		pulling.pulledby = null
 		var/mob/living/ex_pulled = pulling
 		pulling = null
