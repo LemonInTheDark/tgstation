@@ -64,7 +64,7 @@
 	return FALSE
 
 /mob/living/simple_animal/spirit/proc/on_ranged_attack(datum/source, atom/target)
-	target.attack_tk(src)
+	target.attack_tk(src, TRUE)
 
 /mob/living/simple_animal/spirit/IsAdvancedToolUser()
 	return FALSE

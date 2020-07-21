@@ -187,9 +187,10 @@
 	var/mob/living/L = mob
 	switch(L.incorporeal_move)
 		if(INCORPOREAL_MOVE_BASIC)
+			/*
 			var/turf/T = L.loc
 			var/sane = step(L, direct)
-			if(sane)
+			if(L.pulling)
 				if(L.pulling.anchored)
 					L.stop_pulling()
 				else
@@ -200,11 +201,12 @@
 						L.pulling.Move(T, get_dir(L.pulling, T)) //the pullee tries to reach our previous position
 						L.pulling.moving_from_pull = null
 					L.check_pulling()
-			else
-				var/any_tile = get_step(L,direct)
-				if(T)
-					L.forceMove(any_tile, FALSE)
-				L.setDir(direct)
+			if(!sane)
+			*/
+			var/any_tile = get_step(L,direct)
+			if(any_tile)
+				L.forceMove(any_tile)
+			L.setDir(direct)
 		if(INCORPOREAL_MOVE_SHADOW)
 			if(prob(50))
 				var/locx
