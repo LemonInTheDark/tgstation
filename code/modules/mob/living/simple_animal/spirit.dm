@@ -1,4 +1,4 @@
-#define INVISIBILITY_SPIRIT 51
+GLOBAL_DATUM(spirits_target, /datum)
 /mob/living/simple_animal/spirit
 	name = "Shade"
 	real_name = "Shade"
@@ -9,7 +9,9 @@
 	icon_living = "spirit"
 	mob_biotypes = MOB_SPIRIT
 	incorporeal_move = INCORPOREAL_MOVE_BASIC
-	invisibility = 0
+	invisibility = INVISIBILITY_SPIRIT
+	see_invisible = INVISIBILITY_SPIRIT
+	alpha = 255
 	layer = GHOST_LAYER
 	healable = FALSE
 	sight = SEE_SELF|SEE_TURFS|SEE_MOBS|SEE_OBJS
@@ -56,6 +58,8 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	RegisterSignal(src, COMSIG_MOB_ATTACK_RANGED, .proc/on_ranged_attack)
+	animate(src, alpha = 0, time = 15, loop = -1)
+	animate(alpha = 220, time = 15)
 
 /mob/living/simple_animal/spirit/attack_animal(mob/living/simple_animal/M)
 	return FALSE
