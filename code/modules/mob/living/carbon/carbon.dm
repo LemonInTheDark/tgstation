@@ -575,7 +575,7 @@
 		return
 	if(stat == DEAD)
 		sight = (SEE_TURFS|SEE_MOBS|SEE_OBJS)
-		see_in_dark = 8
+		see_in_dark = MAX_RELEVANT_SEE_IN_DARK
 		see_invisible = SEE_INVISIBLE_OBSERVER
 		return
 
@@ -613,7 +613,7 @@
 
 	if(HAS_TRAIT(src, TRAIT_XRAY_VISION))
 		sight |= (SEE_TURFS|SEE_MOBS|SEE_OBJS)
-		see_in_dark = max(see_in_dark, 8)
+		see_in_dark = max(see_in_dark, MAX_RELEVANT_SEE_IN_DARK)
 
 	if(see_override)
 		see_invisible = see_override

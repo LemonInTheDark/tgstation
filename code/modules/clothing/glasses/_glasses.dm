@@ -73,7 +73,7 @@
 	desc = "An optical meson scanner fitted with an amplified visible light spectrum overlay, providing greater visual clarity in darkness."
 	icon_state = "nvgmeson"
 	inhand_icon_state = "nvgmeson"
-	darkness_view = 8
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	flash_protect = FLASH_PROTECTION_SENSITIVE
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	glass_colour_type = /datum/client_colour/glass_colour/green
@@ -110,7 +110,7 @@
 	desc = "You can totally see in the dark now!"
 	icon_state = "night"
 	inhand_icon_state = "glasses"
-	darkness_view = 8
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	flash_protect = FLASH_PROTECTION_SENSITIVE
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	glass_colour_type = /datum/client_colour/glass_colour/green
@@ -427,7 +427,7 @@
 	icon_state = "godeye"
 	inhand_icon_state = "godeye"
 	vision_flags = SEE_TURFS|SEE_MOBS|SEE_OBJS
-	darkness_view = 8
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	resistance_flags = LAVA_PROOF | FIRE_PROOF
 	clothing_flags = SCAN_REAGENTS
@@ -488,7 +488,7 @@
 	icon_state = "nvgmeson"
 	inhand_icon_state = "nvgmeson"
 	flags_cover = GLASSESCOVERSEYES
-	darkness_view = 8
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	flash_protect = FLASH_PROTECTION_WELDER
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	glass_colour_type = FALSE
@@ -530,5 +530,10 @@
 
 /obj/item/clothing/glasses/ghost
 	icon_state = "buster_goggles"
-	glass_colour_type = /datum/client_colour/glass_colour/lightgreen
+	glass_colour_type = /datum/client_colour/glass_colour/blue
 	invis_view = INVISIBILITY_SPIRIT
+
+/obj/item/clothing/glasses/ghost/night_vision
+	icon_state = "buster_gogglesnight"
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
+	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE

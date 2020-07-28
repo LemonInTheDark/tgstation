@@ -11,7 +11,6 @@ GLOBAL_DATUM(spirits_target, /datum)
 	incorporeal_move = INCORPOREAL_MOVE_BASIC
 	invisibility = INVISIBILITY_SPIRIT
 	see_invisible = INVISIBILITY_SPIRIT
-	alpha = 255
 	layer = GHOST_LAYER
 	healable = FALSE
 	sight = SEE_SELF|SEE_TURFS|SEE_MOBS|SEE_OBJS
@@ -41,7 +40,7 @@ GLOBAL_DATUM(spirits_target, /datum)
 	attack_verb_continuous = "screaches"
 	attack_verb_simple = "emmits a screach"
 	throwforce = 0
-	see_in_dark = 8
+	see_in_dark = MAX_RELEVANT_SEE_IN_DARK
 	unsuitable_atmos_damage = 0
 	damage_coeff = list(BRUTE = 0, BURN = 0, TOX = 0, CLONE = 0, STAMINA = 0, OXY = 0)
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
@@ -58,13 +57,17 @@ GLOBAL_DATUM(spirits_target, /datum)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	RegisterSignal(src, COMSIG_MOB_ATTACK_RANGED, .proc/on_ranged_attack)
-	animate(src, alpha = 0, time = 15, loop = -1)
-	animate(alpha = 220, time = 15)
 
 /mob/living/simple_animal/spirit/attack_animal(mob/living/simple_animal/M)
 	return FALSE
 
 /mob/living/simple_animal/spirit/attackby(obj/item/O, mob/user, params)
+	var/obj/projectile/ectoplasam/fuck_you = new(loc)
+	fuck_you.set_homing_target(user)
+	fuck_you.fire(null, src)
+	return FALSE
+
+/mob/living/simple_animal/spirit/bullet_act(obj/projectile/shot_me)
 	return FALSE
 
 /mob/living/simple_animal/spirit/proc/on_ranged_attack(datum/source, atom/target)
