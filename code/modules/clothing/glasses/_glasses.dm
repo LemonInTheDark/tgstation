@@ -529,25 +529,6 @@
 		H.update_sight()
 
 /obj/item/clothing/glasses/ghost
+	icon_state = "buster_goggles"
 	glass_colour_type = /datum/client_colour/glass_colour/lightgreen
-
-/obj/item/clothing/glasses/ghost/Initialize()
-	. = ..()
-	RegisterSignal(GLOB.spirits_target, COMSIG_IMPLANT_EXISTING_UPLINK, .proc/spook)
-	START_PROCESSING(SSfastprocess, src)
-
-/obj/item/clothing/glasses/ghost/proc/spook()
-	process()
-/obj/item/clothing/glasses/ghost/process()
-	var/mob/living/carbon/papa = get_atom_on_turf(src)
-	if(!istype(papa))
-		return
-	papa.client.images = list()
-	for(var/mob/living/simple_animal/spirit/ghostey in range(5, papa))
-		var/image/I = new(loc = get_turf(ghostey))
-		var/mutable_appearance/MA = new(ghostey)
-		MA.alpha = 128
-		MA.dir = ghostey.dir
-		I.appearance = MA
-		papa.client.images += I
-
+	invis_view = INVISIBILITY_SPIRIT
