@@ -58,16 +58,19 @@ GLOBAL_DATUM(spirits_target, /datum)
 	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	RegisterSignal(src, COMSIG_MOB_ATTACK_RANGED, .proc/on_ranged_attack)
 
-/mob/living/simple_animal/spirit/attack_animal(mob/living/simple_animal/M)
-	return FALSE
+///mob/living/simple_animal/spirit/attack_animal(mob/living/simple_animal/M)
+//	return FALSE
 
 /mob/living/simple_animal/spirit/attackby(obj/item/O, mob/user, params)
-	var/obj/projectile/ectoplasam/fuck_you = new(loc)
+	message_admins("test")
+	var/obj/projectile/ectoplasam/fuck_you = new(get_turf(loc))
 	fuck_you.set_homing_target(user)
-	fuck_you.fire(null, src)
-	return FALSE
+	fuck_you.firer = src
+	fuck_you.fire()
+	. = ..()
 
 /mob/living/simple_animal/spirit/bullet_act(obj/projectile/shot_me)
+	message_admins(shot_me.type)
 	return FALSE
 
 /mob/living/simple_animal/spirit/proc/on_ranged_attack(datum/source, atom/target)
