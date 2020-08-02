@@ -167,7 +167,7 @@
 	if(fired_from)
 		SEND_SIGNAL(fired_from, COMSIG_PROJECTILE_ON_HIT, firer, target, Angle)
 	// i know that this is probably more with wands and gun mods in mind, but it's a bit silly that the projectile on_hit signal doesn't ping the projectile itself.
-	// maybe we care what the projectile thinks! See about combining these via args some time when it's not 5AM
+	// maybe we care what the projectile thinks! See about combining these via args some time when it's not 5AM // Unfortunatly it is still 5AM
 	var/obj/item/bodypart/hit_limb
 	if(isliving(target))
 		var/mob/living/L = target
@@ -305,7 +305,7 @@
 #define DO_NOT_QDEL 2		//Pass through.
 #define FORCE_QDEL 3		//Force deletion.
 
-/obj/projectile/proc/process_hit(turf/T, atom/target, qdel_self, hit_something = FALSE)		//probably needs to be reworked entirely when pixel movement is done.
+/obj/projectile/proc/process_hit(turf/T, atom/target, qdel_self, hit_something = FALSE)		//probably needs to be reworked entirely when pixel movement is done. //Poke
 	if(QDELETED(src) || !T || !target)		//We're done, nothing's left.
 		if((qdel_self == FORCE_QDEL) || ((qdel_self == QDEL_SELF) && !temporary_unstoppable_movement && !(movement_type & UNSTOPPABLE)))
 			qdel(src)

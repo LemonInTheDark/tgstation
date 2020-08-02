@@ -62,12 +62,12 @@ GLOBAL_DATUM(spirits_target, /datum)
 //	return FALSE
 
 /mob/living/simple_animal/spirit/attackby(obj/item/O, mob/user, params)
-	message_admins("test")
-	var/obj/projectile/ectoplasam/fuck_you = new(get_turf(loc))
-	fuck_you.set_homing_target(user)
-	fuck_you.firer = src
-	fuck_you.fire()
-	. = ..()
+	if(istype(O, /obj/item/ectoattractor))
+		var/obj/projectile/ectoplasam/fuck_you = new(get_turf(loc))
+		fuck_you.set_homing_target(user)
+		fuck_you.firer = src
+		fuck_you.fire()
+		. = ..()
 
 /mob/living/simple_animal/spirit/bullet_act(obj/projectile/shot_me)
 	message_admins(shot_me.type)

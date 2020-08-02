@@ -3,10 +3,14 @@
 	homing = TRUE
 	nodamage = TRUE
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE | PASSCLOSEDTURF | PASSMACHINE | PASSSTRUCTURE
-	invisibility = INVISIBILITY_SPIRIT
+	invisibility = 0
+	range = 10
 	homing_turn_speed = 50
 	speed = 1
 
-/obj/projectile/ectoplasam/fire()
-	animate(src, alpha = 0, time = 50, loop = 0)
-	..()
+/obj/projectile/ectoplasam/pixel_move()
+	animate(src, alpha = (255/10) * range, time = 5)
+	. = ..()
+
+/obj/projectile/ectoplasam/on_hit()
+	return FALSE
