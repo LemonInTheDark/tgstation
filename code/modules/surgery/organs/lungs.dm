@@ -128,9 +128,8 @@
 			H.failed_last_breath = FALSE
 			if(H.health >= H.crit_threshold)
 				H.adjustOxyLoss(-5)
-			gas_breathed = breath_gases[/datum/gas/oxygen][MOLES]
+			gas_breathed = breath_gases[/datum/gas/oxygen][MOLES] //I'm too dumb to understand this
 			H.clear_alert("not_enough_oxy")
-
 	//Exhale
 	breath_gases[/datum/gas/oxygen][MOLES] -= gas_breathed
 	breath_gases[/datum/gas/carbon_dioxide][MOLES] += gas_breathed
@@ -385,7 +384,7 @@
 		var/ratio = safe_breath_min/breath_pp
 		H.adjustOxyLoss(min(5*ratio, HUMAN_MAX_OXYLOSS)) // Don't fuck them up too fast (space only does HUMAN_MAX_OXYLOSS after all!
 		H.failed_last_breath = TRUE
-		. = true_pp*ratio/6
+		. = true_pp*ratio
 	else
 		H.adjustOxyLoss(HUMAN_MAX_OXYLOSS)
 		H.failed_last_breath = TRUE
