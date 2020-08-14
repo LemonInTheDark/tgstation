@@ -58,9 +58,6 @@ GLOBAL_DATUM(spirits_target, /datum)
 	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	RegisterSignal(src, COMSIG_MOB_ATTACK_RANGED, .proc/on_ranged_attack)
 
-///mob/living/simple_animal/spirit/attack_animal(mob/living/simple_animal/M)
-//	return FALSE
-
 /mob/living/simple_animal/spirit/attackby(obj/item/O, mob/user, params)
 	if(istype(O, /obj/item/ectoattractor))
 		var/obj/projectile/ectoplasam/fuck_you = new(get_turf(loc))
