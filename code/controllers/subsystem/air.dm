@@ -275,7 +275,7 @@ SUBSYSTEM_DEF(air)
 		active_turfs |= T
 		if(currentpart == SSAIR_ACTIVETURFS)
 			currentrun |= T
-		if(blockchanges && T.excited_group)
+		if(blockchanges && T.excited_group) // Did someone forget to clean you up?
 			T.excited_group.garbage_collect()
 	else if(T.flags_1 & INITIALIZED_1)
 		for(var/turf/S in T.atmos_adjacent_turfs)

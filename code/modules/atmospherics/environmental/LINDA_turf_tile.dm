@@ -29,18 +29,26 @@
 	var/datum/gas_mixture/turf/air
 
 	var/obj/effect/hotspot/active_hotspot
-	var/atmos_cooldown  = 0
-	var/planetary_atmos = FALSE //air will revert to initial_gas_mix over time
+	var/planetary_atmos = FALSE //air will revert to initial_gas_mix
 
 	var/list/atmos_overlay_types //gas IDs of current active gas overlays
 	#ifdef TRACK_MAX_SHARE
 	var/max_share = 0
 	#endif
 
+GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 /turf/open/Initialize()
 	if(!blocks_air)
-		air = new
-		air.copy_from_turf(src)
+		if(!planetary_atmos)
+			air = new
+			air.copy_from_turf(src)
+		else
+			if(!GLOB.planetary[src.initial_gas_mix])
+				var/datum/gas_mixture/immutable/planetary/mix = new
+				mix.parse_string_immutable(src.initial_gas_mix)
+				GLOB.planetary[src.initial_gas_mix] = mix
+			air = GLOB.planetary[src.initial_gas_mix]
+			update_visuals()
 	. = ..()
 
 /turf/open/Destroy()
@@ -54,7 +62,7 @@
 /////////////////GAS MIXTURE PROCS///////////////////
 
 /turf/open/assume_air(datum/gas_mixture/giver) //use this for machines to adjust air
-	if(!giver)
+	if(!giver || planetary_atmos)
 		return FALSE
 	air.merge(giver)
 	update_visuals()
@@ -90,6 +98,24 @@
 /turf/temperature_expose()
 	if(temperature > heat_capacity)
 		to_be_destroyed = TRUE
+	if(temperature > max_fire_temperature_sustained)
+		max_fire_temperature_sustained = temperature
+	if(to_be_destroyed && !changing_turf)
+		burn_tile()
+		var/chance_of_deletion
+		if (heat_capacity) //beware of division by zero
+			chance_of_deletion = max_fire_temperature_sustained / heat_capacity * 8 //there is no problem with prob(23456), min() was redundant --rastaf0
+		else
+			chance_of_deletion = 100
+		if(prob(chance_of_deletion))
+			Melt()
+		else
+			to_be_destroyed = FALSE
+			max_fire_temperature_sustained = 0
+
+/turf/open/temperature_expose(air, exposed_temperature, exposed_volume)
+	SEND_SIGNAL(src, COMSIG_TURF_EXPOSE, air, exposed_temperature, exposed_volume)
+	..()
 
 /turf/proc/archive()
 	temperature_archived = temperature
@@ -153,20 +179,16 @@
 	max_share = max(last_share, max_share);\
 	if(last_share > MINIMUM_AIR_TO_SUSPEND){\
 		our_excited_group.reset_cooldowns();\
-		cached_atmos_cooldown = 0;\
 	} else if(last_share > MINIMUM_MOLES_DELTA_TO_MOVE) {\
 		our_excited_group.dismantle_cooldown = 0;\
-		cached_atmos_cooldown = 0;\
 	}
 #else
 #define LAST_SHARE_CHECK \
 	var/last_share = our_air.last_share;\
 	if(last_share > MINIMUM_AIR_TO_SUSPEND){\
 		our_excited_group.reset_cooldowns();\
-		cached_atmos_cooldown = 0;\
 	} else if(last_share > MINIMUM_MOLES_DELTA_TO_MOVE) {\
 		our_excited_group.dismantle_cooldown = 0;\
-		cached_atmos_cooldown = 0;\
 	}
 #endif
 
@@ -183,11 +205,6 @@
 	var/list/adjacent_turfs = atmos_adjacent_turfs
 	var/datum/excited_group/our_excited_group = excited_group
 	var/adjacent_turfs_length = LAZYLEN(adjacent_turfs)
-	var/cached_atmos_cooldown = atmos_cooldown + 1
-
-	var/planet_atmos = planetary_atmos
-	if (planet_atmos)
-		adjacent_turfs_length++
 
 	var/datum/gas_mixture/our_air = air
 
@@ -236,33 +253,21 @@
 					consider_pressure_difference(enemy_tile, difference)
 				else
 					enemy_tile.consider_pressure_difference(src, -difference)
+			//This acts effectivly as a very slow timer, the max deltas of the group will slowly lower until it breaksdown, they then pop up a bit, and fall back down until irrelevant
 			LAST_SHARE_CHECK
 
 
 	/******************* GROUP HANDLING FINISH *********************************************************************/
 
-	if (planet_atmos) //share our air with the "atmosphere" "above" the turf
-		var/datum/gas_mixture/G = new
-		G.copy_from_turf(src)
-		G.archive()
-		if(our_air.compare(G))
-			if(!our_excited_group)
-				var/datum/excited_group/EG = new
-				EG.add_turf(src)
-				our_excited_group = excited_group
-			our_air.share(G, adjacent_turfs_length)
-			LAST_SHARE_CHECK
 
 	our_air.react(src)
 
 	update_visuals()
 
-	if((!our_excited_group && !(our_air.temperature > MINIMUM_TEMPERATURE_START_SUPERCONDUCTION && consider_superconductivity(starting = TRUE))) \
-	|| (cached_atmos_cooldown > (EXCITED_GROUP_DISMANTLE_CYCLES * 2)))
-		SSair.remove_from_active(src)
+	if((!(our_air.temperature > MINIMUM_TEMPERATURE_START_SUPERCONDUCTION && consider_superconductivity(starting = TRUE))) && !our_excited_group)
+		SSair.remove_from_active(src) //This will kill any connected excited group, be careful
 
-	atmos_cooldown = cached_atmos_cooldown
-
+	temperature_expose(our_air, our_air.temperature, CELL_VOLUME) //I should add some sanity checks to this thing
 //////////////////////////SPACEWIND/////////////////////////////
 
 /turf/open/proc/consider_pressure_difference(turf/T, difference)
@@ -351,24 +356,38 @@
 	var/list/turf_list = src.turf_list
 	var/turflen = turf_list.len
 	var/space_in_group = FALSE
+	var/energy = 0
+	var/heat_cap = 0
 
 	for(var/t in turf_list)
 		var/turf/open/T = t
-		if (space_is_all_consuming && !space_in_group && istype(T.air, /datum/gas_mixture/immutable/space))
+		//Cache?
+		var/datum/gas_mixture/turf/mix = T.air
+		if (space_is_all_consuming && istype(T.air, /datum/gas_mixture/immutable/space))
 			space_in_group = TRUE
 			qdel(A)
 			A = new /datum/gas_mixture/immutable/space()
 			A_gases = A.gases //update the cache
 			break
-		A.merge(T.air)
+		//"borrowing" this code from merge(), I need to play with the temp portion. Lets expand it out
+		//temperature = (giver.temperature * giver_heat_capacity + temperature * self_heat_capacity) / combined_heat_capacity
+		var/capacity = mix.heat_capacity()
+		energy += mix.temperature * capacity
+		heat_cap += capacity
 
+		var/list/giver_gases = mix.gases
+		for(var/giver_id in giver_gases)
+			ASSERT_GAS(giver_id, A)
+			A_gases[giver_id][MOLES] += giver_gases[giver_id][MOLES]
+
+	if(!space_in_group)
+		A.temperature = energy / heat_cap
 	for(var/id in A_gases)
 		A_gases[id][MOLES] /= turflen
 
 	for(var/t in turf_list)
 		var/turf/open/T = t
 		T.air.copy_from(A)
-		T.atmos_cooldown = 0
 		T.update_visuals()
 
 	breakdown_cooldown = 0
@@ -430,7 +449,7 @@
 			. |= direction
 
 /turf/proc/neighbor_conduct_with_src(turf/open/other)
-	if(!other.blocks_air) //Open but neighbor is solid
+	if(!other.blocks_air) //Solid but neighbor is open
 		other.temperature_share_open_to_solid(src)
 	else //Both tiles are solid
 		other.share_temperature_mutual_solid(src, thermal_conductivity)
@@ -444,7 +463,7 @@
 	if(!other.blocks_air) //Both tiles are open
 		var/turf/open/T = other
 		T.air.temperature_share(air, WINDOW_HEAT_TRANSFER_COEFFICIENT)
-	else //Solid but neighbor is open
+	else //Open but neighbor is solid
 		temperature_share_open_to_solid(other)
 	SSair.add_to_active(src, 0)
 
@@ -514,12 +533,12 @@
 /turf/open/proc/temperature_share_open_to_solid(turf/sharer)
 	sharer.temperature = air.temperature_share(null, sharer.thermal_conductivity, sharer.temperature, sharer.heat_capacity)
 
-/turf/proc/share_temperature_mutual_solid(turf/sharer, conduction_coefficient) //to be understood
-	var/delta_temperature = (temperature_archived - sharer.temperature_archived)
-	if(abs(delta_temperature) > MINIMUM_TEMPERATURE_DELTA_TO_CONSIDER && heat_capacity && sharer.heat_capacity)
-
+/turf/proc/share_temperature_mutual_solid(turf/sharer, conduction_coefficient) //to be understood //bet
+	var/delta_temperature = (temperature_archived - sharer.temperature_archived) //Get the delta temp
+	if(abs(delta_temperature) > MINIMUM_TEMPERATURE_DELTA_TO_CONSIDER && heat_capacity && sharer.heat_capacity) //"MR CONDUCTOR THIS NUMBER SEEMS TOO LOW"
+															//Soulfull
 		var/heat = conduction_coefficient*delta_temperature* \
-			(heat_capacity*sharer.heat_capacity/(heat_capacity+sharer.heat_capacity))
+			(heat_capacity*sharer.heat_capacity/(heat_capacity+sharer.heat_capacity)) //THe larger the combined capacity the less is shared
 
-		temperature -= heat/heat_capacity
+		temperature -= heat/heat_capacity //The higher your own heat cap the less heat you get from this arangement
 		sharer.temperature += heat/sharer.heat_capacity

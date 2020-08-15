@@ -80,6 +80,27 @@
 	},
 /turf/open/floor/plasteel,
 /area/security/prison/safe)
+"aak" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/atmospherics/pipe/simple/supply/hidden{
+	dir = 4
+	},
+/obj/structure/cable,
+/obj/machinery/door/airlock/maintenance,
+/turf/open/floor/plating,
+/area/maintenance/port/fore)
+"aal" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/atmospherics/pipe/simple/supply/hidden,
+/obj/structure/disposalpipe/segment,
+/obj/effect/turf_decal/tile/neutral,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/obj/structure/cable,
+/obj/machinery/door/airlock/maintenance,
+/turf/open/floor/plasteel,
+/area/maintenance/port/fore)
 "aam" = (
 /obj/machinery/atmospherics/pipe/manifold/scrubbers/hidden,
 /obj/effect/turf_decal/tile/neutral{
@@ -1102,6 +1123,35 @@
 /obj/effect/turf_decal/tile/purple,
 /turf/open/floor/plasteel/white,
 /area/science/research)
+"ack" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/mob/living/simple_animal/mouse/white,
+/turf/open/floor/plasteel/cafeteria,
+/area/security/prison)
+"acl" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/door/airlock/maintenance,
+/turf/open/floor/plating,
+/area/maintenance/port/fore)
+"acm" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/atmospherics/pipe/simple/supply/hidden,
+/obj/structure/disposalpipe/segment,
+/obj/effect/turf_decal/tile/neutral,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/structure/cable,
+/obj/machinery/door/airlock/maintenance,
+/turf/open/floor/plasteel,
+/area/maintenance/port/fore)
+"acn" = (
+/obj/structure/cable,
+/obj/machinery/door/airlock/maintenance,
+/turf/open/floor/plating,
+/area/maintenance/port)
 "aco" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
@@ -1191,6 +1241,52 @@
 	},
 /turf/open/floor/plating,
 /area/maintenance/solars/starboard/fore)
+"acw" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/atmospherics/pipe/simple/supply/hidden,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/structure/cable,
+/obj/machinery/door/airlock/maintenance,
+/turf/open/floor/plasteel{
+	heat_capacity = 1e+006
+	},
+/area/maintenance/port)
+"acz" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/atmospherics/pipe/simple/supply/hidden{
+	dir = 4
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/structure/cable,
+/obj/machinery/door/airlock/maintenance,
+/turf/open/floor/plating,
+/area/maintenance/port)
+"acA" = (
+/obj/effect/turf_decal/tile/neutral{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/obj/structure/cable,
+/turf/open/floor/plasteel,
+/area/hallway/primary/central)
+"acE" = (
+/obj/machinery/atmospherics/pipe/simple/supply/hidden{
+	dir = 4
+	},
+/obj/effect/turf_decal/plaque{
+	icon_state = "L3"
+	},
+/turf/open/floor/plasteel,
+/area/hallway/primary/central)
 "acF" = (
 /obj/docking_port/stationary{
 	dir = 2;
@@ -15388,17 +15484,6 @@
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,
 /turf/open/floor/plating,
 /area/hydroponics/garden/abandoned)
-"aHp" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
-/obj/structure/disposalpipe/segment,
-/obj/effect/turf_decal/tile/neutral,
-/obj/effect/turf_decal/tile/neutral{
-	dir = 8
-	},
-/obj/structure/cable,
-/turf/open/floor/plasteel,
-/area/maintenance/port/fore)
 "aHq" = (
 /obj/item/kirbyplants/random,
 /obj/machinery/newscaster{
@@ -18446,13 +18531,6 @@
 	},
 /area/security/prison)
 "aNK" = (
-/turf/open/floor/plasteel/cafeteria,
-/area/security/prison)
-"aNM" = (
-/mob/living/simple_animal/mouse/white,
-/obj/machinery/light{
-	dir = 4
-	},
 /turf/open/floor/plasteel/cafeteria,
 /area/security/prison)
 "aNO" = (
@@ -68823,20 +68901,6 @@
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,
 /turf/closed/wall,
 /area/maintenance/port)
-"czB" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
-/obj/effect/turf_decal/tile/neutral{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/neutral{
-	dir = 4
-	},
-/obj/structure/cable,
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
-/area/maintenance/port)
 "czC" = (
 /obj/machinery/light{
 	dir = 8
@@ -73739,15 +73803,6 @@
 /obj/structure/cable,
 /turf/open/floor/plasteel,
 /area/hallway/primary/central)
-"cIK" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
-/obj/effect/turf_decal/plaque{
-	icon_state = "L3"
-	},
-/turf/open/floor/plasteel,
-/area/hallway/primary/central)
 "cIL" = (
 /obj/machinery/atmospherics/pipe/simple/supply/hidden{
 	dir = 4
@@ -74711,16 +74766,6 @@
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
-	},
-/obj/effect/turf_decal/tile/neutral{
-	dir = 8
-	},
-/obj/structure/cable,
-/turf/open/floor/plasteel,
-/area/hallway/primary/central)
-"cKv" = (
-/obj/effect/turf_decal/tile/neutral{
-	dir = 1
 	},
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
@@ -144500,7 +144545,7 @@ cEf
 cFW
 cHr
 cwo
-cKa
+acz
 cLI
 cMY
 eBZ
@@ -145778,7 +145823,7 @@ cnI
 cnI
 cnI
 cxN
-cxN
+acn
 cxO
 cCC
 cxN
@@ -147577,7 +147622,7 @@ cpq
 chJ
 ckM
 cxT
-czB
+acw
 ckM
 cCG
 cEo
@@ -147786,7 +147831,7 @@ aPW
 avm
 alg
 arB
-arB
+acl
 arB
 aug
 aug
@@ -149563,7 +149608,7 @@ alV
 alU
 alU
 alU
-asM
+aak
 alf
 alf
 aub
@@ -150089,7 +150134,7 @@ aCz
 aDB
 aEG
 aFS
-aHp
+aal
 aIM
 aEG
 aLB
@@ -150099,7 +150144,7 @@ aQd
 aRM
 aTt
 aEG
-aQd
+acm
 aYw
 bat
 bbT
@@ -155808,7 +155853,7 @@ cEL
 cGp
 cHN
 boT
-cKv
+acA
 bsO
 cNp
 cPg
@@ -156321,7 +156366,7 @@ cCX
 cEM
 cGq
 czZ
-cIK
+acE
 cKx
 cLV
 cNu
@@ -173737,7 +173782,7 @@ uoy
 aKV
 wDi
 plN
-aNM
+ack
 aPv
 aKZ
 aSI

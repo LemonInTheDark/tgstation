@@ -335,6 +335,11 @@
 	. = ..()
 	add_atom_colour("#ffffff", FIXED_COLOUR_PRIORITY)
 
+/obj/structure/spacevine/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/heat_sensitive, 0, null)
+	RegisterSignal(src, COMSIG_HEAT_HOT, .proc/heated)
+
 /obj/structure/spacevine/examine(mob/user)
 	. = ..()
 	var/text = "This one is a"
@@ -571,10 +576,10 @@
 	if(!i && prob(100/severity))
 		qdel(src)
 
-/obj/structure/spacevine/temperature_expose(null, temp, volume)
+/obj/structure/spacevine/proc/heated(datum/source, datum/gas_mixture/mix, temperature, volume)
 	var/override = 0
 	for(var/datum/spacevine_mutation/SM in mutations)
-		override += SM.process_temperature(src, temp, volume)
+		override += SM.process_temperature(src, temperature, volume)
 	if(!override)
 		qdel(src)
 
