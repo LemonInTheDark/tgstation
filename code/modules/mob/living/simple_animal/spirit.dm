@@ -1,8 +1,8 @@
 GLOBAL_DATUM(spirits_target, /datum)
 /mob/living/simple_animal/spirit
-	name = "Shade"
-	real_name = "Shade"
-	desc = "A bound spirit."
+	name = "Spirit"
+	real_name = "Spirit"
+	desc = "A trickster spirit, what's it doing here?"
 	gender = PLURAL
 	icon = 'icons/mob/corrupted_spirit.dmi'
 	icon_state = "spirit"

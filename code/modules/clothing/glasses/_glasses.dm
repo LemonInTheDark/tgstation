@@ -529,11 +529,15 @@
 		H.update_sight()
 
 /obj/item/clothing/glasses/ghost
+	name = "Buster Goggles"
+	desc = "Handy little goggles that let you see the other side"
 	icon_state = "buster_goggles"
 	glass_colour_type = /datum/client_colour/glass_colour/blue
 	invis_view = INVISIBILITY_SPIRIT
 
 /obj/item/clothing/glasses/ghost/night_vision
+	name = "Night Vision Buster Goggles"
+	desc = "They let you see the other side, and the other side of that dark void too!"
 	icon_state = "buster_gogglesnight"
 	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
