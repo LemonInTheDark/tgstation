@@ -1479,3 +1479,7 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	return call(source, proctype)(arglist(arguments))
 
 #define TURF_FROM_COORDS_LIST(List) (locate(List[1], List[2], List[3]))
+
+//Fun fact, get_dist() fucking dies at 127 tiles, and I'm too dumb to make an issue report about it
+///Use this if you intend to use things above 127 tiles, and want to use get_dist(), and get exactly its functionality
+#define GET_DIST(A, B) max(abs(A.x - B.x), abs(A.y - B.y))
