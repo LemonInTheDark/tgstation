@@ -49,7 +49,7 @@ GLOBAL_LIST_EMPTY(cached_cards)
 		desc = "It's the back of a trading card... no peeking!"
 		icon_state = "cardback"
 	else
-		var/datum/card/template = GLOB.cached_cards[series]["ALL"][id]
+		var/datum/card/template = get_card_datum()
 		name = template.name
 		desc = template.desc
 		icon_state = template.icon_state
@@ -62,6 +62,10 @@ GLOBAL_LIST_EMPTY(cached_cards)
 /obj/item/tcgcard/dropped(mob/user, silent)
 	. = ..()
 	transform = matrix(0.3,0,0,0,0.3,0)
+
+///A helper proc for retrieving the card datum a card is mapped to
+/obj/item/tcgcard/proc/get_card_datum()
+	return GLOB.cached_cards[series]["ALL"][id]
 
 /obj/item/tcg_cardhand
 	name = "\improper TGC hand"
