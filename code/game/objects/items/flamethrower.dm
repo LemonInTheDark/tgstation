@@ -223,6 +223,7 @@
 	//location.hotspot_expose(1000,500,1)
 	SSair.add_to_active(target, FALSE)
 
+
 /obj/item/flamethrower/Initialize(mapload)
 	. = ..()
 	if(create_full)

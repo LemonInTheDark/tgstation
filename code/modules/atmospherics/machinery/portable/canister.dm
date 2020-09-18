@@ -64,12 +64,7 @@
 		"caution" = /obj/machinery/portable_atmospherics/canister,
 		"miasma" = /obj/machinery/portable_atmospherics/canister/miasma,
 		"freon" = /obj/machinery/portable_atmospherics/canister/freon,
-		"hydrogen" = /obj/machinery/portable_atmospherics/canister/hydrogen,
-		"healium" = /obj/machinery/portable_atmospherics/canister/healium,
-		"proto_nitrate" = /obj/machinery/portable_atmospherics/canister/proto_nitrate,
-		"zauker" = /obj/machinery/portable_atmospherics/canister/zauker,
-		"halon" = /obj/machinery/portable_atmospherics/canister/halon,
-		"hexane" = /obj/machinery/portable_atmospherics/canister/hexane
+		"hydrogen" = /obj/machinery/portable_atmospherics/canister/hydrogen
 	)
 
 /obj/machinery/portable_atmospherics/canister/ComponentInitialize()
@@ -89,28 +84,28 @@
 		. += "<span class='notice'>This canister is tier [mode]. A sticker on its side says <b>MAX PRESSURE: [siunit(pressure_limit, "Pa", 0)]</b>.</span>"
 
 /obj/machinery/portable_atmospherics/canister/nitrogen
-	name = "Nitrogen canister"
+	name = "n2 canister"
 	desc = "Nitrogen gas. Reportedly useful for something."
 	icon_state = "red"
 	base_icon_state = "red"
 	gas_type = /datum/gas/nitrogen
 
 /obj/machinery/portable_atmospherics/canister/oxygen
-	name = "Oxygen canister"
+	name = "o2 canister"
 	desc = "Oxygen. Necessary for human life."
 	icon_state = "blue"
 	base_icon_state = "blue"
 	gas_type = /datum/gas/oxygen
 
 /obj/machinery/portable_atmospherics/canister/carbon_dioxide
-	name = "Carbon dioxide canister"
+	name = "co2 canister"
 	desc = "Carbon dioxide. What the fuck is carbon dioxide?"
 	icon_state = "black"
 	base_icon_state = "black"
 	gas_type = /datum/gas/carbon_dioxide
 
 /obj/machinery/portable_atmospherics/canister/toxins
-	name = "Plasma canister"
+	name = "plasma canister"
 	desc = "Plasma gas. The reason YOU are here. Highly toxic."
 	icon_state = "orange"
 	base_icon_state = "orange"
@@ -124,55 +119,55 @@
 	gas_type = /datum/gas/bz
 
 /obj/machinery/portable_atmospherics/canister/nitrous_oxide
-	name = "Nitrous oxide canister"
+	name = "n2o canister"
 	desc = "Nitrous oxide gas. Known to cause drowsiness."
 	icon_state = "redws"
 	base_icon_state = "redws"
 	gas_type = /datum/gas/nitrous_oxide
 
 /obj/machinery/portable_atmospherics/canister/air
-	name = "Air canister"
+	name = "air canister"
 	desc = "Pre-mixed air."
 	icon_state = "grey"
 	base_icon_state = "grey"
 
 /obj/machinery/portable_atmospherics/canister/tritium
-	name = "Tritium canister"
+	name = "tritium canister"
 	desc = "Tritium. Inhalation might cause irradiation."
 	icon_state = "green"
 	base_icon_state = "green"
 	gas_type = /datum/gas/tritium
 
 /obj/machinery/portable_atmospherics/canister/nob
-	name = "Hyper-noblium canister"
+	name = "hyper-noblium canister"
 	desc = "Hyper-Noblium. More noble than all other gases."
 	icon_state = "nob"
 	base_icon_state = "nob"
 	gas_type = /datum/gas/hypernoblium
 
 /obj/machinery/portable_atmospherics/canister/nitryl
-	name = "Nitryl canister"
+	name = "nitryl canister"
 	desc = "Nitryl gas. Feels great 'til the acid eats your lungs."
 	icon_state = "brown"
 	base_icon_state = "brown"
 	gas_type = /datum/gas/nitryl
 
 /obj/machinery/portable_atmospherics/canister/stimulum
-	name = "Stimulum canister"
+	name = "stimulum canister"
 	desc = "Stimulum. High energy gas, high energy people."
 	icon_state = "darkpurple"
 	base_icon_state = "darkpurple"
 	gas_type = /datum/gas/stimulum
 
 /obj/machinery/portable_atmospherics/canister/pluoxium
-	name = "Pluoxium canister"
+	name = "pluoxium canister"
 	desc = "Pluoxium. Like oxygen, but more bang for your buck."
 	icon_state = "darkblue"
 	base_icon_state = "darkblue"
 	gas_type = /datum/gas/pluoxium
 
 /obj/machinery/portable_atmospherics/canister/water_vapor
-	name = "Water vapor canister"
+	name = "water vapor canister"
 	desc = "Water Vapor. We get it, you vape."
 	icon_state = "water_vapor"
 	base_icon_state = "water_vapor"
@@ -180,15 +175,15 @@
 	filled = 1
 
 /obj/machinery/portable_atmospherics/canister/miasma
-	name = "Miasma canister"
-	desc = "Miasma. Makes you wish your nose was blocked."
+	name = "miasma canister"
+	desc = "Miasma. Makes you wish your nose were blocked."
 	icon_state = "miasma"
 	base_icon_state = "miasma"
 	gas_type = /datum/gas/miasma
 	filled = 1
 
 /obj/machinery/portable_atmospherics/canister/freon
-	name = "Freon canister"
+	name = "freon canister"
 	desc = "Freon. Can absorb heat"
 	icon_state = "freon"
 	base_icon_state = "freon"
@@ -196,52 +191,13 @@
 	filled = 1
 
 /obj/machinery/portable_atmospherics/canister/hydrogen
-	name = "Hydrogen canister"
+	name = "hydrogen canister"
 	desc = "Hydrogen, highly flammable"
 	icon_state = "h2"
 	base_icon_state = "h2"
 	gas_type = /datum/gas/hydrogen
 	filled = 1
 
-/obj/machinery/portable_atmospherics/canister/healium
-	name = "Healium canister"
-	desc = "Healium, causes deep sleep"
-	icon_state = "healium"
-	base_icon_state = "healium"
-	gas_type = /datum/gas/healium
-	filled = 1
-
-/obj/machinery/portable_atmospherics/canister/proto_nitrate
-	name = "Proto Nitrate canister"
-	desc = "Proto Nitrate, reacts differently with various gases"
-	icon_state = "proto_nitrate"
-	base_icon_state = "proto_nitrate"
-	gas_type = /datum/gas/proto_nitrate
-	filled = 1
-
-/obj/machinery/portable_atmospherics/canister/zauker
-	name = "Zauker canister"
-	desc = "Zauker, highly toxic"
-	icon_state = "zauker"
-	base_icon_state = "zauker"
-	gas_type = /datum/gas/zauker
-	filled = 1
-
-/obj/machinery/portable_atmospherics/canister/halon
-	name = "Halon canister"
-	desc = "Halon, removes oxygen from high temperature fires and cools down the area"
-	icon_state = "halon"
-	base_icon_state = "halon"
-	gas_type = /datum/gas/halon
-	filled = 1
-
-/obj/machinery/portable_atmospherics/canister/hexane
-	name = "Hexane canister"
-	desc = "Hexane, useful for removing contaminants."
-	icon_state = "hexane"
-	base_icon_state = "hexane"
-	gas_type = /datum/gas/hexane
-	filled = 1
 
 /obj/machinery/portable_atmospherics/canister/fusion_test
 	name = "fusion test canister"
@@ -255,7 +211,7 @@
 	air_contents.gases[/datum/gas/hydrogen][MOLES] = 500
 	air_contents.gases[/datum/gas/plasma][MOLES] = 500
 	air_contents.gases[/datum/gas/tritium][MOLES] = 350
-	air_contents.temperature = 10000
+	air_contents.temperature = 15000
 
 /obj/machinery/portable_atmospherics/canister/proc/get_time_left()
 	if(timing)
