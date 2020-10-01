@@ -11,16 +11,10 @@
 	. = ..()
 	if(iscarbon(target))
 		var/mob/living/carbon/hit_mob = target
-		var/thermal_protection = 1 // The inverse of the amount of protection
-
-		if(temperature > 0) // The projectile is hot
-			thermal_protection -= hit_mob.get_heat_protection(hit_mob.bodytemperature + temperature)
-		else // The projectile was cold
-			thermal_protection -= hit_mob.get_cold_protection(hit_mob.bodytemperature + temperature)
-
+		message_admins("starting [hit_mob.bodytemperature] by [temperature]")
 		// The new body temperature is adjusted by 100-blocked % of the bullet's effect temperature
-		// Reduce the amount of the effect temperature change based on the amount of insulation the mob is wearing
-		hit_mob.adjust_bodytemperature(((100 - blocked) / 100) * (thermal_protection * temperature))
+		hit_mob.adjust_bodytemperature(((100 - blocked) / 100) * temperature, use_insulation = TRUE)
+		message_admins("finished with [hit_mob.bodytemperature]")
 
 	else if(isliving(target))
 		var/mob/living/L = target
