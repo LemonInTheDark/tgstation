@@ -28,6 +28,7 @@
 	var/last_warning
 	var/consumedSupermatter = 0 //If the singularity has eaten a supermatter shard and can go to stage six
 	var/drifting_dir = 0 // Chosen direction to drift in
+	var/list/consumed = list() //List of turfs that have had something on them consumed, duplicate entrys are allowed.
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
 	obj_flags = CAN_BE_HIT | DANGEROUS_POSSESSION
 
@@ -145,11 +146,11 @@
 
 
 /obj/singularity/process()
+	eat()
 	if(current_size >= STAGE_TWO)
 		move()
 		if(prob(event_chance))//Chance for it to run a special event TODO:Come up with one or two more that fit
 			event()
-	eat()
 	dissipate()
 	check_energy()
 
@@ -247,7 +248,7 @@
 			icon_state = "singularity_s11"
 			pixel_x = -160
 			pixel_y = -160
-			grav_pull = 15
+			grav_pull = 12
 			consume_range = 5
 			dissipate = 0
 	if(current_size == allowed_size)
@@ -304,8 +305,11 @@
 
 
 /obj/singularity/proc/consume(atom/A)
+	var/spot = A.loc
 	var/gain = A.singularity_act(current_size, src)
 	src.energy += gain
+	if(gain)
+		consumed += get_dir(src, spot)
 	if(istype(A, /obj/machinery/power/supermatter_crystal) && !consumedSupermatter)
 		desc = "[initial(desc)] It glows fiercely with inner fire."
 		name = "supermatter-charged [initial(name)]"
@@ -317,16 +321,31 @@
 /obj/singularity/proc/move(force_move = 0)
 	if(!move_self)
 		return FALSE
+	var/current_dir = 0
+	if(length(consumed))
+		var/new_dir = pick(GLOB.alldirs - last_failed_movement)
+		if(!drifting_dir)
+			current_dir = new_dir //snap to lad, this allows for fast changes towards a new source of stuff in the worst case senario
+		else
+			//Since we're buond to 9 diections herew, actually use them instead of 360, allows for better control
+			var/subtractor = clamp(dir2angle(drifting_dir) - dir2angle(new_dir), -45, 45)
+			//var/actual = rand(0,1) - ((subtractor < 0) ? 1 : 0)
+			current_dir = turn(drifting_dir, subtractor)
+			message_admins("[subtractor] added to [dir2text(new_dir)] against [dir2text(drifting_dir)] leads to [dir2text(current_dir)]")
+		drifting_dir = current_dir
+	else
+		current_dir = pick(GLOB.alldirs - last_failed_movement)
+		drifting_dir = NONE
 
-	var/drifting_dir = pick(GLOB.alldirs - last_failed_movement)
-
+	consumed.Cut()
 	if(force_move)
-		drifting_dir = force_move
-
+		current_dir = force_move
+		drifting_dir = current_dir
 	if(target && prob(60))
-		drifting_dir = get_dir(src,target) //moves to a singulo beacon, if there is one
+		current_dir = get_dir(src,target) //moves to a singulo beacon, if there is one
+		drifting_dir = current_dir
 
-	step(src, drifting_dir)
+	step(src, current_dir)
 
 /obj/singularity/proc/check_cardinals_range(steps, retry_with_move = FALSE)
 	. = length(GLOB.cardinals)			//Should be 4.
