@@ -427,6 +427,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 	dismantle_cooldown = 0
 
 //argument is so world start can clear out any turf differences quickly.
+//consider splitting up ss breakdowns into "must do at once" parts, and non "must do at once" parts.
 /datum/excited_group/proc/self_breakdown(roundstart = FALSE, poke_turfs = TRUE)
 	var/datum/gas_mixture/A = new
 
