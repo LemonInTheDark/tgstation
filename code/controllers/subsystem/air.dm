@@ -262,9 +262,9 @@ SUBSYSTEM_DEF(air)
 	//cache for sanic speed (lists are references anyways)
 	var/list/currentrun = src.currentrun
 	while(currentrun.len)
-		var/turf/open/T = currentrun[currentrun.len]
+		var/turf/T = currentrun[currentrun.len]
 		currentrun.len--
-		T.conduct_around()
+		T.super_conduct()
 		if(MC_TICK_CHECK)
 			return
 
@@ -349,7 +349,7 @@ SUBSYSTEM_DEF(air)
 			return
 
 ///Removes a turf from processing, and causes it's excited group to clean up to adapt to the change
-/datum/controller/subsystem/air/proc/remove_from_active(turf/open/T, kill_excited = TRUE)
+/datum/controller/subsystem/air/proc/remove_from_active(turf/open/T)
 	active_turfs -= T
 	if(currentpart == SSAIR_ACTIVETURFS)
 		currentrun -= T
@@ -376,7 +376,7 @@ SUBSYSTEM_DEF(air)
 		T.excited = FALSE
 
 ///Adds a turf to active processing, handles duplicates, call this with blockchanges == TRUE if you want to nuke the assoc excited group
-/datum/controller/subsystem/air/proc/add_to_active(turf/open/T, blockchanges = TRUE)
+/datum/controller/subsystem/air/proc/add_to_active(turf/open/T, blockchanges = FALSE)
 	if(istype(T) && T.air)
 		T.significant_share_ticker = 0 //Reset the ticker, need to think about this
 		if(blockchanges && T.excited_group) //This is used almost exclusivly for shuttles, so the excited group doesn't stay behind

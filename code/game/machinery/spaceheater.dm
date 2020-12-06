@@ -192,6 +192,8 @@
 	if(istype(L))
 		var/datum/gas_mixture/env = L.return_air()
 		curTemp = env.temperature
+	else if(isturf(L))
+		curTemp = L.temperature
 	if(isnull(curTemp))
 		data["currentTemp"] = "N/A"
 	else

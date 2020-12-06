@@ -13,6 +13,7 @@
 	density = TRUE
 	layer = EDGED_TURF_LAYER
 	base_icon_state = "smoothrocks"
+	temperature = TCMB
 	var/smooth_icon = 'icons/turf/smoothrocks.dmi'
 	var/environment_type = "asteroid"
 	var/turf/open/floor/plating/turf_type = /turf/open/floor/plating/asteroid/airless

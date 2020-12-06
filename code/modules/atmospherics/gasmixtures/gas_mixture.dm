@@ -278,6 +278,12 @@ GLOBAL_LIST_INIT(gaslist_cache, init_gaslist_cache())
 	///Returns: TRUE if we are mutable, FALSE otherwise
 /datum/gas_mixture/proc/copy_from_turf(turf/model)
 	parse_gas_string(model.initial_gas_mix)
+
+	//acounts for changes in temperature
+	var/turf/model_parent = model.parent_type
+	if(model.temperature != initial(model.temperature) || model.temperature != initial(model_parent.temperature))
+		temperature = model.temperature
+
 	return TRUE
 
 	///Copies variables from a particularly formatted string.
@@ -414,12 +420,15 @@ GLOBAL_LIST_INIT(gaslist_cache, init_gaslist_cache())
 			delta > gas_moles * MINIMUM_AIR_RATIO_TO_MOVE)
 			return id
 
-	var/temp = temperature
-	var/sample_temp = sample.temperature
+	var/our_moles
+	TOTAL_MOLES(cached_gases, our_moles)
+	if(our_moles > MINIMUM_MOLES_DELTA_TO_MOVE) //Don't consider temp if there's not enough mols, this can cause some silly things, test
+		var/temp = temperature
+		var/sample_temp = sample.temperature
 
-	var/temperature_delta = abs(temp - sample_temp)
-	if(temperature_delta > MINIMUM_TEMPERATURE_DELTA_TO_SUSPEND)
-		return "temp"
+		var/temperature_delta = abs(temp - sample_temp)
+		if(temperature_delta > MINIMUM_TEMPERATURE_DELTA_TO_SUSPEND)
+			return "temp"
 
 	return ""
 
