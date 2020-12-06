@@ -114,15 +114,15 @@
   * About a turfs atmos. It's real clunky, and someone needs to clean it up, but not today.
   * Arguments:
   * * update - Has the state of atmos blocked turfs changed? If so, update our adjacent atmos turf list, if not, don't.
-  * * remove - Are you removing a turf from this list? or adding one.
+  * * remove - Are you removing an active turf (Read wall), or adding one
   */
 /turf/air_update_turf(update = FALSE, remove = FALSE)
 	if(update)
 		ImmediateCalculateAdjacentTurfs()
 	if(remove)
-		SSair.remove_from_active(src, TRUE)
+		SSair.remove_from_active(src)
 	else
-		SSair.add_to_active(src,FALSE)
+		SSair.add_to_active(src)
 
 /atom/movable/proc/move_update_air(turf/T)
 	if(isturf(T))
@@ -144,4 +144,4 @@
 
 	air.merge(G)
 	archive()
-	SSair.add_to_active(src, FALSE)
+	SSair.add_to_active(src)

@@ -104,7 +104,7 @@ GLOBAL_LIST_EMPTY(station_turfs)
 
 	if(requires_activation)
 		CALCULATE_ADJACENT_TURFS(src)
-		SSair.add_to_active(src)
+		SSair.add_to_active(src, TRUE)
 
 	if (light_power && light_range)
 		update_light()

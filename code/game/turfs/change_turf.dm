@@ -342,7 +342,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 		var/turf/open/T = t
 		T.air.copy_from(total)
 		T.update_visuals()
-		SSair.add_to_active(T, FALSE)
+		SSair.add_to_active(T)
 
 /turf/proc/ReplaceWithLattice()
 	ScrapeAway(flags = CHANGETURF_INHERIT_AIR)

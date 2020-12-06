@@ -52,7 +52,7 @@
 		add_overlay(/obj/effect/fullbright)
 
 	if(requires_activation)
-		SSair.add_to_active(src)
+		SSair.add_to_active(src, TRUE)
 
 	if (light_system == STATIC_LIGHT && light_power && light_range)
 		update_light()

@@ -342,13 +342,13 @@ SUBSYSTEM_DEF(air)
 		EG.breakdown_cooldown++
 		EG.dismantle_cooldown++
 		if(EG.breakdown_cooldown >= EXCITED_GROUP_BREAKDOWN_CYCLES)
-			EG.self_breakdown()
+			EG.self_breakdown(poke_turfs = TRUE)
 		else if(EG.dismantle_cooldown >= EXCITED_GROUP_DISMANTLE_CYCLES)
 			EG.dismantle()
 		if (MC_TICK_CHECK)
 			return
 
-
+///Removes a turf from processing, and causes it's excited group to clean up to adapt to the change
 /datum/controller/subsystem/air/proc/remove_from_active(turf/open/T, kill_excited = TRUE)
 	active_turfs -= T
 	if(currentpart == SSAIR_ACTIVETURFS)
@@ -358,16 +358,30 @@ SUBSYSTEM_DEF(air)
 	#endif
 	if(istype(T))
 		T.excited = FALSE
-		if(T.excited_group && kill_excited)
-			//TODO: Make this whole chain suck less ass.
-			T.excited_group.garbage_collect()
+		if(T.excited_group)
+			//If this fires during active turfs it'll cause a slight removal of active turfs, as they breakdown if they have no excited group
+			//The group also expands by a tile per rebuild on each edge, suffering
+			SSair.add_to_cleanup(T.excited_group) //Poke everybody in the group and reform
+			T.excited_group.garbage_collect() //Do this second, as it cleans up the group itself
 
-/datum/controller/subsystem/air/proc/add_to_active(turf/open/T, blockchanges = 1)
+///Puts an active turf to sleep, so it doesn't process, without cleaning up it's excited group. This is used for speeeed
+/datum/controller/subsystem/air/proc/sleep_active_turf(turf/open/T)
+	active_turfs -= T
+	if(currentpart == SSAIR_ACTIVETURFS)
+		currentrun -= T
+	#ifdef VISUALIZE_ACTIVE_TURFS
+	T.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, COLOR_VIBRANT_LIME)
+	#endif
+	if(istype(T))
+		T.excited = FALSE
+
+///Adds a turf to active processing, handles duplicates, call this with blockchanges == TRUE if you want to nuke the assoc excited group
+/datum/controller/subsystem/air/proc/add_to_active(turf/open/T, blockchanges = TRUE)
 	if(istype(T) && T.air)
 		T.significant_share_ticker = 0 //Reset the ticker, need to think about this
-		if(T.excited)
-			if(blockchanges && T.excited_group) //This is used almost exclusivly for shuttles, so the excited group doesn't stay behind
-				T.excited_group.garbage_collect(FALSE) //Nuke it
+		if(blockchanges && T.excited_group) //This is used almost exclusivly for shuttles, so the excited group doesn't stay behind
+			T.excited_group.garbage_collect() //Nuke it
+		if(T.excited) //Don't keep doing it if there's no point
 			return
 		#ifdef VISUALIZE_ACTIVE_TURFS
 		T.add_atom_colour(COLOR_VIBRANT_LIME, TEMPORARY_COLOUR_PRIORITY)
@@ -376,11 +390,9 @@ SUBSYSTEM_DEF(air)
 		active_turfs += T
 		if(currentpart == SSAIR_ACTIVETURFS)
 			currentrun += T
-		if(blockchanges && T.excited_group)
-			T.excited_group.garbage_collect(FALSE)
 	else if(T.flags_1 & INITIALIZED_1)
 		for(var/turf/S in T.atmos_adjacent_turfs)
-			add_to_active(S)
+			add_to_active(S, TRUE)
 	else if(map_loading)
 		if(queued_for_activation)
 			queued_for_activation[T] = T
@@ -399,7 +411,7 @@ SUBSYSTEM_DEF(air)
 /datum/controller/subsystem/air/StopLoadingMap()
 	map_loading = FALSE
 	for(var/T in queued_for_activation)
-		add_to_active(T)
+		add_to_active(T, TRUE)
 	queued_for_activation.Cut()
 
 /datum/controller/subsystem/air/proc/setup_allturfs()
@@ -446,8 +458,8 @@ SUBSYSTEM_DEF(air)
 		var/ending_ats = active_turfs.len
 		for(var/thing in excited_groups)
 			var/datum/excited_group/EG = thing
-			EG.self_breakdown(roundstart = TRUE, poke_turfs = FALSE)
-			EG.dismantle(TRUE)
+			EG.self_breakdown(roundstart = TRUE)
+			EG.dismantle()
 			CHECK_TICK
 
 		var/msg = "HEY! LISTEN! [DisplayTimeText(world.timeofday - timer)] were wasted processing [starting_ats] turf(s) (connected to [ending_ats - starting_ats] other turfs) with atmos differences at round start."

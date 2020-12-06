@@ -57,7 +57,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 		QDEL_NULL(active_hotspot)
 	// Adds the adjacent turfs to the current atmos processing
 	for(var/T in atmos_adjacent_turfs)
-		SSair.add_to_active(T, FALSE)
+		SSair.add_to_active(T)
 	return ..()
 
 /////////////////GAS MIXTURE PROCS///////////////////
@@ -262,7 +262,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 		if(our_excited_group && enemy_excited_group && enemy_tile.excited) //If you're both excited, no need to compare right?
 			should_share_air = TRUE
 		else if(our_air.compare(enemy_air)) //Lets see if you're up for it
-			SSair.add_to_active(enemy_tile, FALSE) //Add yourself young man
+			SSair.add_to_active(enemy_tile) //Add yourself young man
 			var/datum/excited_group/EG = our_excited_group || enemy_excited_group || new
 			if(!our_excited_group)
 				EG.add_turf(src)
@@ -294,13 +294,14 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 	else if(!our_excited_group) //If nothing of interest is happening, kill the active turf
 		SSair.remove_from_active(src) //This will kill any connected excited group, be careful
 	if(cached_ticker > EXCITED_GROUP_DISMANTLE_CYCLES && !active_hotspot) //If you're stalling out, take a rest
-		SSair.remove_from_active(src, FALSE)
+		SSair.sleep_active_turf(src)
 
 	significant_share_ticker = cached_ticker //Save our changes
 	temperature_expose(our_air, our_air.temperature) //I should add some sanity checks to this thing
 
 ////////////////////Excited Group Cleanup///////////////////////
 
+///For dealing with reforming excited groups, this prevents clog in process_cell
 /turf/open/proc/cleanup_group(fire_count, breakdown, dismantle)
 	current_cycle = fire_count + 0.5 //It works, I know it's dumb but it works
 
@@ -310,7 +311,6 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 
 	for(var/t in adjacent_turfs)
 		var/turf/open/enemy_tile = t
-
 
 		if(current_cycle <= enemy_tile.current_cycle)
 			continue
@@ -428,7 +428,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 
 //argument is so world start can clear out any turf differences quickly.
 //consider splitting up ss breakdowns into "must do at once" parts, and non "must do at once" parts.
-/datum/excited_group/proc/self_breakdown(roundstart = FALSE, poke_turfs = TRUE)
+/datum/excited_group/proc/self_breakdown(roundstart = FALSE, poke_turfs = FALSE)
 	var/datum/gas_mixture/A = new
 
 	//make local for sanic speed
@@ -469,7 +469,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 		T.air.copy_from(A)
 		T.update_visuals()
 		if(!T.excited && poke_turfs) //Because we only activate all these once every breakdown, in event of lag due to this code and slow space + vent things, increase the wait time for breakdowns
-			SSair.add_to_active(T, FALSE) //Maybe check molar diff or something? IDK
+			SSair.add_to_active(T) //Maybe check molar diff or something? IDK
 			T.significant_share_ticker = EXCITED_GROUP_DISMANTLE_CYCLES //Max out the ticker, if they don't share next tick, nuke em
 	if(roundstart)
 		var/datum/gas_mixture/cache = new()
@@ -482,30 +482,25 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 
 	breakdown_cooldown = 0
 
-/datum/excited_group/proc/dismantle(starting_up = FALSE)
-	if(!starting_up)
-		self_breakdown(poke_turfs = FALSE)
+///Dismantles the excited group, puts allll the turfs to sleep
+/datum/excited_group/proc/dismantle()
 	for(var/t in turf_list)
 		var/turf/open/T = t
 		T.excited = FALSE
-		T.excited_group = null
 		T.significant_share_ticker = 0
 		SSair.active_turfs -= T
 		#ifdef VISUALIZE_ACTIVE_TURFS //Use this when you want details about how the turfs are moving, display_all_groups should work for normal operation
 		T.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, COLOR_VIBRANT_LIME)
 		#endif
-	garbage_collect(FALSE)
+	garbage_collect()
 
-/datum/excited_group/proc/garbage_collect(rebuild_excited_groups = TRUE)
+//Breaks down the excited group, this doesn't kill the turfs mind, just removes them from the group
+/datum/excited_group/proc/garbage_collect()
 	if(display_id) //If we ever did make those changes
 		hide_turfs()
 	for(var/t in turf_list)
 		var/turf/open/T = t
 		T.excited_group = null
-	//If this fires during active turfs it'll cause a slight removal of active turfs, as they breakdown if they have no excited group
-	if(rebuild_excited_groups) //I want my holes to space consistent you hear me?
-		//There's still some bugs with cleanup, doesn't fully merge properly, but this'll do for now
-		SSair.add_to_cleanup(src) //Poke everybody in the group, just in case
 	turf_list.Cut()
 	SSair.excited_groups -= src
 	if(SSair.currentpart == SSAIR_EXCITEDGROUPS)
@@ -590,12 +585,12 @@ My current implementation is not built to support heat leaking through floors, a
 			if(T.archived_cycle < SSair.times_fired)
 				T.archive()
 			T.air.temperature_share(mix, thermal_conductivity)
-			SSair.add_to_active(T, FALSE)
+			SSair.add_to_active(T)
 
 /turf/open/super_conduct(datum/gas_mixture/mix, turf/source)
 	if(archived_cycle < SSair.times_fired)
 		archive()
 	air.temperature_share(mix, WINDOW_HEAT_TRANSFER_COEFFICIENT)
-	SSair.add_to_active(src, FALSE)
+	SSair.add_to_active(src)
 	..(air)
 
