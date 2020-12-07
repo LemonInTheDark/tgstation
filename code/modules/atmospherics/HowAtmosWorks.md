@@ -32,7 +32,7 @@ Now then, here we go.
 
 ## 3. The Air Controller
 
-![Cyclical graph of one atmos tick](https://file.house/5kPL.png)
+![Cyclical graph of one atmos tick](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/Cycle.png)
 
 *Figure 3.1: the structure of one air controller tick. Not totally accurate, but it will do*
 
