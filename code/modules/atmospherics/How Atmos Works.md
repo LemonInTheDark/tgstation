@@ -349,15 +349,26 @@ You can also toggle the visibility of each individual group here, and
 ### What to look for
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/StartingOut.png)
+
 An excited group can contain 2 things, sources of diffs, and dead tiles.
+
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/MovingForward.png)
+
 Of course, if left unchecked active turfs will spread further and further out, slowly lowering the amount of dead tiles.
+
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/SleepWorking.png)
+
 Excited group breakdown causes them to recede and wrap around the things causing them
+
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/CleanupTroubles.png)
+
 Cleanup causes a major recession due to turfs becoming suddenly no longed excited
+
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/StrangeGrowth.png)
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/OddGrowth%2BMonkey.png)
+
 Due to how `process_cell()` works, active turfs will spread strangely when low on difs
+
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/Flickering.png)
+
 Active turfs will occasionally nap, then immediately wake back up. This is either because of a discrepancy between `compare()` and `LAST_SHARE_CHECK`, or just a result of sleeping being a thing.
