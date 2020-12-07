@@ -17,7 +17,7 @@
 	var/atom/us = source
 	us.UnregisterSignal(get_turf(us), COMSIG_TURF_EXPOSE)
 	if(us.flags_1 & ATMOS_IS_PROCESSING_1)
-		SSair.atom_process_list -= us
+		SSair.atom_process -= us
 		us.flags_1 &= ~ATMOS_IS_PROCESSING_1
 	return ..()
 
@@ -33,10 +33,10 @@
 	if(should_atmos_process(air, exposed_temperature))
 		if(flags_1 & ATMOS_IS_PROCESSING_1)
 			return
-		SSair.atom_process_list += src
+		SSair.atom_process += src
 		flags_1 |= ATMOS_IS_PROCESSING_1
 	else if(flags_1 & ATMOS_IS_PROCESSING_1)
-		SSair.atom_process_list -= src
+		SSair.atom_process -= src
 		flags_1 &= ~ATMOS_IS_PROCESSING_1
 
 /atom/proc/process_exposure()
@@ -46,12 +46,12 @@
 	else if(istype(src, /turf/open)) //Need to let turfs operate
 		spot = src
 	else //If you end up in a locker or a wall reconsider your life decisions
-		SSair.atom_process_list -= src
+		SSair.atom_process -= src
 		flags_1 &= ~ATMOS_IS_PROCESSING_1
 		return
 	var/temp = spot.air.temperature
 	if(!should_atmos_process(spot.air, temp)) //Temp and such can move without the tile becoming active. If that ever changes...
-		SSair.atom_process_list -= src
+		SSair.atom_process -= src
 		flags_1 &= ~ATMOS_IS_PROCESSING_1
 		return
 	atmos_expose(spot.air, temp)

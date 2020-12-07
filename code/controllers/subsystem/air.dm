@@ -35,7 +35,7 @@ SUBSYSTEM_DEF(air)
 	//Special functions lists
 	var/list/turf/active_super_conductivity = list()
 	var/list/turf/open/high_pressure_delta = list()
-	var/list/atom_process_list = list()
+	var/list/atom_process = list()
 
 	/// A cache of objects that perisists between processing runs when resumed == TRUE. Dangerous, qdel'd objects not cleared from this may cause runtimes on processing.
 	var/list/currentrun = list()
@@ -67,7 +67,7 @@ SUBSYSTEM_DEF(air)
 	msg += "SC:[active_super_conductivity.len]|"
 	msg += "PN:[networks.len]|"
 	msg += "AM:[atmos_machinery.len]|"
-	msg += "AO:[atom_process_list.len]|"
+	msg += "AO:[atom_process.len]|"
 	msg += "AT/MS:[round((cost ? active_turfs.len/cost : 0),0.1)]"
 	return ..()
 
@@ -135,7 +135,6 @@ SUBSYSTEM_DEF(air)
 		resumed = FALSE
 		currentpart = SSAIR_EXCITEDCLEANUP
 
-	//Yes I made a subprocess just to deal with firelocks, fuck you too
 	if(currentpart == SSAIR_EXCITEDCLEANUP)
 		timer = TICK_USAGE_REAL
 		if(!resumed)
@@ -232,7 +231,7 @@ SUBSYSTEM_DEF(air)
 
 /datum/controller/subsystem/air/proc/process_atoms(resumed = FALSE)
 	if(!resumed)
-		src.currentrun = atom_process_list.Copy()
+		src.currentrun = atom_process.Copy()
 	//cache for sanic speed (lists are references anyways)
 	var/list/currentrun = src.currentrun
 	while(currentrun.len)
@@ -619,7 +618,7 @@ GLOBAL_LIST_EMPTY(colored_images)
 	data["hotspots_size"] = hotspots.len
 	data["excited_size"] = excited_groups.len
 	data["conducting_size"] = active_super_conductivity.len
-	data["atoms_size"] = atom_process_list.len
+	data["atoms_size"] = atom_process.len
 	data["frozen"] = can_fire
 	data["show_all"] = display_all_groups
 	data["fire_count"] = times_fired
