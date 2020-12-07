@@ -288,6 +288,7 @@ For this reason, and because excited groups spread gas out so much, we want to k
 react() is called for every active turf, and every pipenet. On each react call for reasons I don't want to go into right now, we need to iterate over every reaction and do a preliminary test. Therefor, the more datum reactions we have, the slower those two processes go.
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/LargeExcitedGroup.png)
+
 It's hard to tell here cause I took the picture right as it happen, but when large excited groups go through self_breakdown() they can overtime by a significant deal. This is because `self_breakdown` can't be delayed, we can't let an older gasmix that's already been collected have say 10000 mols of plasma added, then go into breakdown and delete it all. Thus, the overtime cost. This was with a excited group 900 tiles large tho, so it isn't nearly ever this bad. It also scales with the amount of gases.
 
 On the whole excited groups are the only major source of overrun, consider this a treatise on why that 900ms cost number next to atmos isn't making the server die.
@@ -325,6 +326,7 @@ To start with, you should enable the TESTING define in compile_options.dm, this 
 Past that you'll want to turn on excited group highlighting, to do this open the atmos control panel in the debug tab and toggle both personal view and display all. Display all makes turfs display their group and personal view shows/hides the groups from you, it's faster to toggle this, and this way you don't piss off the other debugger on live.
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/AtmosControlPanel.png)
+
 To go into more detail about the control panel, it is split into two parts. At the top there's a readout of some relevant stats, the amount of active turfs, how many times the subsystem has fired, etc. You can get the same information from the SSAir MC entry, but it's a bit harder to read. I'll get into that in a bit. There's a button that turns the subsystem on/off in the top left, it's handy for debugging and seeing how things work step by step, use it if you need to slow things down.
 
 The rest of the panel is where things get more interesting, it's a readout of excited groups, sorted by area name. Most of it ought to be obvious, this is where TRACK_MAX_SHARE comes into effect. If it's defined, excited groups will have an extra entry which displays the largest molar diff in the group. This is useful for diagnosing group breakdown issues, and getting a feel for when a group will next breakdown. You can also toggle the visibility of each individual group here, and teleport to the group by clicking on the area name.
