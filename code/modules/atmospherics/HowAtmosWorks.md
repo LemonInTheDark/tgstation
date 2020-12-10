@@ -301,10 +301,6 @@ The goal of active turfs, excited groups, and sleeping is to isolate the process
 
 Performance and gameplay are much more important then realism. In all your work on the subsystem, keep this in mind, and you'll build fast and quality code.
 
-## 8. Atmos Machinery Classification
-
-I will not go into detail on each of these right now due to time concerns. This should be updated with atmos machines and the meaning behind the pipenet classifications.
-
 ## Appendix A - Glossary
 
 * *Carbon dioxide* - What the fuck is this?]
