@@ -303,6 +303,8 @@ Performance and gameplay are much more important then realism. In all your work 
 
 ## 8. Pipelines and pipeline machinery
 
+![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/PipeLeak.png)
+
 `/datum/pipeline` handles the simulation of piping and such. It has 2 main actions, one of which you should know very well. The other is slightly more of a hurdle.
 
 To understand pipelines you'll first need to understand how we process things like pumps or vents, atmos components that is.
