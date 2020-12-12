@@ -301,6 +301,62 @@ The goal of active turfs, excited groups, and sleeping is to isolate the process
 
 Performance and gameplay are much more important then realism. In all your work on the subsystem, keep this in mind, and you'll build fast and quality code.
 
+## 8. Pipelines and pipeline machinery
+
+`/datum/pipeline` handles the simulation of piping and such. It has 2 main actions, one of which you should know very well. The other is slightly more of a hurdle.
+
+To understand pipelines you'll first need to understand how we process things like pumps or vents, atmos components that is.
+To start with, a set of pipes is treated as one gas mixture, however several different components draw from this mix. Think pumps, heaters, mixers, vents, etc.
+
+Since these components change the mix itself, we can't just let them all act on the mix at once, because that would cause concerns around the order in which things process, and so on.
+We don't want canisters that blow up half the time, and the other half of the time don't. Better then to give each component its own gas mix that it alone can act on, that will be shared with the pipeline as a whole. Pipelines do something similar to active turfs by the way, they won't re-equalize their mix if nothing about the state of things has changed.
+
+We do this sharing based on the proportion of volume between all the components. So if you want a component to consume more gas, give it a higher volume.
+
+On that note, I'd like to be clear about something. In lines of connected pipes, each pipe doesn't have its own gasmix, they instead share mixes, as the pipes themselves won't have any effect on the state of the mix.
+
+Oh, and pipelines react the gas-mixture inside them, thought I should mention that.
+
+All the other behavior of pipes and pipe components are handled by atmos machinery. I'll give a brief rundown of how they're classified, but the details of each machine are left as an exercise to the reader.
+
+#### Pipes
+
+The raw pipes. They have some amount of nuance, mostly around layers, but it's not too tricky to deal with.
+
+##### Heat Exchange
+
+The HE pipes, used to transfer heat from the pipe to the turf it's sitting on. These work directly with the pipeline's mix, which is ehhhh? Might need some touching up, perhaps making them subnets that do one heat transfer. Not too big a deal in any case, since they're the only thing that acts directly on a pipeline mix. They have some other behavior, like glowing when hot, but it's minor.
+
+#### Components
+
+These are the components I described above, they have some sort of internal gas mix that they act on in some manner.
+
+The following classifications are very simple, but I'll run them over anyhow
+
+##### Unary
+
+Unary devices can only interact with one pipeline, aside from some exceptions, like the heat exchanger. The type path comes from the amount of pipelines a device expects gas-mixtures from. I'm sure you can see where this is going.
+
+##### Binary
+
+Binary devices connect to 2 pipelines.
+
+##### Trinary
+
+Trinary devices connect to 3 p- Listen you get it already.
+
+##### Fusion
+
+Finally something more interesting. Unfortunately I'm not familiar with the inner workings of this machine, but this folder deals with hypertorus code.
+
+#### Other
+
+This is for the oddballs, the one offs, the half useless things. Things that are tied to the module, but that we don't have a better spot for. Think meters, stuff like that.
+
+#### Portable
+
+These are the atmos machines you can move around. They interface with connectors to talk to pipelines, and can contain tanks. Not a whole lot more to discuss here.
+
 ## Appendix A - Glossary
 
 * *Carbon dioxide* - What the fuck is this?]

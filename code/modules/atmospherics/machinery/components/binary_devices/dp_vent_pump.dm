@@ -79,7 +79,7 @@
 				air_update_turf(FALSE, FALSE)
 
 				var/datum/pipeline/parent1 = parents[1]
-				parent1.update = 1
+				parent1.update = TRUE
 
 	else //external -> output
 		var/pressure_delta = 10000
@@ -102,7 +102,7 @@
 				air_update_turf(FALSE, FALSE)
 
 				var/datum/pipeline/parent2 = parents[2]
-				parent2.update = 1
+				parent2.update = TRUE
 
 	//Radio remote control
 
