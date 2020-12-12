@@ -317,7 +317,7 @@ We do this sharing based on the proportion of volume between all the components.
 
 On that note, I'd like to be clear about something. In lines of connected pipes, each pipe doesn't have its own gasmix, they instead share mixes, as the pipes themselves won't have any effect on the state of the mix.
 
-Oh, and pipelines react the gas-mixture inside them, thought I should mention that.
+Oh, and pipelines react the gas mixture inside them, thought I should mention that.
 
 All the other behavior of pipes and pipe components are handled by atmos machinery. I'll give a brief rundown of how they're classified, but the details of each machine are left as an exercise to the reader.
 
