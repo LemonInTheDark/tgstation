@@ -76,9 +76,11 @@ Now then, into the breach.
     - Calls `process_exposure()` on each `/atom` in the `atom_process` list
 
 ## 4. Gas Mixtures
-If the air controller is the heart of atmos, then gas mixtures make up its blood. The bulk of all atmos calculations are performed within a given gas mixture datum (an instance of /datum/gas_mixture), be it within a turf or within an emergency oxygen tank or within a pipe. In particular, /datum/gas_mixture/proc/share() is the cornerstone of atmos simulation, as it and its stack perform all the calculations for equalizing two gas mixtures.
+If the air controller is the heart of atmos, then gas mixtures make up its blood. The bulk of all atmos calculations are performed within a given gas mixture datum (an instance of `/datum/gas_mixture`), be it within a turf or within an emergency oxygen tank or within a pipe. In particular, `/datum/gas_mixture/proc/share()` is the cornerstone of atmos simulation, as it and its stack perform all the calculations for equalizing two gas mixtures.
 
 Gas mixtures contain some of the oldest code still in our codebase, and it is remarkable that overall, the logic behind the majority of gas mixture procs has gone unchanged since the days of Exadv1. Despite being in some sense "oldcode", the logic itself is quite robust and based in real world physics. Thankfully, gas mixtures already are quite well documented in terms of their behavior. Their file is well commented and kept up to date. I will, however, elaborate on some of the less obvious operations here. Additionally, I will document the structure of gas lists, and how one should interface with a gas mixture should you choose to use one in other code.
+
+Now don't be scared by the code mind, it's SPOOKY PHYSICS but it's not the devil, we can break it down into component parts to understand it.
 
 ```DM
 //transfer of thermal energy (via changed heat capacity) between self and sharer
