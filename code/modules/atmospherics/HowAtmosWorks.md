@@ -1,4 +1,3 @@
-v
 # Atmospherics
 ## 1. Preamble
 
