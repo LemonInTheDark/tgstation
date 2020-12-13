@@ -1,10 +1,10 @@
-
+v
 # Atmospherics
 ## 1. Preamble
 
 This file will be written in the first person in the interest of having a laid back style, as some of the concepts here would be ass to read as technical writing. Understand that this isn't the work of one person, but the combined efforts of several contributors. It is a living document, and one you should strive to keep up to date.
 
-I have ~~stolen~~ adapted this document from the work of Duncathan, an off and on maintainer who is responsible for the majority of the quality of the current atmos system. He pushed through several code cleanliness and sanity refactors to the system, and wrote the rundown of gas mixtures you'll find in this document. See the [original](https://gist.github.com/duncathan/77d918748d153b4f31a8f76f6085b91a) for his draft.
+I have ~~stolen~~ adapted this document from the work of duncathan, an off and on maintainer who is responsible for the majority of the quality of the current atmos system. He pushed through several code cleanliness and sanity refactors to the system, and wrote the rundown of gas mixtures you'll find in this document. See the [original](https://gist.github.com/duncathan/77d918748d153b4f31a8f76f6085b91a) for his draft.
 
 Now, the purpose of this bit of documentation.
 
@@ -36,7 +36,7 @@ Now then, into the breach.
 
 *Figure 3.1: the structure of one air controller tick. Not totally accurate, but it will do*
 
- The air controller is, at its core, quite simple, yet it is absolutely fundamental to the atmospheric system. The air controller is the clock which triggers all continuous actions within the atmos system, such as vents distributing air or gas moving between tiles. The actions taken by the air controller are quite simple, and will be enumerated here. Much of the substance of the air ticker is due to the game's master controller, whose intricacies I will not delve into for this document. As such, this is a simplified list of the air controller's actions in a single tick:
+ The air controller is, at its core, quite simple, yet it is absolutely fundamental to the atmospheric system. The air controller is the clock which triggers all continuous actions within the atmos system, such as vents distributing air or gas moving between tiles. The actions taken by the air controller are quite simple, and will be enumerated here. Much of the substance of the air ticker is due to the game's master controller, whose intricacies I will not delve into for this document. I will however go into more detail about how SSAir in particular works in Chapter 6. In any case, this is a simplified list of the air controller's actions in a single tick:
 1. Rebuild Pipenets
     - Runs each time SSAir processes, sometimes out of order. It ensures that no pipenets sit unresolved or unbuilt
     - Calls `build_network()` on each `/obj/machinery/atmospherics` in the `pipenets_needing_rebuilt` list
@@ -90,7 +90,7 @@ Gas mixtures contain some of the oldest code still in our codebase, and it is re
 
 The snippet above is an example of one particularly strange looking calculation. This part of share() is updating the temperature of a gas mixture to account for lost or gained thermal energy as gas moves to/from the mixture, since gases themselves carry heat. To understand this snippet, it is important to understand the difference between heat and temperature. For the most part, the average coder need only concern himself with temperature, as it is a familiar experience for anybody. However, internally in atmos, heat (thermal energy) is the truly important quantity. Heat is defined as temperature multiplied by heat capacity, and is measured in joules. Typically within atmos, we are more concerned with manipulating heat than temperature; however, temperature is tracked rather than heat largely to make interfacing with the system simpler for the average coder. Thus, this snippet modifies heat in terms of temperature - it adds/subtracts three terms, each of which measure heat, to determine the new heat in the gas mixture. This heat is then divided by the mixture's heat capacity in order to determine temperature.
 
-One trick to understanding passages like this is to do some simple dimensional analysis. Look only at the units, and ensure that whenever a variable is assigned that it is being assigned the appropriate unit. The snippet previously discussed can be represented with the following units: temperature = ((J/K)*K - (J/K)*K + (J/K)*K)/(J/K). Simplified, you get (J-J+J)*K/J and then simply J*K/J and K, verifying that temperature is being set to a value in kelvins. This trick has proven invaluable to me when debugging the inner workings of gas mixtures.
+One trick to understanding passages like this is to do some simple dimensional analysis. Look only at the units, and ensure that whenever a variable is assigned that it is being assigned the appropriate unit. The snippet previously discussed can be represented with the following units: `temperature = ((J/K)*K - (J/K)*K + (J/K)*K)/(J/K)`. Simplified, you get `(J-J+J)*K/J` and then simply `J*K/J` and `K`, verifying that temperature is being set to a value in kelvins. This trick has proven invaluable to me when debugging the inner workings of gas mixtures.
 
 ### Gases
 
@@ -134,6 +134,15 @@ Of particular note in this snippet are the two procs assert_gas() and garbage_co
 * *`/datum/gas_mixture/var/temperature`* - Measured in kelvins. Useful constants are T0C and T20C for 0 and 20 degrees Celsius respectively, and TCMB,the temperature of space and the lower bound for temperature in atmos.
 * *`/datum/gas_mixture/var/volume`* - Measured in liters.
 
+While we're on the subject, `/datum/gas_mixture` has two subtypes.
+The first is `/datum/gas_mixture/turf`, which exists for literally one purpose. When a turf is empty, we want it to have the same heat capacity as space. This lets us achieve that by overriding `heat_capacity()`
+
+The second is `/datum/gas_mixture/immutable`, which itself has two subtypes.
+The type is built to allow for gasmixtures that serve as infinite sources of "something", which can't be changed or mutated.
+It's used by `/datum/gas_mixture/immutable/space`, which implements some particular things for `heat_capacity()` and some optimizations for gas operations.
+It's also implemented by `/datum/gas_mixture/immutable/planetary`, which is used for planetary turfs, and has some code that makes actually having a gasmix possible.
+
+
 ##### Gas List
 * *`gases[path][MOLES]`* - Quantity of a particular gas within a mixture.
 * *`gases[path][GAS_META][META_GAS_NAME]`* - The long name of a gas, ex. "Oxygen" or "Hyper-noblium"
@@ -174,7 +183,7 @@ If we just used active turfs sleeping would be easy as pie, we could do it turf 
 
 I didn't mention this above, but active turf processing, or really `share()`, has a fatal flaw. The amount of gas moved per tick goes down exponentially the further away a turf is from the source of changes, or diffs.
 
-With only active turfs breaches would never settle, and as soon as a tile becomes active it would never rest again. (This is one of the reasons I wrote this document by the way, excited groups nearly totally broke about 4 years ago, and none at the time noticed because the code was so twisted none knew how it ought to work)
+With only active turfs breaches would never settle, and as soon as a tile becomes active it would never rest again. (This is one of the reasons I wrote this document by the way, excited groups nearly totally broke around about 2016, and none at the time noticed because the code was so twisted none knew how it ought to work, so it persisted for 4 years past that)
 
 So active turfs are bad at evening out diffs. What can we do to solve this?
 
@@ -299,6 +308,8 @@ This is matters the most with environmental stuff, but it's everywhere you look.
 
 The goal of active turfs, excited groups, and sleeping is to isolate the processing that needs to happen, and move diffs from their source to a consumer as much as we can. We don't simulate every tile, and most of the changes to LINDA have been directed at simulating as little as we can get away with.
 
+Hell, space being cold is a hack we use to make gameplay interesting. There's a lot more stuff like this, because this isn't a simulator, it's a theater production.
+
 Performance and gameplay are much more important then realism. In all your work on the subsystem, keep this in mind, and you'll build fast and quality code.
 
 ## 8. Pipelines and pipeline machinery
@@ -361,10 +372,17 @@ These are the atmos machines you can move around. They interface with connectors
 
 ## Appendix A - Glossary
 
-* *Carbon dioxide* - What the fuck is this?]
-* *LINDA* - Created by Aranclanos, Beautiful in Spanish
+* *LINDA* - Our environmental gas system, created by Aranclanos, Beautiful in Spanish
 * *Naps* - A healthy pastime
-* *Diffs* - A difference between gasmixes. We want to get rid of these over time, and clump them up with their sources so we don't need to process too many turfs
+* *Gas mixtures* - The datums that store gas information, key to listmos and our underlying method of handling well gas
+* *Diffs* - The differences between gasmixes. We want to get rid of these over time, and clump them up with their sources so we don't need to process too many turfs
+* *FEA* - Finite Element Analysis, the underlying system our atmos is built on top of. Ugly in Spanish
+* *Pipelines* - The datum that represents and handles the gasmixtures of a set of pipes and their components
+* *Components* - Atmos machines that act on pipelines, modifying their mix
+* *Active Turfs* - An optimization of FEA implemented in LINDA that causes processing to only occur when differences are equalizing
+* *Excited Groups* - Evens out groups of active turfs to compensate for the way `share()` works
+* *Carbon dioxide* - What the fuck is this?]
+* *MC* - The master controller, makes sure all subsystems get the time they need to process, prevents lockups from one subsystem having a lot of work
 
 ## Appendix B - How to test environmental atmos
 If you really want to get a feeling for how flow works you'll need to load up the game and make some diffs. What follows is a short description of how to set up testing.
