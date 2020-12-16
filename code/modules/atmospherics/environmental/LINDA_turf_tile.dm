@@ -40,15 +40,13 @@
 GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 /turf/open/Initialize()
 	if(!blocks_air)
-		if(!planetary_atmos)
-			air = new
-			air.copy_from_turf(src)
-		else
+		air = new
+		air.copy_from_turf(src)
+		if(planetary_atmos)
 			if(!GLOB.planetary[initial_gas_mix])
 				var/datum/gas_mixture/immutable/planetary/mix = new
 				mix.parse_string_immutable(initial_gas_mix)
 				GLOB.planetary[initial_gas_mix] = mix
-			air = GLOB.planetary[initial_gas_mix]
 	. = ..()
 
 /turf/open/Destroy()
@@ -212,6 +210,28 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 		enemy_tile.significant_share_ticker = 0;\
 	}
 #endif
+#ifdef TRACK_MAX_SHARE
+#define PLANET_SHARE_CHECK \
+	var/last_share = our_air.last_share;\
+	max_share = max(last_share, max_share);\
+	if(last_share > MINIMUM_AIR_TO_SUSPEND){\
+		our_excited_group.reset_cooldowns();\
+		cached_ticker = 0;\
+	} else if(last_share > MINIMUM_MOLES_DELTA_TO_MOVE) {\
+		our_excited_group.dismantle_cooldown = 0;\
+		cached_ticker = 0;\
+	}
+#else
+#define PLANET_SHARE_CHECK \
+	var/last_share = our_air.last_share;\
+	if(last_share > MINIMUM_AIR_TO_SUSPEND){\
+		our_excited_group.reset_cooldowns();\
+		cached_ticker = 0;\
+	} else if(last_share > MINIMUM_MOLES_DELTA_TO_MOVE) {\
+		our_excited_group.dismantle_cooldown = 0;\
+		cached_ticker = 0;\
+	}
+#endif
 
 /turf/proc/process_cell(fire_count)
 	SSair.remove_from_active(src)
@@ -284,6 +304,21 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 
 	/******************* GROUP HANDLING FINISH *********************************************************************/
 
+	if (planetary_atmos) //share our air with the "atmosphere" "above" the turf
+		var/datum/gas_mixture/G = GLOB.planetary[initial_gas_mix]
+		// archive ourself again so we don't accidentally share more gas than we currently have
+		archive()
+		if(our_air.compare(G))
+			if(!our_excited_group)
+				var/datum/excited_group/EG = new
+				EG.add_turf(src)
+				our_excited_group = excited_group
+			// shares 4/5 of our difference in moles with the atmosphere
+			our_air.share(G, 0.25)
+			// temperature share with the atmosphere with an inflated heat capacity to simulate faster sharing with a large atmosphere
+			our_air.temperature_share(G, OPEN_HEAT_TRANSFER_COEFFICIENT, G.temperature_archived, G.heat_capacity() * 5)
+			G.garbage_collect()
+			PLANET_SHARE_CHECK
 
 	our_air.react(src)
 
