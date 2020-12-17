@@ -61,7 +61,7 @@
 				atmos_machines += A
 
 	SSmapping.reg_in_areas_in_z(areas)
-	SSatoms.InitializeAtoms(areas + turfs + atoms, returns_created ? created_atoms : null)
+	SSatoms.InitializeAtoms(areas + turfs + atoms)
 	//if the template is set to return a list, then pass ssatoms the list, otherwise give it null
 
 	// NOTE, now that Initialize and LateInitialize run correctly, do we really
