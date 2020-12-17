@@ -71,7 +71,7 @@
 	if(rename)
 		name = "rotting [initial(name)]"
 		desc += " They smell terrible."
-	trigger_rot()
+	AddComponent(/datum/component/rot/gibs)
 
 /obj/effect/decal/cleanable/blood/gibs/ex_act(severity, target)
 	return
