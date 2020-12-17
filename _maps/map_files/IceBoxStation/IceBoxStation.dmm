@@ -25002,7 +25002,7 @@
 /area/maintenance/port)
 "bgx" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating,
+/turf/open/floor/plating/icemoon,
 /area/science/test_area)
 "bgy" = (
 /obj/structure/cable,
@@ -31002,7 +31002,7 @@
 /area/icemoon/surface/outdoors)
 "buw" = (
 /obj/effect/spawner/structure/window/plasma/reinforced,
-/turf/open/floor/plating,
+/turf/open/floor/plating/icemoon,
 /area/engine/atmos)
 "bux" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
@@ -35444,7 +35444,7 @@
 /area/science/mixing)
 "bGI" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating,
+/turf/open/floor/plating/icemoon,
 /area/maintenance/solars/port/aft)
 "bGJ" = (
 /obj/machinery/air_sensor/atmos/incinerator_tank{
@@ -36532,7 +36532,7 @@
 /area/maintenance/disposal/incinerator)
 "bJS" = (
 /obj/machinery/door/poddoor/incinerator_atmos_aux,
-/turf/open/floor/plating/airless,
+/turf/open/floor/plating/icemoon,
 /area/maintenance/disposal/incinerator)
 "bJT" = (
 /obj/machinery/vending/cigarette,
@@ -39658,7 +39658,7 @@
 /turf/open/floor/plasteel/white/corner,
 /area/engine/atmos)
 "bUU" = (
-/obj/effect/turf_decal/gas/nitrous_oxide,
+/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /turf/open/floor/engine/n2o,
 /area/engine/atmos)
 "bUV" = (
@@ -40925,7 +40925,7 @@
 /turf/open/floor/plasteel,
 /area/engine/atmos)
 "bYU" = (
-/obj/effect/turf_decal/gas/plasma,
+/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/engine/plasma,
 /area/engine/atmos)
 "bYV" = (
@@ -41908,7 +41908,7 @@
 /turf/open/floor/plasteel,
 /area/engine/atmos)
 "ccB" = (
-/obj/effect/turf_decal/gas/carbon_dioxide,
+/obj/machinery/portable_atmospherics/canister/carbon_dioxide,
 /turf/open/floor/engine/co2,
 /area/engine/atmos)
 "ccC" = (
@@ -43808,14 +43808,14 @@
 /turf/open/floor/plasteel,
 /area/security/main)
 "clT" = (
-/obj/effect/turf_decal/gas/nitrogen,
+/obj/machinery/portable_atmospherics/canister/nitrogen,
 /turf/open/floor/engine/n2,
 /area/engine/atmos)
 "clU" = (
 /turf/open/floor/engine/n2,
 /area/engine/atmos)
 "clV" = (
-/obj/effect/turf_decal/gas/oxygen,
+/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/engine/o2,
 /area/engine/atmos)
 "clW" = (
@@ -47095,8 +47095,8 @@
 /turf/open/floor/plasteel,
 /area/engine/engineering)
 "cBP" = (
+/obj/machinery/portable_atmospherics/canister/air,
 /obj/effect/landmark/event_spawn,
-/obj/effect/turf_decal/gas/air,
 /turf/open/floor/engine/air,
 /area/engine/atmos)
 "cBR" = (
@@ -49627,17 +49627,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/science/mixing)
-"fvM" = (
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
-	dir = 4
-	},
-/obj/machinery/door/airlock/maintenance,
-/turf/open/floor/plating,
-/area/maintenance/starboard/fore)
 "fxH" = (
 /obj/effect/spawner/structure/window,
 /obj/machinery/pinpointer_dispenser,
@@ -50298,6 +50287,10 @@
 /obj/effect/spawner/structure/window/reinforced,
 /turf/closed/wall,
 /area/maintenance/starboard/aft)
+"htE" = (
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/plating/icemoon,
+/area/hallway/secondary/entry)
 "hxq" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -55916,14 +55909,6 @@
 "vHt" = (
 /turf/open/floor/plasteel,
 /area/science/misc_lab)
-"vIh" = (
-/obj/structure/disposalpipe/segment,
-/obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer2,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4,
-/obj/machinery/door/airlock/maintenance,
-/turf/open/floor/plating,
-/area/maintenance/aft)
 "vIU" = (
 /obj/machinery/hydroponics/soil,
 /obj/machinery/light{
@@ -65943,9 +65928,9 @@ boP
 boP
 boP
 asU
-awW
+htE
 auP
-awW
+htE
 asU
 asU
 boP
@@ -98877,7 +98862,7 @@ nEs
 nEs
 nEs
 nEs
-vIh
+nEs
 nEs
 caT
 cbP
@@ -99072,7 +99057,7 @@ aty
 arr
 apC
 alP
-fvM
+aEe
 alP
 anf
 vvP

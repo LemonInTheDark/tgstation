@@ -36185,7 +36185,9 @@
 /turf/open/floor/engine/n2o,
 /area/engine/atmos)
 "bKI" = (
-/obj/effect/turf_decal/gas/nitrous_oxide,
+/obj/machinery/portable_atmospherics/canister/nitrous_oxide{
+	valve_open = 1
+	},
 /turf/open/floor/engine/n2o,
 /area/engine/atmos)
 "bKJ" = (
@@ -37914,6 +37916,9 @@
 /turf/open/floor/plasteel/kitchen_coldroom/freezerfloor,
 /area/crew_quarters/kitchen/coldroom)
 "bPc" = (
+/obj/machinery/firealarm{
+	pixel_y = 26
+	},
 /obj/machinery/atmospherics/pipe/heat_exchanging/simple{
 	dir = 4
 	},
@@ -38626,7 +38631,7 @@
 /turf/open/floor/engine/plasma,
 /area/engine/atmos)
 "bQY" = (
-/obj/effect/turf_decal/gas/plasma,
+/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/engine/plasma,
 /area/engine/atmos)
 "bQZ" = (
@@ -40442,7 +40447,7 @@
 /turf/open/floor/engine/co2,
 /area/engine/atmos)
 "bVO" = (
-/obj/effect/turf_decal/gas/carbon_dioxide,
+/obj/machinery/portable_atmospherics/canister/carbon_dioxide,
 /turf/open/floor/engine/co2,
 /area/engine/atmos)
 "bVP" = (
@@ -46070,7 +46075,7 @@
 /turf/open/floor/engine/n2,
 /area/engine/atmos)
 "cjd" = (
-/obj/effect/turf_decal/gas/nitrogen,
+/obj/machinery/portable_atmospherics/canister/nitrogen,
 /turf/open/floor/engine/n2,
 /area/engine/atmos)
 "cje" = (
@@ -46084,7 +46089,7 @@
 /turf/open/floor/engine/o2,
 /area/engine/atmos)
 "cjg" = (
-/obj/effect/turf_decal/gas/oxygen,
+/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/engine/o2,
 /area/engine/atmos)
 "cjh" = (
@@ -46099,7 +46104,7 @@
 /turf/open/floor/engine/air,
 /area/engine/atmos)
 "cjj" = (
-/obj/effect/turf_decal/gas/air,
+/obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/engine/air,
 /area/engine/atmos)
 "cjk" = (
