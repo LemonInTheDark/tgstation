@@ -94,7 +94,7 @@
 	switch(severity)
 		if(1)
 			//SN src = null
-			var/turf/NT = ScrapeAway(flags = CHANGETURF_RECALC_ADJACENT) //Maybe attach to the explosion ss, might make this faster
+			var/turf/NT = ScrapeAway()
 			NT.contents_explosion(severity, target)
 			return
 		if(2)

@@ -112,7 +112,7 @@
   * Ok so this thing is pretty much used as a catch all for all the situations someone might wanna change something
   * About a turfs atmos. It's real clunky, and someone needs to clean it up, but not today.
   * Arguments:
-  * * update - Has the state of atmos blocked turfs changed? If so, update our adjacent atmos turf list, if not, don't.
+  * * update - Has the state of the structures in the world changed? If so, update our adjacent atmos turf list, if not, don't.
   * * remove - Are you removing an active turf (Read wall), or adding one
   */
 /turf/air_update_turf(update = FALSE, remove = FALSE)
