@@ -18,38 +18,40 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 //FLAGS BITMASK
 
 /// This flag is what recursive_hear_check() uses to determine wether to add an item to the hearer list or not.
-#define HEAR_1						(1<<3)
+#define HEAR_1						(1<<0)
 /// conducts electricity (metal etc.)
-#define CONDUCT_1					(1<<5)
+#define CONDUCT_1					(1<<1)
 /// For machines and structures that should not break into parts, eg, holodeck stuff
-#define NODECONSTRUCT_1				(1<<7)
+#define NODECONSTRUCT_1				(1<<2)
 /// atom queued to SSoverlay
-#define OVERLAY_QUEUED_1			(1<<8)
+#define OVERLAY_QUEUED_1			(1<<3)
 /// item has priority to check when entering or leaving
-#define ON_BORDER_1					(1<<9)
+#define ON_BORDER_1					(1<<4)
 /// Prevent clicking things below it on the same turf eg. doors/ fulltile windows
-#define PREVENT_CLICK_UNDER_1		(1<<11)
-#define HOLOGRAM_1					(1<<12)
+#define PREVENT_CLICK_UNDER_1		(1<<5)
+#define HOLOGRAM_1					(1<<6)
 /// Prevents mobs from getting chainshocked by teslas and the supermatter
-#define SHOCKED_1 					(1<<13)
+#define SHOCKED_1 					(1<<7)
 ///Whether /atom/Initialize() has already run for the object
-#define INITIALIZED_1				(1<<14)
+#define INITIALIZED_1				(1<<8)
 /// was this spawned by an admin? used for stat tracking stuff.
-#define ADMIN_SPAWNED_1			    (1<<15)
+#define ADMIN_SPAWNED_1			    (1<<9)
 /// should not get harmed if this gets caught by an explosion?
-#define PREVENT_CONTENTS_EXPLOSION_1 (1<<16)
+#define PREVENT_CONTENTS_EXPLOSION_1 (1<<10)
 /// should the contents of this atom be acted upon
-#define RAD_PROTECT_CONTENTS_1 (1 << 17)
+#define RAD_PROTECT_CONTENTS_1 (1 << 11)
 /// should this object be allowed to be contaminated
-#define RAD_NO_CONTAMINATE_1 (1 << 18)
+#define RAD_NO_CONTAMINATE_1 (1 << 12)
 /// Should this object be paintable with very dark colors?
-#define ALLOW_DARK_PAINTS_1 (1 << 19)
+#define ALLOW_DARK_PAINTS_1 (1 << 13)
 /// Should this object be unpaintable?
-#define UNPAINTABLE_1 (1 << 20)
+#define UNPAINTABLE_1 (1 << 14)
 /// Is the thing currently spinning?
-#define IS_SPINNING_1 (1 << 21)
-/// Is this object currently processing in the atmos object list?
-#define ATMOS_IS_PROCESSING_1 (1 << 22)
+#define IS_SPINNING_1 (1 << 15)
+#define IS_ONTOP_1 (1 << 16)
+#define SUPERMATTER_IGNORES_1 (1 << 17)
+/// Is this object currently processing in the atmos object list? (SHOOT ME)
+#define ATMOS_IS_PROCESSING_1 (1 << 18)
 
 /// If the thing can reflect light (lasers/energy)
 #define RICOCHET_SHINY			(1<<0)
@@ -74,7 +76,7 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 /// If blobs can spawn there and if it counts towards their score.
 #define BLOBS_ALLOWED				(1<<1)
 /// If mining tunnel generation is allowed in this area
-#define TUNNELS_ALLOWED				(1<<2)
+#define CAVES_ALLOWED				(1<<2)
 /// If flora are allowed to spawn in this area randomly through tunnel generation
 #define FLORA_ALLOWED				(1<<3)
 /// If mobs can be spawned by natural random generation
@@ -107,6 +109,7 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define PASSBLOB		(1<<3)
 #define PASSMOB			(1<<4)
 #define PASSCLOSEDTURF	(1<<5)
+/// Let thrown things past us. **ONLY MEANINGFUL ON pass_flags_self!**
 #define LETPASSTHROW	(1<<6)
 #define	PASSMACHINE		(1<<7)
 #define PASSSTRUCTURE	(1<<8)
@@ -117,8 +120,8 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define FLYING			(1<<1)
 #define VENTCRAWLING	(1<<2)
 #define FLOATING		(1<<3)
-/// When moving, will Bump()/Cross()/Uncross() everything, but won't be stopped.
-#define UNSTOPPABLE		(1<<4)
+/// When moving, will Cross()/Uncross() everything, but won't stop or Bump() anything.
+#define PHASING			(1<<4)
 
 //Fire and Acid stuff, for resistance_flags
 #define LAVA_PROOF		(1<<0)

@@ -8,14 +8,11 @@
 	if(new_amount)
 		amount = new_amount
 
-	RegisterSignal(parent, COMSIG_START_MIASMA_GENERATION, .proc/start_processing)
 	START_PROCESSING(SSprocessing, src)
 
-/datum/component/rot/proc/start_processing()
-	START_PROCESSING(SSprocessing, src)
-
-/datum/component/rot/proc/stop_processing()
+/datum/component/rot/Destroy(force, silent)
 	STOP_PROCESSING(SSprocessing, src)
+	. = ..()
 
 /datum/component/rot/process(delta_time)
 	var/atom/A = parent
@@ -42,7 +39,7 @@
 /datum/component/rot/corpse/process()
 	var/mob/living/carbon/C = parent
 	if(C.stat != DEAD)
-		stop_processing()
+		qdel(src)
 		return
 
 	// Wait a bit before decaying
