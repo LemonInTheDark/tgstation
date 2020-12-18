@@ -162,6 +162,7 @@ This is a rather large subject, we will need to cover gas flow, turf sleeping, s
 
 ### Active Turfs
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/FlowVisuals.png)
+
 *Figure 5.1: A visual of the algorithm `process_cell()` implements, ignoring our optimizations*
 
 Active turfs are the backbone of how gas moves from tile to tile. While most of `process_cell()` should be easy enough to understand, I am going to go into some detail about archiving, since I think it's a common source of hiccups.
@@ -182,6 +183,7 @@ If we just used active turfs sleeping would be easy as pie, we could do it turf 
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/Unsettled.png)
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/Settled.png)
+
 *Figure 5.2.1-5.2.2: Settled VS Unsettled gases, this is what excited groups do*
 
 I didn't mention this above, but active turf processing, or really `share()`, has a fatal flaw. The amount of gas moved per tick goes down exponentially the further away a turf is from the source of changes, or diffs.
@@ -227,6 +229,7 @@ There's one more major aspect of environmental atmos to cover, and while it's no
 ### Superconduction, or why var names really matter
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/Superconduction.png)
+
 *Figure 5.3: The death of a pug, and a visual description of what superconduction does*
 
 Superconduction, an odd name really, it doesn't really describe much of anything aside from something to do with heat. It gets worse, trust me.
@@ -263,6 +266,7 @@ First, some new vocab.
 The MC entry for SSAir is very helpful for debugging, and it is good to understand before I talk about cost.
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/SSAirAtRest.png)
+
 *Figure 6.1: SSAir sitting doing little to nothing turf wise, only processing pipenets and atmos machines*
 
 As you can see here, SSAir is a bit of a jumble, don't worry, it'll make sense in a second. The first line is in this order: cost, tick_usage, tick_overrun, ticks.
@@ -288,6 +292,7 @@ See that image from before? Notice how the cost of SSAir at rest is about 40ms? 
 The atmos subsystem was used as a testing ground for the robustness of the master-controller. It used to have a wait of 2 seconds, but that was lowered to 0.5 as it was thought that the system could handle it. It can! But this can have annoying side effects. As you know, we edge right up against 50ms when sitting at rest, and if we start to make diffs...
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/GasTypes.png)
+
 *Figure 6.2: SSAir when a high amount of active turfs are operating, with a large selection of gastypes for each tile*
 
 As you can see, active turfs can be really slow. Oh but it gets so much worse.
@@ -299,6 +304,7 @@ For this reason, and because excited groups spread gas out so much, we want to k
 react() is called for every active turf, and every pipenet. On each react call for reasons I don't want to go into right now, we need to iterate over every reaction and do a preliminary test. Therefor, the more datum reactions we have, the slower those two processes go.
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/LargeExcitedGroup.png)
+
 *Figure 6.3: The effects of a large excited group on overtime*
 
 It's hard to tell here because I took the picture right as it happen, but when large excited groups go through `self_breakdown()` they can overtime by a significant deal. This is because `self_breakdown()` can't be delayed, or done in two parts. We can't let an older gasmix that's already been collected have say 1000 mols of plasma added, then go into breakdown and delete it all. Thus, the overtime cost. This was with a excited group 900 tiles large though, so it isn't nearly ever this bad. It also scales with the amount of gases in the same way that `share()` does.
@@ -308,6 +314,7 @@ On the whole excited groups are the only major source of overrun, consider this 
 ## 7. What we want atmos code to be
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/DiffsSettling.png)
+
 *Figure 7.1: Diffs settling out as they should, around their sources*
 
 Our goal is not to simulate real life atmospherics. It is instead to put on a show of doing so. To sleep wherever we can, and fake it as hard as possible.
@@ -323,6 +330,7 @@ Performance and gameplay are much more important then realism. In all your work 
 ## 8. Pipelines and pipeline machinery
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/PipelineVisuals.png)
+
 *Figure 8.1: The structure of pipelines shown in color, components are a mix*
 
 `/datum/pipeline` handles the simulation of piping and such. It has 2 main actions, one of which you should know very well. The other is slightly more of a hurdle.
@@ -401,6 +409,7 @@ To start with, you should enable the `TESTING` define in compile_options.dm, thi
 Past that you'll want to turn on excited group highlighting, to do this open the atmos control panel in the debug tab and toggle both personal view and display all. Display all makes turfs display their group and personal view shows/hides the groups from you, it's faster to toggle this, and this way you don't piss off the other debuggers on live.
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/AtmosControlPanel.png)
+
 *Figure B.1: The atmospherics control panel*
 
 To go into more detail about the control panel, it is split into two parts. At the top there's a readout of some relevant stats, the amount of active turfs, how many times the subsystem has fired, etc. You can get the same information from the SSAir MC entry, but it's a bit harder to read. I detail this in the section on performance in environmental atmos. There's a button that turns the subsystem on/off in the top left, it's handy for debugging and seeing how things work step by step. Use it if you need to slow things down.
