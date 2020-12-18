@@ -380,7 +380,7 @@
 	return FALSE
 
 // -------------------------------------
-// Xenobiology Slime-Extract Smartfridge
+// Xenobiology Petri Dish Smartfridge
 // -------------------------------------
 /obj/machinery/smartfridge/extract
 	name = "smart slime extract storage"

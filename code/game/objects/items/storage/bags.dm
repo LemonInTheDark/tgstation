@@ -439,8 +439,7 @@
 		/obj/item/organ,
 		/obj/item/bodypart,
 		/obj/item/petri_dish,
-		/obj/item/swab,
-		/obj/item/biopsy_tool
+		/obj/item/swab
 		))
 
 /*
