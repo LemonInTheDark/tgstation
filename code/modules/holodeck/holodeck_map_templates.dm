@@ -10,12 +10,13 @@
 	var/access_flags //bitflags representing what holodeck is allowed to access them
 	var/restricted = FALSE
 	var/datum/parsed_map/lastparsed
-	returns_created = TRUE
-	should_place_on_top = FALSE
-	turf_blacklist = list()
+	//returns_created = TRUE
+	//should_place_on_top = FALSE
+	//turf_blacklist = list()
 
 	var/obj/machinery/computer/holodeck/linked
 
+/*
 /datum/map_template/holodeck/offline
 	name = "Holodeck - Offline"
 	template_id = "holodeck_offline"
@@ -191,7 +192,7 @@
 	description = "benis"
 	mappath = "_maps/templates/holodeck_refuelingstation.dmm"
 	restricted = TRUE
-	access_flags = STATION_HOLODECK
+	access_flags = STATION_HOLODECK*/
 
 //flag debug holodeck
 

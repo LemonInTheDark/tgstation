@@ -6,10 +6,10 @@
 	var/loaded = 0 // Times loaded this round
 	var/datum/parsed_map/cached_map
 	var/keep_cached_map = FALSE
-	var/should_place_on_top = TRUE
-	var/returns_created = FALSE//if true, returns a list of all spawned items, used for holodeck
-	var/list/created_atoms = list()
-	var/list/turf_blacklist = list()
+	//var/should_place_on_top = TRUE
+	//var/returns_created = FALSE//if true, returns a list of all spawned items, used for holodeck
+	//var/list/created_atoms = list()
+	//var/list/turf_blacklist = list()
 
 /datum/map_template/New(path = null, rename = null, cache = FALSE)
 	if(path)
@@ -30,13 +30,11 @@
 	return bounds
 
 ///initializes all atoms, atmos, and power within and just outside of bounds
-/datum/map_template/proc/initTemplateBounds(list/bounds)
+/datum/parsed_map/proc/initTemplateBounds()
 	var/list/obj/machinery/atmospherics/atmos_machines = list()
 	var/list/obj/structure/cable/cables = list()
 	var/list/atom/atoms = list()
 	var/list/area/areas = list()
-	if (!bounds)
-		return
 	var/list/turfs = block(
 		locate(
 			bounds[MAP_MINX],
@@ -88,11 +86,12 @@
 		affected_turf.levelupdate()
 
 /datum/map_template/proc/load_new_z()
+	//message_admins(loaded)
 	var/x = round((world.maxx - width) * 0.5) + 1
 	var/y = round((world.maxy - height) * 0.5) + 1
 
 	var/datum/space_level/level = SSmapping.add_new_zlevel(name, list(ZTRAIT_AWAY = TRUE))
-	var/datum/parsed_map/parsed = load_map(file(mappath), x, y, level.z_value, no_changeturf=(SSatoms.initialized == INITIALIZATION_INSSATOMS), placeOnTop=should_place_on_top)
+	var/datum/parsed_map/parsed = load_map(file(mappath), x, y, level.z_value, no_changeturf=(SSatoms.initialized == INITIALIZATION_INSSATOMS), placeOnTop=TRUE)
 	var/list/bounds = parsed.bounds
 	if(!bounds)
 		return FALSE
@@ -100,7 +99,7 @@
 	repopulate_sorted_areas()
 
 	//initialize things that are normally initialized after map load
-	initTemplateBounds(bounds)
+	parsed.initTemplateBounds()
 	smooth_zlevel(world.maxz)
 	log_game("Z-level [name] loaded at [x],[y],[world.maxz]")
 
@@ -108,6 +107,7 @@
 
 ///loads in the current template on turf T
 /datum/map_template/proc/load(turf/T, centered = FALSE)
+	//message_admins(loaded+" times loaded")
 	if(centered)
 		T = locate(T.x - round(width/2) , T.y - round(height/2) , T.z)
 	if(!T)
@@ -129,10 +129,10 @@
 	var/datum/parsed_map/parsed = cached_map || new(file(mappath))
 	cached_map = keep_cached_map ? parsed : null
 
-	update_blacklist(T)
-	parsed.turf_blacklist = turf_blacklist
+	//update_blacklist(T)
+	//parsed.turf_blacklist = turf_blacklist
 
-	if(!parsed.load(T.x, T.y, T.z, cropMap=TRUE, no_changeturf=(SSatoms.initialized == INITIALIZATION_INSSATOMS), placeOnTop=should_place_on_top))
+	if(!parsed.load(T.x, T.y, T.z, cropMap=TRUE, no_changeturf=(SSatoms.initialized == INITIALIZATION_INSSATOMS), placeOnTop=TRUE))
 		return
 	var/list/bounds = parsed.bounds
 	if(!bounds)
@@ -142,7 +142,7 @@
 		repopulate_sorted_areas()
 
 	//initialize things that are normally initialized after map load
-	initTemplateBounds(bounds)
+	parsed.initTemplateBounds()
 
 	log_game("[name] loaded at [T.x],[T.y],[T.z]")
 	return bounds
