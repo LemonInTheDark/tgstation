@@ -237,6 +237,8 @@ SUBSYSTEM_DEF(air)
 	while(currentrun.len)
 		var/atom/talk_to = currentrun[currentrun.len]
 		currentrun.len--
+		if(!talk_to)
+			return
 		talk_to.process_exposure()
 		if(MC_TICK_CHECK)
 			return
@@ -296,7 +298,6 @@ SUBSYSTEM_DEF(air)
 	var/fire_count = times_fired
 	if (!resumed)
 		src.currentrun = active_turfs.Copy()
-		active_super_conductivity.Cut() //Clear the superconduction list so we can enter into it later
 	//cache for sanic speed (lists are references anyways)
 	var/list/currentrun = src.currentrun
 	while(currentrun.len)
@@ -347,7 +348,7 @@ SUBSYSTEM_DEF(air)
 		if (MC_TICK_CHECK)
 			return
 
-///Removes a turf from processing, and causes it's excited group to clean up to adapt to the change
+///Removes a turf from processing, and causes its excited group to clean up so things properly adapt to the change
 /datum/controller/subsystem/air/proc/remove_from_active(turf/open/T)
 	active_turfs -= T
 	if(currentpart == SSAIR_ACTIVETURFS)
@@ -363,7 +364,7 @@ SUBSYSTEM_DEF(air)
 			SSair.add_to_cleanup(T.excited_group) //Poke everybody in the group and reform
 			T.excited_group.garbage_collect() //Do this second, as it cleans up the group itself
 
-///Puts an active turf to sleep, so it doesn't process, without cleaning up it's excited group. This is used for speeeed
+///Puts an active turf to sleep so it doesn't process. Do this without cleaning up its excited group.
 /datum/controller/subsystem/air/proc/sleep_active_turf(turf/open/T)
 	active_turfs -= T
 	if(currentpart == SSAIR_ACTIVETURFS)
@@ -374,10 +375,10 @@ SUBSYSTEM_DEF(air)
 	if(istype(T))
 		T.excited = FALSE
 
-///Adds a turf to active processing, handles duplicates, call this with blockchanges == TRUE if you want to nuke the assoc excited group
+///Adds a turf to active processing, handles duplicates. Call this with blockchanges == TRUE if you want to nuke the assoc excited group
 /datum/controller/subsystem/air/proc/add_to_active(turf/open/T, blockchanges = FALSE)
 	if(istype(T) && T.air)
-		T.significant_share_ticker = 0 //Reset the ticker, need to think about this
+		T.significant_share_ticker = 0
 		if(blockchanges && T.excited_group) //This is used almost exclusivly for shuttles, so the excited group doesn't stay behind
 			T.excited_group.garbage_collect() //Nuke it
 		if(T.excited) //Don't keep doing it if there's no point
@@ -468,7 +469,7 @@ SUBSYSTEM_DEF(air)
 /turf/open/proc/resolve_active_graph()
 	. = list()
 	var/datum/excited_group/EG = excited_group
-	if (blocks_air || !air || planetary_atmos)
+	if (blocks_air || !air)
 		return
 	if (!EG)
 		EG = new

@@ -84,9 +84,9 @@ All ShuttleMove procs go here
 
 /turf/proc/lateShuttleMove(turf/oldT)
 	blocks_air = initial(blocks_air)
-	air_update_turf(TRUE, FALSE)
+	air_update_turf(TRUE, blocks_air)
 	oldT.blocks_air = initial(oldT.blocks_air)
-	oldT.air_update_turf(TRUE, TRUE)
+	oldT.air_update_turf(TRUE, oldT.blocks_air)
 
 
 /////////////////////////////////////////////////////////////////////////////////////

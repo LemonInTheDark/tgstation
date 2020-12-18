@@ -32,7 +32,7 @@
 
 /obj/structure/mineral_door/Destroy()
 	if(!door_opened)
-		air_update_turf(TRUE, TRUE)
+		air_update_turf(TRUE, FALSE)
 	. = ..()
 
 /obj/structure/mineral_door/Move()
@@ -138,7 +138,7 @@
 /obj/structure/mineral_door/set_anchored(anchorvalue) //called in default_unfasten_wrench() chain
 	. = ..()
 	set_opacity(anchored ? !door_opened : FALSE)
-	air_update_turf(TRUE, TRUE)
+	air_update_turf(TRUE, anchorvalue)
 
 /obj/structure/mineral_door/wrench_act(mob/living/user, obj/item/I)
 	..()

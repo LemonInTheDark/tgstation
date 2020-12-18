@@ -97,6 +97,7 @@
 	if(atmos_link)
 		link_atmos()
 
+//This proc breaks as soon as atmos turfs are reacalculated, someone fix it
 /obj/effect/portal/proc/link_atmos()
 	if(atmos_source || atmos_destination)
 		unlink_atmos()

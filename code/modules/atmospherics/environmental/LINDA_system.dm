@@ -101,8 +101,6 @@
 	return adjacent_turfs
 
 /atom/proc/air_update_turf(update = FALSE, remove = FALSE)
-	if(!isturf(loc) && update)
-		return
 	var/turf/T = get_turf(loc)
 	T.air_update_turf(update, remove)
 

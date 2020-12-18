@@ -50,7 +50,7 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define IS_SPINNING_1 (1 << 15)
 #define IS_ONTOP_1 (1 << 16)
 #define SUPERMATTER_IGNORES_1 (1 << 17)
-/// Is this object currently processing in the atmos object list? (SHOOT ME)
+/// Is this object currently processing in the atmos object list?
 #define ATMOS_IS_PROCESSING_1 (1 << 18)
 
 /// If the thing can reflect light (lasers/energy)

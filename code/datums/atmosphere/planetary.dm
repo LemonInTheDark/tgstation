@@ -43,7 +43,6 @@
 		/datum/gas/miasma=1.2,
 	)
 	restricted_chance = 50
-	restricted_chance = 50
 
 	minimum_pressure = HAZARD_LOW_PRESSURE + 10
 	maximum_pressure = LAVALAND_EQUIPMENT_EFFECT_PRESSURE - 1

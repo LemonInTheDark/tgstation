@@ -498,9 +498,6 @@ GLOBAL_LIST_INIT(atmos_adjacent_savings, list(0,0))
 #define CALCULATE_ADJACENT_TURFS(T) SSadjacent_air.queue[T] = 1
 #endif
 
-//Returns true if there's a significant amount of temp on the turf, and it's capable of moving heat
-#define CONSIDER_SUPERCONDUCTIVITY(air) !(air.heat_capacity() < M_CELL_WITH_RATIO || air.temperature < MINIMUM_TEMPERATURE_START_SUPERCONDUCTION)
-
 //If you're doing spreading things related to atmos, DO NOT USE CANATMOSPASS, IT IS NOT CHEAP. use this instead, the info is cached after all. it's tweaked just a bit to allow for circular checks
 #define TURFS_CAN_SHARE(T1, T2) (LAZYACCESS(T2.atmos_adjacent_turfs, T1) || LAZYLEN(T1.atmos_adjacent_turfs & T2.atmos_adjacent_turfs))
 //Use this to see if a turf is fully blocked or not, think windows or firelocks. Fails with 1x1 non full tile windows, but it's not worth the cost.

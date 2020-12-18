@@ -1,4 +1,4 @@
-//This element should be a way to facilitate registering objects for heat behavior
+//This element facilitates reaction to atmos changes when a tile is inactive.
 //It adds the object to a list on SSair to be processed for so long as the object wants to be processed
 //And removes it as soon as the object is no longer interested
 //Don't put it on things that tend to clump into one spot, you will cause lag spikes.
@@ -50,23 +50,17 @@
 		flags_1 &= ~ATMOS_IS_PROCESSING_1
 		return
 	var/temp = spot.air.temperature
-	if(!should_atmos_process(spot.air, temp)) //Temp and such can move without the tile becoming active. If that ever changes...
+	if(!should_atmos_process(spot.air, temp)) //Things can change without a tile becoming active
 		SSair.atom_process -= src
 		flags_1 &= ~ATMOS_IS_PROCESSING_1
 		return
 	atmos_expose(spot.air, temp)
 
+///We use this proc to check if we should start processing an item, or continue processing it. Returns true/false as expected
 /atom/proc/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return FALSE
 
 
-///Used by the atmos_sensitive component to register onto atmos flow over our turf
+///This is your process() proc
 /atom/proc/atmos_expose(datum/gas_mixture/air, exposed_temperature)
 	return
-
-/*
-	TODO:
-	Superconductors need to fucking settle (Test this later)
-	They also need a better qualifyier, shouldn't just be heat. (maybe)
-	Maybe link some atmos machinery to this system? idk man. (later)
-*/

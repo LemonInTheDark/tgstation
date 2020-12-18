@@ -220,7 +220,7 @@
 
 /obj/structure/window/set_anchored(anchorvalue)
 	..()
-	air_update_turf(TRUE, TRUE)
+	air_update_turf(TRUE, anchorvalue)
 	update_nearby_icons()
 
 /obj/structure/window/proc/check_state(checked_state)
@@ -291,7 +291,7 @@
 	return TRUE
 
 /obj/structure/window/proc/after_rotation(mob/user,rotation_type)
-	air_update_turf(TRUE, TRUE)
+	air_update_turf(TRUE, FALSE)
 	ini_dir = dir
 	add_fingerprint(user)
 
