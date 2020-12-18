@@ -255,16 +255,16 @@
 	qdel(object)
 
 /obj/machinery/computer/holodeck/process(delta_time)
-	if(damaged && DT_PROB(5, delta_time))
+	/*if(damaged && DT_PROB(5, delta_time))
 		for(var/turf/holo_turf in linked)
 			if(DT_PROB(2.5, delta_time))
 				do_sparks(2, 1, holo_turf)
-				return
+				return*/
 
 	if(!..() || program == offline_program)//we dont need to scan the holodeck if the holodeck is offline
 		return
 
-	if(!floorcheck())
+	/*if(!floorcheck())
 		emergency_shutdown()
 		damaged = TRUE
 		for(var/mob/can_see_fuckup in urange(10,src))
@@ -283,7 +283,7 @@
 	for(var/_effect in effects)
 		var/obj/effect/holodeck_effect/holo_effect = _effect
 		holo_effect.tick()
-	active_power_usage = 50 + spawned.len * 3 + effects.len * 5
+	active_power_usage = 50 + spawned.len * 3 + effects.len * 5*/
 
 /obj/machinery/computer/holodeck/proc/toggle_power(toggleOn = FALSE)
 	if(active == toggleOn)
