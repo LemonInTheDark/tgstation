@@ -145,8 +145,8 @@
 			say("Safeties restored. Restarting...")
 
 ///this is what makes the holodeck not spawn anything on broken tiles (space and non engine plating)
-/datum/map_template/holodeck/update_blacklist(turf/placement)
-	return
+///datum/map_template/holodeck/update_blacklist(turf/placement)
+//	return
 	/*turf_blacklist.Cut()
 	for (var/_turf in get_affected_turfs(placement))
 		var/turf/possible_blacklist = _turf
@@ -360,7 +360,7 @@
 	return ..()
 
 
-/obj/machinery/computer/holodeck/offstation
+/*/obj/machinery/computer/holodeck/offstation
 	name = "holodeck control console"
 	desc = "A computer used to control a nearby holodeck."
 	offline_program = "holodeck_offline"
@@ -369,7 +369,7 @@
 
 /obj/machinery/computer/holodeck/offstation/LateInitialize()
 	holodeck_access |= STATION_HOLODECK
-	. = ..()
+	. = ..()*/
 
 #undef HOLODECK_CD
 #undef HOLODECK_DMG_CD

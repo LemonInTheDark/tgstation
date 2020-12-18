@@ -6,10 +6,6 @@
 	var/loaded = 0 // Times loaded this round
 	var/datum/parsed_map/cached_map
 	var/keep_cached_map = FALSE
-	//var/should_place_on_top = TRUE
-	//var/returns_created = FALSE//if true, returns a list of all spawned items, used for holodeck
-	//var/list/created_atoms = list()
-	//var/list/turf_blacklist = list()
 
 /datum/map_template/New(path = null, rename = null, cache = FALSE)
 	if(path)
@@ -29,12 +25,12 @@
 			cached_map = parsed
 	return bounds
 
-///initializes all atoms, atmos, and power within and just outside of bounds
 /datum/parsed_map/proc/initTemplateBounds()
 	var/list/obj/machinery/atmospherics/atmos_machines = list()
 	var/list/obj/structure/cable/cables = list()
 	var/list/atom/atoms = list()
 	var/list/area/areas = list()
+
 	var/list/turfs = block(
 		locate(
 			bounds[MAP_MINX],
@@ -60,8 +56,6 @@
 
 	SSmapping.reg_in_areas_in_z(areas)
 	SSatoms.InitializeAtoms(areas + turfs + atoms)
-	//if the template is set to return a list, then pass ssatoms the list, otherwise give it null
-
 	// NOTE, now that Initialize and LateInitialize run correctly, do we really
 	// need these two below?
 	SSmachines.setup_template_powernets(cables)
@@ -86,7 +80,6 @@
 		affected_turf.levelupdate()
 
 /datum/map_template/proc/load_new_z()
-	//message_admins(loaded)
 	var/x = round((world.maxx - width) * 0.5) + 1
 	var/y = round((world.maxy - height) * 0.5) + 1
 
@@ -105,9 +98,7 @@
 
 	return level
 
-///loads in the current template on turf T
 /datum/map_template/proc/load(turf/T, centered = FALSE)
-	//message_admins(loaded+" times loaded")
 	if(centered)
 		T = locate(T.x - round(width/2) , T.y - round(height/2) , T.z)
 	if(!T)
@@ -128,10 +119,6 @@
 	// ruins clogging up memory for the whole round.
 	var/datum/parsed_map/parsed = cached_map || new(file(mappath))
 	cached_map = keep_cached_map ? parsed : null
-
-	//update_blacklist(T)
-	//parsed.turf_blacklist = turf_blacklist
-
 	if(!parsed.load(T.x, T.y, T.z, cropMap=TRUE, no_changeturf=(SSatoms.initialized == INITIALIZATION_INSSATOMS), placeOnTop=TRUE))
 		return
 	var/list/bounds = parsed.bounds
@@ -164,7 +151,3 @@
 /proc/load_new_z_level(file, name)
 	var/datum/map_template/template = new(file, name)
 	template.load_new_z()
-
-///in case the template has turf types it doesnt want to place itself on
-/datum/map_template/proc/update_blacklist(turf/placement)
-	return
