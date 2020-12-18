@@ -76,7 +76,7 @@
 			var/obj/structure/sign/poster/P = O
 			P.roll_and_drop(src)
 
-	ScrapeAway(flags = CHANGETURF_RECALC_ADJACENT)
+	ScrapeAway()
 
 /turf/closed/wall/proc/break_wall()
 	new sheet_type(src, sheet_amount)
@@ -281,7 +281,7 @@
 	switch(passed_mode)
 		if(RCD_DECONSTRUCT)
 			to_chat(user, "<span class='notice'>You deconstruct the wall.</span>")
-			ScrapeAway(flags = CHANGETURF_RECALC_ADJACENT)
+			ScrapeAway()
 			return TRUE
 	return FALSE
 

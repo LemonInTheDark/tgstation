@@ -259,7 +259,7 @@
 				var/turf/closed/wall/W = target
 				if(!do_after_cooldown(W, source))
 					return
-				W.ScrapeAway(flags = CHANGETURF_RECALC_ADJACENT)
+				W.ScrapeAway()
 			else if(isfloorturf(target))
 				var/turf/open/floor/F = target
 				if(!do_after_cooldown(target, source))

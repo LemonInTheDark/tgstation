@@ -20,7 +20,6 @@
 	intact = TRUE
 	tiled_dirt = TRUE
 
-	var/icon_regular_floor = "floor" //used to remember what icon the tile should have by default
 	var/icon_plating = "plating"
 	var/broken = FALSE
 	var/burnt = FALSE

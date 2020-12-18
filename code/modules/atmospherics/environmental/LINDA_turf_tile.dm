@@ -330,7 +330,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 			SSair.sleep_active_turf(src)
 
 	significant_share_ticker = cached_ticker //Save our changes
-	temperature_expose(our_air, our_air.temperature) //I should add some sanity checks to this thing
+	temperature_expose(our_air, our_air.temperature)
 
 ////////////////////Excited Group Cleanup///////////////////////
 
@@ -408,10 +408,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 	If a tile is sleeping, it is removed from the active turfs list and not processed at all
 	The issue comes when we try and reform excited groups after a removal like this
 	and the turfs just poof go fully to sleep.
-	I'm going to try keeping track of state with the excited variable, and if it's set to sleep, we just well,
-	only preform merge operations with neighboring excited groups.
-
-	Maybe this will help with player caused rebuilds
+	We solve this with excited group cleanup. See the documentation for more details.
 */
 /datum/excited_group
 	var/list/turf_list = list()
@@ -459,8 +456,6 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 	breakdown_cooldown = 0
 	dismantle_cooldown = 0
 
-//argument is so world start can clear out any turf differences quickly.
-//consider splitting up ss breakdowns into "must do at once" parts, and non "must do at once" parts.
 /datum/excited_group/proc/self_breakdown(roundstart = FALSE, poke_turfs = FALSE)
 	var/datum/gas_mixture/A = new
 
@@ -501,17 +496,9 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 		var/turf/open/T = t
 		T.air.copy_from(A)
 		T.update_visuals()
-		if(!T.excited && poke_turfs) //Because we only activate all these once every breakdown, in event of lag due to this code and slow space + vent things, increase the wait time for breakdowns
-			SSair.add_to_active(T) //Maybe check molar diff or something? IDK
+		if(poke_turfs) //Because we only activate all these once every breakdown, in event of lag due to this code and slow space + vent things, increase the wait time for breakdowns
+			SSair.add_to_active(T)
 			T.significant_share_ticker = EXCITED_GROUP_DISMANTLE_CYCLES //Max out the ticker, if they don't share next tick, nuke em
-	if(roundstart)
-		var/datum/gas_mixture/cache = new()
-		cache.copy_from(A)
-		for(var/t in turf_list)
-			var/turf/open/T = t
-			A.react(T)
-			T.update_visuals()
-			A.copy_from(cache) //Keep it the same nerd
 
 	breakdown_cooldown = 0
 
@@ -527,7 +514,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 		#endif
 	garbage_collect()
 
-//Breaks down the excited group, this doesn't kill the turfs mind, just removes them from the group
+//Breaks down the excited group, this doesn't sleep the turfs mind, just removes them from the group
 /datum/excited_group/proc/garbage_collect()
 	if(display_id) //If we ever did make those changes
 		hide_turfs()
@@ -566,7 +553,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 /**
 ALLLLLLLLLLLLLLLLLLLLRIGHT HERE WE GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 
-Read the code for more details, but first, a brief concept discussion.area
+Read the code for more details, but first, a brief concept discussion/area
 
 Our goal here is to "model" heat moving through solid objects, so walls, windows, and sometimes doors.
 We do this by heating up the floor itself with the heat of the gasmix ontop of it, this is what the coeffs are for here, they slow that movement
@@ -684,5 +671,5 @@ Then we space some of our heat, and think about if we should stop conducting.
 		var/heat = conduction_coefficient*delta_temperature* \
 			(heat_capacity*sharer.heat_capacity/(heat_capacity+sharer.heat_capacity)) //The larger the combined capacity the less is shared
 
-		temperature -= heat/heat_capacity //The higher your own heat cap the less heat you get from this arangement
+		temperature -= heat/heat_capacity //The higher your own heat cap the less heat you get from this arrangement
 		sharer.temperature += heat/sharer.heat_capacity

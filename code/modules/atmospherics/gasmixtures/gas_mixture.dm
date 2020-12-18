@@ -373,7 +373,7 @@ GLOBAL_LIST_INIT(gaslist_cache, init_gaslist_cache())
 
 	garbage_collect()
 	sharer.garbage_collect()
-	if(temperature_delta > MINIMUM_TEMPERATURE_TO_MOVE)
+	if(temperature_delta > MINIMUM_TEMPERATURE_TO_MOVE || abs(moved_moles) > MINIMUM_MOLES_DELTA_TO_MOVE)
 		var/our_moles
 		TOTAL_MOLES(cached_gases,our_moles)
 		var/their_moles
@@ -422,7 +422,7 @@ GLOBAL_LIST_INIT(gaslist_cache, init_gaslist_cache())
 
 	var/our_moles
 	TOTAL_MOLES(cached_gases, our_moles)
-	if(our_moles > MINIMUM_MOLES_DELTA_TO_MOVE) //Don't consider temp if there's not enough mols, this can cause some silly things, test
+	if(our_moles > MINIMUM_MOLES_DELTA_TO_MOVE) //Don't consider temp if there's not enough mols
 		var/temp = temperature
 		var/sample_temp = sample.temperature
 
@@ -449,7 +449,7 @@ GLOBAL_LIST_INIT(gaslist_cache, init_gaslist_cache())
 		return
 
 	reaction_results = new
-	//It might be worth looking into updating these after each reaction, but it changes things a lot, so be carful
+	//It might be worth looking into updating these after each reaction, but it changes things a lot, so be careful
 	var/temp = temperature
 	var/ener = THERMAL_ENERGY(src)
 

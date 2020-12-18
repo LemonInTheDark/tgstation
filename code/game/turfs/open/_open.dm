@@ -161,13 +161,6 @@
 	excited = FALSE
 	update_visuals()
 
-	var/datum/gas_mixture/cache = new()
-	cache.copy_from(air)
-	cache.react(src)
-
-	if(planetary_atmos)
-		return
-
 	current_cycle = times_fired
 	ImmediateCalculateAdjacentTurfs()
 	for(var/i in atmos_adjacent_turfs)
