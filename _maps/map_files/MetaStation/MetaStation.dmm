@@ -59088,6 +59088,10 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
 	},
+/obj/item/kitchen/knife{
+	pixel_x = 14;
+	pixel_y = 1
+	},
 /turf/open/floor/plasteel/white,
 /area/science/cytology)
 "cRZ" = (
@@ -60912,6 +60916,7 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 8
 	},
+/obj/machinery/smartfridge/organ,
 /turf/open/floor/plasteel/white,
 /area/science/cytology)
 "dcl" = (
@@ -61030,6 +61035,7 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 8
 	},
+/obj/structure/tank_holder/extinguisher,
 /turf/open/floor/plasteel/white,
 /area/science/cytology)
 "dcx" = (
@@ -64737,6 +64743,10 @@
 	},
 /turf/open/floor/plasteel,
 /area/hallway/secondary/service)
+"dOB" = (
+/obj/structure/reagent_dispensers/watertank,
+/turf/open/floor/plating,
+/area/science/cytology)
 "dOR" = (
 /obj/machinery/conveyor{
 	dir = 1;
@@ -65865,6 +65875,10 @@
 /obj/effect/turf_decal/trimline/neutral/line,
 /turf/open/floor/plasteel/dark,
 /area/crew_quarters/cafeteria)
+"fkF" = (
+/obj/structure/sign/warning/biohazard,
+/turf/closed/wall/r_wall,
+/area/science/cytology)
 "flL" = (
 /obj/machinery/door/airlock/maintenance{
 	name = "Surgery C Maintenance";
@@ -67283,9 +67297,6 @@
 /obj/effect/spawner/lootdrop/glowstick,
 /turf/open/floor/plasteel/white,
 /area/medical/abandoned)
-"gYC" = (
-/turf/closed/wall/r_wall,
-/area/science/cytology)
 "gYQ" = (
 /obj/machinery/firealarm{
 	dir = 1;
@@ -67761,12 +67772,6 @@
 "hEd" = (
 /turf/open/floor/plasteel/white,
 /area/medical/paramedic)
-"hEn" = (
-/obj/structure/disposalpipe/segment{
-	dir = 9
-	},
-/turf/open/floor/plasteel/white,
-/area/science/cytology)
 "hEp" = (
 /obj/structure/closet/secure_closet/freezer/meat,
 /obj/machinery/light/small{
@@ -68128,6 +68133,13 @@
 	},
 /turf/closed/wall,
 /area/crew_quarters/fitness/recreation)
+"ijP" = (
+/obj/machinery/door/airlock/hatch{
+	name = "Cytology Maintenance";
+	req_access_txt = "47"
+	},
+/turf/open/floor/plasteel/white,
+/area/science/cytology)
 "ilm" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 1
@@ -69536,6 +69548,10 @@
 	},
 /turf/open/floor/wood,
 /area/crew_quarters/bar)
+"jUP" = (
+/obj/machinery/space_heater,
+/turf/open/floor/plating,
+/area/science/cytology)
 "jVo" = (
 /obj/machinery/chem_master/condimaster{
 	name = "CondiMaster Neo"
@@ -69611,6 +69627,9 @@
 	},
 /turf/open/floor/plasteel,
 /area/hallway/primary/central)
+"jZH" = (
+/turf/open/floor/plating,
+/area/science/cytology)
 "jZN" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -70757,6 +70776,12 @@
 	},
 /turf/open/floor/plasteel,
 /area/quartermaster/warehouse)
+"lzf" = (
+/obj/structure/disposalpipe/segment{
+	dir = 9
+	},
+/turf/open/floor/plasteel/white,
+/area/science/cytology)
 "lzk" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
@@ -72508,10 +72533,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/medical/chemistry)
-"nTq" = (
-/obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating,
-/area/science/cytology)
 "nUa" = (
 /obj/effect/turf_decal/tile/blue,
 /obj/effect/turf_decal/tile/blue{
@@ -73590,6 +73611,10 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/maintenance/port)
+"plZ" = (
+/obj/effect/spawner/structure/window/reinforced,
+/turf/open/floor/plating,
+/area/science/cytology)
 "pmn" = (
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
@@ -74174,10 +74199,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/medical/surgery/room_b)
-"pSQ" = (
-/obj/machinery/holopad,
-/turf/open/floor/plasteel/white,
-/area/science/cytology)
 "pSX" = (
 /obj/machinery/door/airlock/external{
 	name = "Auxiliary Escape Airlock"
@@ -74780,6 +74801,10 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/security/prison)
+"qzT" = (
+/obj/structure/reagent_dispensers/fueltank,
+/turf/open/floor/plating,
+/area/science/cytology)
 "qAO" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
@@ -76480,6 +76505,10 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/science/misc_lab/range)
+"sAc" = (
+/obj/machinery/holopad,
+/turf/open/floor/plasteel/white,
+/area/science/cytology)
 "sAk" = (
 /obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
 	dir = 5
@@ -77898,6 +77927,11 @@
 	},
 /turf/open/floor/plating,
 /area/quartermaster/qm)
+"uGs" = (
+/obj/effect/spawner/lootdrop/maintenance/two,
+/obj/structure/rack,
+/turf/open/floor/plating,
+/area/science/cytology)
 "uGS" = (
 /turf/closed/wall,
 /area/medical/pharmacy)
@@ -78265,6 +78299,12 @@
 	},
 /turf/open/floor/plasteel,
 /area/maintenance/department/science)
+"vhY" = (
+/obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
+	dir = 8
+	},
+/turf/open/floor/plasteel/white,
+/area/science/cytology)
 "viE" = (
 /obj/structure/cable,
 /obj/structure/disposalpipe/segment{
@@ -78355,9 +78395,6 @@
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/plasteel/dark,
 /area/engine/storage_shared)
-"vpC" = (
-/turf/open/floor/plasteel/white,
-/area/science/cytology)
 "vpU" = (
 /obj/machinery/door/firedoor,
 /obj/structure/cable,
@@ -79257,12 +79294,6 @@
 	},
 /turf/open/floor/plating,
 /area/maintenance/aft)
-"wtY" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
-	dir = 8
-	},
-/turf/open/floor/plasteel/white,
-/area/science/cytology)
 "wuc" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
@@ -79790,6 +79821,9 @@
 	},
 /turf/open/floor/plasteel,
 /area/hallway/primary/port)
+"xaM" = (
+/turf/closed/wall/r_wall,
+/area/science/cytology)
 "xbP" = (
 /obj/machinery/hydroponics/soil,
 /obj/item/cultivator,
@@ -79994,10 +80028,6 @@
 	dir = 9
 	},
 /area/medical/sleeper)
-"xnT" = (
-/obj/structure/sign/warning/biohazard,
-/turf/closed/wall/r_wall,
-/area/science/cytology)
 "xop" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/sink{
@@ -80463,6 +80493,9 @@
 /obj/effect/turf_decal/tile/red,
 /turf/open/floor/plasteel,
 /area/security/prison)
+"xUr" = (
+/turf/open/floor/plasteel/white,
+/area/science/cytology)
 "xVb" = (
 /obj/structure/cable,
 /obj/machinery/power/solar{
@@ -116566,16 +116599,16 @@ aaa
 aaa
 aaa
 aaa
-gYC
-gYC
+xaM
+xaM
 cTB
-gYC
-gYC
-gYC
-gYC
-gYC
-gYC
-gYC
+xaM
+xaM
+xaM
+xaM
+xaM
+xaM
+xaM
 cRi
 cRi
 cRi
@@ -116823,7 +116856,7 @@ aaa
 aaa
 aaa
 aaa
-gYC
+xaM
 cRv
 cTD
 dcg
@@ -116832,15 +116865,15 @@ dDI
 ssm
 jHT
 xet
-gYC
+xaM
+jUP
+jZH
+jZH
+dOB
+xaM
 aaa
-aaa
-aaf
-aaa
-aaa
-aaa
-aaf
-aaf
+lMJ
+lMJ
 aaa
 lMJ
 aaf
@@ -117080,7 +117113,7 @@ aaa
 aaa
 aaa
 aaa
-gYC
+xaM
 cRw
 cUM
 dch
@@ -117089,14 +117122,14 @@ dUu
 tMJ
 ilM
 fas
-gYC
+ijP
+jZH
+jZH
+qzT
+xaM
+xaM
 aaa
-aaa
-aaf
-aaa
-aaa
-aaa
-aaf
+lMJ
 aaa
 aaa
 aaa
@@ -117337,20 +117370,20 @@ aaa
 aaa
 aaf
 aaa
-gYC
+xaM
 cRz
 cUN
 dci
-gYC
+xaM
 eLW
 vLD
 eAK
 fas
-nTq
-aaa
-aaa
-aaa
-aaa
+xaM
+uGs
+uGs
+xaM
+xaM
 aaa
 aaa
 aaa
@@ -117594,19 +117627,19 @@ aaa
 aaa
 aaf
 aaa
-gYC
-gYC
-xnT
+xaM
+xaM
+fkF
 dcj
-gYC
+xaM
 jgL
 wLG
 eAK
 fas
-nTq
-aaa
-aaa
-aaa
+xaM
+xaM
+xaM
+xaM
 aaa
 aaa
 aaa
@@ -117851,7 +117884,7 @@ aaa
 aaf
 aaf
 aaa
-gYC
+xaM
 cRS
 cZa
 dck
@@ -117860,7 +117893,7 @@ kbl
 vLD
 eAK
 gbn
-gYC
+xaM
 aaa
 aaa
 aaa
@@ -118108,16 +118141,16 @@ anT
 aaf
 aaf
 aaa
-nTq
+plZ
 cRY
 cZv
 dcl
 dcx
-vpC
+xUr
 vLD
 eAK
 tSC
-gYC
+xaM
 lMJ
 aaa
 aaa
@@ -118365,16 +118398,16 @@ aaf
 aaa
 aaf
 aaa
-gYC
+xaM
 cSy
 dbv
-vpC
+xUr
 dcx
-pSQ
+sAc
 vLD
 eAK
 fas
-nTq
+plZ
 lMJ
 lMJ
 aaa
@@ -118622,7 +118655,7 @@ dbJ
 aaa
 aaf
 aaf
-gYC
+xaM
 cSB
 dbw
 dcm
@@ -118631,7 +118664,7 @@ mjj
 xsP
 kqs
 fas
-nTq
+plZ
 lMJ
 aaa
 aaa
@@ -118879,16 +118912,16 @@ dbO
 aaf
 aaf
 aaf
-nTq
+plZ
 cSQ
 dbw
 dcn
 dcx
-vpC
+xUr
 dbw
 pxA
 fas
-nTq
+plZ
 aaa
 aaa
 aaa
@@ -119136,7 +119169,7 @@ dbJ
 aaa
 aaf
 aaa
-gYC
+xaM
 cSR
 dbX
 dco
@@ -119145,7 +119178,7 @@ dco
 wkw
 eAK
 gbn
-gYC
+xaM
 aaa
 aaa
 aaa
@@ -119393,16 +119426,16 @@ aaa
 aaa
 anT
 aaa
-gYC
+xaM
 cSZ
-vpC
+xUr
 dcq
-hEn
-vpC
-wtY
-vpC
+lzf
+xUr
+vhY
+xUr
 fas
-gYC
+xaM
 lMJ
 aaa
 aaa
@@ -119650,7 +119683,7 @@ dbJ
 aaf
 anT
 aaa
-gYC
+xaM
 cTn
 dbY
 dcr
@@ -119659,7 +119692,7 @@ oXi
 dtz
 pQW
 fTf
-gYC
+xaM
 lMJ
 aaa
 aaa
@@ -119907,16 +119940,16 @@ dbO
 aaf
 anT
 aaa
-xnT
-gYC
-gYC
-nTq
-nTq
-gYC
-gYC
-gYC
-gYC
-xnT
+fkF
+xaM
+xaM
+plZ
+plZ
+xaM
+xaM
+xaM
+xaM
+fkF
 lMJ
 aaa
 aaa
