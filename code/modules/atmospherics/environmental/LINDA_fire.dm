@@ -1,5 +1,6 @@
 
 
+/atom/proc/temperature_expose(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	return null
 
 
@@ -95,7 +96,7 @@
 
 	for(var/A in location)
 		var/atom/AT = A
-		if(!QDELETED(AT) && AT != src) // It's possible that the item is deleted in temperature_expose
+		if(!QDELETED(AT) && AT != src)
 			AT.fire_act(temperature, volume)
 	return
 
