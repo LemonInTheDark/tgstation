@@ -9,12 +9,12 @@
 	var/description
 	var/access_flags //bitflags representing what holodeck is allowed to access them
 	var/restricted = FALSE
-	var/datum/parsed_map/lastparsed
+	//var/datum/parsed_map/lastparsed
 	//returns_created = TRUE
 	//should_place_on_top = FALSE
 	//turf_blacklist = list()
 
-	var/obj/machinery/computer/holodeck/linked
+	//var/obj/machinery/computer/holodeck/linked
 
 /*
 /datum/map_template/holodeck/offline

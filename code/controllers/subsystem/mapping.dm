@@ -23,7 +23,7 @@ SUBSYSTEM_DEF(mapping)
 
 	var/list/shuttle_templates = list()
 	var/list/shelter_templates = list()
-	var/list/holodeck_templates = list()
+	//var/list/holodeck_templates = list()
 
 	var/list/areas_in_z = list()
 
@@ -190,7 +190,7 @@ SUBSYSTEM_DEF(mapping)
 	unused_turfs = SSmapping.unused_turfs
 	turf_reservations = SSmapping.turf_reservations
 	used_turfs = SSmapping.used_turfs
-	holodeck_templates = SSmapping.holodeck_templates
+	//holodeck_templates = SSmapping.holodeck_templates
 	config = SSmapping.config
 	next_map_config = SSmapping.next_map_config
 
@@ -389,7 +389,7 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 	preloadRuinTemplates()
 	preloadShuttleTemplates()
 	preloadShelterTemplates()
-	preloadHolodeckTemplates()
+	//preloadHolodeckTemplates()
 
 /datum/controller/subsystem/mapping/proc/preloadRuinTemplates()
 	// Still supporting bans by filename
@@ -444,7 +444,7 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 		shelter_templates[S.shelter_id] = S
 		map_templates[S.shelter_id] = S
 
-/datum/controller/subsystem/mapping/proc/preloadHolodeckTemplates()
+/*/datum/controller/subsystem/mapping/proc/preloadHolodeckTemplates()
 	for(var/item in subtypesof(/datum/map_template/holodeck))
 		var/datum/map_template/holodeck/holodeck_type = item
 		if(!(initial(holodeck_type.mappath)))
@@ -452,7 +452,7 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 		var/datum/map_template/holodeck/S = new holodeck_type()
 
 		holodeck_templates[S.template_id] = S
-		map_templates[S.template_id] = S
+		map_templates[S.template_id] = S*/
 
 //Manual loading of away missions.
 /client/proc/admin_away()

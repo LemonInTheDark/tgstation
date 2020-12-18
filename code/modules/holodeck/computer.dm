@@ -195,8 +195,8 @@
 				holo_turf.baseturfs -= _baseturf
 				holo_turf.baseturfs += /turf/open/floor/holofloor/plating
 
-	template = SSmapping.holodeck_templates[map_id]
-	template.load(bottom_left)//this is what actually loads the holodeck simulation into the map
+	//template = SSmapping.holodeck_templates[map_id]
+	//template.load(bottom_left)//this is what actually loads the holodeck simulation into the map
 
 	//spawned = template.created_atoms
 

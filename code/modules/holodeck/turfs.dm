@@ -24,26 +24,7 @@
 	name = "chapel floor"
 	icon_state = "chapel"
 
-/turf/open/floor/holofloor/chapel/bottom_left
-	name = "chapel floor"
-	icon_state = "chapel"
-	direction = 8
-
-/turf/open/floor/holofloor/chapel/top_right
-	name = "chapel floor"
-	icon_state = "chapel"
-	direction = 4
-
-/turf/open/floor/holofloor/chapel/bottom_right
-	name = "chapel floor"
-	icon_state = "chapel"
-
-/turf/open/floor/holofloor/chapel/top_left
-	name = "chapel floor"
-	icon_state = "chapel"
-	direction = 1
-
-/turf/open/floor/holofloor/Initialize()
+/*/turf/open/floor/holofloor/Initialize()
 	. = ..()
 	if (direction != 2)
 		src.setDir(direction)
@@ -51,6 +32,7 @@
 	//mapload is finished, but not after.
 	//update: 70% sure this is because turf/ChangeTurf() only takes in the path of the new turf and not any attributes, so this will have to stay
 	//unless that is fixed
+*/
 
 /turf/open/floor/holofloor/plating/burnmix
 	name = "burn-mix floor"
