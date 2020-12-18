@@ -3,7 +3,6 @@ import { flow } from 'common/fp';
 import { useBackend } from '../backend';
 import { Box, Button, Flex, Section, Table } from '../components';
 import { Window } from '../layouts';
-import { FlexItem } from '../components/Flex';
 
 export const AtmosControlPanel = (props, context) => {
   const { act, data } = useBackend(context);
@@ -18,7 +17,7 @@ export const AtmosControlPanel = (props, context) => {
   return (
     <Window
       title="SSAir Control Panel"
-      width={950}
+      width={900}
       height={500}
       resizable>
       <Section m={1}>
@@ -48,9 +47,6 @@ export const AtmosControlPanel = (props, context) => {
           </Flex.Item>
           <Flex.Item>
             Superconductors: {data.conducting_size}
-          </Flex.Item>
-          <Flex.Item>
-            Atoms: {data.atoms_size}
           </Flex.Item>
           <Flex.Item>
             <Button.Checkbox
