@@ -23,11 +23,11 @@
 
 /datum/element/atmos_sensitive/proc/handle_move(datum/source, atom/movable/oldloc, direction, forced)
 	var/atom/microchipped_lad = source
-	if(!istype(microchipped_lad))
-		return
 	microchipped_lad.UnregisterSignal(oldloc, COMSIG_TURF_EXPOSE)
 	if(istype(microchipped_lad.loc, /turf/open))
-		microchipped_lad.RegisterSignal(microchipped_lad.loc, COMSIG_TURF_EXPOSE, /atom/proc/check_atmos_process)
+		var/turf/open/new_spot = microchipped_lad.loc
+		microchipped_lad.RegisterSignal(new_spot, COMSIG_TURF_EXPOSE, /atom/proc/check_atmos_process)
+		microchipped_lad.check_atmos_process(null, new_spot.air, new_spot.temperature) //Make sure you're properly registered
 
 /atom/proc/check_atmos_process(datum/source, datum/gas_mixture/air, exposed_temperature)
 	if(should_atmos_process(air, exposed_temperature))
@@ -43,18 +43,22 @@
 	var/turf/open/spot
 	if(istype(loc, /turf/open))
 		spot = loc
-	else if(istype(src, /turf/open)) //Need to let turfs operate
-		spot = src
 	else //If you end up in a locker or a wall reconsider your life decisions
 		SSair.atom_process -= src
 		flags_1 &= ~ATMOS_IS_PROCESSING_1
 		return
-	var/temp = spot.air.temperature
-	if(!should_atmos_process(spot.air, temp)) //Things can change without a tile becoming active
+	if(!should_atmos_process(spot.air, spot.air.temperature)) //Things can change without a tile becoming active
 		SSair.atom_process -= src
 		flags_1 &= ~ATMOS_IS_PROCESSING_1
 		return
-	atmos_expose(spot.air, temp)
+	atmos_expose(spot.air, spot.air.temperature)
+
+/turf/open/process_exposure()
+	if(!should_atmos_process(air, air.temperature))
+		SSair.atom_process -= src
+		flags_1 &= ~ATMOS_IS_PROCESSING_1
+		return
+	atmos_expose(air, air.temperature)
 
 ///We use this proc to check if we should start processing an item, or continue processing it. Returns true/false as expected
 /atom/proc/should_atmos_process(datum/gas_mixture/air, exposed_temperature)

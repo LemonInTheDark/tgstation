@@ -872,8 +872,7 @@
 ///from monkey CtrlClickOn(): (/mob)
 #define COMSIG_XENO_MONKEY_CLICK_CTRL "xeno_monkey_click_ctrl"
 
-// /datum/component/atmos_sensitive
-//from /turf/open/temperature_expose(datum/gas_mixture/air, exposed_temperature): (datum/component/atmos_sensitive)
+//from /turf/open/temperature_expose(datum/gas_mixture/air, exposed_temperature)
 #define COMSIG_TURF_EXPOSE "turf_expose"
 
 // /datum/component/container_item
