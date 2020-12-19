@@ -60413,6 +60413,7 @@
 	dir = 4
 	},
 /obj/structure/table/glass,
+/obj/item/book/manual/wiki/cytology,
 /turf/open/floor/plasteel/white,
 /area/science/cytology)
 "dbx" = (
