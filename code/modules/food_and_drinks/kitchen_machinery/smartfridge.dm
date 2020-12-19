@@ -380,7 +380,7 @@
 	return FALSE
 
 // -------------------------------------
-// Xenobiology Petri Dish Smartfridge
+// Xenobiology Slime-Extract Smartfridge
 // -------------------------------------
 /obj/machinery/smartfridge/extract
 	name = "smart slime extract storage"
@@ -398,7 +398,7 @@
 	initial_contents = list(/obj/item/slime_scanner = 2)
 
 // -------------------------------------
-// Cytology Slime-Extract Smartfridge
+// Cytology Petri Dish Smartfridge
 // -------------------------------------
 /obj/machinery/smartfridge/petri
 	name = "smart petri dish storage"
