@@ -884,6 +884,73 @@
 	},
 /turf/open/floor/holofloor/dark,
 /area/holodeck/rec_center/chapelcourt)
+"dV" = (
+/turf/open/floor/holofloor{
+	dir = 1;
+	icon_state = "chapel"
+	},
+/area/holodeck/rec_center/chapelcourt)
+"dX" = (
+/obj/structure/table/wood,
+/obj/item/folder,
+/obj/item/melee/classic_baton/telescopic,
+/turf/open/floor/holofloor,
+/area/holodeck/rec_center/school)
+"dY" = (
+/obj/structure/table/wood,
+/obj/item/toy/crayon/white,
+/turf/open/floor/holofloor,
+/area/holodeck/rec_center/school)
+"dZ" = (
+/obj/structure/table/wood,
+/obj/item/food/grown/apple,
+/turf/open/floor/holofloor,
+/area/holodeck/rec_center/school)
+"ea" = (
+/obj/structure/window/reinforced{
+	dir = 8
+	},
+/turf/open/floor/holofloor{
+	dir = 8;
+	icon_state = "white"
+	},
+/area/holodeck/rec_center/firingrange)
+"eb" = (
+/obj/structure/training_machine,
+/turf/open/floor/holofloor{
+	icon_state = "white"
+	},
+/area/holodeck/rec_center/firingrange)
+"ed" = (
+/obj/structure/chess/whitepawn,
+/turf/open/floor/holofloor{
+	icon_state = "white"
+	},
+/area/holodeck/rec_center/spacechess)
+"ee" = (
+/obj/structure/chess/whitepawn,
+/turf/open/floor/holofloor/dark,
+/area/holodeck/rec_center/spacechess)
+"ef" = (
+/obj/machinery/door/window/westleft{
+	dir = 2;
+	icon_state = "right"
+	},
+/turf/open/floor/holofloor/grass,
+/area/holodeck/rec_center/thunderdome1218)
+"eg" = (
+/obj/structure/window/reinforced,
+/turf/open/floor/holofloor/grass,
+/area/holodeck/rec_center/thunderdome1218)
+"eh" = (
+/obj/machinery/door/window/westleft{
+	dir = 2
+	},
+/turf/open/floor/holofloor/grass,
+/area/holodeck/rec_center/thunderdome1218)
+"ej" = (
+/turf/open/floor/holofloor/plating,
+/area/holodeck/rec_center/kobayashi)
 "em" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
@@ -13705,6 +13772,22 @@
 /area/tdome/tdomeobserve)
 "GG" = (
 /obj/structure/closet/secure_closet/freezer/fridge/open,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/potato,
+/obj/item/food/grown/whitebeet,
+/obj/item/food/grown/whitebeet,
+/obj/item/food/grown/tomato,
+/obj/item/food/grown/tomato,
+/obj/item/food/grown/rice,
+/obj/item/food/grown/rice,
+/obj/item/food/grown/icepepper,
+/obj/item/food/grown/icepepper,
+/obj/item/food/grown/citrus/lemon,
+/obj/item/food/grown/citrus/lime,
+/obj/item/food/grown/citrus/orange,
+/obj/item/food/grown/cherries,
+/obj/item/food/grown/apple,
+/obj/item/food/grown/ambrosia/deus,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -13724,6 +13807,25 @@
 /area/tdome/tdomeobserve)
 "GI" = (
 /obj/structure/closet/secure_closet/freezer/kitchen,
+/obj/item/food/grown/banana,
+/obj/item/food/grown/banana,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/wheat,
+/obj/item/food/grown/vanillapod,
+/obj/item/food/grown/vanillapod,
+/obj/item/food/grown/sugarcane,
+/obj/item/food/grown/sugarcane,
+/obj/item/food/grown/oat,
+/obj/item/food/grown/oat,
+/obj/item/food/grown/grapes,
+/obj/item/food/grown/grapes,
+/obj/item/food/grown/corn,
+/obj/item/food/grown/corn,
+/obj/item/food/grown/chili,
+/obj/item/food/grown/chili,
+/obj/item/food/grown/carrot,
+/obj/item/food/grown/apple,
+/obj/item/food/grown/ambrosia/vulgaris,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -14224,6 +14326,7 @@
 /area/tdome/tdomeobserve)
 "HB" = (
 /obj/structure/table/reinforced,
+/obj/item/food/mint,
 /obj/item/reagent_containers/food/condiment/enzyme{
 	pixel_y = 5
 	},
@@ -16878,7 +16981,32 @@
 /turf/open/floor/holofloor{
 	icon_state = "white"
 	},
-/area/holodeck/rec_center/spacechess)
+/area/holodeck/rec_center/medical)
+"OF" = (
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/obj/structure/table/wood,
+/obj/item/food/grown/poppy{
+	pixel_y = 2
+	},
+/obj/item/food/grown/poppy{
+	pixel_y = 2
+	},
+/obj/item/food/grown/poppy{
+	pixel_y = 2
+	},
+/obj/item/food/grown/poppy{
+	pixel_y = 2
+	},
+/obj/item/food/grown/poppy{
+	pixel_y = 2
+	},
+/turf/open/floor/holofloor/dark,
+/area/holodeck/rec_center/chapelcourt)
 "OG" = (
 /obj/structure/dresser,
 /obj/machinery/light{
@@ -19162,6 +19290,11 @@
 /obj/structure/table/reinforced/ctf,
 /turf/open/floor/plasteel/dark,
 /area/ctf)
+"Yf" = (
+/obj/structure/table/wood,
+/obj/item/food/chawanmushi,
+/turf/open/floor/wood,
+/area/centcom/holding)
 "Yh" = (
 /obj/structure/extinguisher_cabinet{
 	pixel_x = -27
@@ -19440,8 +19573,11 @@
 	dir = 8
 	},
 /obj/structure/table/wood,
-/obj/item/folder/blue,
-/obj/item/pen/red,
+/obj/item/food/grown/harebell,
+/obj/item/food/grown/harebell,
+/obj/item/food/grown/harebell,
+/obj/item/food/grown/harebell,
+/obj/item/food/grown/harebell,
 /turf/open/floor/holofloor/dark,
 /area/holodeck/rec_center/chapelcourt)
 "Zn" = (
