@@ -1,4 +1,4 @@
-
+/*
 #define STATION_HOLODECK		(1<<0)
 #define CUSTOM_HOLODECK_ONE		(1<<1)
 #define CUSTOM_HOLODECK_TWO		(1<<2)
@@ -202,7 +202,7 @@
 	description = "benis"
 	mappath = "_maps/templates/holodeck_gamer.dmm"
 	access_flags = HOLODECK_DEBUG
-
+*/
 
 
 

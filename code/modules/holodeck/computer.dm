@@ -35,12 +35,12 @@
 	var/program = "holodeck_offline"
 	var/last_program
 	var/offline_program = "holodeck_offline"
-	var/holodeck_access = STATION_HOLODECK
+	//var/holodeck_access = STATION_HOLODECK
 
 	var/list/program_cache
 	var/list/emag_programs
 
-	var/program_type = /datum/map_template/holodeck	// subtypes of this (but not this itself) are loadable programs
+	var/program_type// = /datum/map_template/holodeck	// subtypes of this (but not this itself) are loadable programs
 
 	var/active = FALSE
 	var/damaged = FALSE
@@ -85,7 +85,7 @@
 	//generate_program_list()
 	//load_program(offline_program,TRUE)//this does nothing for normal holodecks, but will help with additional custom holodecks
 
-/obj/machinery/computer/holodeck/proc/generate_program_list()
+/*/obj/machinery/computer/holodeck/proc/generate_program_list()
 	for(var/typekey in subtypesof(program_type))
 		var/datum/map_template/holodeck/program = typekey
 		var/list/info_this = list()
@@ -94,7 +94,7 @@
 		if(initial(program.restricted) && (initial(program.access_flags) & holodeck_access))
 			LAZYADD(emag_programs, list(info_this))
 		else if (initial(program.access_flags) & holodeck_access)
-			LAZYADD(program_cache, list(info_this))
+			LAZYADD(program_cache, list(info_this))*/
 
 /obj/machinery/computer/holodeck/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
