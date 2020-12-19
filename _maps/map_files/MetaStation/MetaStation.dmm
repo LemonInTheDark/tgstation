@@ -52827,6 +52827,10 @@
 /obj/item/pen,
 /turf/open/floor/plasteel/dark,
 /area/science/nanite)
+"cBo" = (
+/obj/structure/disposalpipe/segment,
+/turf/closed/wall/r_wall,
+/area/maintenance/department/science/xenobiology)
 "cBp" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
@@ -58991,6 +58995,19 @@
 /obj/structure/cable,
 /turf/open/floor/plasteel/white,
 /area/science/xenobiology)
+"cSi" = (
+/obj/effect/turf_decal/tile/purple{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/purple{
+	dir = 4
+	},
+/obj/machinery/camera{
+	c_tag = "Xenobiology Lab - Fore";
+	network = list("ss13","rd")
+	},
+/turf/open/floor/plasteel/white,
+/area/science/xenobiology)
 "cSj" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
@@ -61226,10 +61243,6 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
 	dir = 10
-	},
-/obj/machinery/camera{
-	c_tag = "Xenobiology Lab - Fore";
-	network = list("ss13","rd")
 	},
 /turf/open/floor/plasteel,
 /area/science/xenobiology)
@@ -65683,10 +65696,6 @@
 /obj/structure/grille,
 /turf/open/space/basic,
 /area/space/nearstation)
-"fxd" = (
-/obj/structure/disposalpipe/segment,
-/turf/closed/wall/r_wall,
-/area/maintenance/department/science/xenobiology)
 "fxT" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
@@ -71856,6 +71865,13 @@
 /obj/machinery/atmospherics/pipe/simple/orange/visible,
 /turf/open/floor/plating,
 /area/maintenance/starboard)
+"nBf" = (
+/obj/structure/disposalpipe/trunk{
+	dir = 1
+	},
+/obj/structure/disposaloutlet,
+/turf/open/floor/plating/airless,
+/area/space/nearstation)
 "nBA" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating{
@@ -80175,13 +80191,6 @@
 /obj/structure/cable,
 /turf/open/floor/wood,
 /area/vacant_room/office)
-"xXp" = (
-/obj/structure/disposalpipe/trunk{
-	dir = 1
-	},
-/obj/structure/disposaloutlet,
-/turf/open/floor/plating/airless,
-/area/space/nearstation)
 "xXB" = (
 /obj/machinery/hydroponics/soil,
 /obj/machinery/camera{
@@ -114162,7 +114171,7 @@ dbS
 dcB
 dcG
 dcd
-cSl
+cSi
 cSr
 cSG
 dIX
@@ -114451,8 +114460,8 @@ cGw
 rrX
 cTC
 xKa
-fxd
-xXp
+cBo
+nBf
 aaf
 aaa
 aaa
