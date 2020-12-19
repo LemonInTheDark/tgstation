@@ -2,7 +2,6 @@
 	icon_state = "floor"
 	thermal_conductivity = 0
 	flags_1 = NONE
-	var/direction = 2
 
 /turf/open/floor/holofloor/attackby(obj/item/I, mob/living/user)
 	return // HOLOFLOOR DOES NOT GIVE A FUCK
@@ -20,27 +19,9 @@
 	name = "holodeck projector floor"
 	icon_state = "engine"
 
-/turf/open/floor/holofloor/chapel
-	name = "chapel floor"
-	icon_state = "chapel"
-
-/*/turf/open/floor/holofloor/Initialize()
-	. = ..()
-	if (direction != 2)
-		src.setDir(direction)
-	//why do i have this? some bug with turfs with dir vars not loading correctly, this only happens after mapload. turfs will be correctly rotated before
-	//mapload is finished, but not after.
-	//update: 70% sure this is because turf/ChangeTurf() only takes in the path of the new turf and not any attributes, so this will have to stay
-	//unless that is fixed
-*/
-
 /turf/open/floor/holofloor/plating/burnmix
 	name = "burn-mix floor"
 	initial_gas_mix = BURNMIX_ATMOS
-
-/turf/open/floor/holofloor/white
-	name = "white floor"
-	icon_state = "white"
 
 /turf/open/floor/holofloor/grass
 	gender = PLURAL
