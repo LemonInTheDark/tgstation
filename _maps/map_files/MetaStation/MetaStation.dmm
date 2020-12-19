@@ -52827,10 +52827,6 @@
 /obj/item/pen,
 /turf/open/floor/plasteel/dark,
 /area/science/nanite)
-"cBo" = (
-/obj/structure/disposalpipe/segment,
-/turf/closed/wall/r_wall,
-/area/maintenance/department/science/xenobiology)
 "cBp" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
@@ -58981,6 +58977,15 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/science/xenobiology)
+"cSf" = (
+/obj/effect/spawner/structure/window/reinforced,
+/obj/machinery/door/poddoor/preopen{
+	id = "cytologywindow";
+	name = "Cytology Window Lockdown"
+	},
+/obj/machinery/door/firedoor,
+/turf/open/floor/plating,
+/area/science/cytology)
 "cSg" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -59005,6 +59010,18 @@
 /obj/machinery/camera{
 	c_tag = "Xenobiology Lab - Fore";
 	network = list("ss13","rd")
+	},
+/obj/machinery/button/door{
+	id = "cytologywindow";
+	name = "Cytology Window Lockdown";
+	pixel_x = 8;
+	pixel_y = 24
+	},
+/obj/machinery/button/door{
+	id = "cytologydoor";
+	name = "Cytology Door Lockdown";
+	pixel_x = -7;
+	pixel_y = 24
 	},
 /turf/open/floor/plasteel/white,
 /area/science/xenobiology)
@@ -60576,10 +60593,6 @@
 /turf/open/floor/plasteel/white,
 /area/science/cytology)
 "dcc" = (
-/obj/machinery/door/airlock/research{
-	name = "Cytology  Lab";
-	req_access_txt = "55"
-	},
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
@@ -60594,6 +60607,14 @@
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4,
 /obj/structure/cable,
+/obj/machinery/door/airlock/research/glass{
+	name = "Cytology  Lab";
+	req_access_txt = "55"
+	},
+/obj/machinery/door/poddoor/preopen{
+	id = "cytologydoor";
+	name = "Cytology Door Lockdown"
+	},
 /turf/open/floor/plasteel/white,
 /area/science/cytology)
 "dcd" = (
@@ -60821,6 +60842,18 @@
 	dir = 8
 	},
 /obj/machinery/light,
+/obj/machinery/button/door{
+	id = "cytologywindow";
+	name = "Cytology Window Lockdown";
+	pixel_x = 8;
+	pixel_y = -24
+	},
+/obj/machinery/button/door{
+	id = "cytologydoor";
+	name = "Cytology Door Lockdown";
+	pixel_x = -7;
+	pixel_y = -24
+	},
 /turf/open/floor/plasteel/white,
 /area/science/cytology)
 "dcJ" = (
@@ -67144,6 +67177,13 @@
 	},
 /turf/open/floor/plasteel,
 /area/hallway/primary/fore)
+"hkk" = (
+/obj/structure/disposalpipe/trunk{
+	dir = 1
+	},
+/obj/structure/disposaloutlet,
+/turf/open/floor/plating/airless,
+/area/space/nearstation)
 "hkv" = (
 /obj/structure/cable,
 /obj/effect/spawner/structure/window/reinforced,
@@ -70321,6 +70361,10 @@
 	dir = 4
 	},
 /area/medical/break_room)
+"lmH" = (
+/obj/structure/disposalpipe/segment,
+/turf/closed/wall/r_wall,
+/area/maintenance/department/science/xenobiology)
 "lnO" = (
 /obj/structure/disposalpipe/segment{
 	dir = 10
@@ -71865,13 +71909,6 @@
 /obj/machinery/atmospherics/pipe/simple/orange/visible,
 /turf/open/floor/plating,
 /area/maintenance/starboard)
-"nBf" = (
-/obj/structure/disposalpipe/trunk{
-	dir = 1
-	},
-/obj/structure/disposaloutlet,
-/turf/open/floor/plating/airless,
-/area/space/nearstation)
 "nBA" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating{
@@ -114427,7 +114464,7 @@ daF
 dcD
 dcB
 dcJ
-dcg
+cSf
 cSl
 ddA
 rgz
@@ -114460,8 +114497,8 @@ cGw
 rrX
 cTC
 xKa
-cBo
-nBf
+lmH
+hkk
 aaf
 aaa
 aaa
@@ -114684,7 +114721,7 @@ daI
 dcD
 dcB
 dcJ
-dcg
+cSf
 cSl
 cRX
 cSL
@@ -114941,7 +114978,7 @@ dcD
 dcD
 dcB
 dcJ
-dcg
+cSf
 cSm
 cSw
 bao
