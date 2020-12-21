@@ -78102,7 +78102,7 @@
 	dir = 1
 	},
 /turf/open/floor/plating,
-/area/science/mixing)
+/area/space/nearstation)
 "uow" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
@@ -78646,6 +78646,9 @@
 /obj/machinery/camera{
 	c_tag = "Science Toxins Test";
 	dir = 4
+	},
+/obj/machinery/computer/pod/old/mass_driver_controller/toxinsdriver{
+	pixel_x = -24
 	},
 /turf/open/floor/plasteel/dark,
 /area/science/mixing)
@@ -81362,6 +81365,11 @@
 "xVl" = (
 /turf/closed/wall,
 /area/hallway/secondary/service)
+"xVr" = (
+/obj/structure/lattice,
+/obj/structure/lattice,
+/turf/open/space,
+/area/space/nearstation)
 "xVP" = (
 /obj/machinery/door/airlock/maintenance{
 	req_one_access_txt = "12;47"
@@ -116683,7 +116691,7 @@ dAZ
 onu
 onu
 onu
-cLK
+dcx
 aaa
 aaa
 aaa
@@ -116940,7 +116948,7 @@ cLK
 cMq
 cNo
 unV
-cLK
+dcx
 lMJ
 lMJ
 lMJ
@@ -117197,7 +117205,7 @@ cLL
 cMr
 onu
 onu
-cLK
+dcx
 aaa
 aaa
 aaa
@@ -121295,8 +121303,8 @@ aaa
 aaa
 aaa
 aaa
-aaa
-aaa
+lMJ
+lMJ
 aaa
 aaa
 aaa
@@ -121547,17 +121555,17 @@ aaa
 cSy
 cSQ
 cSy
+lMJ
 aaa
 aaa
 aaa
 aaa
 aaa
+lMJ
+lMJ
 aaa
 aaa
-aaa
-aaa
-aaa
-aaa
+lMJ
 aaa
 aaa
 aaa
@@ -121814,7 +121822,7 @@ cSy
 cSy
 cSy
 cSy
-aaa
+lMJ
 aaa
 aaa
 aaa
@@ -122572,16 +122580,16 @@ aaa
 aaa
 aaa
 aaa
+lMJ
+lMJ
 aaa
 aaa
 aaa
 aaa
 aaa
 aaa
-aaa
-aaa
-aaa
-aaa
+aaf
+xVr
 cSy
 cSQ
 cSy
@@ -122838,7 +122846,7 @@ aaa
 aaa
 aaa
 aaa
-aav
+aaf
 cSy
 cSQ
 cSy
@@ -123608,7 +123616,7 @@ aaa
 aaa
 aaa
 aaa
-aaa
+lMJ
 dIX
 gck
 jcz
@@ -123863,9 +123871,9 @@ aaa
 aaa
 aaa
 aaa
-aaa
-aaa
-aaa
+lMJ
+lMJ
+lMJ
 dIX
 gcB
 jgL
