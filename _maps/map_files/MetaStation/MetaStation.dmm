@@ -69437,6 +69437,13 @@
 /obj/machinery/door/firedoor,
 /turf/open/floor/plasteel,
 /area/hallway/primary/starboard)
+"ksi" = (
+/obj/machinery/camera{
+	c_tag = "RD Observation Cage";
+	dir = 1
+	},
+/turf/open/floor/engine,
+/area/crew_quarters/heads/hor)
 "kst" = (
 /turf/closed/wall/r_wall,
 /area/maintenance/department/science/xenobiology)
@@ -116411,7 +116418,7 @@ cqQ
 cPf
 cti
 ctZ
-ctZ
+ksi
 cpB
 cwY
 cSI
