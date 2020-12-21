@@ -37,16 +37,15 @@
 	var/max_share = 0
 	#endif
 
-GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 /turf/open/Initialize()
 	if(!blocks_air)
 		air = new
 		air.copy_from_turf(src)
 		if(planetary_atmos)
-			if(!GLOB.planetary[initial_gas_mix])
+			if(!SSair.planetary[initial_gas_mix])
 				var/datum/gas_mixture/immutable/planetary/mix = new
 				mix.parse_string_immutable(initial_gas_mix)
-				GLOB.planetary[initial_gas_mix] = mix
+				SSair.planetary[initial_gas_mix] = mix
 	. = ..()
 
 /turf/open/Destroy()
@@ -305,7 +304,7 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 	/******************* GROUP HANDLING FINISH *********************************************************************/
 
 	if (planetary_atmos) //share our air with the "atmosphere" "above" the turf
-		var/datum/gas_mixture/G = GLOB.planetary[initial_gas_mix]
+		var/datum/gas_mixture/G = SSair.planetary[initial_gas_mix]
 		// archive ourself again so we don't accidentally share more gas than we currently have
 		archive()
 		if(our_air.compare(G))
@@ -361,12 +360,13 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 			var/datum/excited_group/EG = our_excited_group || enemy_excited_group || new
 			if(!our_excited_group)
 				EG.add_turf(src)
-			if(!enemy_excited_group)
+			if(!enemy_excited_group && enemy_tile.flags_1 & EXCITED_CLEANUP_1)
 				EG.add_turf(enemy_tile)
 			our_excited_group = excited_group
 	if(our_excited_group)
 		our_excited_group.breakdown_cooldown = breakdown //Update with the old data
 		our_excited_group.dismantle_cooldown = dismantle
+	flags_1 &= ~EXCITED_CLEANUP_1
 
 //////////////////////////SPACEWIND/////////////////////////////
 
@@ -494,7 +494,10 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 
 	for(var/t in turf_list)
 		var/turf/open/T = t
-		T.air.copy_from(A)
+		if(T.planetary_atmos) //We do this as a hack to try and minimize unneeded excited group spread over planetary turfs
+			T.air.copy_from(SSair.planetary[T.initial_gas_mix]) //Comes with a cost of "slower" drains, but it's worth it
+		else
+			T.air.copy_from(A) //Otherwise just set the mix to a copy of our equalized mix
 		T.update_visuals()
 		if(poke_turfs) //Because we only activate all these once every breakdown, in event of lag due to this code and slow space + vent things, increase the wait time for breakdowns
 			SSair.add_to_active(T)
@@ -515,12 +518,16 @@ GLOBAL_LIST_EMPTY(planetary) //Lets cache static planetary mixes
 	garbage_collect()
 
 //Breaks down the excited group, this doesn't sleep the turfs mind, just removes them from the group
-/datum/excited_group/proc/garbage_collect()
+/datum/excited_group/proc/garbage_collect(will_cleanup = FALSE)
 	if(display_id) //If we ever did make those changes
 		hide_turfs()
 	for(var/t in turf_list)
 		var/turf/open/T = t
 		T.excited_group = null
+		if(will_cleanup)
+			T.flags_1 |= EXCITED_CLEANUP_1
+	if(will_cleanup)
+		SSair.add_to_cleanup(src)
 	turf_list.Cut()
 	SSair.excited_groups -= src
 	if(SSair.currentpart == SSAIR_EXCITEDGROUPS)

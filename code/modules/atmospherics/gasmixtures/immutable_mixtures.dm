@@ -63,10 +63,11 @@
 
 /datum/gas_mixture/immutable/planetary/garbage_collect()
 	..()
-	gases = list()
-	for(var/id in initial_gas) //Gotta grab those internal lists
-		var/list/gas = initial_gas[id]
-		gases[id] = gas.Copy()
+	gases.Cut()
+	for(var/id in initial_gas)
+		ADD_GAS(id, gases)
+		gases[id][MOLES] = initial_gas[id][MOLES]
+		gases[id][ARCHIVE] = initial_gas[id][ARCHIVE]
 
 /datum/gas_mixture/immutable/planetary/proc/parse_string_immutable(gas_string) //I know I know, I need this tho
 	gas_string = SSair.preprocess_gas_string(gas_string)
@@ -86,6 +87,10 @@
 		ADD_GAS(path, mix)
 		mix[path][MOLES] = text2num(gas[id])
 		mix[path][ARCHIVE] = mix[path][MOLES]
-	gases = initial_gas.Copy()
+
+	for(var/id in mix)
+		ADD_GAS(id, gases)
+		gases[id][MOLES] = mix[id][MOLES]
+		gases[id][ARCHIVE] = mix[id][MOLES]
 
 

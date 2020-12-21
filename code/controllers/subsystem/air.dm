@@ -31,6 +31,7 @@ SUBSYSTEM_DEF(air)
 	//atmos singletons
 	var/list/gas_reactions = list()
 	var/list/atmos_gen
+	var/list/planetary = list() //Lets cache static planetary mixes
 
 	//Special functions lists
 	var/list/turf/active_super_conductivity = list()
@@ -324,7 +325,8 @@ SUBSYSTEM_DEF(air)
 		while(turf_list.len) //The turf list
 			var/turf/open/T = turf_list[turf_list.len]
 			//I'd normally check for nulls here, but turfs are dumb with refs, so it's not an issue
-			if(istype(T) && !istype(T.air, /datum/gas_mixture/immutable))
+			//We don't allow planetary turfs as a semi stopgap to worldspanning groups
+			if(istype(T) && !istype(T.air, /datum/gas_mixture/immutable) && !T.planetary_atmos)
 				T.cleanup_group(fire_count, breakdown, dismantle)
 			turf_list.len--
 			if (MC_TICK_CHECK)
@@ -361,8 +363,7 @@ SUBSYSTEM_DEF(air)
 		if(T.excited_group)
 			//If this fires during active turfs it'll cause a slight removal of active turfs, as they breakdown if they have no excited group
 			//The group also expands by a tile per rebuild on each edge, suffering
-			SSair.add_to_cleanup(T.excited_group) //Poke everybody in the group and reform
-			T.excited_group.garbage_collect() //Do this second, as it cleans up the group itself
+			T.excited_group.garbage_collect(will_cleanup = TRUE) //Poke everybody in the group and reform
 
 ///Puts an active turf to sleep so it doesn't process. Do this without cleaning up its excited group.
 /datum/controller/subsystem/air/proc/sleep_active_turf(turf/open/T)
