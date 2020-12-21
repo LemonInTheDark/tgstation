@@ -46328,12 +46328,12 @@
 /turf/open/floor/circuit/green,
 /area/science/robotics/mechbay)
 "cjZ" = (
-/obj/machinery/mechpad,
+/obj/effect/landmark/start/roboticist,
+/obj/machinery/holopad,
 /turf/open/floor/circuit/green,
 /area/science/robotics/mechbay)
 "cka" = (
-/obj/machinery/holopad,
-/obj/effect/landmark/start/roboticist,
+/obj/machinery/mechpad,
 /turf/open/floor/circuit/green,
 /area/science/robotics/mechbay)
 "ckb" = (
