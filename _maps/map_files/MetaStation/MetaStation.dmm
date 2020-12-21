@@ -52668,10 +52668,11 @@
 /turf/open/floor/plasteel/white,
 /area/science/research)
 "cDu" = (
-/obj/item/storage/box/lights/mixed,
 /obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
 	dir = 4
 	},
+/obj/structure/reagent_dispensers/watertank,
+/obj/item/reagent_containers/glass/bucket,
 /turf/open/floor/plating,
 /area/maintenance/starboard/aft)
 "cDv" = (
@@ -66914,6 +66915,10 @@
 	},
 /turf/open/floor/plasteel,
 /area/maintenance/starboard)
+"hLk" = (
+/obj/machinery/seed_extractor,
+/turf/open/floor/plating,
+/area/maintenance/starboard/aft)
 "hLm" = (
 /obj/effect/turf_decal/bot,
 /obj/structure/closet/crate,
@@ -67390,6 +67395,7 @@
 	pixel_x = -12;
 	pixel_y = 2
 	},
+/obj/item/seeds/carrot,
 /turf/open/floor/plating,
 /area/maintenance/starboard/aft)
 "iuX" = (
@@ -68030,6 +68036,11 @@
 	},
 /turf/open/floor/plasteel,
 /area/maintenance/starboard)
+"jkI" = (
+/obj/structure/lattice,
+/obj/structure/lattice,
+/turf/open/space,
+/area/space/nearstation)
 "jkQ" = (
 /obj/structure/table,
 /obj/item/phone{
@@ -68798,6 +68809,13 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/medical/virology)
+"jUb" = (
+/obj/machinery/hydroponics/soil{
+	pixel_y = 8
+	},
+/obj/item/seeds/ambrosia,
+/turf/open/floor/plating,
+/area/maintenance/starboard/aft)
 "jUu" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 4
@@ -68943,6 +68961,14 @@
 	},
 /turf/open/floor/plasteel,
 /area/hydroponics)
+"kaR" = (
+/obj/machinery/hydroponics/soil{
+	pixel_y = 8
+	},
+/obj/item/seeds/glowshroom,
+/obj/item/seeds/glowshroom,
+/turf/open/floor/plating,
+/area/maintenance/starboard/aft)
 "kbl" = (
 /obj/machinery/airalarm{
 	pixel_y = 23
@@ -69468,7 +69494,7 @@
 /turf/open/floor/plating,
 /area/maintenance/starboard)
 "kDM" = (
-/obj/machinery/hydroponics/constructable,
+/obj/machinery/biogenerator,
 /turf/open/floor/plating,
 /area/maintenance/starboard/aft)
 "kDT" = (
@@ -71559,6 +71585,10 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/medical/morgue)
+"nlq" = (
+/obj/item/seeds/watermelon,
+/turf/open/floor/plating,
+/area/maintenance/starboard/aft)
 "nmr" = (
 /obj/structure/disposalpipe/segment{
 	dir = 6
@@ -75666,6 +75696,12 @@
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/maintenance/aft/secondary)
+"rzd" = (
+/obj/effect/landmark/xeno_spawn,
+/turf/open/floor/plating{
+	icon_state = "platingdmg1"
+	},
+/area/maintenance/starboard/aft)
 "rzV" = (
 /obj/effect/landmark/blobstart,
 /obj/structure/cable,
@@ -77253,7 +77289,17 @@
 /turf/open/floor/grass,
 /area/security/prison)
 "tsk" = (
-/obj/structure/table,
+/obj/item/storage/bag/plants/portaseeder,
+/obj/item/plant_analyzer,
+/obj/item/cultivator,
+/obj/item/reagent_containers/glass/bucket,
+/obj/structure/rack,
+/obj/item/seeds/corn,
+/obj/item/seeds/cabbage,
+/obj/item/seeds/ambrosia,
+/obj/item/seeds/grass,
+/obj/item/food/grown/mushroom/glowshroom,
+/obj/item/vending_refill/hydroseeds,
 /turf/open/floor/plating,
 /area/maintenance/starboard/aft)
 "tsx" = (
@@ -77621,6 +77667,16 @@
 /obj/structure/disposalpipe/segment,
 /turf/closed/wall/r_wall,
 /area/maintenance/department/science/xenobiology)
+"tLJ" = (
+/obj/machinery/hydroponics/soil{
+	pixel_y = 8
+	},
+/obj/item/plant_analyzer,
+/obj/structure/sign/poster/contraband/random{
+	pixel_y = 32
+	},
+/turf/open/floor/plating,
+/area/maintenance/starboard/aft)
 "tMJ" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -78884,6 +78940,13 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/medical/medbay/central)
+"vok" = (
+/obj/machinery/hydroponics/soil{
+	pixel_y = 8
+	},
+/obj/item/seeds/berry,
+/turf/open/floor/plating,
+/area/maintenance/starboard/aft)
 "voJ" = (
 /obj/machinery/vending/cola/red,
 /obj/effect/turf_decal/tile/red,
@@ -80541,6 +80604,12 @@
 	},
 /turf/open/floor/plasteel,
 /area/science/xenobiology)
+"wZz" = (
+/obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
+	dir = 4
+	},
+/turf/open/floor/plating,
+/area/maintenance/starboard/aft)
 "wZA" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
@@ -81365,11 +81434,6 @@
 "xVl" = (
 /turf/closed/wall,
 /area/hallway/secondary/service)
-"xVr" = (
-/obj/structure/lattice,
-/obj/structure/lattice,
-/turf/open/space,
-/area/space/nearstation)
 "xVP" = (
 /obj/machinery/door/airlock/maintenance{
 	req_one_access_txt = "12;47"
@@ -117964,12 +118028,12 @@ ciL
 cBJ
 ddi
 dvY
-kDM
+hLk
 ciL
 ciL
-cNk
+rzd
 ciL
-ciL
+nlq
 tsk
 dvY
 aaa
@@ -118222,11 +118286,11 @@ dvY
 dvY
 dvY
 dvY
-kDM
-kDM
-ciL
-kDM
-kDM
+tLJ
+vok
+wZz
+jUb
+kaR
 tuZ
 dvY
 aaa
@@ -122589,7 +122653,7 @@ aaa
 aaa
 aaa
 aaf
-xVr
+jkI
 cSy
 cSQ
 cSy
