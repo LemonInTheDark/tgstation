@@ -57530,9 +57530,6 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 4
 	},
-/obj/effect/turf_decal/siding/blue{
-	dir = 4
-	},
 /obj/structure/cable,
 /turf/open/floor/plasteel/white,
 /area/science/research)
@@ -59731,10 +59728,8 @@
 /turf/open/floor/plasteel/dark,
 /area/science/nanite)
 "dcm" = (
-/obj/effect/turf_decal/box/corners{
-	dir = 1;
-	pixel_x = 7;
-	pixel_y = -7
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
 	},
 /turf/open/floor/holofloor/dark,
 /area/science/cytology)
@@ -59956,16 +59951,17 @@
 /obj/machinery/light{
 	dir = 1
 	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
 /turf/open/floor/holofloor/dark,
 /area/science/cytology)
 "dcP" = (
 /obj/structure/window/reinforced{
 	dir = 4
 	},
-/obj/effect/turf_decal/box/corners{
-	dir = 4;
-	pixel_x = -7;
-	pixel_y = -7
+/obj/effect/turf_decal/stripes/line{
+	dir = 5
 	},
 /turf/open/floor/holofloor/dark,
 /area/science/cytology)
@@ -63610,6 +63606,9 @@
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 4
 	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
 /turf/open/floor/holofloor/dark,
 /area/science/cytology)
 "dXp" = (
@@ -63858,6 +63857,9 @@
 	},
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 8
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
 	},
 /turf/open/floor/holofloor/dark,
 /area/science/cytology)
@@ -68432,15 +68434,13 @@
 /area/medical/sleeper)
 "jxo" = (
 /obj/structure/window/reinforced,
-/obj/effect/turf_decal/box/corners{
-	dir = 8;
-	pixel_x = 7;
-	pixel_y = 7
-	},
 /obj/machinery/camera{
 	c_tag = "Cytology Lab - Worklab";
 	dir = 4;
 	network = list("ss13","rd")
+	},
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
 	},
 /turf/open/floor/holofloor/dark,
 /area/science/cytology)
@@ -68456,6 +68456,7 @@
 "jyJ" = (
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4,
+/obj/effect/turf_decal/stripes/line,
 /turf/open/floor/holofloor/dark,
 /area/science/cytology)
 "jBf" = (
@@ -68553,9 +68554,8 @@
 	dir = 4
 	},
 /obj/structure/window/reinforced,
-/obj/effect/turf_decal/box/corners{
-	pixel_x = -7;
-	pixel_y = 7
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
 	},
 /turf/open/floor/holofloor/dark,
 /area/science/cytology)
