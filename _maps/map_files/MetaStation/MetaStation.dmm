@@ -66673,6 +66673,7 @@
 /obj/machinery/atmospherics/pipe/layer_manifold{
 	dir = 4
 	},
+/obj/structure/grille,
 /turf/open/floor/plating{
 	icon_state = "platingdmg1"
 	},
