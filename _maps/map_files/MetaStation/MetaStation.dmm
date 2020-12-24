@@ -54539,9 +54539,7 @@
 /turf/open/floor/engine,
 /area/science/mixing/chamber)
 "cIY" = (
-/obj/structure/window/plasma{
-	dir = 4
-	},
+/obj/structure/window/plasma/reinforced/spawner/east,
 /turf/open/space/basic,
 /area/space/nearstation)
 "cJb" = (
@@ -54886,9 +54884,7 @@
 /turf/open/floor/plasteel,
 /area/science/mixing)
 "cJQ" = (
-/obj/structure/window/plasma{
-	dir = 8
-	},
+/obj/structure/window/plasma/reinforced/spawner/west,
 /turf/open/space/basic,
 /area/space/nearstation)
 "cJS" = (
@@ -75727,9 +75723,6 @@
 /obj/machinery/firealarm{
 	pixel_y = 24
 	},
-/obj/machinery/light{
-	dir = 4
-	},
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
@@ -77986,6 +77979,7 @@
 /obj/structure/closet/l3closet/scientist,
 /obj/effect/turf_decal/stripes/line,
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
+/obj/machinery/light,
 /turf/open/floor/plasteel/white,
 /area/science/xenobiology)
 "tFJ" = (
@@ -80794,6 +80788,12 @@
 /obj/structure/closet/radiation,
 /turf/open/floor/plasteel/dark,
 /area/engine/atmos)
+"wOh" = (
+/obj/machinery/light/small/broken{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/maintenance/aft/secondary)
 "wOm" = (
 /obj/structure/table/glass,
 /obj/structure/reagent_dispensers/virusfood{
@@ -113342,7 +113342,7 @@ dAn
 cQs
 cQS
 cRb
-wOE
+wOh
 cRe
 wtq
 jgm
