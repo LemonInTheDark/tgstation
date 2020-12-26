@@ -167,7 +167,6 @@
 			open()
 		else
 			do_animate("deny")
-	return
 
 /obj/machinery/door/attack_hand(mob/user)
 	. = ..()
