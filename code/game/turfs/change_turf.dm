@@ -16,9 +16,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	if(turf_type)
 		var/turf/newT = ChangeTurf(turf_type, baseturf_type, flags)
 		SSair.remove_from_active(newT)
-		CALCULATE_ADJACENT_TURFS(newT)
-		SSair.add_to_active(newT, TRUE)
-
+		CALCULATE_ADJACENT_TURFS(newT, KILL_EXCITED)
 /turf/proc/copyTurf(turf/T)
 	if(T.type != type)
 		var/obj/O
@@ -89,6 +87,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	blueprint_data = null
 
 	var/list/old_baseturfs = baseturfs
+	var/old_type = type
 
 	var/list/transferring_comps = list()
 	SEND_SIGNAL(src, COMSIG_TURF_CHANGE, path, new_baseturfs, flags, transferring_comps)
@@ -112,7 +111,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	W.explosion_level = old_exl
 
 	if(!(flags & CHANGETURF_DEFER_CHANGE))
-		W.AfterChange(flags)
+		W.AfterChange(flags, old_type)
 
 	W.blueprint_data = old_bp
 
@@ -283,13 +282,14 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 
 
 //If you modify this function, ensure it works correctly with lateloaded map templates.
-/turf/proc/AfterChange(flags) //called after a turf has been replaced in ChangeTurf()
+/turf/proc/AfterChange(flags, oldType, screaming) //called after a turf has been replaced in ChangeTurf()
 	levelupdate()
 	if(flags & CHANGETURF_RECALC_ADJACENT)
 		ImmediateCalculateAdjacentTurfs()
-	else
-		CALCULATE_ADJACENT_TURFS(src)
-
+		if(ispath(oldType, /turf/closed) && istype(src, /turf/open))
+			SSair.add_to_active(src)
+	else //In effect, I want closed turfs to make their tile active when sheered, but we need to queue it since they have no adjacent turfs
+		CALCULATE_ADJACENT_TURFS(src, (!(ispath(oldType, /turf/closed) && istype(src, /turf/open)) ? NORMAL_TURF : MAKE_ACTIVE))
 	//update firedoor adjacency
 	var/list/turfs_to_check = get_adjacent_open_turfs(src) | src
 	for(var/I in turfs_to_check)
