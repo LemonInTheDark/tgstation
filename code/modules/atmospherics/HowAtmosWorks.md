@@ -285,11 +285,11 @@ Now then, what the hell is going on in that image.
 
 ### Dynamic scaling
 
-SSAir has a wait of 5 deciseconds, or 50ms. This means it wants to fire roughly twice a second. You'll see in a moment why this hardly ever happens.
+SSAir has a wait of 5 deciseconds, or 500ms. This means it wants to fire roughly twice a second. You'll see in a moment why this hardly ever happens.
 
 See that image from before? Notice how the cost of SSAir at rest is about 40ms? yeahhhhh.
 
-The atmos subsystem was used as a testing ground for the robustness of the master-controller. It used to have a wait of 2 seconds, but that was lowered to 0.5 as it was thought that the system could handle it. It can! But this can have annoying side effects. As you know, we edge right up against 50ms when sitting at rest, and if we start to make diffs...
+The atmos subsystem was used as a testing ground for the robustness of the master-controller. It used to have a wait of 2 seconds, but that was lowered to 0.5 as it was thought that the system could handle it. It can! But this can have annoying side effects. As you know, we edge right up against 1/10th of the wait when sitting at rest, and if we start to make diffs...
 
 ![](https://raw.githubusercontent.com/LemonInTheDark/documentation-assets/atmos-pics/atmos/GasTypes.png)
 
@@ -297,7 +297,7 @@ The atmos subsystem was used as a testing ground for the robustness of the maste
 
 As you can see, active turfs can be really slow. Oh but it gets so much worse.
 
-Active turf cost is mostly held up in `share()`, `compare()` and `react()` `share()` and `compare()` scale directly with the amount of gas in the air. `compare()` does better, but `share()` has a really bad time.
+Active turf cost is mostly held up in `react()`, `share()` and `compare()`. `react()` and `share()` scale directly with the amount of gas in the air. `compare()` does better, but none of them do that great.
 
 For this reason, and because excited groups spread gas out so much, we want to keep the variation of gastypes in the air relatively low.
 
