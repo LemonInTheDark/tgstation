@@ -491,6 +491,7 @@
 		A.temperature = energy / heat_cap
 		for(var/id in A_gases)
 			A_gases[id][MOLES] /= turflen
+		A.garbage_collect()
 
 	for(var/t in turf_list)
 		var/turf/open/T = t
