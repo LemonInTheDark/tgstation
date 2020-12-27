@@ -1,7 +1,7 @@
 /turf
 	//used for temperature calculations
 	var/thermal_conductivity = 0.05
-	var/heat_capacity = 1
+	var/heat_capacity = INFINITY //This should be opt in rather then opt out
 	var/temperature_archived
 
 	///list of turfs adjacent to us that air can flow onto
