@@ -167,7 +167,7 @@ This is a rather large subject, we will need to cover gas flow, turf sleeping, s
 
 Active turfs are the backbone of how gas moves from tile to tile. While most of `process_cell()` should be easy enough to understand, I am going to go into some detail about archiving, since I think it's a common source of hiccups.
 
-* *`archived_cycle`* this var stores the last cycle of the atmos loop that the turf processed on. The key point to notice here is that when processing a turf, we don't share with all its neighbors, we only talk to those who haven't processed yet. This is because the remainder of `process_cell()` and especially `share()` are similar in form to addition. We can add in any order we like, and we only need to add once. This is what archived gases are for by the way, they store the state of the relevant tile before any processing occurs.
+* *`archived_cycle`* this var stores the last cycle of the atmos loop that the turf processed on. The key point to notice here is that when processing a turf, we don't share with all its neighbors, we only talk to those who haven't processed yet. This is because the remainder of `process_cell()` and especially `share()` ought to be similar in form to addition. We can add in any order we like, and we only need to add once. This is what archived gases are for by the way, they store the state of the relevant tile before any processing occurs. This isn't strictly the case unfortunately, but it's minor enough that we can ignore the effects.
 
 Alright then, with that out of the way, what is an active turf.
 
