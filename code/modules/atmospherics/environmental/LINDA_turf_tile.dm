@@ -59,7 +59,7 @@
 /////////////////GAS MIXTURE PROCS///////////////////
 
 /turf/open/assume_air(datum/gas_mixture/giver) //use this for machines to adjust air
-	if(!giver || planetary_atmos)
+	if(!giver)
 		return FALSE
 	air.merge(giver)
 	update_visuals()
