@@ -25,7 +25,7 @@
 /datum/element/atmos_sensitive/proc/handle_move(datum/source, atom/movable/oldloc, direction, forced)
 	var/atom/microchipped_lad = source
 	microchipped_lad.UnregisterSignal(oldloc, COMSIG_TURF_EXPOSE)
-	if(isopenturf(microchipped_lad.loc)
+	if(isopenturf(microchipped_lad.loc))
 		var/turf/open/new_spot = microchipped_lad.loc
 		microchipped_lad.RegisterSignal(new_spot, COMSIG_TURF_EXPOSE, /atom/proc/check_atmos_process)
 		microchipped_lad.check_atmos_process(null, new_spot.air, new_spot.temperature) //Make sure you're properly registered
