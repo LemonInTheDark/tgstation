@@ -94,7 +94,7 @@
 	plane = ABOVE_HUD_PLANE
 
 	var/atom/movable/focus
-	var/mob/living/carbon/tk_user
+	var/mob/living/tk_user
 
 /obj/item/tk_grab/Initialize()
 	. = ..()
@@ -195,9 +195,14 @@
 	return TRUE
 
 /obj/item/tk_grab/proc/check_if_focusable(obj/target)
-	if(!tk_user || !istype(tk_user) || QDELETED(target) || !istype(target) || !tk_user.dna.check_mutation(TK))
+	if(!tk_user || !istype(tk_user) || QDELETED(target) || !istype(target))
 		qdel(src)
 		return
+	if(istype(tk_user, /mob/living/carbon))
+		var/mob/living/carbon/big_brain = tk_user
+		if(!big_brain.dna.check_mutation(TK))
+			qdel(src)
+			return
 	if(!tkMaxRangeCheck(tk_user, target) || target.anchored || !isturf(target.loc))
 		qdel(src)
 		return

@@ -13,6 +13,8 @@
 	var/datum/ai_laws/laws = new()
 	var/force_replace_ai_name = FALSE
 	var/overrides_aicore_laws = FALSE // Whether the laws on the MMI, if any, override possible pre-existing laws loaded on the AI core.
+	var/brain_name = "brain"
+	var/radio_check = TRUE
 
 /obj/item/mmi/Initialize()
 	. = ..()
@@ -233,15 +235,15 @@
 /obj/item/mmi/examine(mob/user)
 	. = ..()
 	if(radio)
-		. += "<span class='notice'>There is a switch to toggle the radio system [radio.on ? "off" : "on"].[brain ? " It is currently being covered by [brain]." : null]</span>"
+		. += "<span class='notice'>There is a switch to turn the radio system [radio.on ? "off" : "on"].[brain && radio_check ? " It is currently being covered by [brain]." : null]</span>"
 	if(brainmob)
 		var/mob/living/brain/B = brainmob
 		if(!B.key || !B.mind || B.stat == DEAD)
-			. += "<span class='warning'>\The [src] indicates that the brain is completely unresponsive.</span>"
+			. += "<span class='warning'>\The [src] indicates that the [brain_name] is completely unresponsive.</span>"
 		else if(!B.client)
-			. += "<span class='warning'>\The [src] indicates that the brain is currently inactive; it might change.</span>"
+			. += "<span class='warning'>\The [src] indicates that the [brain_name] is currently inactive; it might change.</span>"
 		else
-			. += "<span class='notice'>\The [src] indicates that the brain is active.</span>"
+			. += "<span class='notice'>\The [src] indicates that the [brain_name] is active.</span>"
 
 /obj/item/mmi/relaymove(mob/living/user, direction)
 	return //so that the MMI won't get a warning about not being able to move if it tries to move
@@ -250,7 +252,7 @@
 	var/mob/living/brain/B = brainmob
 	if(!B)
 		if(user)
-			to_chat(user, "<span class='warning'>\The [src] indicates that there is no brain present!</span>")
+			to_chat(user, "<span class='warning'>\The [src] indicates that there is no [brain_name] present!</span>")
 		return FALSE
 	if(!B.key || !B.mind)
 		if(user)
@@ -266,11 +268,11 @@
 		return FALSE
 	if(B.stat == DEAD)
 		if(user)
-			to_chat(user, "<span class='warning'>\The [src] indicates that the brain is dead!</span>")
+			to_chat(user, "<span class='warning'>\The [src] indicates that the [brain_name] is dead!</span>")
 		return FALSE
 	if(brain?.organ_flags & ORGAN_FAILING)
 		if(user)
-			to_chat(user, "<span class='warning'>\The [src] indicates that the brain is damaged!</span>")
+			to_chat(user, "<span class='warning'>\The [src] indicates that the [brain_name] is damaged!</span>")
 		return FALSE
 	return TRUE
 

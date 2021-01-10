@@ -53,6 +53,7 @@
 #define LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE 128
 #define LIGHTING_PLANE_ALPHA_INVISIBLE 0
 
+#define MAX_RELEVANT_SEE_IN_DARK 10 //Basic widescreen support
 //lighting area defines
 /// dynamic lighting disabled (area stays at full brightness)
 #define DYNAMIC_LIGHTING_DISABLED 0

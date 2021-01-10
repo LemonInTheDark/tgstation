@@ -4,6 +4,7 @@
 
 #define SEE_INVISIBLE_LIVING 25
 
+#define INVISIBILITY_SPIRIT 45 // Don't show this to people without the right goggles
 //#define SEE_INVISIBLE_LEVEL_ONE 35 //currently unused
 //#define INVISIBILITY_LEVEL_ONE 35 //currently unused
 

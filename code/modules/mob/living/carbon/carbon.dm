@@ -594,7 +594,7 @@
 		return
 	if(stat == DEAD)
 		sight = (SEE_TURFS|SEE_MOBS|SEE_OBJS)
-		see_in_dark = 8
+		see_in_dark = MAX_RELEVANT_SEE_IN_DARK
 		see_invisible = SEE_INVISIBLE_OBSERVER
 		return
 
@@ -622,9 +622,9 @@
 		if(G.invis_override)
 			see_invisible = G.invis_override
 		else
-			see_invisible = min(G.invis_view, see_invisible)
+			see_invisible = max(G.invis_view, see_invisible) //Larger == you can see more
 		if(!isnull(G.lighting_alpha))
-			lighting_alpha = min(lighting_alpha, G.lighting_alpha)
+			lighting_alpha = min(lighting_alpha, G.lighting_alpha) //Lower == you can see more
 
 	if(HAS_TRAIT(src, TRAIT_THERMAL_VISION))
 		sight |= (SEE_MOBS)
@@ -632,7 +632,7 @@
 
 	if(HAS_TRAIT(src, TRAIT_XRAY_VISION))
 		sight |= (SEE_TURFS|SEE_MOBS|SEE_OBJS)
-		see_in_dark = max(see_in_dark, 8)
+		see_in_dark = max(see_in_dark, MAX_RELEVANT_SEE_IN_DARK)
 
 	if(see_override)
 		see_invisible = see_override

@@ -115,7 +115,7 @@
 	desc = "An optical meson scanner fitted with an amplified visible light spectrum overlay, providing greater visual clarity in darkness."
 	icon_state = "nvgmeson"
 	inhand_icon_state = "nvgmeson"
-	darkness_view = 8
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	flash_protect = FLASH_PROTECTION_SENSITIVE
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	glass_colour_type = /datum/client_colour/glass_colour/green
@@ -153,7 +153,7 @@
 	desc = "You can totally see in the dark now!"
 	icon_state = "night"
 	inhand_icon_state = "glasses"
-	darkness_view = 8
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	flash_protect = FLASH_PROTECTION_SENSITIVE
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	glass_colour_type = /datum/client_colour/glass_colour/green
@@ -473,7 +473,7 @@
 	icon_state = "godeye"
 	inhand_icon_state = "godeye"
 	vision_flags = SEE_TURFS|SEE_MOBS|SEE_OBJS
-	darkness_view = 8
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	resistance_flags = LAVA_PROOF | FIRE_PROOF
 	custom_materials = null
@@ -539,7 +539,7 @@
 	icon_state = "nvgmeson"
 	inhand_icon_state = "nvgmeson"
 	flags_cover = GLASSESCOVERSEYES
-	darkness_view = 8
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
 	flash_protect = FLASH_PROTECTION_WELDER
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	glass_colour_type = FALSE
@@ -578,3 +578,17 @@
 		xray = !xray
 		var/mob/living/carbon/human/H = user
 		H.update_sight()
+
+/obj/item/clothing/glasses/ghost
+	name = "Buster Goggles"
+	desc = "A pair of goggles that let you see glimpses of other side."
+	icon_state = "buster_goggles"
+	glass_colour_type = /datum/client_colour/glass_colour/blue
+	invis_view = INVISIBILITY_SPIRIT
+
+/obj/item/clothing/glasses/ghost/night_vision
+	name = "Night Vision Buster Goggles"
+	desc = "A two for one deal, they let you see the other side, and the other side of that dark corner!"
+	icon_state = "buster_gogglesnight"
+	darkness_view = MAX_RELEVANT_SEE_IN_DARK
+	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE

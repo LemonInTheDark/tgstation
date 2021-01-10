@@ -143,6 +143,34 @@
 	crate_name = "firefighting backpack crate"
 	crate_type = /obj/structure/closet/crate/secure
 
+/datum/supply_pack/emergency/ghost_prevention_kit
+	name = "Supernatural Value Pack"
+	desc = "Trap the souls of the long dead in cages, hunt them down and stop their mad rampage of mild annoyance with the WF INC's Supernatural Value Pack"
+	cost = CARGO_CRATE_VALUE * 2
+	access = ACCESS_CARGO
+	contains = list(/obj/item/ectoattractor,
+					/obj/item/ectoattractor,
+					/obj/item/ghost_trap,
+					/obj/item/ghost_trap,
+					/obj/item/ghost_trap,
+					/obj/item/ghost_trap,
+					/obj/item/clothing/glasses/ghost,
+					/obj/item/clothing/glasses/ghost)
+
+/datum/supply_pack/emergency/ghost_prevention_kit
+	name = "Supernatural Emergency Set"
+	desc = "For when there's too many ghosts and not enough robots, stock up on night vision goggles and traps galore."
+	cost = CARGO_CRATE_VALUE * 4
+	access = ACCESS_CARGO
+	contains = list(/obj/item/ectoattractor,
+					/obj/item/ghost_trap,
+					/obj/item/ghost_trap,
+					/obj/item/ghost_trap,
+					/obj/item/ghost_trap,
+					/obj/item/ghost_trap,
+					/obj/item/ghost_trap,
+					/obj/item/clothing/glasses/ghost/night_vision)
+
 /datum/supply_pack/emergency/internals
 	name = "Internals Crate"
 	desc = "Master your life energy and control your breathing with three breath masks, three emergency oxygen tanks and three large air tanks."//IS THAT A

@@ -191,9 +191,25 @@
 	var/mob/living/L = mob
 	switch(L.incorporeal_move)
 		if(INCORPOREAL_MOVE_BASIC)
-			var/T = get_step(L,direct)
-			if(T)
-				L.forceMove(T)
+			/*
+			var/turf/T = L.loc
+			var/sane = step(L, direct)
+			if(L.pulling)
+				if(L.pulling.anchored)
+					L.stop_pulling()
+				else
+					var/pull_dir = get_dir(src, L.pulling)
+					//puller and pullee more than one tile away or in diagonal position
+					if(get_dist(src, L.pulling) > 1 || (L.moving_diagonally != SECOND_DIAG_STEP && ((pull_dir - 1) & pull_dir)))
+						L.pulling.moving_from_pull = src
+						L.pulling.Move(T, get_dir(L.pulling, T)) //the pullee tries to reach our previous position
+						L.pulling.moving_from_pull = null
+					L.check_pulling()
+			if(!sane)
+			*/
+			var/any_tile = get_step(L,direct)
+			if(any_tile)
+				L.forceMove(any_tile)
 			L.setDir(direct)
 		if(INCORPOREAL_MOVE_SHADOW)
 			if(prob(50))

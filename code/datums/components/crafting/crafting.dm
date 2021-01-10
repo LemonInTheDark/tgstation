@@ -406,7 +406,7 @@
 			ui_interact(user)
 			var/atom/movable/result = construct_item(user, TR)
 			if(!istext(result)) //We made an item and didn't get a fail message
-				if(ismob(user) && isitem(result)) //In case the user is actually possessing a non mob like a machine
+				if(ismob(user) && isitem(result) && user.can_hold_items()) //In case the user is actually possessing a non mob like a machine
 					user.put_in_hands(result)
 				else
 					result.forceMove(user.drop_location())
