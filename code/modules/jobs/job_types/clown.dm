@@ -14,6 +14,8 @@
 	paycheck = PAYCHECK_MINIMAL
 	paycheck_department = ACCOUNT_SRV
 
+	liver_traits = list(TRAIT_COMEDY_METABOLISM)
+
 	display_order = JOB_DISPLAY_ORDER_CLOWN
 
 
@@ -48,6 +50,12 @@
 
 	chameleon_extras = /obj/item/stamp/clown
 
+/datum/outfit/job/clown/pre_equip(mob/living/carbon/human/H, visualsOnly)
+	. = ..()
+	if(HAS_TRAIT(SSstation, STATION_TRAIT_BANANIUM_SHIPMENTS))
+		backpack_contents[/obj/item/stack/sheet/mineral/bananium/five] = 1
+
+
 /datum/outfit/job/clown/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	..()
 	if(visualsOnly)
@@ -55,7 +63,6 @@
 
 	H.fully_replace_character_name(H.real_name, pick(GLOB.clown_names)) //rename the mob AFTER they're equipped so their ID gets updated properly.
 	ADD_TRAIT(H, TRAIT_NAIVE, JOB_TRAIT)
-	ADD_TRAIT(H, TRAIT_CLOWNLIKE, JOB_TRAIT)
 	H.dna.add_mutation(CLOWNMUT)
 	for(var/datum/mutation/human/clumsy/M in H.dna.mutations)
 		M.mutadone_proof = TRUE

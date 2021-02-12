@@ -56,7 +56,7 @@
 
 ///Override for checkliked in edible component, because all cops LOVE donuts
 /obj/item/food/donut/proc/check_liked(fraction, mob/living/carbon/human/H)
-	if(HAS_TRAIT(H.mind, TRAIT_LAW_ENFORCEMENT_METABOLISM) && !HAS_TRAIT(H, TRAIT_AGEUSIA))
+	if(!HAS_TRAIT(H, TRAIT_AGEUSIA) && H.mind && HAS_TRAIT(H.mind, TRAIT_DONUT_LOVER))
 		return FOOD_LIKED
 
 //Use this donut ingame
@@ -833,11 +833,11 @@
 	add_overlay(pancake_visual)
 	update_icon()
 
-/obj/item/food/pancakes/attack(mob/M, mob/user, def_zone, stacked = TRUE)
-	if(user.a_intent == INTENT_HARM || !contents.len || !stacked)
+/obj/item/food/pancakes/attack(mob/M, mob/living/user, params, stacked = TRUE)
+	if(user.combat_mode || !contents.len || !stacked)
 		return ..()
 	var/obj/item/O = contents[contents.len]
-	. = O.attack(M, user, def_zone, FALSE)
+	. = O.attack(M, user, params, FALSE)
 	update_icon()
 
 #undef PANCAKE_MAX_STACK

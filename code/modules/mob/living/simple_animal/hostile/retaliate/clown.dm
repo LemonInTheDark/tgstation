@@ -16,7 +16,7 @@
 	speak = list("HONK", "Honk!", "Welcome to clown planet!")
 	emote_see = list("honks", "squeaks")
 	speak_chance = 1
-	a_intent = INTENT_HARM
+	combat_mode = TRUE
 	maxHealth = 75
 	health = 75
 	speed = 1
@@ -33,20 +33,11 @@
 	minbodytemp = 270
 	maxbodytemp = 370
 	unsuitable_atmos_damage = 10
+	unsuitable_heat_damage = 15
 	footstep_type = FOOTSTEP_MOB_SHOE
 	var/banana_time = 0 // If there's no time set it won't spawn.
 	var/banana_type = /obj/item/grown/bananapeel
 	var/attack_reagent
-
-/mob/living/simple_animal/hostile/retaliate/clown/handle_temperature_damage()
-	if(bodytemperature < minbodytemp)
-		adjustBruteLoss(10)
-		throw_alert("temp", /atom/movable/screen/alert/cold, 2)
-	else if(bodytemperature > maxbodytemp)
-		adjustBruteLoss(15)
-		throw_alert("temp", /atom/movable/screen/alert/hot, 3)
-	else
-		clear_alert("temp")
 
 /mob/living/simple_animal/hostile/retaliate/clown/attack_hand(mob/living/carbon/human/M)
 	..()
@@ -133,7 +124,6 @@
 	emote_see = list("honks", "sweats", "jiggles", "contemplates its existence")
 	speak_chance = 5
 	dextrous = TRUE
-	ventcrawler = VENTCRAWLER_ALWAYS
 	maxHealth = 140
 	health = 140
 	speed = -5
@@ -142,6 +132,10 @@
 	attack_verb_simple = "limply slap"
 	obj_damage = 5
 	loot = list(/obj/item/clothing/suit/hooded/bloated_human, /obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap)
+
+/mob/living/simple_animal/hostile/retaliate/clown/fleshclown/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
 /mob/living/simple_animal/hostile/retaliate/clown/longface
 	name = "Longface"
@@ -386,18 +380,7 @@
 	. = ..()
 	can_buckle = TRUE
 	buckle_lying = 0
-	var/datum/component/riding/riding = LoadComponent(/datum/component/riding)
-	riding.set_riding_offsets(RIDING_OFFSET_ALL, list(TEXT_NORTH = list(0, 24), TEXT_SOUTH = list(0, 24), TEXT_EAST = list(-16, 24), TEXT_WEST = list(16, 24)))
-	riding.set_vehicle_dir_layer(SOUTH, ABOVE_MOB_LAYER)
-	riding.set_vehicle_dir_layer(NORTH, OBJ_LAYER)
-	riding.set_vehicle_dir_layer(EAST, ABOVE_MOB_LAYER)
-	riding.set_vehicle_dir_layer(WEST, ABOVE_MOB_LAYER)
-
-	//these 0 offsets are needed for the riding component to work properly with base pixel offset mobs for some cursed reason.
-	riding.set_vehicle_dir_offsets(SOUTH, 0, 0)
-	riding.set_vehicle_dir_offsets(NORTH, 0, 0)
-	riding.set_vehicle_dir_offsets(EAST, 0, 0)
-	riding.set_vehicle_dir_offsets(WEST, 0, 0)
+	AddElement(/datum/element/ridable, /datum/component/riding/creature/glutton)
 
 /mob/living/simple_animal/hostile/retaliate/clown/mutant/glutton/add_cell_sample()
 	AddElement(/datum/element/swabable, CELL_LINE_TABLE_GLUTTON, CELL_VIRUS_TABLE_GENERIC_MOB, 1, 5)

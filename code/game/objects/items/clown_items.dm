@@ -139,8 +139,7 @@
 		user.visible_message("<span class='warning'>\the [user] washes \the [target]'s mouth out with [src.name]!</span>", "<span class='notice'>You wash \the [target]'s mouth out with [src.name]!</span>") //washes mouth out with soap sounds better than 'the soap' here			if(user.zone_selected == "mouth")
 		if(human_user.lip_style)
 			user.mind?.adjust_experience(/datum/skill/cleaning, CLEAN_SKILL_GENERIC_WASH_XP)
-			human_user.lip_style = null //removes lipstick
-			human_user.update_body()
+			human_user.update_lips(null)
 		decreaseUses(user)
 		return
 	else if(istype(target, /obj/structure/window))
@@ -171,7 +170,7 @@
 
 /obj/item/bikehorn
 	name = "bike horn"
-	desc = "A horn off of a bicycle."
+	desc = "A horn off of a bicycle. Rumour has it that they're made from recycled clowns."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "bike_horn"
 	inhand_icon_state = "bike_horn"

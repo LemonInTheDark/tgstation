@@ -12,6 +12,7 @@
 	glass_icon_state = "glass_orange"
 	glass_name = "glass of orange juice"
 	glass_desc = "Vitamins! Yay!"
+	ph = 3.3
 
 /datum/reagent/consumable/orangejuice/on_mob_life(mob/living/carbon/M)
 	if(M.getOxyLoss() && prob(30))
@@ -42,6 +43,7 @@
 	glass_icon_state = "glass_green"
 	glass_name = "glass of lime juice"
 	glass_desc = "A glass of sweet-sour lime juice."
+	ph = 2.2
 
 /datum/reagent/consumable/limejuice/on_mob_life(mob/living/carbon/M)
 	if(M.getToxLoss() && prob(20))
@@ -84,6 +86,7 @@
 	description = "The sweet juice of an apple, fit for all ages."
 	color = "#ECFF56" // rgb: 236, 255, 86
 	taste_description = "apples"
+	ph = 3.2 // ~ 2.7 -> 3.7
 
 /datum/reagent/consumable/poisonberryjuice
 	name = "Poison Berry Juice"
@@ -116,6 +119,7 @@
 	glass_icon_state  = "lemonglass"
 	glass_name = "glass of lemon juice"
 	glass_desc = "Sour..."
+	ph = 2
 
 /datum/reagent/consumable/banana
 	name = "Banana Juice"
@@ -127,9 +131,10 @@
 	glass_desc = "The raw essence of a banana. HONK."
 
 /datum/reagent/consumable/banana/on_mob_life(mob/living/carbon/M)
-	if((ishuman(M) && HAS_TRAIT(M, TRAIT_CLOWNLIKE)) || ismonkey(M))
-		M.heal_bodypart_damage(1,1, 0)
-		. = 1
+	var/obj/item/organ/liver/liver = M.getorganslot(ORGAN_SLOT_LIVER)
+	if((liver && HAS_TRAIT(liver, TRAIT_COMEDY_METABOLISM)) || ismonkey(M))
+		M.heal_bodypart_damage(brute = 1, burn = 1)
+		. = TRUE
 	..()
 
 /datum/reagent/consumable/nothing
@@ -198,6 +203,7 @@
 	glass_icon_state = "glass_white"
 	glass_name = "glass of milk"
 	glass_desc = "White and nutritious goodness!"
+	ph = 6.5
 
 	// Milk is good for humans, but bad for plants. The sugars cannot be used by plants, and the milk fat harms growth. Not shrooms though. I can't deal with this now...
 /datum/reagent/consumable/milk/on_hydroponics_apply(obj/item/seeds/myseed, datum/reagents/chems, obj/machinery/hydroponics/mytray, mob/user)
@@ -685,7 +691,9 @@
 	M.adjustToxLoss(-0.5, 0)
 	M.adjustOxyLoss(-0.5, 0)
 	if(M.nutrition && (M.nutrition - 2 > 0))
-		if(!(M.mind && (M.mind.assigned_role in GLOB.medical_positions))) //Drains the nutrition of the holder. Not medical doctors though, since it's the Doctor's Delight!
+		var/obj/item/organ/liver/liver = M.getorganslot(ORGAN_SLOT_LIVER)
+		if(!(HAS_TRAIT(liver, TRAIT_MEDICAL_METABOLISM)))
+			// Drains the nutrition of the holder. Not medical doctors though, since it's the Doctor's Delight!
 			M.adjust_nutrition(-2)
 	..()
 	. = 1

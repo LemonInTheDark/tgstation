@@ -6,6 +6,9 @@
 
 /obj/vehicle/ridden/scooter/Initialize()
 	. = ..()
+	make_ridable()
+
+/obj/vehicle/ridden/scooter/proc/make_ridable()
 	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/scooter)
 
 /obj/vehicle/ridden/scooter/wrench_act(mob/living/user, obj/item/I)
@@ -53,11 +56,12 @@
 
 /obj/vehicle/ridden/scooter/skateboard/Initialize()
 	. = ..()
-	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/scooter/skateboard)
 	sparks = new
 	sparks.set_up(1, 0, src)
 	sparks.attach(src)
 
+/obj/vehicle/ridden/scooter/skateboard/make_ridable()
+	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/scooter/skateboard)
 
 /obj/vehicle/ridden/scooter/skateboard/Destroy()
 	if(sparks)
@@ -181,13 +185,13 @@
 //CONSTRUCTION
 /obj/item/scooter_frame
 	name = "scooter frame"
-	desc = "A metal frame for building a scooter. Looks like you'll need to add some metal to make wheels."
+	desc = "A metal frame for building a scooter. Looks like you'll need to add some iron to make wheels."
 	icon = 'icons/obj/vehicles.dmi'
 	icon_state = "scooter_frame"
 	w_class = WEIGHT_CLASS_NORMAL
 
 /obj/item/scooter_frame/attackby(obj/item/I, mob/user, params)
-	if(istype(I, /obj/item/stack/sheet/metal))
+	if(istype(I, /obj/item/stack/sheet/iron))
 		if(!I.tool_start_check(user, amount=5))
 			return
 		to_chat(user, "<span class='notice'>You begin to add wheels to [src].</span>")
@@ -231,7 +235,7 @@
 	to_chat(user, "<span class='notice'>You begin to deconstruct and remove the wheels on [src]...</span>")
 	if(I.use_tool(src, user, 20, volume=50))
 		to_chat(user, "<span class='notice'>You deconstruct the wheels on [src].</span>")
-		new /obj/item/stack/sheet/metal(drop_location(), 5)
+		new /obj/item/stack/sheet/iron(drop_location(), 5)
 		new /obj/item/scooter_frame(drop_location())
 		if(has_buckled_mobs())
 			var/mob/living/carbon/H = buckled_mobs[1]
@@ -251,8 +255,7 @@
 	///Name of the wheels, for visible messages
 	var/wheel_name = "wheels"
 
-/obj/vehicle/ridden/scooter/skateboard/wheelys/Initialize()
-	. = ..()
+/obj/vehicle/ridden/scooter/skateboard/wheelys/make_ridable()
 	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/scooter/skateboard/wheelys)
 
 /obj/vehicle/ridden/scooter/skateboard/wheelys/post_unbuckle_mob(mob/living/M)
@@ -279,8 +282,7 @@
 	desc = "An EightO brand pair of roller skates. Vintage, yet functional!"
 	instability = 8
 
-/obj/vehicle/ridden/scooter/skateboard/wheelys/rollerskates/Initialize()
-	. = ..()
+/obj/vehicle/ridden/scooter/skateboard/wheelys/rollerskates/make_ridable()
 	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/scooter/skateboard/wheelys/rollerskates)
 
 /obj/vehicle/ridden/scooter/skateboard/wheelys/skishoes
@@ -289,6 +291,5 @@
 	instability = 8
 	wheel_name = "skis"
 
-/obj/vehicle/ridden/scooter/skateboard/wheelys/skishoes/Initialize()
-	. = ..()
+/obj/vehicle/ridden/scooter/skateboard/wheelys/skishoes/make_ridable()
 	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/scooter/skateboard/wheelys/skishoes)

@@ -1,5 +1,6 @@
 /obj/item/restraints
 	breakouttime = 600
+	dye_color = DYE_PRISONER
 
 /obj/item/restraints/suicide_act(mob/living/carbon/user)
 	user.visible_message("<span class='suicide'>[user] is strangling [user.p_them()]self with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
@@ -162,10 +163,10 @@
 		else
 			to_chat(user, "<span class='warning'>You need one rod to make a wired rod!</span>")
 			return
-	else if(istype(I, /obj/item/stack/sheet/metal))
-		var/obj/item/stack/sheet/metal/M = I
+	else if(istype(I, /obj/item/stack/sheet/iron))
+		var/obj/item/stack/sheet/iron/M = I
 		if(M.get_amount() < 6)
-			to_chat(user, "<span class='warning'>You need at least six metal sheets to make good enough weights!</span>")
+			to_chat(user, "<span class='warning'>You need at least six iron sheets to make good enough weights!</span>")
 			return
 		to_chat(user, "<span class='notice'>You begin to apply [I] to [src]...</span>")
 		if(do_after(user, 35, target = src))
