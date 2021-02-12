@@ -20,13 +20,12 @@
 	move_resist = MOVE_FORCE_OVERPOWERING
 	mob_size = MOB_SIZE_TINY
 	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB
-	flags_1 = RAD_NO_CONTAMINATE_1
 	stop_automated_movement = TRUE
 	status_flags = NONE
 	del_on_death = TRUE
 	speed = 10
-	maxHealth = 1
-	health = 1
+	maxHealth = 10
+	health = 10
 	healable = FALSE
 	speak_emote = list("howls")
 	emote_hear = list("screams.")
@@ -52,25 +51,60 @@
 	dextrous = TRUE
 	dextrous_hud_type = /datum/hud/dextrous
 
+	light_system = MOVABLE_LIGHT
+	light_range = 2
+	light_power = 1
+	light_color = COLOR_VIBRANT_LIME
+	light_on = FALSE
+	light_flags = NONE
+	var/contaminated = FALSE
+
 /mob/living/simple_animal/spirit/Initialize()
 	. = ..()
 	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	RegisterSignal(src, COMSIG_MOB_ATTACK_RANGED, .proc/on_ranged_attack)
+	RegisterSignal(src, COMSIG_ATOM_RAD_CONTAMINATING,  .proc/on_contaiminate)
 
 /mob/living/simple_animal/spirit/attackby(obj/item/O, mob/user, params)
-	if(istype(O, /obj/item/ectoattractor))
-		var/obj/projectile/ectoplasam/fuck_you = new(get_turf(loc))
-		fuck_you.set_homing_target(user)
-		fuck_you.firer = src
-		fuck_you.fire()
-		Move(get_step(src, get_dir(src, user)), get_dir(src, user))
-		. = ..()
+	if(!istype(O, /obj/item/ectoattractor))
+		return
+	var/obj/projectile/ectoplasam/fuck_you = new(get_turf(loc))
+	fuck_you.set_homing_target(user)
+	fuck_you.firer = src
+	fuck_you.fire()
+	Move(get_step(src, get_dir(src, user)), get_dir(src, user))
+	if(contaminated) //Take damage
+		adjustFireLoss(1)
+	. = ..()
+
+/mob/living/simple_animal/spirit/process(delta_time)
+	for(var/mob/living/target in range(1, src))
+		if(target == src)
+			continue
+		var/chance = 50
+		var/dist = get_dist_euclidian(src)
+		if(dist <= 1) //If you were close enough in the first place
+			if(dist > 0) //If you're not on my tile
+				chance = 25 //Should be 25 if we're adjacent
+		else	
+			chance = 0
+		var/multiplier = (DT_PROB(chance, delta_time)) ? 2 : 1
+
+		target.adjustFireLoss(1 * multiplier)
+		to_chat(target, "<span class='userdanger'>You feel a slimey heat on your skin, it burns!</span>")
 
 /mob/living/simple_animal/spirit/bullet_act(obj/projectile/shot_me)
 	return FALSE
 
 /mob/living/simple_animal/spirit/proc/on_ranged_attack(datum/source, atom/target)
 	target.attack_tk(src, TRUE)
+
+/mob/living/simple_animal/spirit/proc/on_contaiminate(datum/source, strength)
+	. |= COMPONENT_BLOCK_CONTAMINATION
+	if(strength > 50) //Some significant amount of rads
+		contaminated = TRUE
+		set_light_on(TRUE)
+		START_PROCESSING(SSprocessing, src)
 
 /mob/living/simple_animal/spirit/canUseTopic(atom/movable/M, be_close=FALSE, no_dexterity=FALSE, no_tk=FALSE)
 	return FALSE
