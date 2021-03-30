@@ -98,7 +98,7 @@
 
 /datum/component/rot/proc/rot_react_touch(datum/source, mob/living/react_to)
 	SIGNAL_HANDLER
-	rot_react(source, react_to, react_to.zone_selected)
+	rot_react(source, react_to, pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
 
 ///The main bit of logic for the rot component, does a temperature check and has a chance to infect react_to
 /datum/component/rot/proc/rot_react(source, mob/living/react_to, target_zone = null)
