@@ -94,10 +94,7 @@ GLOBAL_LIST_INIT(gas_id_to_canister, init_gas_id_to_canister())
 	else
 		create_gas()
 	update_appearance()
-
-/obj/machinery/portable_atmospherics/canister/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive, mapload)
 
 /obj/machinery/portable_atmospherics/canister/interact(mob/user)
 	. = ..()

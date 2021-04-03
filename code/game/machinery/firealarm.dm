@@ -51,10 +51,7 @@
 	update_appearance()
 	myarea = get_area(src)
 	LAZYADD(myarea.firealarms, src)
-
-/obj/machinery/firealarm/ComponentInitialize()
-	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive, mapload)
 
 /obj/machinery/firealarm/Destroy()
 	myarea.firereset(src)
@@ -88,7 +85,7 @@
 
 	var/area/A = get_area(src)
 
-	if(!detecting || !A.fire)
+	if(!detecting || (!A.fire && !triggered))
 		. += "fire_off"
 		SSvis_overlays.add_vis_overlay(src, icon, "fire_off", layer, plane, dir)
 		SSvis_overlays.add_vis_overlay(src, icon, "fire_off", layer, EMISSIVE_PLANE, dir)
@@ -131,18 +128,17 @@
 /obj/machinery/firealarm/atmos_expose(datum/gas_mixture/air, exposed_temperature)
 	if(!detecting)
 		return
+	playsound(loc, 'goon/sound/machinery/FireAlarm.ogg', 75)
 	if(!triggered)
 		triggered = TRUE
-		myarea.triggered_firealarms += 1
 		update_appearance()
-	alarm()
 
-/obj/machinery/firealarm/atmos_end(datum/gas_mixture/air, exposed_temperature)
+/obj/machinery/firealarm/atmos_end()
+	. = ..()
 	if(!detecting)
 		return
 	if(triggered)
 		triggered = FALSE
-		myarea.triggered_firealarms -= 1
 		update_appearance()
 
 /obj/machinery/firealarm/proc/alarm(mob/user)

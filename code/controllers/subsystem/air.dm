@@ -229,7 +229,6 @@ SUBSYSTEM_DEF(air)
 	for(var/list/packet in expansion_queue)
 		if(packet[SSAIR_REBUILD_PIPELINE] == line)
 			expansion_queue -= packet
-			return
 
 /datum/controller/subsystem/air/proc/process_atoms(resumed = FALSE)
 	if(!resumed)
@@ -241,7 +240,11 @@ SUBSYSTEM_DEF(air)
 		currentrun.len--
 		if(!talk_to)
 			return
-		talk_to.process_exposure()
+		if(talk_to.flags_1 & ATMOS_IS_PROCESSING_1) //This is a normal processing canidate
+			talk_to.process_exposure(talk_to.loc)
+		else
+			for(var/turf/open/listening as anything in talk_to.get_atmos_listening_targets())
+				talk_to.process_exposure(listening)
 		if(MC_TICK_CHECK)
 			return
 

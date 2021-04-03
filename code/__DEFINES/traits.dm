@@ -503,6 +503,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 ///generic atom traits
 #define DO_NOT_SPLASH "do_not_splash"
+#define ATMOS_PROCESSING "atmos_processing"
 
 // unique trait sources, still defines
 #define CLONING_POD_TRAIT "cloning-pod"

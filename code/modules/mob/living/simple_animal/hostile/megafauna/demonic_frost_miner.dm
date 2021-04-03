@@ -402,7 +402,7 @@ Difficulty: Extremely Hard
 	icon_state = "frozen"
 
 /datum/status_effect/ice_block_talisman/on_apply()
-	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, .proc/owner_moved)
+	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE_CHECK, .proc/owner_moved)
 	if(!owner.stat)
 		to_chat(owner, "<span class='userdanger'>You become frozen in a cube!</span>")
 	cube = icon('icons/effects/freeze.dmi', "ice_cube")
@@ -419,7 +419,7 @@ Difficulty: Extremely Hard
 	if(!owner.stat)
 		to_chat(owner, "<span class='notice'>The cube melts!</span>")
 	owner.cut_overlay(cube)
-	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
+	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE_CHECK)
 
 /obj/item/ice_energy_crystal
 	name = "ice energy crystal"

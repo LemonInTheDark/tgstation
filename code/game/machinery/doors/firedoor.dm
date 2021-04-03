@@ -25,9 +25,10 @@
 	var/boltslocked = TRUE
 	var/list/affecting_areas
 
-/obj/machinery/door/firedoor/Initialize()
+/obj/machinery/door/firedoor/Initialize(mapload)
 	. = ..()
 	CalculateAffectingAreas()
+	AddElement(/datum/element/atmos_sensitive, mapload)
 
 /obj/machinery/door/firedoor/examine(mob/user)
 	. = ..()
@@ -63,6 +64,26 @@
 	remove_from_areas()
 	affecting_areas.Cut()
 	return ..()
+
+/obj/machinery/door/firedoor/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+	return (exposed_temperature > T0C + 200 || exposed_temperature < BODYTEMP_COLD_DAMAGE_LIMIT - 5) && !machine_stat
+
+/obj/machinery/door/firedoor/atmos_expose(datum/gas_mixture/air, exposed_temperature)
+	expand_toggle(FIREDOOR_CLOSED)
+
+/obj/machinery/door/firedoor/proc/expand_toggle(state)
+	//TODO: Refactor this to not cause crashes with long chains of firedoors
+	nextstate = state
+	for(var/direc in GLOB.cardinals)
+		var/obj/machinery/door/firedoor/new_door = locate(/obj/machinery/door/firedoor) in get_step(src, direc)
+		if(new_door && new_door.nextstate != state)
+			new_door.expand_toggle(state)
+	INVOKE_ASYNC(src, .proc/latetoggle)
+
+/obj/machinery/door/firedoor/get_atmos_listening_targets()
+	. = list()
+	for(var/direc in GLOB.cardinals) //Explictly don't listen for your tile
+		. += get_step(src, direc)
 
 /obj/machinery/door/firedoor/Bumped(atom/movable/AM)
 	if(panel_open || operating)

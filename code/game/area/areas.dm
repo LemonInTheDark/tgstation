@@ -17,8 +17,6 @@
 
 	///Do we have an active fire alarm?
 	var/fire = FALSE
-	///How many fire alarm sources do we have?
-	var/triggered_firealarms = 0
 	///Whether there is an atmos alarm in this area
 	var/atmosalm = FALSE
 	var/poweralm = FALSE
@@ -379,9 +377,6 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 			var/obj/machinery/firealarm/alarm = source
 			if(alarm.triggered)
 				alarm.triggered = FALSE
-				triggered_firealarms -= 1
-		if(triggered_firealarms > 0)
-			should_reset_alarms = FALSE
 		should_reset_alarms = should_reset_alarms & power_environ //No resetting if there's no power
 
 	if (should_reset_alarms) // if there's a source, make sure there's no fire alarms left
@@ -421,7 +416,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
  * If 100 ticks has elapsed, toggle all the firedoors closed again
  */
 /area/process()
-	if(!triggered_firealarms)
+	if(!fire)
 		firereset() //If there are no breaches or fires, and this alert was caused by a breach or fire, die
 	if(firedoors_last_closed_on + 100 < world.time) //every 10 seconds
 		ModifyFiredoors(FALSE)
@@ -466,8 +461,6 @@ GLOBAL_LIST_EMPTY(teleportlocs)
  */
 /area/proc/set_fire_alarm_effect()
 	fire = TRUE
-	if(!triggered_firealarms) //If there aren't any fires/breaches
-		triggered_firealarms = INFINITY //You're not allowed to naturally die
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	for(var/alarm in firealarms)
 		var/obj/machinery/firealarm/F = alarm
@@ -482,7 +475,6 @@ GLOBAL_LIST_EMPTY(teleportlocs)
  */
 /area/proc/unset_fire_alarm_effects()
 	fire = FALSE
-	triggered_firealarms = 0
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	for(var/alarm in firealarms)
 		var/obj/machinery/firealarm/F = alarm

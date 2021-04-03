@@ -80,7 +80,7 @@
 	), .proc/consume_attack)
 	RegisterSignal(parent, COMSIG_PARENT_ATTACKBY, .proc/consume_attackby)
 
-	RegisterSignal(parent, COMSIG_MOVABLE_PRE_MOVE, .proc/moved)
+	RegisterSignal(parent, COMSIG_MOVABLE_PRE_MOVE_CHECK, .proc/moved)
 	RegisterSignal(parent, list(COMSIG_ATOM_BUMPED, COMSIG_MOVABLE_CROSSED), .proc/consume)
 
 	RegisterSignal(parent, COMSIG_ATOM_BULLET_ACT, .proc/consume_bullets)
@@ -112,7 +112,7 @@
 		COMSIG_ATOM_BULLET_ACT,
 		COMSIG_ATOM_BUMPED,
 		COMSIG_MOVABLE_CROSSED,
-		COMSIG_MOVABLE_PRE_MOVE,
+		COMSIG_MOVABLE_PRE_MOVE_CHECK,
 		COMSIG_PARENT_ATTACKBY,
 	))
 

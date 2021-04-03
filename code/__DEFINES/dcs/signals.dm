@@ -92,6 +92,8 @@
 	#define EXAMINE_POSITION_BEFORE (1<<1)
 	//End positions
 	#define COMPONENT_EXNAME_CHANGED (1<<0)
+#define COMSIG_ADD_ATMOS_ATOM "add_atmos_atom"
+#define COMSIG_REMOVE_ATMOS_ATOM "remove_atmos_atom"
 
 ///from base of [/atom/proc/update_appearance]: (updates)
 #define COMSIG_ATOM_UPDATE_APPEARANCE "atom_update_appearance"
@@ -349,9 +351,11 @@
 
 // /atom/movable signals
 
-///from base of atom/movable/Moved(): (/atom)
-#define COMSIG_MOVABLE_PRE_MOVE "movable_pre_move"
+///from base of atom/movable/Move(): (/atom)
+#define COMSIG_MOVABLE_PRE_MOVE_CHECK "movable_pre_move_check"
 	#define COMPONENT_MOVABLE_BLOCK_PRE_MOVE (1<<0)
+///from the base of atom/movable/Move(): (/atom)
+#define COMSIG_MOVABLE_PRE_MOVE "movable_pre_move"
 ///from base of atom/movable/Moved(): (/atom, dir)
 #define COMSIG_MOVABLE_MOVED "movable_moved"
 ///from base of atom/movable/Cross(): (/atom/movable)

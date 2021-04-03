@@ -372,8 +372,10 @@
 	if(!newloc.Enter(src, src.loc))
 		return
 
-	if (SEND_SIGNAL(src, COMSIG_MOVABLE_PRE_MOVE, newloc) & COMPONENT_MOVABLE_BLOCK_PRE_MOVE)
+	if (SEND_SIGNAL(src, COMSIG_MOVABLE_PRE_MOVE_CHECK, newloc) & COMPONENT_MOVABLE_BLOCK_PRE_MOVE)
 		return
+
+	SEND_SIGNAL(src, COMSIG_MOVABLE_PRE_MOVE, newloc)
 
 	// Past this is the point of no return
 	var/atom/oldloc = loc
