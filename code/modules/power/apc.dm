@@ -58,7 +58,8 @@
 /// The wire value used to reset the APCs wires after one's EMPed.
 #define APC_RESET_EMP "emp"
 
-// update_state
+// update_overlay
+
 // Bitshifts: (If you change the status values to be something other than an int or able to exceed 3 you will need to change these too)
 /// The bit shift for the APCs cover status.
 #define UPSTATE_COVER_SHIFT (0)
@@ -67,34 +68,37 @@
 	/// The bitflag representing the APCs cover being missing for icon purposes.
 	#define UPSTATE_OPENED2 (APC_COVER_REMOVED << UPSTATE_COVER_SHIFT)
 
-// Bitflags:
-/// The APC has a power cell.
-#define UPSTATE_CELL_IN (1<<2)
-/// The APC is broken or damaged.
-#define UPSTATE_BROKE (1<<3)
-/// The APC is undergoing maintenance.
-#define UPSTATE_MAINT (1<<4)
-/// The APC is emagged or malfed.
-#define UPSTATE_BLUESCREEN (1<<5)
-/// The APCs wires are exposed.
-#define UPSTATE_WIREEXP (1<<6)
+//These need to be greated then the largest shift you're using for the other bitflags
+/// Bit shift for the charging status of the APC.
+#define UPOVERLAY_CHARGING_SHIFT (12)
+/// Bit shift for the equipment status of the APC.
+#define UPOVERLAY_EQUIPMENT_SHIFT (14)
+/// Bit shift for the lighting channel status of the APC.
+#define UPOVERLAY_LIGHTING_SHIFT (16)
+/// Bit shift for the environment channel status of the APC.
+#define UPOVERLAY_ENVIRON_SHIFT (18)
 
-// update_overlay
 // Bitflags:
 /// Bitflag indicating that the APCs operating status overlay should be shown.
-#define UPOVERLAY_OPERATING (1<<0)
+#define UPOVERLAY_OPERATING (1<<2)
 /// Bitflag indicating that the APCs locked status overlay should be shown.
-#define UPOVERLAY_LOCKED (1<<1)
-
-// Bitshifts: (If you change the status values to be something other than an int or able to exceed 3 you will need to change these too)
-/// Bit shift for the charging status of the APC.
-#define UPOVERLAY_CHARGING_SHIFT (2)
-/// Bit shift for the equipment status of the APC.
-#define UPOVERLAY_EQUIPMENT_SHIFT (4)
-/// Bit shift for the lighting channel status of the APC.
-#define UPOVERLAY_LIGHTING_SHIFT (6)
-/// Bit shift for the environment channel status of the APC.
-#define UPOVERLAY_ENVIRON_SHIFT (8)
+#define UPOVERLAY_LOCKED (1<<3)
+/// The APC has a power cell.
+#define UPSTATE_CELL_IN (1<<4)
+/// The APC is broken or damaged.
+#define UPSTATE_BROKE (1<<5)
+/// The APC is undergoing maintenance.
+#define UPSTATE_MAINT (1<<6)
+/// The APC is emagged or malfed.
+#define UPSTATE_BLUESCREEN (1<<7)
+/// The APCs wires are exposed.
+#define UPSTATE_WIREEXP (1<<8)
+/// The APC has a terminal deployed
+#define UPOVERLAY_TERMINAL (1<<9)
+/// The APC has its electronics inserted
+#define UPOVERLAY_ELECTRONICS_INSERT (1<<10)
+/// The APC has its electronics fastened
+#define UPOVERLAY_ELECTRONICS_FASTENED (1<<11)
 
 // the Area Power Controller (APC), formerly Power Distribution Unit (PDU)
 // one per area, needs wire connection to power network through a terminal
@@ -107,7 +111,8 @@
 	name = "area power controller"
 	desc = "A control terminal for the area's electrical systems."
 
-	icon_state = "apc0"
+	icon = 'icons/obj/APC.dmi'
+	icon_state = "frame"
 	use_power = NO_POWER_USE
 	req_access = null
 	max_integrity = 200
@@ -156,7 +161,6 @@
 	var/emergency_lights = FALSE
 	var/nightshift_lights = FALSE
 	var/last_nightshift_switch = 0
-	var/update_state = -1
 	var/update_overlay = -1
 	var/icon_update_needed = FALSE
 	var/obj/machinery/computer/apc_control/remote_control = null
@@ -355,7 +359,12 @@
 
 	. = ..()
 	// And now, separately for cleanness, the lighting changing
-	if(!update_state)
+	if(update_overlay & UPSTATE_BLUESCREEN)
+		set_light_color(LIGHT_COLOR_BLUE)
+		set_light(lon_range)
+		return
+
+	if(update_overlay)
 		switch(charging)
 			if(APC_NOT_CHARGING)
 				set_light_color(COLOR_SOFT_RED)
@@ -366,100 +375,113 @@
 		set_light(lon_range)
 		return
 
-	if(update_state & UPSTATE_BLUESCREEN)
-		set_light_color(LIGHT_COLOR_BLUE)
-		set_light(lon_range)
-		return
-
 	set_light(0)
-
-/obj/machinery/power/apc/update_icon_state()
-	if(!update_state)
-		icon_state = "apc0"
-		return ..()
-	if(update_state & (UPSTATE_OPENED1|UPSTATE_OPENED2))
-		var/basestate = "apc[cell ? 2 : 1]"
-		if(update_state & UPSTATE_OPENED1)
-			icon_state = (update_state & (UPSTATE_MAINT|UPSTATE_BROKE)) ? "apcmaint" : basestate
-		else if(update_state & UPSTATE_OPENED2)
-			icon_state = "[basestate][((update_state & UPSTATE_BROKE) || malfhack) ? "-b" : null]-nocover"
-		return ..()
-	if(update_state & UPSTATE_BROKE)
-		icon_state = "apc-b"
-		return ..()
-	if(update_state & UPSTATE_BLUESCREEN)
-		icon_state = "apcemag"
-		return ..()
-	if(update_state & UPSTATE_WIREEXP)
-		icon_state = "apcewires"
-		return ..()
-	if(update_state & UPSTATE_MAINT)
-		icon_state = "apc0"
-	return ..()
 
 /obj/machinery/power/apc/update_overlays()
 	. = ..()
-	if((machine_stat & (BROKEN|MAINT)) || update_state)
+
+	if(update_overlay & UPOVERLAY_TERMINAL)
+		. += mutable_appearance(icon, "terminal", layer, plane)
+
+	if(update_overlay & UPSTATE_CELL_IN)
+		. += mutable_appearance(icon, "cell", layer, plane)
+
+	if(update_overlay & UPSTATE_WIREEXP)
+		. += mutable_appearance(icon, "tray", layer, plane)
+
+		if(update_overlay & UPOVERLAY_ELECTRONICS_INSERT)
+			. += mutable_appearance(icon, "electronics", layer, plane)
+		if(update_overlay & UPOVERLAY_ELECTRONICS_FASTENED)
+			. += mutable_appearance(icon, "wires_secured", layer, plane)
+
+	if(update_overlay & UPSTATE_OPENED1)
+		. += mutable_appearance(icon, "hatch-open", layer, plane)
+	else if(!(update_overlay & UPSTATE_OPENED2))
+		. += mutable_appearance(icon, "hatch-shut", layer, plane)
+
+	if(!locked)
+		. += mutable_appearance(icon, "apc_unlocked", layer, plane)
+
+	if(update_overlay & UPSTATE_BROKE)
+		. += mutable_appearance(icon, "broken_overlay", layer, plane)
+
+	if((machine_stat & (BROKEN|MAINT)))
 		return
 
-	. += mutable_appearance(icon, "apcox-[locked]", layer, plane)
-	. += mutable_appearance(icon, "apcox-[locked]", layer, EMISSIVE_PLANE)
-	. += mutable_appearance(icon, "apco3-[charging]", layer, plane)
-	. += mutable_appearance(icon, "apco3-[charging]", layer, EMISSIVE_PLANE)
-	if(!operating)
+	if(update_overlay & UPSTATE_BLUESCREEN)
+		. += mutable_appearance(icon, "emagged", layer, plane)
+		. += mutable_appearance(icon, "emagged", layer, EMISSIVE_PLANE)
+
+		if(update_overlay & (UPSTATE_OPENED1 | UPSTATE_OPENED2))
+			return
+
+		. += mutable_appearance(icon, "equip-0", layer, plane)
+		. += mutable_appearance(icon, "equip-0", layer, EMISSIVE_PLANE)
+		. += mutable_appearance(icon, "light-0", layer, plane)
+		. += mutable_appearance(icon, "light-0", layer, EMISSIVE_PLANE)
+		. += mutable_appearance(icon, "enviro-0", layer, plane)
+		. += mutable_appearance(icon, "enviro-0", layer, EMISSIVE_PLANE)
 		return
 
-	. += mutable_appearance(icon, "apco0-[equipment]", layer, plane)
-	. += mutable_appearance(icon, "apco0-[equipment]", layer, EMISSIVE_PLANE)
-	. += mutable_appearance(icon, "apco1-[lighting]", layer, plane)
-	. += mutable_appearance(icon, "apco1-[lighting]", layer, EMISSIVE_PLANE)
-	. += mutable_appearance(icon, "apco2-[environ]", layer, plane)
-	. += mutable_appearance(icon, "apco2-[environ]", layer, EMISSIVE_PLANE)
+	. += mutable_appearance(icon, "state-[charging]", layer, plane)
+	. += mutable_appearance(icon, "state-[charging]", layer, EMISSIVE_PLANE)
+
+	if(!operating || update_overlay & (UPSTATE_OPENED1 | UPSTATE_OPENED2))
+		return
+
+	. += mutable_appearance(icon, "equip-[equipment]", layer, plane)
+	. += mutable_appearance(icon, "equip-[equipment]", layer, EMISSIVE_PLANE)
+	. += mutable_appearance(icon, "light-[lighting]", layer, plane)
+	. += mutable_appearance(icon, "light-[lighting]", layer, EMISSIVE_PLANE)
+	. += mutable_appearance(icon, "enviro-[environ]", layer, plane)
+	. += mutable_appearance(icon, "enviro-[environ]", layer, EMISSIVE_PLANE)
 
 /// Checks for what icon updates we will need to handle
 /obj/machinery/power/apc/proc/check_updates()
 	SIGNAL_HANDLER
-	. = NONE
-
-	// Handle icon status:
-	var/new_update_state = NONE
-	if(machine_stat & BROKEN)
-		new_update_state |= UPSTATE_BROKE
-	if(machine_stat & MAINT)
-		new_update_state |= UPSTATE_MAINT
-
-	if(opened)
-		new_update_state |= (opened << UPSTATE_COVER_SHIFT)
-		if(cell)
-			new_update_state |= UPSTATE_CELL_IN
-
-	else if((obj_flags & EMAGGED) || malfai)
-		new_update_state |= UPSTATE_BLUESCREEN
-	else if(panel_open)
-		new_update_state |= UPSTATE_WIREEXP
-
-	if(new_update_state != update_state)
-		update_state = new_update_state
-		. |= UPDATE_ICON_STATE
 
 	// Handle overlay status:
 	var/new_update_overlay = NONE
 	if(operating)
 		new_update_overlay |= UPOVERLAY_OPERATING
 
-	if(!update_state)
-		if(locked)
-			new_update_overlay |= UPOVERLAY_LOCKED
+	if(locked)
+		new_update_overlay |= UPOVERLAY_LOCKED
 
-		new_update_overlay |= (charging << UPOVERLAY_CHARGING_SHIFT)
-		new_update_overlay |= (equipment << UPOVERLAY_EQUIPMENT_SHIFT)
-		new_update_overlay |= (lighting << UPOVERLAY_LIGHTING_SHIFT)
-		new_update_overlay |= (environ << UPOVERLAY_ENVIRON_SHIFT)
+	if(terminal)
+		new_update_overlay |= UPOVERLAY_TERMINAL
+	// Handle icon status:
+	if(machine_stat & BROKEN)
+		new_update_overlay |= UPSTATE_BROKE
+	if(machine_stat & MAINT)
+		new_update_overlay |= UPSTATE_MAINT
+
+	if(opened)
+		new_update_overlay |= (opened << UPSTATE_COVER_SHIFT)
+	if(cell)
+		new_update_overlay |= UPSTATE_CELL_IN
+
+	if((obj_flags & EMAGGED) || malfai)
+		new_update_overlay |= UPSTATE_BLUESCREEN
+
+	if(panel_open)
+		new_update_overlay |= UPSTATE_WIREEXP
+
+	if(has_electronics)
+		new_update_overlay |= UPOVERLAY_ELECTRONICS_INSERT
+
+	if(has_electronics == APC_ELECTRONICS_SECURED)
+		new_update_overlay |= UPOVERLAY_ELECTRONICS_FASTENED
+
+	new_update_overlay |= (charging << UPOVERLAY_CHARGING_SHIFT)
+	new_update_overlay |= (equipment << UPOVERLAY_EQUIPMENT_SHIFT)
+	new_update_overlay |= (lighting << UPOVERLAY_LIGHTING_SHIFT)
+	new_update_overlay |= (environ << UPOVERLAY_ENVIRON_SHIFT)
 
 	if(new_update_overlay != update_overlay)
 		update_overlay = new_update_overlay
-		. |= UPDATE_OVERLAYS
-
+		return UPDATE_OVERLAYS
+	return NONE
 
 // Used in process so it doesn't update the icon too much
 /obj/machinery/power/apc/proc/queue_icon_update()
@@ -483,23 +505,21 @@
 						user.visible_message("<span class='notice'>[user.name] breaks the power control board inside [src.name]!</span>",\
 							"<span class='notice'>You break the charred power control board and remove the remains.</span>",
 							"<span class='hear'>You hear a crack.</span>")
-						return
 					else if (obj_flags & EMAGGED)
 						obj_flags &= ~EMAGGED
 						user.visible_message("<span class='notice'>[user.name] discards an emagged power control board from [src.name]!</span>",\
 							"<span class='notice'>You discard the emagged power control board.</span>")
-						return
 					else if (malfhack)
 						user.visible_message("<span class='notice'>[user.name] discards a strangely programmed power control board from [src.name]!</span>",\
 							"<span class='notice'>You discard the strangely programmed board.</span>")
 						malfai = null
 						malfhack = 0
-						return
 					else
 						user.visible_message("<span class='notice'>[user.name] removes the power control board from [src.name]!</span>",\
 							"<span class='notice'>You remove the power control board.</span>")
 						new /obj/item/electronics/apc(loc)
-						return
+					update_appearance()
+					return
 		else if (opened!=APC_COVER_REMOVED)
 			opened = APC_COVER_CLOSED
 			coverlocked = TRUE //closing cover relocks it
@@ -656,6 +676,7 @@
 				to_chat(user, "<span class='notice'>You add cables to the APC frame.</span>")
 				make_terminal()
 				terminal.connect_to_network()
+				update_appearance()
 	else if (istype(W, /obj/item/electronics/apc) && opened)
 		if (has_electronics)
 			to_chat(user, "<span class='warning'>There is already a board inside the [src]!</span>")
@@ -672,6 +693,7 @@
 				has_electronics = APC_ELECTRONICS_INSTALLED
 				locked = FALSE
 				to_chat(user, "<span class='notice'>You place the power control board inside the frame.</span>")
+				update_appearance()
 				qdel(W)
 	else if(istype(W, /obj/item/electroadaptive_pseudocircuit) && opened)
 		var/obj/item/electroadaptive_pseudocircuit/P = W
@@ -761,6 +783,7 @@
 				"<span class='notice'>You adapt a power control board and click it into place in [src]'s guts.</span>")
 				has_electronics = TRUE
 				locked = TRUE
+				update_appearance()
 				return TRUE
 			else if(!cell)
 				if(machine_stat & MAINT)
