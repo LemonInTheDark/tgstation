@@ -47,23 +47,43 @@
 /turf/proc/ImmediateCalculateAdjacentTurfs()
 	var/canpass = CANATMOSPASS(src, src)
 	var/canvpass = CANVERTICALATMOSPASS(src, src)
+	var/list/atmos_adj_turfs = LAZYLISTDUPLICATE(atmos_adjacent_turfs)
+
 	for(var/direction in GLOB.cardinals_multiz)
 		var/turf/T = get_step_multiz(src, direction)
 		if(!isopenturf(T))
 			continue
 		if(!(blocks_air || T.blocks_air) && ((direction & (UP|DOWN))? (canvpass && CANVERTICALATMOSPASS(T, src)) : (canpass && CANATMOSPASS(T, src))) )
-			LAZYINITLIST(atmos_adjacent_turfs)
+			LAZYINITLIST(atmos_adj_turfs)
 			LAZYINITLIST(T.atmos_adjacent_turfs)
-			atmos_adjacent_turfs[T] = TRUE
+			atmos_adj_turfs[T] = TRUE
 			T.atmos_adjacent_turfs[src] = TRUE
 		else
-			if (atmos_adjacent_turfs)
-				atmos_adjacent_turfs -= T
+			if (atmos_adj_turfs)
+				atmos_adj_turfs -= T
 			if (T.atmos_adjacent_turfs)
 				T.atmos_adjacent_turfs -= src
 			UNSETEMPTY(T.atmos_adjacent_turfs)
-	UNSETEMPTY(atmos_adjacent_turfs)
-	src.atmos_adjacent_turfs = atmos_adjacent_turfs
+	UNSETEMPTY(atmos_adj_turfs)
+
+	//If there's none to talk to, don't
+	if(!LAZYLEN(atmos_adjacent_turfs) && !LAZYLEN(atmos_adj_turfs))
+		share_coeff = 1
+		atmos_adjacent_turfs = atmos_adj_turfs
+		return
+
+	//We need to get our nighboors to update their share coefficent, so let's do that yeah?
+	for(var/turf/open/to_recalc as anything in atmos_adjacent_turfs | atmos_adj_turfs)
+		if(!LAZYLEN(to_recalc.atmos_adjacent_turfs) || isspaceturf(to_recalc))
+			to_recalc.share_coeff = 1
+			continue
+		to_recalc.share_coeff = 1/(LAZYLEN(to_recalc.atmos_adjacent_turfs) + 1)
+
+	atmos_adjacent_turfs = atmos_adj_turfs
+	if(isspaceturf(src))
+		share_coeff = 1
+	else
+		share_coeff = 1/(LAZYLEN(atmos_adjacent_turfs) + 1)
 
 //returns a list of adjacent turfs that can share air with this one.
 //alldir includes adjacent diagonal tiles that can share

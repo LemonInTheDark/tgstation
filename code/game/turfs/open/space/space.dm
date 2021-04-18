@@ -7,6 +7,8 @@
 	temperature = TCMB
 	thermal_conductivity = OPEN_HEAT_TRANSFER_COEFFICIENT
 	heat_capacity = 700000
+	//This is snowflaked, you can't normally set share_coeff like this
+	share_coeff = 1
 
 	var/destination_z
 	var/destination_x
