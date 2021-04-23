@@ -174,11 +174,10 @@
 #define HUD_RENDER_TARGET "HUD_PLANE"
 #define ABOVE_HUD_PLANE 1100
 #define ABOVE_HUD_RENDER_TARGET "ABOVE_HUD_PLANE"
-///1000 is an unimportant number, it's just to normalize copied layers
-#define RADIAL_LAYER 1000
 
 #define RADIAL_BACKGROUND_LAYER 0
-#define RADIAL_CONTENT_LAYER 1
+///1000 is an unimportant number, it's just to normalize copied layers
+#define RADIAL_CONTENT_LAYER 1000
 
 ///Plane of the "splash" icon used that shows on the lobby screen. Nothing should ever be above this.
 #define SPLASHSCREEN_PLANE 9999
