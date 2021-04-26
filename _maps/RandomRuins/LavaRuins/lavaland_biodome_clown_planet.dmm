@@ -1024,9 +1024,7 @@
 "hY" = (
 /obj/machinery/light,
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/plating/asteroid/basalt/lava_land_surface{
-	initial_gas_mix = "o2=22;n2=82;TEMP=293.15"
-	},
+/turf/open/floor/plating/asteroid/basalt,
 /area/ruin/powered/clownplanet)
 "os" = (
 /obj/effect/mapping_helpers/no_lava,
@@ -1037,9 +1035,7 @@
 /obj/machinery/light{
 	dir = 4
 	},
-/turf/open/floor/plating/asteroid/basalt/lava_land_surface{
-	initial_gas_mix = "o2=22;n2=82;TEMP=293.15"
-	},
+/turf/open/floor/plating/asteroid/basalt,
 /area/ruin/powered/clownplanet)
 "ye" = (
 /turf/open/lava/smooth,
@@ -1070,9 +1066,7 @@
 	name = "stealth banana peel"
 	},
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/plating/asteroid/basalt/lava_land_surface{
-	initial_gas_mix = "o2=22;n2=82;TEMP=293.15"
-	},
+/turf/open/floor/plating/asteroid/basalt,
 /area/lavaland/surface/outdoors/explored)
 "LH" = (
 /obj/machinery/disposal/delivery_chute{
@@ -1089,9 +1083,7 @@
 	dir = 8
 	},
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/plating/asteroid/basalt/lava_land_surface{
-	initial_gas_mix = "o2=22;n2=82;TEMP=293.15"
-	},
+/turf/open/floor/plating/asteroid/basalt,
 /area/ruin/powered/clownplanet)
 "RW" = (
 /obj/effect/mapping_helpers/no_lava,
@@ -1113,18 +1105,14 @@
 /area/ruin/powered/clownplanet)
 "XO" = (
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/plating/asteroid/basalt/lava_land_surface{
-	initial_gas_mix = "o2=22;n2=82;TEMP=293.15"
-	},
+/turf/open/floor/plating/asteroid/basalt,
 /area/lavaland/surface/outdoors/explored)
 "Yf" = (
 /obj/machinery/light{
 	dir = 1
 	},
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/plating/asteroid/basalt/lava_land_surface{
-	initial_gas_mix = "o2=22;n2=82;TEMP=293.15"
-	},
+/turf/open/floor/plating/asteroid/basalt,
 /area/ruin/powered/clownplanet)
 "YI" = (
 /obj/machinery/light/small,

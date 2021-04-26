@@ -244,6 +244,10 @@
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_FLOOR_ICE)
 	canSmoothWith = list(SMOOTH_GROUP_FLOOR_ICE)
 
+/turf/open/floor/plating/ice/no_planet_atmos
+	baseturfs = /turf/open/floor/plating/ice/no_planet_atmos
+	planetary_atmos = FALSE
+
 /turf/open/floor/plating/ice/break_tile()
 	return
 
