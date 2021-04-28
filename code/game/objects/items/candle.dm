@@ -19,6 +19,7 @@
 	. = ..()
 	if(start_lit)
 		light()
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/candle/update_icon_state()
 	icon_state = "candle[(wax > 800) ? ((wax > 1500) ? 1 : 2) : 3][lit ? "_lit" : ""]"

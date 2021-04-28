@@ -2,6 +2,7 @@
 	var/gas_name
 	var/gas_amount
 	var/temp_amount
+	var/static/list/connect_loc_signals = list(COMSIG_TURF_FIRE = .proc/flame_react)
 
 /datum/component/hot_ice/Initialize(gas_name, gas_amount, temp_amount)
 
@@ -11,10 +12,12 @@
 
 	RegisterSignal(parent, COMSIG_PARENT_ATTACKBY, .proc/attackby_react)
 	RegisterSignal(parent, COMSIG_ATOM_FIRE_ACT, .proc/flame_react)
+	AddElement(/datum/element/connect_loc, parent, connect_loc_signals)
 
 /datum/component/hot_ice/UnregisterFromParent()
 	UnregisterSignal(parent, COMSIG_PARENT_ATTACKBY)
 	UnregisterSignal(parent, COMSIG_ATOM_FIRE_ACT)
+	RemoveElement(/datum/element/connect_loc, parent, connect_loc_signals)
 
 /datum/component/hot_ice/proc/hot_ice_melt(mob/user)
 	var/turf/open/T = get_turf(parent)

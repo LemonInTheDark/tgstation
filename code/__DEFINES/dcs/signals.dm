@@ -358,6 +358,8 @@
 #define COMSIG_TURF_ON_SHUTTLE_MOVE "turf_on_shuttle_move"
 ///from /turf/open/temperature_expose(datum/gas_mixture/air, exposed_temperature)
 #define COMSIG_TURF_EXPOSE "turf_expose"
+///from /obj/effect/hotspot/proc/perform_exposure(): (exposed_temperature, exposed_volume)
+#define COMSIG_TURF_FIRE "turf_fire"
 
 // /atom/movable signals
 

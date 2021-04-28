@@ -211,6 +211,7 @@
 	diag_hud_set_mechcell()
 	diag_hud_set_mechstat()
 	update_appearance()
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/mecha/ComponentInitialize()
 	. = ..()
@@ -492,7 +493,7 @@
 	diag_hud_set_mechcell()
 	diag_hud_set_mechstat()
 
-/obj/vehicle/sealed/mecha/fire_act() //Check if we should ignite the pilot of an open-canopy mech
+/obj/vehicle/sealed/mecha/fire_act(exposed_temperature, exposed_volume) //Check if we should ignite the pilot of an open-canopy mech
 	. = ..()
 	if(enclosed || mecha_flags & SILICON_PILOT)
 		return

@@ -20,6 +20,7 @@
 	var/static/list/resistlist = typecacheof(
 		/turf/closed/wall/r_wall
 		)
+	var/static/list/connect_loc_signals = list(COMSIG_TURF_FIRE = .proc/flame_react)
 
 /datum/component/thermite/Initialize(_amount)
 	if(!istype(parent, /turf) || blacklist[parent.type])
@@ -41,11 +42,13 @@
 	RegisterSignal(parent, COMSIG_COMPONENT_CLEAN_ACT, .proc/clean_react)
 	RegisterSignal(parent, COMSIG_PARENT_ATTACKBY, .proc/attackby_react)
 	RegisterSignal(parent, COMSIG_ATOM_FIRE_ACT, .proc/flame_react)
+	AddElement(/datum/element/connect_loc, parent, connect_loc_signals)
 
 /datum/component/thermite/UnregisterFromParent()
 	UnregisterSignal(parent, COMSIG_COMPONENT_CLEAN_ACT)
 	UnregisterSignal(parent, COMSIG_PARENT_ATTACKBY)
 	UnregisterSignal(parent, COMSIG_ATOM_FIRE_ACT)
+	RemoveElement(/datum/element/connect_loc, parent, connect_loc_signals)
 
 /datum/component/thermite/Destroy()
 	var/turf/master = parent

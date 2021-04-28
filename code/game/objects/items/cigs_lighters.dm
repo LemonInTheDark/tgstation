@@ -28,6 +28,10 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	heat = 1000
 	grind_results = list(/datum/reagent/phosphorus = 2)
 
+/obj/item/match/Initialize()
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
+
 /obj/item/match/process(delta_time)
 	smoketime -= delta_time
 	if(smoketime <= 0)
@@ -151,6 +155,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if(starts_lit)
 		light()
 	AddComponent(/datum/component/knockoff,90,list(BODY_ZONE_PRECISE_MOUTH),list(ITEM_SLOT_MASK))//90% to knock off when wearing a mask
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/clothing/mask/cigarette/Destroy()
 	STOP_PROCESSING(SSobj, src)

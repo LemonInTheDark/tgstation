@@ -11,6 +11,10 @@
 	var/burntime = 120
 	var/lit = FALSE
 
+/obj/item/sparkler/Initialize()
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
+
 /obj/item/sparkler/fire_act(exposed_temperature, exposed_volume)
 	light()
 
@@ -49,10 +53,10 @@
 
 /obj/item/sparkler/Destroy()
 	STOP_PROCESSING(SSobj, src)
-	..()
+	return ..()
 
 /obj/item/sparkler/ignition_effect(atom/A, mob/user)
-	. = "<span class='notice'>[user] gracefully lights [A] with [src].</span>"
+	return "<span class='notice'>[user] gracefully lights [A] with [src].</span>"
 
 /obj/item/sparkler/get_temperature()
 	return lit * heat
@@ -71,6 +75,10 @@
 	throw_speed = 3
 	throw_range = 7
 	det_time = 30
+
+/obj/item/grenade/firecracker/Initialize()
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/grenade/firecracker/attack_self(mob/user) // You need to light it manually.
 	return

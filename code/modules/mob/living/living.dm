@@ -9,6 +9,7 @@
 		diag_hud.add_to_hud(src)
 	faction += "[REF(src)]"
 	GLOB.mob_living_list += src
+	AddElement(/datum/element/fire_sensitive)
 
 /mob/living/ComponentInitialize()
 	. = ..()

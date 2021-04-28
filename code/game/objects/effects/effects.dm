@@ -8,6 +8,10 @@
 	obj_flags = NONE
 	vis_flags = VIS_INHERIT_PLANE
 
+/obj/effect/Initialize(mapload)
+	. = ..()
+	RemoveElement(/datum/element/fire_sensitive)
+
 /obj/effect/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
 	return
 

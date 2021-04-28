@@ -9,6 +9,8 @@
 	. = ..()
 	if(turf_loc_check && (!isturf(loc) || NeverShouldHaveComeHere(loc)))
 		return INITIALIZE_HINT_QDEL
+	if(!(resistance_flags & FIRE_PROOF))
+		AddElement(/datum/element/fire_sensitive)
 
 /obj/effect/decal/blob_act(obj/structure/blob/B)
 	if(B && B.loc == loc)

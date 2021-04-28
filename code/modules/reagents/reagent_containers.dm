@@ -26,6 +26,7 @@
 		reagents.add_reagent(/datum/reagent/blood, disease_amount, data)
 
 	add_initial_reagents()
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/reagent_containers/create_reagents(max_vol, flags)
 	. = ..()
@@ -188,9 +189,6 @@
 /obj/item/reagent_containers/microwave_act(obj/machinery/microwave/M)
 	reagents.expose_temperature(1000)
 	..()
-
-/obj/item/reagent_containers/fire_act(temperature, volume)
-	reagents.expose_temperature(temperature)
 
 /// Updates the icon of the container when the reagents change. Eats signal args
 /obj/item/reagent_containers/proc/on_reagent_change(datum/reagents/holder, ...)

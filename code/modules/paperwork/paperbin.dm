@@ -37,6 +37,8 @@
 		papers.Add(generate_paper())
 	update_appearance()
 
+	AddElement(/datum/element/fire_sensitive)
+
 /obj/item/paper_bin/proc/generate_paper()
 	var/obj/item/paper/paper = new papertype(src)
 	if(SSevents.holidays && SSevents.holidays[APRIL_FOOLS])

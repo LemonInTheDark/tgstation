@@ -35,6 +35,8 @@
 	else
 		pass_flags &= ~PASSBLOB
 
+	AddElement(/datum/element/fire_sensitive)
+
 /mob/living/simple_animal/hostile/blob/Destroy()
 	if(overmind)
 		overmind.blob_mobs -= src

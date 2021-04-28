@@ -38,6 +38,7 @@
 		mytape = new starting_tape_type(src)
 	soundloop = new(list(src))
 	update_appearance()
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/taperecorder/Destroy()
 	QDEL_NULL(soundloop)
@@ -346,10 +347,6 @@
 	var/list/icons_available = list()
 	var/radial_icon_file = 'icons/hud/radial_tape.dmi'
 
-/obj/item/tape/fire_act(exposed_temperature, exposed_volume)
-	unspool()
-	..()
-
 /obj/item/tape/Initialize()
 	. = ..()
 	initial_icon_state = icon_state //random tapes will set this after choosing their icon
@@ -361,6 +358,12 @@
 
 	if(prob(50))
 		tapeflip()
+
+	AddElement(/datum/element/fire_sensitive)
+
+/obj/item/tape/fire_act(exposed_temperature, exposed_volume)
+	unspool()
+	..()
 
 /obj/item/tape/proc/update_available_icons()
 	icons_available = list()

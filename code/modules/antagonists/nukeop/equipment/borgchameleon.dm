@@ -21,6 +21,7 @@
 			COMSIG_MOVABLE_IMPACT_ZONE,
 			COMSIG_ATOM_BULLET_ACT,
 			COMSIG_ATOM_EX_ACT,
+			COMSIG_TURF_FIRE,
 			COMSIG_ATOM_FIRE_ACT,
 			COMSIG_ATOM_EMP_ACT,
 			)
@@ -30,6 +31,7 @@
 /obj/item/borg_chameleon/Initialize()
 	. = ..()
 	friendlyName = pick(GLOB.ai_names)
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/borg_chameleon/Destroy()
 	listeningTo = null

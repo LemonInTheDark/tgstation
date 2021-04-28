@@ -46,6 +46,7 @@
 /obj/structure/firepit/Initialize()
 	..()
 	toggleFirepit()
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/structure/firepit/interact(mob/living/user)
 	if(active)

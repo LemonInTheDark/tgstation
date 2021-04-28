@@ -33,7 +33,8 @@
 	. = ..()
 	paddles = new paddle_type(src)
 	update_power()
-	return
+
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/defibrillator/loaded/Initialize() //starts with hicap
 	. = ..()
@@ -307,6 +308,10 @@
 	var/req_defib = TRUE
 	var/combat = FALSE //If it penetrates armor and gives additional functionality
 	var/wielded = FALSE // track wielded status on item
+
+/obj/item/shockpaddles/Initialize()
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/shockpaddles/ComponentInitialize()
 	. = ..()

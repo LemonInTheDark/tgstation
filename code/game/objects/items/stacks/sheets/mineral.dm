@@ -162,6 +162,10 @@ GLOBAL_LIST_INIT(uranium_recipes, list ( \
 	material_type = /datum/material/plasma
 	walltype = /turf/closed/wall/mineral/plasma
 
+/obj/item/stack/sheet/mineral/plasma/Initialize(mapload, new_amount, merge, list/mat_override, mat_amt)
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
+
 /obj/item/stack/sheet/mineral/plasma/suicide_act(mob/living/carbon/user)
 	user.visible_message("<span class='suicide'>[user] begins licking \the [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
 	return TOXLOSS//dont you kids know that stuff is toxic?
@@ -456,6 +460,10 @@ GLOBAL_LIST_INIT(abductor_recipes, list ( \
 	merge_type = /obj/item/stack/sheet/mineral/coal
 	grind_results = list(/datum/reagent/carbon = 20)
 	novariants = TRUE
+
+/obj/item/stack/sheet/mineral/coal/Initialize(mapload, new_amount, merge, list/mat_override, mat_amt)
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
 
 /obj/item/stack/sheet/mineral/coal/attackby(obj/item/W, mob/user, params)
 	if(W.get_temperature() > 300)//If the temperature of the object is over 300, then ignite

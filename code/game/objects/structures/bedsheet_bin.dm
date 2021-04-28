@@ -301,6 +301,10 @@ LINEN BINS
 	var/list/sheets = list()
 	var/obj/item/hidden = null
 
+/obj/structure/bedsheetbin/Initialize()
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
+
 /obj/structure/bedsheetbin/empty
 	amount = 0
 	icon_state = "linenbin-empty"

@@ -672,6 +672,7 @@
 #include "code\datums\elements\embed.dm"
 #include "code\datums\elements\empprotection.dm"
 #include "code\datums\elements\eyestab.dm"
+#include "code\datums\elements\fire_sensitive.dm"
 #include "code\datums\elements\firestacker.dm"
 #include "code\datums\elements\forced_gravity.dm"
 #include "code\datums\elements\haunted.dm"

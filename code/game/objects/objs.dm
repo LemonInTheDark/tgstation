@@ -90,6 +90,8 @@
 		AddComponent(/datum/component/ntnet_interface, network_id, id_tag)
 		/// Needs to run before as ComponentInitialize runs after this statement...why do we have ComponentInitialize again?
 
+	if(!(resistance_flags & FIRE_PROOF))
+		AddElement(/datum/element/fire_sensitive)
 
 /obj/Destroy(force=FALSE)
 	if(!ismachinery(src))

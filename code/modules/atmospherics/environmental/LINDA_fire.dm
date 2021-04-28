@@ -94,10 +94,7 @@
 			volume = affected.reaction_results["fire"]*FIRE_GROWTH_RATE
 			location.assume_air(affected)
 
-	for(var/A in location)
-		var/atom/AT = A
-		if(!QDELETED(AT) && AT != src)
-			AT.fire_act(temperature, volume)
+	SEND_SIGNAL(location, COMSIG_TURF_FIRE, temperature, volume)
 	return
 
 /obj/effect/hotspot/proc/gauss_lerp(x, x1, x2)

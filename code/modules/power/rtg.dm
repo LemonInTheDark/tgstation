@@ -68,6 +68,10 @@
 	pixel_y = 7
 	var/going_kaboom = FALSE // Is it about to explode?
 
+/obj/machinery/power/rtg/abductor/Initialize()
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
+
 /obj/machinery/power/rtg/abductor/proc/overload()
 	if(going_kaboom)
 		return

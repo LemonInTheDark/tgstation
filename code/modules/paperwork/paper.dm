@@ -54,6 +54,10 @@
 	var/list/form_fields = list()
 	var/field_counter = 1
 
+/obj/item/paper/Initialize()
+	. = ..()
+	AddElement(/datum/element/fire_sensitive)
+
 /obj/item/paper/Destroy()
 	stamps = null
 	stamped = null
