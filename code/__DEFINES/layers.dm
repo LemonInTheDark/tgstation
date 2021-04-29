@@ -128,7 +128,6 @@
 #define BYOND_LIGHTING_PLANE 130
 #define BYOND_LIGHTING_RENDER_TARGET "BYOND_LIGHTING_PLANE"
 
-
 //---------- EMISSIVES -------------
 //Layering order of these is not particularly meaningful.
 //Important part is the seperation of the planes for control via plane_master
