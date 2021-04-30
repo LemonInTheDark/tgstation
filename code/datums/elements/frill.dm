@@ -54,15 +54,17 @@ GLOBAL_LIST_EMPTY(frill_objects)
 	layer = ABOVE_MOB_LAYER
 	plane = FRILL_PLANE
 	vis_flags = NONE
-
+	var/static/list/apperances = list()
 
 /atom/movable/visual/frill/Initialize(mapload, icon, junction, shadow, custom_alpha, custom_pixel_x, custom_pixel_y, custom_plane)
 	. = ..()
 	src.icon = icon
 	icon_state = "frill-[junction]"
-	if(shadow)
-		var/mutable_appearance/shadows = mutable_appearance(icon, junction, 0, UNDER_FRILL_PLANE, 120)
-		add_overlay(list(shadows))
+	var/mutable_appearance/cached_apperance = apperances["[icon]-[junction]"]
+	if(cached_apperance)
+		apperances["[icon]-[junction]"] = mutable_appearance(icon, junction, 0, UNDER_FRILL_PLANE, 120)
+		cached_apperance = apperances["[icon]-[junction]"]
+	add_overlay(list(cached_apperance))
 	if(!isnull(custom_alpha))
 		alpha = custom_alpha
 	if(!isnull(custom_pixel_x))
