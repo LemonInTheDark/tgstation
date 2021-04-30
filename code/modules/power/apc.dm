@@ -382,60 +382,60 @@
 	. = ..()
 
 	if(update_overlay & UPOVERLAY_TERMINAL)
-		. += mutable_appearance(icon, "terminal", layer, plane)
+		. += mutable_appearance(icon, "terminal")
 
 	if(update_overlay & UPSTATE_CELL_IN)
-		. += mutable_appearance(icon, "cell", layer, plane)
+		. += mutable_appearance(icon, "cell")
 
 	if(update_overlay & UPSTATE_WIREEXP)
-		. += mutable_appearance(icon, "tray", layer, plane)
+		. += mutable_appearance(icon, "tray")
 
 		if(update_overlay & UPOVERLAY_ELECTRONICS_INSERT)
-			. += mutable_appearance(icon, "electronics", layer, plane)
+			. += mutable_appearance(icon, "electronics")
 		if(update_overlay & UPOVERLAY_TERMINAL)
-			. += mutable_appearance(icon, "wires_secured", layer, plane)
+			. += mutable_appearance(icon, "wires_secured")
 
 	if(update_overlay & UPSTATE_OPENED1)
 		. += mutable_appearance(icon, "hatch-open", layer, BYOND_LIGHTING_PLANE + 1)
 	else if(!(update_overlay & UPSTATE_OPENED2))
-		. += mutable_appearance(icon, "hatch-shut", layer, plane)
+		. += mutable_appearance(icon, "hatch-shut")
 
 	if(!locked)
-		. += mutable_appearance(icon, "apc_unlocked", layer, plane)
+		. += mutable_appearance(icon, "apc_unlocked")
 
 	if(update_overlay & UPSTATE_BROKE)
-		. += mutable_appearance(icon, "broken_overlay", layer, plane)
+		. += mutable_appearance(icon, "broken_overlay")
 
 	if((machine_stat & (BROKEN|MAINT)))
 		return
 
 	if(update_overlay & UPSTATE_BLUESCREEN)
-		. += mutable_appearance(icon, "emagged", layer, plane)
-		. += mutable_appearance(icon, "emagged", layer, EMISSIVE_PLANE)
+		. += mutable_appearance(icon, "emagged")
+		. += emissive_appearance(icon, "emagged")
 
 		if(update_overlay & (UPSTATE_OPENED1 | UPSTATE_OPENED2))
 			return
 
-		. += mutable_appearance(icon, "equip-0", layer, plane)
-		. += mutable_appearance(icon, "equip-0", layer, EMISSIVE_PLANE)
-		. += mutable_appearance(icon, "light-0", layer, plane)
-		. += mutable_appearance(icon, "light-0", layer, EMISSIVE_PLANE)
-		. += mutable_appearance(icon, "enviro-0", layer, plane)
-		. += mutable_appearance(icon, "enviro-0", layer, EMISSIVE_PLANE)
+		. += mutable_appearance(icon, "equip-0")
+		. += emissive_appearance(icon, "equip-0")
+		. += mutable_appearance(icon, "light-0")
+		. += emissive_appearance(icon, "light-0")
+		. += mutable_appearance(icon, "enviro-0")
+		. += emissive_appearance(icon, "enviro-0")
 		return
 
-	. += mutable_appearance(icon, "state-[charging]", layer, plane)
-	. += mutable_appearance(icon, "state-[charging]", layer, EMISSIVE_PLANE)
+	. += mutable_appearance(icon, "state-[charging]")
+	. += emissive_appearance(icon, "state-[charging]")
 
 	if(!operating || update_overlay & (UPSTATE_OPENED1 | UPSTATE_OPENED2))
 		return
 
-	. += mutable_appearance(icon, "equip-[equipment]", layer, plane)
-	. += mutable_appearance(icon, "equip-[equipment]", layer, EMISSIVE_PLANE)
-	. += mutable_appearance(icon, "light-[lighting]", layer, plane)
-	. += mutable_appearance(icon, "light-[lighting]", layer, EMISSIVE_PLANE)
-	. += mutable_appearance(icon, "enviro-[environ]", layer, plane)
-	. += mutable_appearance(icon, "enviro-[environ]", layer, EMISSIVE_PLANE)
+	. += mutable_appearance(icon, "equip-[equipment]")
+	. += emissive_appearance(icon, "equip-[equipment]")
+	. += mutable_appearance(icon, "light-[lighting]")
+	. += emissive_appearance(icon, "light-[lighting]")
+	. += mutable_appearance(icon, "enviro-[environ]")
+	. += emissive_appearance(icon, "enviro-[environ]")
 
 /// Checks for what icon updates we will need to handle
 /obj/machinery/power/apc/proc/check_updates()
