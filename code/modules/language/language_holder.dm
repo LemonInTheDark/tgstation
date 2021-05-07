@@ -54,15 +54,24 @@ Key procs
 
 /// Initializes, and copies in the languages from the current atom if available.
 /datum/language_holder/New(_owner)
+	RegisterSignal(owner, COMSIG_PARENT_QDELETING, .proc/testmerge_del_happen)
 	owner = _owner
 	if(istype(owner, /datum/mind))
 		var/datum/mind/M = owner
 		if(M.current)
 			update_atom_languages(M.current)
 	get_selected_language()
+	stack_trace("TESTMERGE: \ref[src] [type] just had its owner var set to \ref[owner] [owner.type], that's a good start")
+	if(owner && QDELETED(owner))
+		stack_trace("TESTMERGE: \ref[src] [type] is holding a ref to \ref[owner] [owner.type] in [type].owner, how did we get here?")
+
+/datum/language_holder/proc/testmerge_del_happen(datum/source)
+	SIGNAL_HANDLER
+	stack_trace("TESTMERGE: \ref[src] [type] owner \ref[owner] [owner.type] was just deleted, will we keep the ref you think?")
 
 /datum/language_holder/Destroy()
 	QDEL_NULL(language_menu)
+	stack_trace("TESTMERGE: \ref[src] [type] owner \ref[owner] [owner.type] was just cleared, well done")
 	owner = null
 	return ..()
 
