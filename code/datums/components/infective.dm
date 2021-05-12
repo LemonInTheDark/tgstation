@@ -2,6 +2,9 @@
 	var/list/datum/disease/diseases //make sure these are the static, non-processing versions!
 	var/expire_time
 	var/required_clean_types = CLEAN_TYPE_DISEASE
+	var/static/list/disease_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/try_infect_crossed,
+	)
 
 /datum/component/infective/Initialize(list/datum/disease/_diseases, expire_in)
 	if(islist(_diseases))
@@ -15,9 +18,6 @@
 	if(!ismovable(parent))
 		return COMPONENT_INCOMPATIBLE
 
-	var/static/list/disease_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/try_infect_crossed,
-	)
 	AddElement(/datum/element/connect_loc, parent, disease_connections)
 
 	RegisterSignal(parent, COMSIG_COMPONENT_CLEAN_ACT, .proc/clean)
@@ -35,6 +35,10 @@
 			RegisterSignal(parent, COMSIG_GLASS_DRANK, .proc/try_infect_drink)
 	else if(istype(parent, /obj/effect/decal/cleanable/blood/gibs))
 		RegisterSignal(parent, COMSIG_GIBS_STREAK, .proc/try_infect_streak)
+
+/datum/component/infective/Destroy(force, silent)
+	RemoveElement(/datum/element/connect_loc, parent, disease_connections)
+	return ..()
 
 /datum/component/infective/proc/try_infect_eat(datum/source, mob/living/eater, mob/living/feeder)
 	SIGNAL_HANDLER

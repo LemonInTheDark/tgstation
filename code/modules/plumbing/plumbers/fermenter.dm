@@ -9,14 +9,18 @@
 
 	///input dir
 	var/eat_dir = SOUTH
-
-/obj/machinery/plumbing/fermenter/Initialize(mapload, bolt, layer)
-	. = ..()
-	AddComponent(/datum/component/plumbing/simple_supply, bolt, layer)
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+	
+/obj/machinery/plumbing/fermenter/Initialize(mapload, bolt, layer)
+	. = ..()
+	AddComponent(/datum/component/plumbing/simple_supply, bolt, layer)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/machinery/plumbing/fermenter/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/machinery/plumbing/grinder_chemical/can_be_rotated(mob/user, rotation_type)
 	if(anchored)

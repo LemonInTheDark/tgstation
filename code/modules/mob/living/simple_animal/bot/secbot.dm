@@ -42,6 +42,9 @@
 	var/weapon_force = 20 // Only used for NAP violation beatdowns on non-grievous securitrons
 	var/market_verb = "Suspect"
 	var/payment_department = ACCOUNT_SEC
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /mob/living/simple_animal/bot/secbot/beepsky
 	name = "Commander Beep O'sky"
@@ -87,13 +90,11 @@
 	//SECHUD
 	var/datum/atom_hud/secsensor = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
 	secsensor.add_hud_to(src)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /mob/living/simple_animal/bot/secbot/Destroy()
 	QDEL_NULL(weapon)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /mob/living/simple_animal/bot/secbot/update_icon_state()

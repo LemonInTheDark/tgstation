@@ -374,7 +374,7 @@
 	var/area/A = get_area(src)
 	if(A)
 		on = FALSE
-// A.update_lights()
+// A.update_lights() //What the fuck
 	QDEL_NULL(cell)
 	return ..()
 
@@ -862,6 +862,9 @@
 	grind_results = list(/datum/reagent/silicon = 5, /datum/reagent/nitrogen = 10) //Nitrogen is used as a cheaper alternative to argon in incandescent lighbulbs
 	var/rigged = FALSE // true if rigged to explode
 	var/brightness = 2 //how much light it gives off
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/item/light/suicide_act(mob/living/carbon/user)
 	if (status == LIGHT_BROKEN)
@@ -921,10 +924,11 @@
 	create_reagents(LIGHT_REAGENT_CAPACITY, INJECTABLE | DRAINABLE)
 	AddElement(/datum/element/caltrop, min_damage = force)
 	update()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/item/light/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/item/light/proc/on_entered(datum/source, atom/movable/AM)
 	SIGNAL_HANDLER

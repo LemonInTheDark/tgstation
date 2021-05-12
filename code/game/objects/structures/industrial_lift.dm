@@ -154,6 +154,11 @@ GLOBAL_LIST_EMPTY(lifts)
 	var/controls_locked = FALSE //if true, the lift cannot be manually moved.
 	var/list/atom/movable/lift_load //things to move
 	var/datum/lift_master/lift_master_datum    //control from
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXITED =.proc/UncrossedRemoveItemFromLift,
+		COMSIG_ATOM_ENTERED = .proc/AddItemOnLift,
+		COMSIG_ATOM_CREATED = .proc/AddItemOnLift,
+	)
 
 /obj/structure/industrial_lift/New()
 	GLOB.lifts.Add(src)
@@ -161,11 +166,6 @@ GLOBAL_LIST_EMPTY(lifts)
 
 /obj/structure/industrial_lift/Initialize(mapload)
 	. = ..()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXITED =.proc/UncrossedRemoveItemFromLift,
-		COMSIG_ATOM_ENTERED = .proc/AddItemOnLift,
-		COMSIG_ATOM_CREATED = .proc/AddItemOnLift,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 	RegisterSignal(src, COMSIG_MOVABLE_BUMP, .proc/GracefullyBreak)
 
@@ -336,6 +336,7 @@ GLOBAL_LIST_EMPTY(lifts)
 	moveToNullspace()
 	for(var/border_lift in border_lift_platforms)
 		lift_master_datum = new(border_lift)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /obj/structure/industrial_lift/debug

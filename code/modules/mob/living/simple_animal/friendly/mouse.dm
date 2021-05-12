@@ -30,6 +30,9 @@
 	can_be_held = TRUE
 	held_state = "mouse_gray"
 	faction = list("rat")
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /mob/living/simple_animal/mouse/Initialize()
 	. = ..()
@@ -42,9 +45,6 @@
 	add_cell_sample()
 
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /mob/living/simple_animal/mouse/add_cell_sample()
@@ -173,6 +173,7 @@
 
 /mob/living/simple_animal/mouse/Destroy()
 	SSmobs.cheeserats -= src
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 //TOM IS ALIVE! SQUEEEEEEEE~K :)

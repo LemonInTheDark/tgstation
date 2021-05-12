@@ -39,6 +39,9 @@
 
 	/// If specified, the singularity will slowly move to this target
 	var/atom/target
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/consume,
+	)
 
 /datum/component/singularity/Initialize(
 	bsa_targetable = TRUE,
@@ -82,9 +85,7 @@
 
 	RegisterSignal(parent, COMSIG_MOVABLE_PRE_MOVE, .proc/moved)
 	RegisterSignal(parent, COMSIG_ATOM_BUMPED, .proc/consume)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/consume,
-	)
+
 	AddElement(/datum/element/connect_loc, parent, loc_connections)
 
 	RegisterSignal(parent, COMSIG_ATOM_BULLET_ACT, .proc/consume_bullets)
@@ -107,6 +108,7 @@
 	parent.RemoveElement(/datum/element/bsa_blocker)
 	parent.RemoveElement(/datum/element/forced_gravity)
 
+	RemoveElement(/datum/element/connect_loc, parent, loc_connections)
 	UnregisterSignal(parent, list(
 		COMSIG_ATOM_ATTACK_ANIMAL,
 		COMSIG_ATOM_ATTACK_HAND,

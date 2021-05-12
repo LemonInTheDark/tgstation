@@ -60,7 +60,9 @@
 	var/just_spawned = TRUE
 	var/bypassing = FALSE
 	var/visual_update_tick = 0
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/effect/hotspot/Initialize(mapload, starting_volume, starting_temperature)
 	. = ..()
@@ -72,9 +74,6 @@
 	perform_exposure()
 	setDir(pick(GLOB.cardinals))
 	air_update_turf(FALSE, FALSE)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/effect/hotspot/proc/perform_exposure()
@@ -211,6 +210,7 @@
 	return TRUE
 
 /obj/effect/hotspot/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	SSair.hotspots -= src
 	var/turf/open/T = loc
 	if(istype(T) && T.active_hotspot == src)

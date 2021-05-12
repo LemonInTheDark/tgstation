@@ -74,7 +74,10 @@
 	var/busy = FALSE
 	var/sound
 	var/walks_left = 50 //prevents the game from hanging in extreme cases (such as minigun fire)
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /obj/effect/cross_action/singularity_act()
 	return
 
@@ -84,9 +87,6 @@
 /obj/effect/cross_action/spacetime_dist/Initialize(mapload)
 	. = ..()
 	setDir(pick(GLOB.cardinals))
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/effect/cross_action/spacetime_dist/proc/walk_link(atom/movable/AM)
@@ -127,4 +127,5 @@
 /obj/effect/cross_action/spacetime_dist/Destroy()
 	busy = TRUE
 	linked_dist = null
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()

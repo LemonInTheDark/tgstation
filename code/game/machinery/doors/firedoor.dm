@@ -262,7 +262,10 @@
 	flags_1 = ON_BORDER_1
 	CanAtmosPass = ATMOS_PASS_PROC
 	glass = FALSE
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXIT = .proc/on_exit,
+	)
+	
 /obj/machinery/door/firedoor/border_only/closed
 	icon_state = "door_closed"
 	opacity = TRUE
@@ -271,11 +274,11 @@
 /obj/machinery/door/firedoor/border_only/Initialize()
 	. = ..()
 
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXIT = .proc/on_exit,
-	)
-
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/machinery/door/firedoor/border_only/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/machinery/door/firedoor/border_only/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()

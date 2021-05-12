@@ -1321,13 +1321,17 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 
 /obj/effect/hallucination/danger/lava
 	name = "lava"
-
-/obj/effect/hallucination/danger/lava/Initialize(mapload, _target)
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+
+/obj/effect/hallucination/danger/lava/Initialize(mapload, _target)
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/hallucination/danger/lava/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/hallucination/danger/lava/show_icon()
 	image = image('icons/turf/floors/lava.dmi', src, "lava-0", TURF_LAYER)
@@ -1342,13 +1346,17 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 
 /obj/effect/hallucination/danger/chasm
 	name = "chasm"
-
-/obj/effect/hallucination/danger/chasm/Initialize(mapload, _target)
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+
+/obj/effect/hallucination/danger/chasm/Initialize(mapload, _target)
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/hallucination/danger/chasm/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/hallucination/danger/chasm/show_icon()
 	var/turf/target_loc = get_turf(target)
@@ -1368,13 +1376,13 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 
 /obj/effect/hallucination/danger/anomaly
 	name = "flux wave anomaly"
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/effect/hallucination/danger/anomaly/Initialize()
 	. = ..()
 	START_PROCESSING(SSobj, src)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/effect/hallucination/danger/anomaly/process(delta_time)
@@ -1383,6 +1391,7 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 
 /obj/effect/hallucination/danger/anomaly/Destroy()
 	STOP_PROCESSING(SSobj, src)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /obj/effect/hallucination/danger/anomaly/show_icon()

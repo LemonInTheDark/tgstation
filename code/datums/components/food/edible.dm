@@ -44,6 +44,9 @@ Behavior that's still missing from this component that original food items had t
 	var/list/tastes
 	///The type of atom this creates when the object is microwaved.
 	var/atom/microwaved_type
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /datum/component/edible/Initialize(list/initial_reagents,
 								food_flags = NONE,
@@ -69,9 +72,6 @@ Behavior that's still missing from this component that original food items had t
 	RegisterSignal(parent, COMSIG_ITEM_MICROWAVE_COOKED, .proc/OnMicrowaveCooked)
 	RegisterSignal(parent, COMSIG_EDIBLE_INGREDIENT_ADDED, .proc/edible_ingredient_added)
 
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, parent, loc_connections)
 
 	if(isitem(parent))
@@ -138,6 +138,7 @@ Behavior that's still missing from this component that original food items had t
 /datum/component/edible/Destroy(force, silent)
 	QDEL_NULL(after_eat)
 	QDEL_NULL(on_consume)
+	RemoveElement(/datum/element/connect_loc, parent, loc_connections)
 	return ..()
 
 /datum/component/edible/proc/examine(datum/source, mob/user, list/examine_list)

@@ -8,6 +8,9 @@
 	var/beauty = 0
 	///The type of cleaning required to clean the decal, CLEAN_TYPE_LIGHT_DECAL can be cleaned with mops and soap, CLEAN_TYPE_HARD_DECAL can be cleaned by soap, see __DEFINES/cleaning.dm for the others
 	var/clean_type = CLEAN_TYPE_LIGHT_DECAL
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/effect/decal/cleanable/Initialize(mapload, list/datum/disease/diseases)
 	. = ..()
@@ -33,15 +36,13 @@
 	var/turf/T = get_turf(src)
 	if(T && is_station_level(T.z))
 		SSblackbox.record_feedback("tally", "station_mess_created", 1, name)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/effect/decal/cleanable/Destroy()
 	var/turf/T = get_turf(src)
 	if(T && is_station_level(T.z))
 		SSblackbox.record_feedback("tally", "station_mess_destroyed", 1, name)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /obj/effect/decal/cleanable/proc/replace_decal(obj/effect/decal/cleanable/C) // Returns true if we should give up in favor of the pre-existing decal

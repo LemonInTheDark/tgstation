@@ -6,13 +6,17 @@
 	var/mobs_only = FALSE
 	invisibility = INVISIBILITY_ABSTRACT // nope cant see this shit
 	anchored = TRUE
-
-/obj/effect/step_trigger/Initialize(mapload)
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+	
+/obj/effect/step_trigger/Initialize(mapload)
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/step_trigger/Destroy(force)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/step_trigger/proc/Trigger(atom/movable/A)
 	return 0

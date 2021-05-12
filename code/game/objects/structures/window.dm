@@ -31,6 +31,9 @@
 	var/hitsound = 'sound/effects/Glasshit.ogg'
 	flags_ricochet = RICOCHET_HARD
 	receive_ricochet_chance_mod = 0.5
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXIT = .proc/on_exit,
+	)
 
 /obj/structure/window/examine(mob/user)
 	. = ..()
@@ -68,10 +71,6 @@
 	flags_1 |= ALLOW_DARK_PAINTS_1
 	RegisterSignal(src, COMSIG_OBJ_PAINTED, .proc/on_painted)
 	AddElement(/datum/element/atmos_sensitive, mapload)
-
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXIT = .proc/on_exit,
-	)
 
 	if (flags_1 & ON_BORDER_1)
 		AddElement(/datum/element/connect_loc, src, loc_connections)
@@ -308,6 +307,7 @@
 	density = FALSE
 	air_update_turf(TRUE, FALSE)
 	update_nearby_icons()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 

@@ -9,6 +9,9 @@
 	var/climbable = TRUE
 	///Initial direction of the railing.
 	var/ini_dir
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXIT = .proc/on_exit,
+	)
 
 /obj/structure/railing/corner //aesthetic corner sharp edges hurt oof ouch
 	icon_state = "railing_corner"
@@ -23,6 +26,10 @@
 
 	AddComponent(/datum/component/simple_rotation,ROTATION_ALTCLICK | ROTATION_CLOCKWISE | ROTATION_COUNTERCLOCKWISE | ROTATION_VERBS ,null,CALLBACK(src, .proc/can_be_rotated),CALLBACK(src,.proc/after_rotation))
 	init_connect_loc_element()
+
+/obj/structure/railing/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/structure/railing/attackby(obj/item/I, mob/living/user, params)
 	..()
@@ -80,12 +87,7 @@
 	return TRUE
 
 /obj/structure/railing/proc/init_connect_loc_element()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXIT = .proc/on_exit,
-	)
-
 	AddElement(/datum/element/connect_loc, src, loc_connections)
-
 /obj/structure/railing/proc/on_exit(datum/source, atom/movable/leaving, atom/new_location)
 	SIGNAL_HANDLER
 

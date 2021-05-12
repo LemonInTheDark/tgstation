@@ -516,7 +516,10 @@
 	icon_state = "snappop"
 	w_class = WEIGHT_CLASS_TINY
 	var/ash_type = /obj/effect/decal/cleanable/ash
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /obj/item/toy/snappop/proc/pop_burst(n=3, c=1)
 	var/datum/effect_system/spark_spread/s = new()
 	s.set_up(n, c, src)
@@ -536,10 +539,11 @@
 
 /obj/item/toy/snappop/Initialize()
 	. = ..()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/item/toy/snappop/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/item/toy/snappop/proc/on_entered(datum/source, H as mob|obj)
 	SIGNAL_HANDLER

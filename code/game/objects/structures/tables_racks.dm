@@ -317,18 +317,19 @@
 	resistance_flags = ACID_PROOF
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 100)
 	var/list/debris = list()
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /obj/structure/table/glass/Initialize()
 	. = ..()
 	debris += new frame
 	debris += new /obj/item/shard
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/structure/table/glass/Destroy()
 	QDEL_LIST(debris)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	. = ..()
 
 /obj/structure/table/glass/proc/on_entered(datum/source, atom/movable/AM)

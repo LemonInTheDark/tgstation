@@ -14,15 +14,19 @@
 	var/pickup_sound
 	/// Cooldown for the powerup to respawn after it's been used
 	COOLDOWN_DECLARE(respawn_cooldown)
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /obj/effect/powerup/Initialize()
 	..()
 	if(lifetime)
 		QDEL_IN(src, lifetime)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/powerup/Destroy(force)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/powerup/proc/on_entered(datum/source, atom/movable/movable_atom)
 	SIGNAL_HANDLER

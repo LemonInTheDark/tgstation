@@ -36,7 +36,10 @@
 	var/arrest_type = FALSE
 	var/weaponscheck = TRUE
 	var/bikehorn = /obj/item/bikehorn
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /mob/living/simple_animal/bot/honkbot/Initialize()
 	. = ..()
 	update_appearance()
@@ -46,10 +49,11 @@
 	var/datum/id_trim/job/clown_trim = SSid_access.trim_singletons_by_path[/datum/id_trim/job/clown]
 	access_card.add_access(clown_trim.access + clown_trim.wildcard_access)
 	prev_access = access_card.access.Copy()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/mob/living/simple_animal/bot/honkbot/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /mob/living/simple_animal/bot/honkbot/proc/limiting_spam_false() //used for addtimer
 	limiting_spam = FALSE

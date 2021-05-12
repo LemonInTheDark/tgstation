@@ -839,12 +839,12 @@ Congratulations! You are now trained for invasive xenobiology research!"}
 	var/inject_am = 0.5
 
 	var/static/list/injected_reagents = list(/datum/reagent/medicine/cordiolis_hepatico)
-
-/obj/structure/table/optable/abductor/Initialize()
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+
+/obj/structure/table/optable/abductor/Initialize()
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/structure/table/optable/abductor/proc/on_entered(datum/source, atom/movable/AM)
@@ -863,6 +863,7 @@ Congratulations! You are now trained for invasive xenobiology research!"}
 
 /obj/structure/table/optable/abductor/Destroy()
 	STOP_PROCESSING(SSobj, src)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	. = ..()
 
 /obj/structure/closet/abductor

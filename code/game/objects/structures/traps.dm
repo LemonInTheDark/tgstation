@@ -103,15 +103,19 @@
 	checks_antimagic  = FALSE
 	var/obj/item/bountytrap/stored_item
 	var/caught = FALSE
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /obj/structure/trap/stun/hunter/Initialize(mapload)
 	. = ..()
 	time_between_triggers = 10
 	flare_message = "<span class='warning'>[src] snaps shut!</span>"
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/structure/trap/stun/hunter/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/structure/trap/stun/hunter/on_entered(datum/source, atom/movable/AM)
 	if(isliving(AM))

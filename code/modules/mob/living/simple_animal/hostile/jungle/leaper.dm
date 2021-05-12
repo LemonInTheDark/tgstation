@@ -78,13 +78,13 @@
 	icon_state = "leaper"
 	max_integrity = 10
 	density = FALSE
-
-/obj/structure/leaper_bubble/Initialize()
-	. = ..()
-	QDEL_IN(src, 100)
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+	
+/obj/structure/leaper_bubble/Initialize()
+	. = ..()
+	QDEL_IN(src, 100)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/structure/leaper_bubble/ComponentInitialize()
@@ -95,6 +95,7 @@
 /obj/structure/leaper_bubble/Destroy()
 	new /obj/effect/temp_visual/leaper_projectile_impact(get_turf(src))
 	playsound(src,'sound/effects/snap.ogg',50, TRUE, -1)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /obj/structure/leaper_bubble/proc/on_entered(datum/source, atom/movable/AM)

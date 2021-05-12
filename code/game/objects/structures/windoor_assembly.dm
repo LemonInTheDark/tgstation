@@ -29,20 +29,21 @@
 	var/state = "01" //How far the door assembly has progressed
 	CanAtmosPass = ATMOS_PASS_PROC
 
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXIT = .proc/on_exit,
+	)
+
 /obj/structure/windoor_assembly/Initialize(loc, set_dir)
 	. = ..()
 	if(set_dir)
 		setDir(set_dir)
 	air_update_turf(TRUE, TRUE)
 
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXIT = .proc/on_exit,
-	)
-
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/structure/windoor_assembly/Destroy()
 	density = FALSE
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	air_update_turf(TRUE, FALSE)
 	return ..()
 

@@ -25,9 +25,6 @@
 	AddElement(/datum/element/ridable, /datum/component/riding/creature/human)
 	AddElement(/datum/element/strippable, GLOB.strippable_human_items, /mob/living/carbon/human/.proc/should_strip)
 	GLOB.human_list += src
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /mob/living/carbon/human/proc/setup_human_dna()
@@ -44,6 +41,7 @@
 /mob/living/carbon/human/Destroy()
 	QDEL_NULL(physiology)
 	GLOB.human_list -= src
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /mob/living/carbon/human/ZImpactDamage(turf/T, levels)

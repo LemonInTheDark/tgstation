@@ -646,6 +646,9 @@ Difficulty: Hard
 	var/list/hit_things = list() //we hit these already, ignore them
 	var/friendly_fire_check = FALSE
 	var/bursting = FALSE //if we're bursting and need to hit anyone crossing us
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/effect/temp_visual/hierophant/blast/damaging/Initialize(mapload, new_caster, friendly_fire)
 	. = ..()
@@ -656,10 +659,11 @@ Difficulty: Hard
 		var/turf/closed/mineral/M = loc
 		M.gets_drilled(caster)
 	INVOKE_ASYNC(src, .proc/blast)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/temp_visual/hierophant/blast/damaging/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/temp_visual/hierophant/blast/damaging/proc/blast()
 	var/turf/T = get_turf(src)

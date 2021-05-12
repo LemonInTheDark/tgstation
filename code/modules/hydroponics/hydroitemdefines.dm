@@ -409,13 +409,17 @@
 	custom_materials = list(/datum/material/wood = MINERAL_MATERIAL_AMOUNT * 1.5)
 	flags_1 = NONE
 	resistance_flags = FLAMMABLE
-
-/obj/item/cultivator/rake/Initialize()
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+
+/obj/item/cultivator/rake/Initialize()
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/item/cultivator/rake/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/item/cultivator/rake/proc/on_entered(datum/source, atom/movable/AM)
 	SIGNAL_HANDLER

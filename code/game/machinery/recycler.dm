@@ -16,7 +16,10 @@
 	var/crush_damage = 1000
 	var/eat_victim_items = TRUE
 	var/item_recycle_sound = 'sound/items/welder.ogg'
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /obj/machinery/recycler/Initialize()
 	AddComponent(/datum/component/butchering/recycler, 1, amount_produced,amount_produced/5)
 	var/list/allowed_materials = list(/datum/material/iron,
@@ -35,10 +38,11 @@
 	. = ..()
 	update_appearance(UPDATE_ICON)
 	req_one_access = SSid_access.get_region_access_list(list(REGION_ALL_STATION, REGION_CENTCOM))
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/machinery/recycler/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/machinery/recycler/RefreshParts()
 	var/amt_made = 0

@@ -316,14 +316,18 @@
 	var/armed = FALSE
 	///How much damage the trap deals when triggered.
 	var/trap_damage = 20
-
-/obj/item/restraints/legcuffs/beartrap/Initialize()
-	. = ..()
-	update_appearance()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/spring_trap,
 	)
+	
+/obj/item/restraints/legcuffs/beartrap/Initialize()
+	. = ..()
+	update_appearance()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/item/restraints/legcuffs/beartrap/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/item/restraints/legcuffs/beartrap/update_icon_state()
 	icon_state = "[initial(icon_state)][armed]"

@@ -41,6 +41,9 @@
 	var/matter_amount = 0
 	/// Does this stack require a unique girder in order to make a wall?
 	var/has_unique_girder = FALSE
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/item/stack/Initialize(mapload, new_amount, merge = TRUE, list/mat_override=null, mat_amt=1)
 	if(new_amount != null)
@@ -77,10 +80,11 @@
 					recipes += temp
 	update_weight()
 	update_appearance()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/item/stack/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /** Sets the amount of materials per unit for this stack.
  *

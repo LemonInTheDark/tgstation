@@ -228,13 +228,18 @@
 	pass_flags = PASSTABLE|PASSGLASS|PASSGRILLE
 	pass_flags_self = LETPASSTHROW
 	var/obj/item/assembly/infra/master
-
-/obj/effect/beam/i_beam/Initialize(mapload)
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+	
+/obj/effect/beam/i_beam/Initialize(mapload)
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/beam/i_beam/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
+
 
 /obj/effect/beam/i_beam/proc/on_entered(datum/source, atom/movable/AM as mob|obj)
 	SIGNAL_HANDLER

@@ -194,13 +194,17 @@
 	flags_1 = NODECONSTRUCT_1
 	max_integrity = 1000
 	var/boot_dir = 1
-
-/obj/structure/table/wood/bar/Initialize(mapload, _buildstack)
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+
+/obj/structure/table/wood/bar/Initialize(mapload, _buildstack)
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/structure/table/wood/bar/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/structure/table/wood/bar/proc/on_entered(datum/source, atom/movable/AM)
 	SIGNAL_HANDLER

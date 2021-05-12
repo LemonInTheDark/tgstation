@@ -15,7 +15,10 @@
 	var/force_open_above = FALSE // replaces the turf above this stair obj with /turf/open/openspace
 	var/terminator_mode = STAIR_TERMINATOR_AUTOMATIC
 	var/turf/listeningTo
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXIT = .proc/on_exit,
+	)
+	
 /obj/structure/stairs/north
 	dir = NORTH
 
@@ -34,9 +37,6 @@
 		build_signal_listener()
 	update_surrounding()
 
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXIT = .proc/on_exit,
-	)
 
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
@@ -44,6 +44,7 @@
 
 /obj/structure/stairs/Destroy()
 	listeningTo = null
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /obj/structure/stairs/Move() //Look this should never happen but...

@@ -101,13 +101,17 @@
 	density = FALSE
 	var/boing = 0
 	aSignal = /obj/item/assembly/signaler/anomaly/grav
-
-/obj/effect/anomaly/grav/Initialize(mapload, new_lifespan, drops_core)
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+
+/obj/effect/anomaly/grav/Initialize(mapload, new_lifespan, drops_core)
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/anomaly/grav/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/anomaly/grav/anomalyEffect()
 	..()
@@ -171,14 +175,18 @@
 	var/canshock = FALSE
 	var/shockdamage = 20
 	var/explosive = TRUE
-
-/obj/effect/anomaly/flux/Initialize(mapload, new_lifespan, drops_core = TRUE, _explosive = TRUE)
-	. = ..()
-	explosive = _explosive
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+	
+/obj/effect/anomaly/flux/Initialize(mapload, new_lifespan, drops_core = TRUE, _explosive = TRUE)
+	. = ..()
+	explosive = _explosive
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/anomaly/flux/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/anomaly/flux/anomalyEffect()
 	..()

@@ -37,7 +37,10 @@
 	var/mutable_appearance/water_overlay
 	///Visual overlay of the bot commiting warcrimes.
 	var/mutable_appearance/fire_overlay
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /mob/living/simple_animal/bot/hygienebot/Initialize()
 	. = ..()
 	update_appearance(UPDATE_ICON)
@@ -46,10 +49,11 @@
 	var/datum/id_trim/job/jani_trim = SSid_access.trim_singletons_by_path[/datum/id_trim/job/janitor]
 	access_card.add_access(jani_trim.access + jani_trim.wildcard_access)
 	prev_access = access_card.access.Copy()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/mob/living/simple_animal/bot/hygienebot/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /mob/living/simple_animal/bot/hygienebot/explode()
 	walk_to(src,0)

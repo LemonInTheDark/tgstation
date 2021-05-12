@@ -135,6 +135,9 @@
 
 ///Special snowflake component only used for the recycler.
 /datum/component/butchering/recycler
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /datum/component/butchering/recycler/Initialize(_speed, _effectiveness, _bonus_modifier, _butcher_sound, disabled, _can_be_blunt)
 	if(!istype(parent, /obj/machinery/recycler)) //EWWW
@@ -143,10 +146,11 @@
 	if(. == COMPONENT_INCOMPATIBLE)
 		return
 
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, parent, loc_connections)
+
+/datum/component/butchering/recycler/Destroy(force, silent)
+	RemoveElement(/datum/element/connect_loc, parent, loc_connections)
+	. = ..()
 
 /datum/component/butchering/recycler/proc/on_entered(datum/source, mob/living/L)
 	SIGNAL_HANDLER

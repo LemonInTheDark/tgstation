@@ -111,13 +111,17 @@
 	charges = 1
 	/// Reference to trap owner mob
 	var/mob/owner
-
-/obj/structure/trap/eldritch/Initialize(mapload)
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+	
+/obj/structure/trap/eldritch/Initialize(mapload)
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/structure/trap/eldritch/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/structure/trap/eldritch/on_entered(datum/source, atom/movable/AM)
 	if(!isliving(AM))

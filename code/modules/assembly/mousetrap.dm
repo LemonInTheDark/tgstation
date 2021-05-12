@@ -13,13 +13,17 @@
 	var/static/list/holder_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
-
-/obj/item/assembly/mousetrap/Initialize()
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+
+/obj/item/assembly/mousetrap/Initialize()
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/item/assembly/mousetrap/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/item/assembly/mousetrap/examine(mob/user)
 	. = ..()

@@ -261,9 +261,12 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 	armor = list(MELEE = 100, BULLET = 0, LASER = 0, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 100)
 	max_integrity = 40
 	sharpness = SHARP_EDGED
+	embedding = list("embed_chance" = 65)
 	var/icon_prefix
 	var/obj/item/stack/sheet/weld_material = /obj/item/stack/sheet/glass
-	embedding = list("embed_chance" = 65)
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 
 /obj/item/shard/suicide_act(mob/user)
@@ -292,9 +295,6 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 	var/turf/T = get_turf(src)
 	if(T && is_station_level(T.z))
 		SSblackbox.record_feedback("tally", "station_mess_created", 1, name)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/item/shard/Destroy()
@@ -303,7 +303,8 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 	var/turf/T = get_turf(src)
 	if(T && is_station_level(T.z))
 		SSblackbox.record_feedback("tally", "station_mess_destroyed", 1, name)
-
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	
 /obj/item/shard/afterattack(atom/A as mob|obj, mob/user, proximity)
 	. = ..()
 	if(!proximity || !(src in user))

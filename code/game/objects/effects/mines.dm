@@ -11,6 +11,9 @@
 	var/armed = TRUE
 	/// If set, we default armed to FALSE and set it to TRUE after this long from initializing
 	var/arm_delay
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/effect/mine/Initialize()
 	. = ..()
@@ -18,10 +21,12 @@
 		armed = FALSE
 		icon_state = "uglymine-inactive"
 		addtimer(CALLBACK(src, .proc/now_armed), arm_delay)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
+
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/mine/Destroy(force)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/mine/examine(mob/user)
 	. = ..()

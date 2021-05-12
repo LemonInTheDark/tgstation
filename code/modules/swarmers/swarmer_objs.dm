@@ -129,13 +129,17 @@
 	icon_state = "trap"
 	max_integrity = 10
 	density = FALSE
-
-/obj/structure/swarmer/trap/Initialize(mapload)
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+	
+/obj/structure/swarmer/trap/Initialize(mapload)
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/structure/swarmer/trap/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/structure/swarmer/trap/proc/on_entered(datum/source, atom/movable/AM)
 	SIGNAL_HANDLER

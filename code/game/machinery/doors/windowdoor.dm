@@ -24,6 +24,9 @@
 	var/rods = 2
 	var/cable = 1
 	var/list/debris = list()
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXIT = .proc/on_exit,
+	)
 
 /obj/machinery/door/window/Initialize(mapload, set_dir)
 	. = ..()
@@ -42,9 +45,6 @@
 
 	RegisterSignal(src, COMSIG_COMPONENT_NTNET_RECEIVE, .proc/ntnet_receive)
 
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXIT = .proc/on_exit,
-	)
 
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 	AddElement(/datum/element/atmos_sensitive, mapload)
@@ -59,6 +59,8 @@
 	if(obj_integrity == 0)
 		playsound(src, "shatter", 70, TRUE)
 	electronics = null
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	
 	var/turf/floor = get_turf(src)
 	floor.air_update_turf(TRUE, FALSE)
 	return ..()

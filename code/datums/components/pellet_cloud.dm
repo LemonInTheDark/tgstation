@@ -52,6 +52,9 @@
 
 	/// for if we're an ammo casing being fired
 	var/mob/living/shooter
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXITED =.proc/grenade_uncrossed,
+	)
 
 /datum/component/pellet_cloud/Initialize(projectile_type=/obj/item/shrapnel, magnitude=5)
 	if(!isammocasing(parent) && !isgrenade(parent) && !islandmine(parent) && !issupplypod(parent))
@@ -89,6 +92,7 @@
 		RegisterSignal(parent, COMSIG_SUPPLYPOD_LANDED, .proc/create_blast_pellets)
 
 /datum/component/pellet_cloud/UnregisterFromParent()
+	RemoveElement(/datum/element/connect_loc, parent, loc_connections)
 	UnregisterSignal(parent, list(COMSIG_PARENT_PREQDELETED, COMSIG_PELLET_CLOUD_INIT, COMSIG_GRENADE_DETONATE, COMSIG_GRENADE_ARMED, COMSIG_MOVABLE_MOVED, COMSIG_MINE_TRIGGERED, COMSIG_ITEM_DROPPED))
 
 /**
@@ -324,9 +328,6 @@
 	LAZYINITLIST(bodies)
 	RegisterSignal(parent, COMSIG_ITEM_DROPPED, .proc/grenade_dropped)
 	RegisterSignal(parent, COMSIG_MOVABLE_MOVED, .proc/grenade_moved)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXITED =.proc/grenade_uncrossed,
-	)
 	AddElement(/datum/element/connect_loc, parent, loc_connections)
 
 /// Someone dropped the grenade, so set them to the shooter in case they're on top of it when it goes off

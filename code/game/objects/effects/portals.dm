@@ -29,6 +29,9 @@
 	var/innate_accuracy_penalty = 0
 	var/last_effect = 0
 	var/force_teleport = FALSE
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/effect/portal/anom
 	name = "wormhole"
@@ -83,9 +86,6 @@
 	hardlinked = automatic_link
 	if(isturf(hard_target_override))
 		hard_target = hard_target_override
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/effect/portal/singularity_pull()
@@ -145,6 +145,7 @@
 		QDEL_NULL(linked)
 	else
 		linked = null
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /obj/effect/portal/attack_ghost(mob/dead/observer/O)

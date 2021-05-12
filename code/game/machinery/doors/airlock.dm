@@ -113,6 +113,9 @@
 	var/delayed_close_requested = FALSE // TRUE means the door will automatically close the next time it's opened.
 	var/air_tight = FALSE //TRUE means density will be set as soon as the door begins to close
 	var/prying_so_hard = FALSE
+	var/static/list/connections = list(
+		COMSIG_ATOM_ATTACK_HAND = .proc/on_attack_hand
+	)
 
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1 | HTML_USE_INITAL_ICON_1
 	rad_insulation = RAD_MEDIUM_INSULATION
@@ -146,9 +149,6 @@
 	RegisterSignal(src, COMSIG_COMPONENT_NTNET_RECEIVE, .proc/ntnet_receive)
 
 	// Click on the floor to close airlocks
-	var/static/list/connections = list(
-		COMSIG_ATOM_ATTACK_HAND = .proc/on_attack_hand
-	)
 	AddElement(/datum/element/connect_loc, src, connections)
 
 	return INITIALIZE_HINT_LATELOAD
@@ -324,6 +324,7 @@
 	QDEL_NULL(seal)
 	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
 		diag_hud.remove_from_hud(src)
+	RemoveElement(/datum/element/connect_loc, src, connections)
 	return ..()
 
 /obj/machinery/door/airlock/handle_atom_del(atom/A)

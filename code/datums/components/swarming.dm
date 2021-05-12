@@ -14,7 +14,6 @@
 	offset_x = rand(-max_x, max_x)
 	offset_y = rand(-max_y, max_y)
 
-
 	AddElement(/datum/element/connect_loc, parent, swarming_loc_connections)
 
 /datum/component/swarming/Destroy()
@@ -23,7 +22,9 @@
 		other_swarm.swarm_members -= src
 		if(!other_swarm.swarm_members.len)
 			other_swarm.unswarm()
+			
 	swarm_members = null
+	RemoveElement(/datum/element/connect_loc, parent, swarming_loc_connections)
 	return ..()
 
 /datum/component/swarming/proc/join_swarm(datum/source, atom/movable/AM)

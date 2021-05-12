@@ -22,6 +22,9 @@
 	var/static/mutable_appearance/dais_overlay
 	var/obj/structure/opacity_blocker/sight_blocker
 	var/sight_blocker_distance = 1
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXIT = .proc/on_exit,
+	)
 
 /obj/structure/necropolis_gate/Initialize()
 	. = ..()
@@ -46,15 +49,12 @@
 	dais_overlay.layer = CLOSED_TURF_LAYER
 	add_overlay(dais_overlay)
 
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_EXIT = .proc/on_exit,
-	)
-
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/structure/necropolis_gate/Destroy(force)
 	if(force)
 		qdel(sight_blocker, TRUE)
+		RemoveElement(/datum/element/connect_loc, src, loc_connections)
 		. = ..()
 	else
 		return QDEL_HINT_LETMELIVE
@@ -257,17 +257,18 @@ GLOBAL_DATUM(necropolis_gate, /obj/structure/necropolis_gate/legion_gate)
 	var/fall_on_cross = STABLE //If the tile has some sort of effect when crossed
 	var/fallen = FALSE //If the tile is unusable
 	var/falling = FALSE //If the tile is falling
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/structure/stone_tile/Initialize(mapload)
 	. = ..()
 	icon_state = "[tile_key][rand(1, tile_random_sprite_max)]"
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/structure/stone_tile/Destroy(force)
 	if(force || fallen)
+		RemoveElement(/datum/element/connect_loc, src, loc_connections)
 		. = ..()
 	else
 		return QDEL_HINT_LETMELIVE

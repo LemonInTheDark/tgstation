@@ -124,13 +124,17 @@
 
 /obj/effect/particle_effect/smoke/bad
 	lifetime = 8
-
-/obj/effect/particle_effect/smoke/bad/Initialize()
-	. = ..()
 	var/static/list/loc_connections = list(
 		COMSIG_ATOM_ENTERED = .proc/on_entered,
 	)
+	
+/obj/effect/particle_effect/smoke/bad/Initialize()
+	. = ..()
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/effect/particle_effect/smoke/bad/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/effect/particle_effect/smoke/bad/smoke_mob(mob/living/carbon/M)
 	. = ..()

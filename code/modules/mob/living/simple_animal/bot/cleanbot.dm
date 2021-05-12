@@ -51,7 +51,9 @@
 	var/list/suffixes
 
 	var/ascended = FALSE // if we have all the top titles, grant achievements to living mobs that gaze upon our cleanbot god
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /mob/living/simple_animal/bot/cleanbot/proc/deputize(obj/item/W, mob/user)
 	if(in_range(src, user))
@@ -113,9 +115,6 @@
 
 	prefixes = list(command, security, engineering)
 	suffixes = list(research, medical, legal)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /mob/living/simple_animal/bot/cleanbot/Destroy()
@@ -123,6 +122,7 @@
 		var/atom/Tsec = drop_location()
 		weapon.force = weapon_orig_force
 		drop_part(weapon, Tsec)
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	return ..()
 
 /mob/living/simple_animal/bot/cleanbot/turn_on()

@@ -50,20 +50,20 @@
 	var/light_fail = FALSE
 	///Does the scanner ignore light_pass and light_fail for sending signals?
 	var/ignore_signals = FALSE
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/machinery/scanner_gate/Initialize()
 	. = ..()
 	wires = new /datum/wires/scanner_gate(src)
 	set_scanline("passive")
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 
 /obj/machinery/scanner_gate/Destroy()
 	qdel(wires)
 	wires = null
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	. = ..()
 
 /obj/machinery/scanner_gate/examine(mob/user)

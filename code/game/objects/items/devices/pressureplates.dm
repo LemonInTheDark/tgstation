@@ -21,6 +21,9 @@
 	var/can_trigger = TRUE
 	var/trigger_delay = 10
 	var/protected = FALSE
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/item/pressure_plate/Initialize()
 	. = ..()
@@ -32,10 +35,11 @@
 
 	AddElement(/datum/element/undertile, tile_overlay = tile_overlay, use_anchor = TRUE)
 	RegisterSignal(src, COMSIG_OBJ_HIDE, .proc/ToggleActive)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/item/pressure_plate/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/item/pressure_plate/proc/on_entered(datum/source, atom/movable/AM)
 	SIGNAL_HANDLER

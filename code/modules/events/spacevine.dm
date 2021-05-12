@@ -330,13 +330,13 @@
 	var/energy = 0
 	var/datum/spacevine_controller/master = null
 	var/list/mutations = list()
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/structure/spacevine/Initialize(mapload)
 	. = ..()
 	add_atom_colour("#ffffff", FIXED_COLOUR_PRIORITY)
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
 	AddElement(/datum/element/atmos_sensitive, mapload)
 
@@ -353,6 +353,7 @@
 	. += text
 
 /obj/structure/spacevine/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
 	for(var/datum/spacevine_mutation/SM in mutations)
 		SM.on_death(src)
 	if(master)

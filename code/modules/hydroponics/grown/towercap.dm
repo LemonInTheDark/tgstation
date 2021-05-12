@@ -166,7 +166,10 @@
 	var/burn_icon = "bonfire_on_fire" //for a softer more burning embers icon, use "bonfire_warm"
 	var/grill = FALSE
 	var/fire_stack_strength = 5
-
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
+	
 /obj/structure/bonfire/dense
 	density = TRUE
 
@@ -176,10 +179,11 @@
 
 /obj/structure/bonfire/Initialize()
 	. = ..()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/structure/bonfire/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/structure/bonfire/attackby(obj/item/W, mob/living/user, params)
 	if(istype(W, /obj/item/stack/rods) && !can_buckle && !grill)

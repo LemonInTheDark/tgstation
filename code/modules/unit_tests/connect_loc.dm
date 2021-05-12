@@ -58,15 +58,18 @@
 
 /obj/item/watches_mock_calls
 	var/times_called
-
-/obj/item/watches_mock_calls/Initialize()
-	. = ..()
-
 	var/static/list/connections = list(
 		COMSIG_MOCK_SIGNAL = .proc/on_receive_mock_signal,
 	)
 
+/obj/item/watches_mock_calls/Initialize()
+	. = ..()
+
 	AddElement(/datum/element/connect_loc, src, connections)
+
+/obj/item/watches_mock_calls/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, connections)
+	return ..()
 
 /obj/item/watches_mock_calls/proc/on_receive_mock_signal(datum/source)
 	SIGNAL_HANDLER

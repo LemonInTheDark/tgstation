@@ -13,14 +13,18 @@
 	var/team_color = COLOR_WHITE
 	///What radio station is your radio set to when crossed (And human)?
 	var/team_radio = FREQ_COMMON
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+	)
 
 /obj/machinery/teambuilder/Initialize()
 	. = ..()
 	add_filter("teambuilder", 2, list("type" = "outline", "color" = team_color, "size" = 2))
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = .proc/on_entered,
-	)
 	AddElement(/datum/element/connect_loc, src, loc_connections)
+
+/obj/machinery/teambuilder/Destroy()
+	RemoveElement(/datum/element/connect_loc, src, loc_connections)
+	return ..()
 
 /obj/machinery/teambuilder/examine_more(mob/user)
 	. = ..()
