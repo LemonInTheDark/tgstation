@@ -2,6 +2,11 @@
 #define CONSTRUCTION_NO_CIRCUIT 2 //Circuit board removed, can safely weld apart
 #define DEFAULT_STEP_TIME 20 /// default time for each step
 
+//Lmao kill me
+/datum/firedoor_group
+	var/list/connected_doors
+	var/excited_door_count = 0
+
 /obj/machinery/door/firedoor
 	name = "firelock"
 	desc = "Apply crowbar."
@@ -25,10 +30,76 @@
 	var/boltslocked = TRUE
 	var/list/affecting_areas
 	var/being_held_open = FALSE
+	var/list/active_corners = list()
+	var/static/list/pass_on = list(COMSIG_TURF_EXPOSE = /obj/machinery/door/firedoor/proc/test_process)
 
-/obj/machinery/door/firedoor/Initialize()
+/obj/machinery/door/firedoor/Initialize(mapload)
 	. = ..()
 	CalculateAffectingAreas()
+	RegisterSignal(src, COMSIG_MOVABLE_MOVED, .proc/react_to_move)
+	for(var/dir in GLOB.cardinals_multiz)
+		var/turf/listen_to = get_step(src, dir)
+		if(!listen_to)
+			return
+		AddElement(/datum/element/connect_loc, listen_to, pass_on)
+
+		if(!mapload && isopenturf(listen_to))
+			var/turf/open/new_open = listen_to
+			test_process(new_open, new_open.air, new_open.air.temperature) //Make sure you're properly registered
+
+/obj/machinery/door/firedoor/proc/react_to_move(datum/source, atom/movable/oldloc, direction, forced)
+	SIGNAL_HANDLER
+
+	var/list/oldLocs = list()
+	var/list/newLocs = list()
+	for(var/dir in GLOB.cardinals_multiz)
+		oldLocs += get_step(oldloc, dir)
+		newLocs += get_step(src, dir)
+
+	//Get the objects that are only in one list
+	var/list/delta = oldLocs ^ newLocs
+
+	//Dispose of the old stuff
+	for(var/turf/removed_loc as anything in oldLocs & delta)
+		if(!removed_loc)
+			return
+		RemoveElement(/datum/element/connect_loc, removed_loc, pass_on)
+
+	//Attach the new stuff
+	for(var/turf/attached_loc as anything in newLocs & delta)
+		if(!attached_loc)
+			return
+		AddElement(/datum/element/connect_loc, attached_loc, pass_on)
+
+		if(isopenturf(attached_loc))
+			var/turf/open/new_open = attached_loc
+			test_process(new_open, new_open.air, new_open.air.temperature) //Make sure you're properly registered
+
+///Tests to see if we should process or not
+/obj/machinery/door/firedoor/proc/test_process(datum/source, datum/gas_mixture/air, exposed_temperature)
+	SIGNAL_HANDLER
+	if(should_we_drop(air, exposed_temperature))
+		close()
+		active_corners |= source
+		SSair.start_processing_machine(src)
+		return
+	active_corners -= source
+	//Open
+
+/obj/machinery/door/firedoor/proc/should_we_drop(datum/gas_mixture/air, exposed_temperature)
+	return (exposed_temperature > T0C + 200 || exposed_temperature < BODYTEMP_COLD_DAMAGE_LIMIT) && !(obj_flags & EMAGGED) && !machine_stat
+
+/obj/machinery/door/firedoor/process_atmos()
+	var/should_we_close = length(active_corners)
+	if(!should_we_close)
+		SSair.stop_processing_machine(src)
+	for(var/obj/machinery/door/firedoor/door in view(2, src))
+		door.should_be_closed = should_we_close
+		door.
+
+
+	//Close our door/close our friends and alert them
+	return
 
 /obj/machinery/door/firedoor/examine(mob/user)
 	. = ..()

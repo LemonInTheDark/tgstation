@@ -1,3 +1,4 @@
+#define SHOOT_ME(obj) (istype(obj, /turf) ? obj : obj.loc)
 /// This element hooks a signal onto the loc the current object is on.
 /// When the object moves, it will unhook the signal and rehook it to the new object.
 /datum/element/connect_loc
@@ -32,25 +33,25 @@
 
 	if(!tracked)
 		unregister_all(listener)
-	else if(targets[tracked.loc]) // Detach can happen multiple times due to qdel
-		unregister_signals(listener, tracked, tracked.loc)
+	else if(targets[SHOOT_ME(tracked)]) // Detach can happen multiple times due to qdel
+		unregister_signals(listener, tracked, SHOOT_ME(tracked))
 		UnregisterSignal(tracked, COMSIG_MOVABLE_MOVED)
 
 /datum/element/connect_loc/proc/update_signals(datum/listener, atom/movable/tracked)
-	var/existing = length(targets[tracked.loc])
+	var/existing = length(targets[SHOOT_ME(tracked)])
 	if(!existing)
-		targets[tracked.loc] = list()
-	targets[tracked.loc][tracked] = listener
+		targets[SHOOT_ME(tracked)] = list()
+	targets[SHOOT_ME(tracked)][tracked] = listener
 
-	if(isnull(tracked.loc))
+	if(isnull(SHOOT_ME(tracked)))
 		return
 
 	for (var/signal in connections)
-		listener.RegisterSignal(tracked.loc, signal, connections[signal], override=TRUE)
+		listener.RegisterSignal(SHOOT_ME(tracked), signal, connections[signal], override=TRUE)
 		//override=TRUE because more than one connect_loc element instance tracked object can be on the same loc
 
-	if (!existing && isturf(tracked.loc))
-		RegisterSignal(tracked.loc, COMSIG_TURF_CHANGE, .proc/on_turf_change)
+	if (!existing && isturf(SHOOT_ME(tracked)))
+		RegisterSignal(SHOOT_ME(tracked), COMSIG_TURF_CHANGE, .proc/on_turf_change)
 
 /datum/element/connect_loc/proc/unregister_all(datum/listener)
 	for(var/atom/location as anything in targets)
@@ -108,3 +109,5 @@
 	for (var/atom/movable/tracked as anything in targets_copy)
 		var/datum/listener = targets_copy[tracked]
 		update_signals(listener, tracked)
+		
+#undef SHOOT_ME
