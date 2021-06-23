@@ -163,8 +163,8 @@ GLOBAL_LIST_INIT(uranium_recipes, list ( \
 	walltype = /turf/closed/wall/mineral/plasma
 
 /obj/item/stack/sheet/mineral/plasma/Initialize(mapload, new_amount, merge, list/mat_override, mat_amt)
-	. = ..()
 	AddElement(/datum/element/fire_sensitive)
+	. = ..()
 
 /obj/item/stack/sheet/mineral/plasma/suicide_act(mob/living/carbon/user)
 	user.visible_message(span_suicide("[user] begins licking \the [src]! It looks like [user.p_theyre()] trying to commit suicide!"))

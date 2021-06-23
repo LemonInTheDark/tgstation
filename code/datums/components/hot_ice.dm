@@ -12,12 +12,12 @@
 
 	RegisterSignal(parent, COMSIG_PARENT_ATTACKBY, .proc/attackby_react)
 	RegisterSignal(parent, COMSIG_ATOM_FIRE_ACT, .proc/flame_react)
-	AddElement(/datum/element/connect_loc, parent, connect_loc_signals)
+	AddElement(/datum/element/connect_loc_behalf, parent, connect_loc_signals)
 
 /datum/component/hot_ice/UnregisterFromParent()
 	UnregisterSignal(parent, COMSIG_PARENT_ATTACKBY)
 	UnregisterSignal(parent, COMSIG_ATOM_FIRE_ACT)
-	RemoveElement(/datum/element/connect_loc, parent, connect_loc_signals)
+	RemoveElement(/datum/element/connect_loc_behalf, parent, connect_loc_signals)
 
 /datum/component/hot_ice/proc/hot_ice_melt(mob/user)
 	var/turf/open/T = get_turf(parent)

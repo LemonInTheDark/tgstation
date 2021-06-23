@@ -23,8 +23,8 @@
 	var/spreadChance = 0 //Also used by mineral turfs for spreading veins
 
 /obj/item/stack/ore/Initialize(mapload, new_amount, merge, list/mat_override, mat_amt)
-	. = ..()
 	AddElement(/datum/element/fire_sensitive)
+	. = ..()
 
 /obj/item/stack/ore/update_overlays()
 	. = ..()
