@@ -57,13 +57,14 @@
 #define UNINTELLIGIBLE /datum/mutation/human/unintelligible
 #define VOID /datum/mutation/human/void
 #define WACKY /datum/mutation/human/wacky
-#define XRAY /datum/mutation/human/thermal/x_ray
+#define XRAY /datum/mutation/human/xray
 
 #define BURDENED /datum/mutation/human/burdened
 #define HONORBOUND /datum/mutation/human/honorbound
 
 #define UE_CHANGED "ue changed"
 #define UI_CHANGED "ui changed"
+#define UF_CHANGED "uf changed"
 
 #define CHAMELEON_MUTATION_DEFAULT_TRANSPARENCY 204
 
@@ -91,6 +92,23 @@
 #define DNA_HAIRSTYLE_BLOCK 7
 #define DNA_SKIN_TONE_BLOCK 3
 #define DNA_UNI_IDENTITY_BLOCKS 7
+
+#define DNA_FEATURE_BLOCKS 15
+#define DNA_MUTANT_COLOR_BLOCK 1
+#define DNA_ETHEREAL_COLOR_BLOCK 2
+#define DNA_LIZARD_MARKINGS_BLOCK 3
+#define DNA_LIZARD_TAIL_BLOCK 4
+#define DNA_SNOUT_BLOCK 5
+#define DNA_HORNS_BLOCK 6
+#define DNA_FRILLS_BLOCK 7
+#define DNA_SPINES_BLOCK 8
+#define DNA_HUMAN_TAIL_BLOCK 9
+#define DNA_EARS_BLOCK 10
+#define DNA_MOTH_WINGS_BLOCK 11
+#define DNA_MOTH_ANTENNAE_BLOCK 12
+#define DNA_MOTH_MARKINGS_BLOCK 13
+#define DNA_MUSHROOM_CAPS_BLOCK 14
+#define DNA_MONKEY_TAIL_BLOCK 15
 
 #define DNA_SEQUENCE_LENGTH 4
 #define DNA_MUTATION_BLOCKS 8
@@ -166,9 +184,9 @@
 
 //organ defines
 #define STANDARD_ORGAN_THRESHOLD 100
-#define STANDARD_ORGAN_HEALING 0.0005
+#define STANDARD_ORGAN_HEALING 50 / 100000
 /// designed to fail organs when left to decay for ~15 minutes
-#define STANDARD_ORGAN_DECAY 0.00111
+#define STANDARD_ORGAN_DECAY 111 / 100000
 
 //used for the can_chromosome var on mutations
 #define CHROMOSOME_NEVER 0

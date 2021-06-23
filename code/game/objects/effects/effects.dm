@@ -7,6 +7,7 @@
 	move_resist = INFINITY
 	obj_flags = NONE
 	vis_flags = VIS_INHERIT_PLANE
+	blocks_emissive = EMISSIVE_BLOCK_GENERIC
 
 /obj/effect/Initialize(mapload)
 	. = ..()
