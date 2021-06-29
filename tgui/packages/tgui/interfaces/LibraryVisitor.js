@@ -10,7 +10,7 @@ export const LibraryVisitor = (props, context) => {
     <Window
       title="Library Lookup Console"
       width={702}
-      height={410}>
+      height={421}>
       <BookListing />
     </Window>
   );
@@ -28,7 +28,7 @@ export const BookListing = (props, context) => {
         vertical={1}
         justify={"space-between"}>
         <Stack.Item>
-          <Box fillPositionedParent bottom="20px">
+          <Box fillPositionedParent bottom="25px">
             <Window.Content
               scrollable={1}>
               <SearchAndDisplay />
@@ -69,22 +69,16 @@ export const SearchAndDisplay = (props, context) => {
   ])(data.pages);
   return (
     <Section>
-      <Stack>
-        <Stack.Item grow={1}>
-          <Dropdown
-            options={categories}
-            selected={category}
-            onSelected={(value) => act('set-category', {
-              category: value,
-            })} />
-        </Stack.Item>
-        <Stack.Item grow={1}>
+      <Stack justify={"space-between"}>
+        <Stack.Item>
           <Stack>
             <Stack.Item>
-              <Box
-                fontSize={1.4}>
-                Title:
-              </Box>
+              <Dropdown
+                options={categories}
+                selected={category}
+                onSelected={(value) => act('set-category', {
+                  category: value,
+                })} />
             </Stack.Item>
             <Stack.Item>
               <Input
@@ -94,16 +88,6 @@ export const SearchAndDisplay = (props, context) => {
                 onChange={(e, value) => act("set-title", {
                   title: value,
                 })} />
-            </Stack.Item>
-          </Stack>
-        </Stack.Item>
-        <Stack.Item grow={1}>
-          <Stack>
-            <Stack.Item>
-              <Box
-                fontSize={1.4}>
-                Author:
-              </Box>
             </Stack.Item>
             <Stack.Item>
               <Input
@@ -116,21 +100,14 @@ export const SearchAndDisplay = (props, context) => {
             </Stack.Item>
           </Stack>
         </Stack.Item>
-        <Stack.Item
-          grow={1}
-          align={"end"}>
+        <Stack.Item>
           <Button
-            disabled={!params_changed}
             textAlign={'right'}
             onClick={() => act('search')}
-            color={'good'}
+            color={params_changed ? 'good' : ''}
             icon={'book'}>
             Search
           </Button>
-        </Stack.Item>
-        <Stack.Item
-          grow={1}
-          align={"end"}>
           <Button
             textAlign={'right'}
             onClick={() => act('clear-data')}
@@ -190,6 +167,7 @@ export const PageSelect = (props, context) => {
     <Stack>
       <Stack.Item>
         <Button
+          disabled={our_page === 1}
           icon={'angle-double-left'}
           onClick={() => act('switch-page', {
             page: 0,
@@ -197,6 +175,7 @@ export const PageSelect = (props, context) => {
       </Stack.Item>
       <Stack.Item>
         <Button
+          disabled={our_page === 1}
           icon={'chevron-left'}
           onClick={() => act('switch-page', {
             page: our_page - 1,
@@ -211,6 +190,7 @@ export const PageSelect = (props, context) => {
       </Stack.Item>
       <Stack.Item>
         <Button
+          disabled={our_page === page_count}
           icon={'chevron-right'}
           onClick={() => act('switch-page', {
             page: our_page + 1,
@@ -218,6 +198,7 @@ export const PageSelect = (props, context) => {
       </Stack.Item>
       <Stack.Item>
         <Button
+          disabled={our_page === page_count}
           icon={'angle-double-right'}
           onClick={() => act('switch-page', {
             page: page_count,

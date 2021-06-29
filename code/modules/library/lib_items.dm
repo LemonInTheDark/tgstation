@@ -2,6 +2,8 @@
 #define BOOKCASE_ANCHORED 1
 #define BOOKCASE_FINISHED 2
 
+GLOBAL_LIST_EMPTY(roundstart_books_by_area)
+
 /* Library Items
  *
  * Contains:
@@ -33,6 +35,39 @@
 	/// How many random books to generate.
 	var/books_to_load = 0
 
+/obj/structure/bookcase/Initialize(mapload)
+	. = ..()
+	if(!mapload || QDELETED(src))
+		return
+	set_anchored(TRUE)
+	state = BOOKCASE_FINISHED
+	for(var/obj/item/I in loc)
+		if(!isbook(I))
+			continue
+		I.forceMove(src)
+	update_appearance()
+
+	if(load_random_books)
+		INVOKE_ASYNC(src, .proc/generate_random_books)
+
+///Loads a random selection of books in from the db, adds a copy of their info to a global list
+//To send to library consoles as a starting inventory
+/obj/structure/bookcase/proc/generate_random_books()
+	//First order is to load in the random books from the db
+	create_random_books(books_to_load, src, FALSE, random_category)
+	update_appearance() //Make it look good
+
+	var/area/our_area = get_area(src)
+
+	if(!GLOB.roundstart_books_by_area[our_area])
+		GLOB.roundstart_books_by_area[our_area] = list()
+
+	//Time to populate that list
+	var/list/books_in_area = GLOB.roundstart_books_by_area[our_area]
+	for(var/obj/item/book/book in contents)
+		var/datum/book_info/info = book.book_data
+		books_in_area += info.return_copy()
+
 /obj/structure/bookcase/examine(mob/user)
 	. = ..()
 	if(!anchored)
@@ -46,18 +81,6 @@
 			. += span_notice("There's space inside for a <i>wooden</i> shelf.")
 		if(BOOKCASE_FINISHED)
 			. += span_notice("There's a <b>small crack</b> visible on the shelf.")
-
-/obj/structure/bookcase/Initialize(mapload)
-	. = ..()
-	if(!mapload)
-		return
-	set_anchored(TRUE)
-	state = BOOKCASE_FINISHED
-	for(var/obj/item/I in loc)
-		if(!isbook(I))
-			continue
-		I.forceMove(src)
-	update_appearance()
 
 /obj/structure/bookcase/set_anchored(anchorvalue)
 	. = ..()
@@ -132,16 +155,12 @@
 			else
 				return ..()
 
-
 /obj/structure/bookcase/attack_hand(mob/living/user, list/modifiers)
 	. = ..()
 	if(.)
 		return
 	if(!istype(user))
 		return
-	if(load_random_books)
-		create_random_books(books_to_load, src, FALSE, random_category)
-		load_random_books = FALSE
 	if(contents.len)
 		var/obj/item/book/choice = input(user, "Which book would you like to remove from the shelf?") as null|obj in sortNames(contents.Copy())
 		if(choice)
@@ -154,7 +173,6 @@
 				choice.forceMove(drop_location())
 			update_appearance()
 
-
 /obj/structure/bookcase/deconstruct(disassembled = TRUE)
 	var/atom/Tsec = drop_location()
 	new /obj/item/stack/sheet/mineral/wood(Tsec, 4)
@@ -164,17 +182,13 @@
 		I.forceMove(Tsec)
 	return ..()
 
-
 /obj/structure/bookcase/update_icon_state()
 	if(state == BOOKCASE_UNANCHORED || state == BOOKCASE_ANCHORED)
 		icon_state = "bookempty"
 		return ..()
 	var/amount = contents.len
-	if(load_random_books)
-		amount += books_to_load
 	icon_state = "book-[clamp(amount, 0, 5)]"
 	return ..()
-
 
 /obj/structure/bookcase/manuals/engineering
 	name = "engineering manuals bookcase"
@@ -225,7 +239,7 @@
 	if(legacy)
 		author = _author
 		return
-	author = trim(html_encode(_author), 40)
+	author = trim(html_encode(_author), MAX_NAME_LEN)
 
 /datum/book_info/proc/set_content(_content, legacy = FALSE) //Legacy should only be used for books read from the db. It is unsafe in all other cases
 	if(legacy)
@@ -236,6 +250,13 @@
 ///Returns a copy of the book_info datum
 /datum/book_info/proc/return_copy()
 	var/datum/book_info/copycat = new(title, author, content)
+	return copycat
+
+///Modify an existing book_info datum to match your data
+/datum/book_info/proc/copy_into(datum/book_info/copycat)
+	copycat.set_title(title, legacy = TRUE)
+	copycat.set_author(author, legacy = TRUE)
+	copycat.set_content(content, legacy = TRUE)
 	return copycat
 
 /datum/book_info/proc/compare(datum/book_info/cmp_with)
@@ -360,16 +381,18 @@
 					for(var/datum/borrowbook/b in scanner.computer.checkouts)
 						if(b.loanedto == name)
 							scanner.computer.checkouts -= b
+							scanner.computer.checkout_update()
 							to_chat(user, span_notice("[I]'s screen flashes: 'Book stored in buffer. Book has been checked in.'"))
 							return
 					to_chat(user, span_notice("[I]'s screen flashes: 'Book stored in buffer. No active check-out record found for current title.'"))
 				if(3)
 					scanner.book = src
 					for(var/datum/book_info/info as anything in scanner.computer.inventory)
-						if(info.compare(src))
+						if(info.compare(book_data))
 							to_chat(user, span_alert("[I]'s screen flashes: 'Book stored in buffer. Title already present in inventory, aborting to avoid duplicate entry.'"))
 							return
-					scanner.computer.inventory.Add(book_data.return_copy())
+					scanner.computer.inventory += book_data.return_copy()
+					scanner.computer.inventory_update()
 					to_chat(user, span_notice("[I]'s screen flashes: 'Book stored in buffer. Title added to general inventory.'"))
 
 	else if((istype(I, /obj/item/kitchen/knife) || I.tool_behaviour == TOOL_WIRECUTTER) && !(flags_1 & HOLOGRAM_1))

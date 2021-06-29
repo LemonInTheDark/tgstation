@@ -10,7 +10,9 @@
  */
 
 GLOBAL_LIST_INIT(book_categories, list("Any", "Fiction", "Non-Fiction", "Adult", "Reference", "Religion"))
+GLOBAL_LIST_INIT(upload_categories, list("Fiction", "Non-Fiction", "Adult", "Reference", "Religion"))
 GLOBAL_VAR_INIT(default_book_category, "Any")
+GLOBAL_VAR_INIT(default_upload_category, "Fiction")
 
 ///How many books should we load per page?
 #define BOOKS_PER_PAGE 20
@@ -60,7 +62,7 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 /obj/machinery/computer/libraryconsole/ui_data(mob/user)
 	var/list/data = list()
 	data["categories"] = GLOB.book_categories
-	data["category"] = category || GLOB.default_book_category
+	data["category"] = category
 	data["author"] = author
 	data["title"] = title
 	data["page_count"] = page_count + 1 //Increase these by one so it looks like we're not indexing at 0
@@ -112,6 +114,7 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 			title = initial(title)
 			author = initial(author)
 			category = GLOB.default_book_category
+			search_page = 0
 			INVOKE_ASYNC(src, .proc/update_db_info)
 			return TRUE
 
@@ -242,8 +245,20 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 	var/upload_category
 	///List of checked out books, /datum/borrowbook
 	var/list/checkouts = list()
+	///The current max amount of checkout pages allowed
+	var/checkout_page_count = 0
+	///The current page we're on in the checkout listing
+	var/checkout_page = 0
 	///List of book info datums to display to the user as our "inventory"
 	var/list/inventory = list()
+	///The current max amount of inventory pages allowed
+	var/inventory_page_count = 0
+	///The current page we're on in the inventory
+	var/inventory_page = 0
+	///Should we load our inventory from the bookselves in our area?
+	var/dynamic_inv_load = FALSE
+	///What area did we start in? Used to prevent pain if the console moves before the first inventory load
+	var/area/starting_area
 	///Book scanner that will be used when uploading books to the Archive
 	var/datum/weakref/scanner
 	///Our cooldown on using the printer
@@ -253,7 +268,10 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 
 /obj/machinery/computer/libraryconsole/bookmanagement/Initialize(mapload)
 	. = ..()
-	upload_category = GLOB.default_book_category
+	if(mapload)
+		dynamic_inv_load = TRUE //Only load in stuff if we were placed during mapload
+	upload_category = GLOB.default_upload_category
+	starting_area = get_area(src)
 
 /obj/machinery/computer/libraryconsole/bookmanagement/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -267,6 +285,11 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 	data["show_dropdown"] = show_dropdown
 	data["display_lore"] = (obj_flags & EMAGGED && can_spawn_lore)
 	data["world_time"] = world.time
+	if(dynamic_inv_load) //Time to load those area books in
+		dynamic_inv_load = FALSE
+		for(var/datum/book_info/book as anything in GLOB.roundstart_books_by_area[starting_area])
+			inventory += book.return_copy()
+		inventory_update()
 
 	if(screen_state == LIBRARY_INVENTORY)
 		var/id = 0
@@ -278,9 +301,13 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 				"author" = info.author,
 			))
 			id += 1
+		data["has_inventory"] = !!length(inventory)
+		data["inventory_page"] = inventory_page + 1
+		data["inventory_page_count"] = inventory_page_count + 1
 
 	if(screen_state == LIBRARY_CHECKOUT_LISTING)
 		var/id = 0
+		data["checkouts"] = list()
 		for(var/datum/borrowbook/loan as anything in checkouts)
 			var/checkedout = (world.time - loan.checkout) / (1 MINUTES)
 			checkedout = round(checkedout)
@@ -297,6 +324,9 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 				"author" = loan.book_data.author
 			))
 			id += 1
+		data["has_checkout"] = !!length(checkouts)
+		data["checkout_page"] = checkout_page
+		data["checkout_page_count"] = checkout_page_count
 
 	if(screen_state == LIBRARY_CHECKOUT)
 		data["checkoutee"] = buffer_mob
@@ -306,7 +336,7 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 	//Copypasta from the visitor console
 	if(screen_state == LIBRARY_ARCHIVE)
 		data["categories"] = GLOB.book_categories
-		data["category"] = category || GLOB.default_book_category
+		data["category"] = category
 		data["author"] = author
 		data["title"] = title
 		data["page_count"] = page_count + 1 //Increase these by one so it looks like we're not indexing at 0
@@ -319,11 +349,11 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 		var/obj/machinery/libraryscanner/scan = get_scanner()
 		data["has_scanner"] = !!(scan)
 		data["has_cache"] = !!(scan?.cache)
+		data["categories"] = GLOB.upload_categories
 		if(scan?.cache)
-			data["cache_info"] = list(
-				"title" = scan.cache.title,
-				"author" = scan.cache.author
-			)
+			data["cache_title"] = scan.cache.title
+			data["cache_author"] = scan.cache.author
+			data["upload_category"] = upload_category
 
 	return data
 
@@ -453,6 +483,13 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 			dat += "<A href='?src=[REF(src)];switchscreen=0'>No.</A><BR>"
 
 */
+/obj/machinery/computer/libraryconsole/bookmanagement/proc/inventory_update()
+	inventory_page_count = round(length(inventory) / BOOKS_PER_PAGE) //This is just floor()
+	inventory_page = min(max(inventory_page, 0), inventory_page_count)
+
+/obj/machinery/computer/libraryconsole/bookmanagement/proc/checkout_update()
+	checkout_page_count = round(length(checkouts) / BOOKS_PER_PAGE) //This is just floor()
+	checkout_page = min(max(checkout_page, 0), checkout_page_count)
 
 /obj/machinery/computer/libraryconsole/bookmanagement/proc/get_scanner(viewrange)
 	if(scanner)
@@ -493,20 +530,30 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 			var/window = params["screen_index"]
 			screen_state = clamp(window, MIN_LIBRARY, MAX_LIBRARY)
 			return TRUE
-		if("lore_spawn")
-			if(obj_flags & EMAGGED && can_spawn_lore)
-				print_forbidden_lore()
-			screen_state = MIN_LIBRARY
+		if("toggle_dropdown")
+			show_dropdown = !show_dropdown
 			return TRUE
-		if("set-checkout-period")
+		if("inventory_remove")
+			var/id = params["item_id"]
+			inventory -= id
+			inventory_update()
+			return TRUE
+		if("switch_inventory_page")
+			var/parsed = text2num(params["page"])
+			inventory_page = parsed || params["page"]
+			//We expect the search page to be one greater then it should be, because we're lying about indexing at 1
+			inventory_page = min(max(0, inventory_page - 1), page_count)
+			inventory_update()
+			return TRUE
+		if("set_checkout_period")
 			var/checkout_time = params["new_time"]
 			checkout_time = text2num(checkout_time) || checkout_time
 			checkoutperiod = max(checkout_time, 1)
 			return TRUE
-		if("set-book-name")
-			buffer_book = copytext(html_encode(params["new_name"]), 1, 45)
+		if("set_book_name")
+			buffer_book = copytext(html_encode(params["new_name"]), 1, 200)
 			return TRUE
-		if("set-mob-name")
+		if("set_mob_name")
 			buffer_mob = copytext(html_encode(params["new_name"]), 1, MAX_NAME_LEN)
 			return TRUE
 		if("checkout")
@@ -516,33 +563,40 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 			loan.checkout = world.time
 			loan.duedate = world.time + (checkoutperiod * 600)
 			checkouts += loan
+			checkout_update()
 			return TRUE
 		if("checkin")
-			var/id = params["id"]
-			var/datum/borrowbook/loan = checkouts[id]
-			checkouts -= loan
+			var/id = params["checked_out_id"]
+			checkouts -= id
+			checkout_update()
 			return TRUE
-		if("delbook")
-			var/id = params["id"]
-			var/datum/book_info/data = inventory[id]
-			inventory -= data
+		if("switch_checkout_page")
+			var/parsed = text2num(params["page"])
+			checkout_page = parsed || params["page"]
+			//We expect the search page to be one greater then it should be, because we're lying about indexing at 1
+			checkout_page = min(max(0, checkout_page - 1), page_count)
+			checkout_update()
 			return TRUE
-		if("set-author-name")
-			var/newauthor = copytext(html_encode(params["new_name"]), 1, MAX_NAME_LEN)
-			var/obj/machinery/libraryscanner/scan = get_scanner()
-			if(scan?.cache && newauthor)
-				scan.cache.set_author(newauthor)
-			return TRUE
-		if("set-upload-category")
+		if("set_upload_category")
 			var/newcategory = params["category"]
-			if(!(newcategory in GLOB.book_categories)) //Nice try
-				newcategory = GLOB.default_book_category
+			if(!(newcategory in GLOB.upload_categories)) //Nice try
+				newcategory = GLOB.default_upload_category
 			upload_category = sanitize(newcategory)
+			return TRUE
+		if("set_title")
+			var/obj/machinery/libraryscanner/scan = get_scanner()
+			if(scan?.cache && params["title"])
+				scan.cache.set_title(params["title"])
+			return TRUE
+		if("set_author")
+			var/obj/machinery/libraryscanner/scan = get_scanner()
+			if(scan?.cache && params["author"])
+				scan.cache.set_author(params["author"])
 			return TRUE
 		if("upload")
 			upload_from_scanner()
 			return TRUE
-		if("newspost")
+		if("news_post")
 			if(!GLOB.news_network)
 				say("No news network found on station. Aborting.")
 			var/channelexists = FALSE
@@ -560,7 +614,7 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 			GLOB.news_network.SubmitArticle(scan.cache.content, "[scan.cache.title]", BOOK_CLUB, null)
 			say("Upload complete. Your uploaded title is now available on station newscasters.")
 			return TRUE
-		if("print-book")
+		if("print_book")
 			if(!COOLDOWN_FINISHED(src, printer_cooldown))
 				say("Printer currently unavailable, please wait a moment.")
 				return
@@ -568,7 +622,7 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 			var/id = params["book_id"]
 			print_book(id)
 			return TRUE
-		if("print-bible")
+		if("print_bible")
 			if(!COOLDOWN_FINISHED(src, printer_cooldown))
 				say("Printer currently unavailable, please wait a moment.")
 				return
@@ -580,12 +634,17 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 				B.name = GLOB.bible_name
 				B.deity_name = GLOB.deity
 			return TRUE
-		if("print-poster")
+		if("print_poster")
 			if(!COOLDOWN_FINISHED(src, printer_cooldown))
 				say("Printer currently unavailable, please wait a moment.")
 				return
 			COOLDOWN_START(src, printer_cooldown, PRINTER_COOLDOWN)
 			new /obj/item/poster/random_official(loc)
+			return TRUE
+		if("lore_spawn")
+			if(obj_flags & EMAGGED && can_spawn_lore)
+				print_forbidden_lore()
+			screen_state = MIN_LIBRARY
 			return TRUE
 
 /obj/machinery/computer/libraryconsole/bookmanagement/proc/upload_from_scanner()
@@ -604,12 +663,20 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 		say("Connection to Archive has been severed. Aborting.")
 		return
 	var/datum/book_info/book = scan.cache
-	var/content = book.content
-	var/msg = "[key_name(usr)] has uploaded the book titled [book.title], [length(content)] signs"
+	if(!book.title)
+		say("No title detected. Aborting")
+		return
+	if(!book.author)
+		say("No author detected. Aborting")
+		return
+	if(!book.content)
+		say("No content detected. Aborting")
+		return
+	var/msg = "[key_name(usr)] has uploaded the book titled [book.title], [length(book.content)] signs"
 	var/datum/db_query/query_library_upload = SSdbcore.NewQuery({"
 		INSERT INTO [format_table_name("library")] (author, title, content, category, ckey, datetime, round_id_created)
 		VALUES (:author, :title, :content, :category, :ckey, Now(), :round_id)
-	"}, list("title" = book.title, "author" = book.author, "content" = content, "category" = upload_category, "ckey" = usr.ckey, "round_id" = GLOB.round_id))
+	"}, list("title" = book.title, "author" = book.author, "content" = book.content, "category" = upload_category, "ckey" = usr.ckey, "round_id" = GLOB.round_id))
 	if(!query_library_upload.Execute())
 		qdel(query_library_upload)
 		say("Database error encountered uploading to Archive")
@@ -642,8 +709,8 @@ GLOBAL_VAR_INIT(default_book_category, "Any")
 			printed_book.book_data = new()
 			var/datum/book_info/fill = printed_book.book_data
 			fill.set_title(title, legacy = TRUE)
-			fill.set_title(author, legacy = TRUE)
-			fill.set_author(content, legacy = TRUE)
+			fill.set_author(author, legacy = TRUE)
+			fill.set_content(content, legacy = TRUE)
 			printed_book.icon_state = "book[rand(1,8)]"
 			visible_message(span_notice("[src]'s printer hums as it produces a completely bound book. How did it do that?"))
 		break
