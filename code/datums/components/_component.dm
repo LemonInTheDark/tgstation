@@ -72,7 +72,9 @@
  * * silent - deletes the component without sending a [COMSIG_COMPONENT_REMOVING] signal
  */
 /datum/component/Destroy(force=FALSE, silent=FALSE)
-	if(!force && parent)
+	if(!parent)
+		return ..()
+	if(!force)
 		_RemoveFromParent()
 	if(!silent)
 		SEND_SIGNAL(parent, COMSIG_COMPONENT_REMOVING, src)
@@ -311,9 +313,11 @@
  */
 /datum/proc/_SendSignal(sigtype, list/arguments)
 	var/target = comp_lookup[sigtype]
+	var/list/verbose_arguments = arguments.Copy()
+	verbose_arguments.Insert(1, sigtype)
 	if(!length(target))
 		var/datum/listening_datum = target
-		return NONE | call(listening_datum, listening_datum.signal_procs[src][sigtype])(arglist(arguments))
+		return NONE | call(listening_datum, listening_datum.signal_procs[src][sigtype])(arglist(listening_datum.datum_flags & DF_SIGNAL_VERBOSE? verbose_arguments : arguments))
 	. = NONE
 	// This exists so that even if one of the signal receivers unregisters the signal,
 	// all the objects that are receiving the signal get the signal this final time.
@@ -322,7 +326,7 @@
 	for(var/datum/listening_datum as anything in target)
 		queued_calls[listening_datum] = listening_datum.signal_procs[src][sigtype]
 	for(var/datum/listening_datum as anything in queued_calls)
-		. |= call(listening_datum, queued_calls[listening_datum])(arglist(arguments))
+		. |= call(listening_datum, queued_calls[listening_datum])(arglist(listening_datum.datum_flags & DF_SIGNAL_VERBOSE? verbose_arguments : arguments))
 
 // The type arg is casted so initial works, you shouldn't be passing a real instance into this
 /**
@@ -415,7 +419,7 @@
 
 	raw_args[1] = src
 
-	if(dm != COMPONENT_DUPE_ALLOWED)
+	if(dm != COMPONENT_DUPE_ALLOWED && dm != COMPONENT_DUPE_SELECTIVE)
 		if(!dt)
 			old_comp = GetExactComponent(nt)
 		else
@@ -441,19 +445,19 @@
 						old_comp.InheritComponent(arglist(arguments))
 					else
 						old_comp.InheritComponent(new_comp, TRUE)
-				if(COMPONENT_DUPE_SELECTIVE)
-					var/list/arguments = raw_args.Copy()
-					arguments[1] = new_comp
-					var/make_new_component = TRUE
-					for(var/datum/component/existing_component as anything in GetComponents(new_type))
-						if(existing_component.CheckDupeComponent(arglist(arguments)))
-							make_new_component = FALSE
-							QDEL_NULL(new_comp)
-							break
-					if(!new_comp && make_new_component)
-						new_comp = new nt(raw_args)
 		else if(!new_comp)
 			new_comp = new nt(raw_args) // There's a valid dupe mode but there's no old component, act like normal
+	else if(dm == COMPONENT_DUPE_SELECTIVE)
+		var/list/arguments = raw_args.Copy()
+		arguments[1] = new_comp
+		var/make_new_component = TRUE
+		for(var/datum/component/existing_component as anything in GetComponents(new_type))
+			if(existing_component.CheckDupeComponent(arglist(arguments)))
+				make_new_component = FALSE
+				QDEL_NULL(new_comp)
+				break
+		if(!new_comp && make_new_component)
+			new_comp = new nt(raw_args)
 	else if(!new_comp)
 		new_comp = new nt(raw_args) // Dupes are allowed, act like normal
 
@@ -478,8 +482,9 @@
 
 /**
  * Removes the component from parent, ends up with a null parent
+ * Used as a helper proc by the component transfer proc, does not clean up the component like Destroy does
  */
-/datum/component/proc/RemoveComponent()
+/datum/component/proc/ClearFromParent()
 	if(!parent)
 		return
 	var/datum/old_parent = parent
@@ -500,7 +505,7 @@
 	if(!target || target.parent == src)
 		return
 	if(target.parent)
-		target.RemoveComponent()
+		target.ClearFromParent()
 	target.parent = src
 	var/result = target.PostTransfer()
 	switch(result)
