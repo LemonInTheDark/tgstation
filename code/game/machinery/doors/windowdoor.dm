@@ -166,6 +166,7 @@
 	playsound(src, 'sound/machines/windowdoor.ogg', 100, TRUE)
 	icon_state ="[base_state]open"
 	sleep(10)
+	end_animate("opening")
 	set_density(FALSE)
 	air_update_turf(TRUE, FALSE)
 	update_freelook_sight()
@@ -193,6 +194,7 @@
 	update_freelook_sight()
 	sleep(10)
 
+	end_animate("closing")
 	operating = FALSE
 	return 1
 

@@ -309,6 +309,7 @@
 	icon_state = "[base_icon_state][density]"
 	return ..()
 
+///Starts an "animation", most of the time this is an icon state flick
 /obj/machinery/door/proc/do_animate(animation)
 	switch(animation)
 		if("opening")
@@ -325,6 +326,9 @@
 			if(!machine_stat)
 				flick("door_deny", src)
 
+///Called when an animation "ends" if it's something that is capable of ending
+/obj/machinery/door/proc/end_animate(animation)
+	return
 
 /obj/machinery/door/proc/open()
 	if(!density)
@@ -339,6 +343,7 @@
 	flags_1 &= ~PREVENT_CLICK_UNDER_1
 	sleep(5)
 	layer = initial(layer)
+	end_animate("opening")
 	update_appearance()
 	set_opacity(0)
 	operating = FALSE
@@ -368,6 +373,7 @@
 	set_density(TRUE)
 	flags_1 |= PREVENT_CLICK_UNDER_1
 	sleep(5)
+	end_animate("closing")
 	update_appearance()
 	if(visible && !glass)
 		set_opacity(1)
