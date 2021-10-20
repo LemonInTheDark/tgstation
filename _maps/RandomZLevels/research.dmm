@@ -30,7 +30,7 @@
 /turf/open/space,
 /area/awaymission/research/interior/engineering)
 "ai" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /turf/open/floor/plating,
 /area/awaymission/research/interior/engineering)
 "aj" = (
@@ -528,9 +528,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/research/interior/engineering)
 "bx" = (
-/obj/machinery/door/airlock/external{
-	req_access_txt = "13"
-	},
+/obj/machinery/door/airlock/external/ruin,
 /turf/open/floor/plating,
 /area/awaymission/research/interior/maint)
 "by" = (
@@ -1751,8 +1749,8 @@
 /turf/open/floor/plating,
 /area/awaymission/research/interior/maint)
 "ef" = (
-/obj/effect/spawner/lootdrop/maintenance,
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
+/obj/effect/spawner/random/maintenance,
 /obj/structure/closet/crate,
 /turf/open/floor/plating,
 /area/awaymission/research/interior/maint)
@@ -1996,7 +1994,7 @@
 /area/awaymission/research/interior/maint)
 "eG" = (
 /obj/structure/closet/crate,
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating,
 /area/awaymission/research/interior/maint)
 "eH" = (
@@ -3016,7 +3014,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/research/interior/cryo)
 "gR" = (
-/obj/item/melee/classic_baton/telescopic,
+/obj/item/melee/baton/telescopic,
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
 	},
@@ -3601,14 +3599,14 @@
 /area/awaymission/research/interior/genetics)
 "hX" = (
 /obj/structure/rack,
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating,
 /area/awaymission/research/interior/maint)
 "hY" = (
 /obj/structure/closet/crate{
 	icon_state = "crateopen"
 	},
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating,
 /area/awaymission/research/interior/maint)
 "hZ" = (
@@ -4745,7 +4743,7 @@
 /area/awaymission/research/interior/dorm)
 "kS" = (
 /obj/structure/table/wood,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /turf/open/floor/iron,
 /area/awaymission/research/interior/dorm)
 "kT" = (
@@ -5217,7 +5215,7 @@
 /turf/open/floor/wood,
 /area/awaymission/research/interior/dorm)
 "lU" = (
-/obj/effect/spawner/randomarcade{
+/obj/effect/spawner/random/entertainment/arcade{
 	dir = 8
 	},
 /obj/effect/turf_decal/siding/yellow{
@@ -5301,7 +5299,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/research/interior/escapepods)
 "mk" = (
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /obj/effect/turf_decal/tile/green,
 /obj/effect/turf_decal/tile/green{
 	dir = 8
@@ -5383,7 +5381,7 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/awaymission/research/exterior)
 "mu" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Escape Pod One"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -5552,7 +5550,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/research/interior/escapepods)
 "mO" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Escape Pod Two"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -5578,7 +5576,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/research/interior/escapepods)
 "mS" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Escape Pod Three"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -5639,7 +5637,7 @@
 /turf/open/floor/plating,
 /area/awaymission/research/interior/escapepods)
 "mZ" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Escape Airlock"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
@@ -5668,7 +5666,7 @@
 /turf/closed/wall/mineral/plastitanium/nodiagonal,
 /area/awaymission/research/interior/engineering)
 "pt" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Escape Pod Three"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -5764,7 +5762,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/research/interior)
 "xG" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Escape Pod Two"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -5885,7 +5883,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/research/interior)
 "TE" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Escape Pod One"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -5935,7 +5933,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/research/interior)
 "XE" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Escape Airlock"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{

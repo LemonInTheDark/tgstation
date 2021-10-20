@@ -97,7 +97,7 @@
 /turf/closed/wall/mineral/plastitanium/nodiagonal,
 /area/ruin/unpowered/syndicate_lava_base/chemistry)
 "at" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/poddoor{
 	id = "lavalandsyndi_chemistry"
 	},
@@ -425,7 +425,7 @@
 /turf/open/floor/iron/dark,
 /area/ruin/unpowered/syndicate_lava_base/testlab)
 "dS" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/firedoor,
 /obj/machinery/door/poddoor/preopen{
 	id = "lavalandsyndi";
@@ -557,7 +557,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/obj/machinery/power/rad_collector,
+/obj/machinery/power/energy_accumulator/rad_collector,
 /turf/open/floor/iron/dark,
 /area/ruin/unpowered/syndicate_lava_base/cargo)
 "ee" = (
@@ -639,7 +639,7 @@
 /turf/open/floor/iron/dark,
 /area/ruin/unpowered/syndicate_lava_base/testlab)
 "ek" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /turf/open/floor/plating,
 /area/ruin/unpowered/syndicate_lava_base/testlab)
 "el" = (
@@ -909,7 +909,7 @@
 /turf/open/floor/mineral/plastitanium,
 /area/ruin/unpowered/syndicate_lava_base/cargo)
 "eF" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/firedoor,
 /obj/machinery/door/poddoor{
 	id = "lavalandsyndi_cargo"
@@ -932,7 +932,7 @@
 	},
 /area/ruin/unpowered/syndicate_lava_base/virology)
 "eI" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /turf/open/floor/plating,
 /area/ruin/unpowered/syndicate_lava_base/virology)
 "eJ" = (
@@ -1175,11 +1175,11 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/obj/machinery/power/rad_collector,
+/obj/machinery/power/energy_accumulator/rad_collector,
 /turf/open/floor/iron/dark,
 /area/ruin/unpowered/syndicate_lava_base/cargo)
 "fa" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/firedoor,
 /turf/open/floor/plating,
 /area/ruin/unpowered/syndicate_lava_base/cargo)
@@ -1319,7 +1319,7 @@
 /turf/open/floor/iron/white,
 /area/ruin/unpowered/syndicate_lava_base/chemistry)
 "fn" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/firedoor,
 /turf/open/floor/plating,
 /area/ruin/unpowered/syndicate_lava_base/chemistry)
@@ -1632,7 +1632,7 @@
 /turf/open/floor/iron,
 /area/ruin/unpowered/syndicate_lava_base/cargo)
 "gd" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/structure/fans/tiny,
@@ -1659,7 +1659,7 @@
 /area/ruin/unpowered/syndicate_lava_base/cargo)
 "gh" = (
 /obj/structure/fans/tiny,
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -2240,7 +2240,7 @@
 	},
 /area/ruin/unpowered/syndicate_lava_base/virology)
 "hw" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/structure/fans/tiny,
@@ -2341,7 +2341,7 @@
 	},
 /area/ruin/unpowered/syndicate_lava_base/virology)
 "hH" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/poddoor/preopen{
 	id = "lavalandsyndi_virology"
 	},
@@ -2472,7 +2472,7 @@
 /area/ruin/unpowered/syndicate_lava_base/main)
 "hX" = (
 /obj/structure/fans/tiny,
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -2482,7 +2482,7 @@
 /area/ruin/unpowered/syndicate_lava_base/main)
 "hY" = (
 /obj/structure/fans/tiny,
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/effect/decal/cleanable/dirt,
@@ -3165,7 +3165,7 @@
 /turf/open/floor/iron/grimy,
 /area/ruin/unpowered/syndicate_lava_base/dormitories)
 "jr" = (
-/obj/effect/spawner/randomsnackvend{
+/obj/effect/spawner/random/vending/snackvend{
 	hacked = 1
 	},
 /obj/effect/decal/cleanable/dirt,
@@ -3209,7 +3209,7 @@
 /turf/open/floor/iron,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "jx" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/firedoor,
 /obj/machinery/door/poddoor/preopen{
 	id = "lavalandsyndi_bar"
@@ -3247,7 +3247,7 @@
 /turf/open/floor/iron/grimy,
 /area/ruin/unpowered/syndicate_lava_base/dormitories)
 "jD" = (
-/obj/effect/spawner/randomcolavend{
+/obj/effect/spawner/random/vending/colavend{
 	hacked = 1
 	},
 /obj/effect/decal/cleanable/dirt,
@@ -3770,7 +3770,7 @@
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "kG" = (
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/bottle/beer,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
@@ -3961,7 +3961,7 @@
 /obj/machinery/atmospherics/pipe/layer_manifold/visible{
 	dir = 4
 	},
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /turf/open/floor/plating,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "ld" = (
@@ -4158,7 +4158,7 @@
 	pixel_x = -4;
 	pixel_y = 9
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = 5;
 	pixel_y = -2
 	},
@@ -4177,7 +4177,7 @@
 /obj/structure/table/wood,
 /obj/machinery/reagentgrinder,
 /obj/item/kitchen/rollingpin,
-/obj/item/kitchen/knife{
+/obj/item/knife/kitchen{
 	pixel_x = 6
 	},
 /turf/open/floor/wood,
@@ -4292,7 +4292,7 @@
 /area/ruin/unpowered/syndicate_lava_base/main)
 "lT" = (
 /obj/structure/fans/tiny,
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
@@ -4480,7 +4480,7 @@
 /turf/open/floor/iron,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "mm" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/pink/visible{
 	dir = 4
 	},
@@ -4493,7 +4493,7 @@
 /turf/closed/wall/mineral/plastitanium/explosive,
 /area/ruin/unpowered/syndicate_lava_base/telecomms)
 "mp" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/firedoor,
 /obj/machinery/door/poddoor/preopen{
 	id = "lavalandsyndi_telecomms"
@@ -4676,7 +4676,7 @@
 /turf/open/floor/iron/dark,
 /area/ruin/unpowered/syndicate_lava_base/telecomms)
 "mS" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/structure/fans/tiny,
@@ -4690,7 +4690,7 @@
 /area/ruin/unpowered/syndicate_lava_base/arrivals)
 "mU" = (
 /obj/machinery/door/firedoor,
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /turf/open/floor/plating,
 /area/ruin/unpowered/syndicate_lava_base/bar)
 "mX" = (
@@ -5535,7 +5535,7 @@
 /turf/open/floor/iron/dark,
 /area/ruin/unpowered/syndicate_lava_base/telecomms)
 "ox" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/firedoor,
 /obj/machinery/door/poddoor{
 	id = "lavalandsyndi_arrivals"
@@ -5637,7 +5637,7 @@
 /turf/open/floor/engine/n2,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "rF" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/dark/visible,
 /turf/open/floor/plating/airless,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
@@ -5656,7 +5656,7 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/orange{
 	dir = 8
 	},
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /turf/open/floor/plating/airless,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "tW" = (
@@ -5715,7 +5715,7 @@
 /turf/open/floor/engine/co2,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "BF" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/door/firedoor,
 /obj/machinery/door/poddoor/preopen{
 	id = "lavalandsyndi";
@@ -5766,7 +5766,7 @@
 /turf/open/floor/iron,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "EZ" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/structure/fans/tiny,
@@ -5784,7 +5784,7 @@
 /turf/open/floor/iron,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "IH" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /turf/open/floor/plating/airless,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "IJ" = (
@@ -5860,7 +5860,7 @@
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "St" = (
 /obj/structure/fans/tiny,
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	req_access_txt = "150"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
@@ -5915,7 +5915,7 @@
 /turf/open/floor/engine/co2,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 "ZU" = (
-/obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
+/obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /turf/open/floor/plating,
 /area/ruin/unpowered/syndicate_lava_base/engineering)
 

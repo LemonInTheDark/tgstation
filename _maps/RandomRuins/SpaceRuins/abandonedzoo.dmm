@@ -3,7 +3,7 @@
 /turf/template_noop,
 /area/template_noop)
 "ab" = (
-/obj/machinery/power/shieldwallgen/anchored,
+/obj/machinery/power/shieldwallgen/unlocked/anchored,
 /obj/structure/cable,
 /turf/open/floor/plating/airless,
 /area/ruin/space/has_grav/abandonedzoo)
@@ -99,7 +99,7 @@
 /turf/open/floor/iron/dark,
 /area/ruin/space/has_grav/abandonedzoo)
 "aE" = (
-/obj/machinery/power/shieldwallgen/anchored,
+/obj/machinery/power/shieldwallgen/unlocked/anchored,
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/abandonedzoo)
@@ -171,6 +171,9 @@
 /turf/template_noop,
 /area/template_noop)
 "aS" = (
+/obj/structure/rack,
+/obj/effect/spawner/random/maintenance,
+/obj/structure/cable,
 /obj/machinery/power/apc/unlocked{
 	dir = 8;
 	environ = 0;
@@ -178,10 +181,7 @@
 	name = "Worn-out APC";
 	pixel_x = -25
 	},
-/obj/structure/rack,
-/obj/item/melee/baton/cattleprod,
-/obj/effect/spawner/lootdrop/maintenance,
-/obj/structure/cable,
+/obj/item/melee/baton/security/cattleprod,
 /turf/open/floor/iron/dark/side,
 /area/ruin/space/has_grav/abandonedzoo)
 "aT" = (
@@ -298,12 +298,12 @@
 /area/ruin/space/has_grav/abandonedzoo)
 "bs" = (
 /obj/structure/cable,
-/obj/machinery/power/shieldwallgen/anchored,
+/obj/machinery/power/shieldwallgen/unlocked/anchored,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/abandonedzoo)
 "bt" = (
 /obj/structure/cable,
-/obj/machinery/power/shieldwallgen/anchored,
+/obj/machinery/power/shieldwallgen/unlocked/anchored,
 /turf/open/floor/plating/airless,
 /area/ruin/space/has_grav/abandonedzoo)
 "bu" = (
@@ -346,7 +346,7 @@
 /turf/closed/wall/r_wall,
 /area/ruin/space/has_grav/abandonedzoo)
 "bG" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /obj/effect/turf_decal/tile/green{
 	dir = 1
@@ -429,7 +429,7 @@
 /turf/open/floor/plating/airless,
 /area/ruin/space/has_grav/abandonedzoo)
 "bV" = (
-/obj/machinery/power/shieldwallgen,
+/obj/machinery/power/shieldwallgen/unlocked,
 /turf/template_noop,
 /area/template_noop)
 "bW" = (
@@ -488,7 +488,7 @@
 /turf/open/floor/iron/dark/side,
 /area/ruin/space/has_grav/abandonedzoo)
 "lo" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
 	},

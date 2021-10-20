@@ -972,7 +972,7 @@
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation/comm)
 "cN" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
 	},
@@ -2211,7 +2211,7 @@
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation/mining)
 "gd" = (
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating/airless{
 	icon_state = "platingdmg1"
 	},
@@ -2859,7 +2859,7 @@
 /area/ruin/space/has_grav/ancientstation/betacorridor)
 "hK" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/power/rad_collector,
+/obj/machinery/power/energy_accumulator/tesla_coil,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation/deltacorridor)
 "hL" = (
@@ -4266,7 +4266,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Engineering External Access"
 	},
 /turf/open/floor/plating,
@@ -6378,7 +6378,7 @@
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 4
 	},
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Engineering External Access"
 	},
 /turf/open/floor/plating,
@@ -6427,7 +6427,7 @@
 /area/ruin/space/has_grav/ancientstation/engi)
 "xl" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation)
 "xr" = (
@@ -6543,7 +6543,7 @@
 /turf/closed/mineral/plasma,
 /area/ruin/space/has_grav/ancientstation/betacorridor)
 "AF" = (
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation/deltacorridor)
 "AK" = (
@@ -6696,7 +6696,7 @@
 /area/ruin/space/has_grav/ancientstation/betacorridor)
 "GG" = (
 /obj/structure/closet,
-/obj/effect/spawner/lootdrop/maintenance/three,
+/obj/effect/spawner/random/maintenance/three,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation/deltacorridor)
 "GP" = (
@@ -6729,6 +6729,11 @@
 /obj/effect/turf_decal/tile/yellow,
 /turf/open/floor/iron,
 /area/ruin/space/has_grav/ancientstation/atmo)
+"HM" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/power/energy_accumulator/grounding_rod,
+/turf/open/floor/plating,
+/area/ruin/space/has_grav/ancientstation/deltacorridor)
 "It" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/sink{
@@ -6807,7 +6812,7 @@
 /turf/open/floor/iron,
 /area/ruin/space/has_grav/ancientstation)
 "Ky" = (
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating/airless,
 /area/ruin/space/has_grav/ancientstation/betastorage)
 "KF" = (
@@ -7100,7 +7105,7 @@
 /turf/open/floor/iron,
 /area/ruin/space/has_grav/ancientstation/sec)
 "RX" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation/mining)
@@ -7210,11 +7215,11 @@
 /area/ruin/space/has_grav/ancientstation/atmo)
 "Ve" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/spawner/lootdrop/maintenance,
+/obj/effect/spawner/random/maintenance,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation/deltacorridor)
 "Vm" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
+/obj/machinery/portable_atmospherics/canister/plasma,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light/small/directional/east,
@@ -11432,8 +11437,8 @@ bE
 hK
 hK
 dh
-dh
-dh
+HM
+HM
 dh
 Zk
 DC

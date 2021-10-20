@@ -63,7 +63,7 @@
 /turf/open/floor/engine/cult,
 /area/ruin/powered)
 "hI" = (
-/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/bottle/beer,
 /turf/open/floor/plating/ice/icemoon,
 /area/icemoon/underground/explored)
 "iz" = (
@@ -298,7 +298,7 @@
 /obj/item/restraints/legcuffs/beartrap,
 /obj/item/reagent_containers/glass/bottle/venom,
 /obj/item/reagent_containers/glass/bottle/curare,
-/obj/item/kitchen/knife/combat/survival,
+/obj/item/knife/combat/survival,
 /obj/effect/decal/cleanable/dirt,
 /obj/item/food/meat/slab/human,
 /obj/item/food/meat/slab/human,
@@ -318,7 +318,7 @@
 "Cl" = (
 /obj/structure/sacrificealtar,
 /obj/effect/decal/cleanable/blood/old,
-/obj/item/kitchen/knife/bloodletter,
+/obj/item/knife/bloodletter,
 /turf/open/floor/engine/cult,
 /area/ruin/powered)
 "Dm" = (
@@ -381,10 +381,10 @@
 /obj/item/clothing/head/bearpelt,
 /obj/structure/table/wood,
 /obj/item/food/burger/fish,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = -4
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = 10;
 	pixel_y = 6
 	},
@@ -437,7 +437,7 @@
 /turf/open/floor/carpet,
 /area/ruin/powered)
 "Pp" = (
-/obj/effect/spawner/randomsnackvend,
+/obj/effect/spawner/random/vending/snackvend,
 /turf/open/floor/holofloor/wood,
 /area/ruin/powered)
 "PQ" = (

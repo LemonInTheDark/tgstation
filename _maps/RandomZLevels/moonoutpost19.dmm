@@ -164,7 +164,7 @@
 /obj/item/clothing/mask/facehugger/impregnated,
 /obj/item/clothing/under/rank/security/officer,
 /obj/item/clothing/suit/armor/vest,
-/obj/item/melee/baton/loaded,
+/obj/item/melee/baton/security/loaded,
 /obj/item/clothing/head/helmet,
 /turf/open/floor/plating/asteroid{
 	heat_capacity = 1e+006;
@@ -1634,7 +1634,7 @@
 /area/awaymission/moonoutpost19/syndicate)
 "du" = (
 /obj/effect/mapping_helpers/airlock/locked,
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	density = 0;
 	icon_state = "open";
 	opacity = 0;
@@ -1789,7 +1789,7 @@
 /area/awaymission/moonoutpost19/main)
 "dI" = (
 /obj/effect/mapping_helpers/airlock/locked,
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	density = 0;
 	icon_state = "open";
 	opacity = 0;
@@ -2608,7 +2608,7 @@
 /obj/item/reagent_containers/spray/pepper,
 /obj/item/grenade/flashbang,
 /obj/item/storage/belt/security,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = -3;
 	pixel_y = -2
 	},
@@ -3173,10 +3173,7 @@
 	},
 /area/awaymission/moonoutpost19/research)
 "gZ" = (
-/obj/machinery/power/shieldwallgen{
-	locked = 0;
-	req_access = null
-	},
+/obj/machinery/power/shieldwallgen/unlocked,
 /obj/structure/cable,
 /turf/open/floor/plating{
 	heat_capacity = 1e+006
@@ -3327,7 +3324,7 @@
 	name = "research director's locker";
 	req_access_txt = "201"
 	},
-/obj/item/storage/backpack/satchel/tox,
+/obj/item/storage/backpack/satchel/science,
 /obj/item/clothing/gloves/color/latex,
 /turf/open/floor/iron/cafeteria{
 	dir = 5
@@ -3335,8 +3332,8 @@
 /area/awaymission/moonoutpost19/research)
 "hr" = (
 /obj/structure/table,
-/obj/item/cartridge/signal/toxins,
-/obj/item/cartridge/signal/toxins{
+/obj/item/cartridge/signal/ordnance,
+/obj/item/cartridge/signal/ordnance{
 	pixel_x = -4;
 	pixel_y = 2
 	},
@@ -4701,7 +4698,7 @@
 "kp" = (
 /obj/structure/table,
 /obj/item/kitchen/rollingpin,
-/obj/item/kitchen/knife,
+/obj/item/knife/kitchen,
 /turf/open/floor/iron/cafeteria{
 	dir = 5
 	},
@@ -5644,7 +5641,7 @@
 	},
 /area/awaymission/moonoutpost19/arrivals)
 "mB" = (
-/obj/effect/spawner/randomarcade{
+/obj/effect/spawner/random/entertainment/arcade{
 	dir = 1
 	},
 /turf/open/floor/iron/dark,
@@ -5713,7 +5710,7 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/awaymission/moonoutpost19/arrivals)
 "mL" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 4
@@ -5723,7 +5720,7 @@
 	},
 /area/awaymission/moonoutpost19/arrivals)
 "mM" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 8
 	},
@@ -6453,7 +6450,7 @@
 	},
 /area/awaymission/moonoutpost19/main)
 "vV" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 4
 	},
@@ -6469,7 +6466,7 @@
 	},
 /area/awaymission/moonoutpost19/arrivals)
 "zZ" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/plating{
 	heat_capacity = 1e+006
@@ -6548,7 +6545,7 @@
 	},
 /area/awaymission/moonoutpost19/arrivals)
 "Wf" = (
-/obj/machinery/door/airlock/external,
+/obj/machinery/door/airlock/external/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
 	},

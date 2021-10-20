@@ -229,8 +229,7 @@
 /area/security/prison)
 "abg" = (
 /obj/machinery/door/airlock/external{
-	name = "Port Docking Bay 1";
-	safety_mode = 1
+	name = "Port Docking Bay 1"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/plating,
@@ -4962,7 +4961,7 @@
 "atA" = (
 /obj/structure/rack,
 /obj/item/wrench,
-/obj/item/kitchen/knife,
+/obj/item/knife/kitchen,
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 1
 	},
@@ -8714,8 +8713,7 @@
 	dir = 1
 	},
 /obj/machinery/door/airlock/external{
-	name = "Port Docking Bay 1";
-	safety_mode = 1
+	name = "Port Docking Bay 1"
 	},
 /obj/machinery/navbeacon/wayfinding{
 	location = "Arrival Shuttle"
@@ -9595,8 +9593,7 @@
 	dir = 1
 	},
 /obj/machinery/door/airlock/external{
-	name = "Port Docking Bay 1";
-	safety_mode = 1
+	name = "Port Docking Bay 1"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/entry)
@@ -10766,8 +10763,7 @@
 "aVZ" = (
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /obj/machinery/door/airlock/external{
-	name = "Port Docking Bay 1";
-	safety_mode = 1
+	name = "Port Docking Bay 1"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/entry)
@@ -11108,7 +11104,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /turf/open/floor/iron,
 /area/service/bar)
 "aZI" = (
@@ -13831,7 +13827,7 @@
 /obj/structure/industrial_lift/tram{
 	icon_state = "plating"
 	},
-/obj/structure/window/shuttle,
+obj/structure/window/reinforced/shuttle,
 /obj/structure/fluff/tram_rail,
 /turf/open/openspace,
 /area/hallway/primary/tram/center)
@@ -14227,7 +14223,7 @@
 /obj/structure/industrial_lift/tram{
 	icon_state = "plating"
 	},
-/obj/structure/window/shuttle,
+obj/structure/window/reinforced/shuttle,
 /obj/structure/fluff/tram_rail{
 	dir = 1
 	},
@@ -17147,8 +17143,7 @@
 	dir = 4
 	},
 /obj/machinery/door/airlock/external{
-	name = "Escape Airlock";
-	safety_mode = 1
+	name = "Escape Airlock"
 	},
 /obj/machinery/navbeacon/wayfinding{
 	location = "Escape"
@@ -23320,8 +23315,7 @@
 	},
 /obj/machinery/door/airlock/external{
 	name = "Security Escape Airlock";
-	req_access_txt = "2";
-	safety_mode = 1
+	req_access_txt = "2"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/exit/departure_lounge)
@@ -24622,8 +24616,7 @@
 	dir = 8
 	},
 /obj/machinery/door/airlock/external{
-	name = "Cargo Escape Airlock";
-	safety_mode = 1
+	name = "Cargo Escape Airlock"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/exit/departure_lounge)
@@ -25537,7 +25530,7 @@
 /turf/open/floor/carpet,
 /area/commons/vacant_room/office)
 "gsT" = (
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /obj/effect/turf_decal/trimline/neutral/filled/line{
 	dir = 5
 	},
@@ -27467,7 +27460,7 @@
 "hcz" = (
 /obj/effect/turf_decal/sand/plating,
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = -8
 	},
 /turf/open/floor/plating/airless,
@@ -27591,7 +27584,7 @@
 /obj/structure/industrial_lift/tram{
 	icon_state = "plating"
 	},
-/obj/structure/window/shuttle,
+obj/structure/window/reinforced/shuttle,
 /obj/effect/turf_decal/stripes{
 	dir = 1
 	},
@@ -28893,8 +28886,7 @@
 	dir = 4
 	},
 /obj/machinery/door/airlock/external{
-	name = "Escape Airlock";
-	safety_mode = 1
+	name = "Escape Airlock"
 	},
 /obj/structure/sign/warning/vacuum/external{
 	pixel_y = 32
@@ -33395,7 +33387,7 @@
 /area/ai_monitored/turret_protected/ai_upload_foyer)
 "jld" = (
 /obj/structure/table,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /turf/open/floor/iron,
 /area/security/prison)
 "jlf" = (
@@ -36694,15 +36686,15 @@
 	dir = 1
 	},
 /obj/structure/table,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = 7;
 	pixel_y = 5
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = -1;
 	pixel_y = 9
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = -8
 	},
 /turf/open/floor/iron,
@@ -41630,8 +41622,7 @@
 	},
 /obj/machinery/door/airlock/external{
 	name = "Security Escape Airlock";
-	req_access_txt = "2";
-	safety_mode = 1
+	req_access_txt = "2"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/exit/departure_lounge)
@@ -50667,8 +50658,7 @@
 	dir = 4
 	},
 /obj/machinery/door/airlock/external{
-	name = "Cargo Escape Airlock";
-	safety_mode = 1
+	name = "Cargo Escape Airlock"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/exit/departure_lounge)
@@ -51314,7 +51304,7 @@
 "pPW" = (
 /obj/structure/table,
 /obj/item/book/manual/chef_recipes,
-/obj/item/kitchen/knife,
+/obj/item/knife/kitchen,
 /turf/open/floor/iron/white,
 /area/service/kitchen)
 "pPY" = (
@@ -53688,7 +53678,7 @@
 /obj/structure/industrial_lift/tram{
 	icon_state = "plating"
 	},
-/obj/structure/window/shuttle,
+obj/structure/window/reinforced/shuttle,
 /obj/effect/turf_decal/stripes{
 	dir = 1
 	},
@@ -60107,7 +60097,7 @@
 /obj/structure/industrial_lift/tram{
 	icon_state = "plating"
 	},
-/obj/structure/window/shuttle,
+obj/structure/window/reinforced/shuttle,
 /turf/open/openspace,
 /area/hallway/primary/tram/center)
 "tls" = (
@@ -64214,7 +64204,7 @@
 /area/security/office)
 "uLI" = (
 /obj/structure/table/wood,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /obj/item/pen/fourcolor,
 /turf/open/floor/iron/grimy,
 /area/service/library)
@@ -65234,8 +65224,7 @@
 	dir = 8
 	},
 /obj/machinery/door/airlock/external{
-	name = "Escape Airlock";
-	safety_mode = 1
+	name = "Escape Airlock"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/exit/departure_lounge)

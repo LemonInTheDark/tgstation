@@ -71,13 +71,13 @@
 		our_window = new/obj/structure/window/plasma/fulltile(src)
 
 	if(ispath(window_type, /obj/item/stack/sheet/plasmarglass))
-		our_window = new/obj/structure/window/plasma/reinforced/fulltile(src)
+		our_window = new/obj/structure/window/reinforced/plasma/fulltile(src)
 
 	if(ispath(window_type, /obj/item/stack/sheet/titaniumglass))
-		our_window = new/obj/structure/window/shuttle(src)
+		our_window = new /obj/structure/window/reinforced/shuttle(src)
 
 	if(ispath(window_type, /obj/item/stack/sheet/plastitaniumglass))
-		our_window = new/obj/structure/window/plasma/reinforced/plastitanium(src)
+		our_window = new/obj/structure/window/reinforced/plasma/plastitanium(src)
 
 	if(ispath(window_type, /obj/item/stack/sheet/paperframes))
 		our_window = new/obj/structure/window/paperframe(src)

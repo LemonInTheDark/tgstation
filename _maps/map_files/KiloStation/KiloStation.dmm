@@ -38042,8 +38042,7 @@
 /area/hallway/secondary/entry)
 "cCj" = (
 /obj/machinery/door/airlock/external{
-	name = "Arrival Shuttle Airlock";
-	safety_mode = 1
+	name = "Arrival Shuttle Airlock"
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /obj/machinery/navbeacon/wayfinding,
@@ -38052,16 +38051,6 @@
 "cCk" = (
 /obj/machinery/door/airlock/external{
 	name = "Arrival Shuttle Airlock"
-	},
-/obj/effect/mapping_helpers/airlock/cyclelink_helper{
-	dir = 1
-	},
-/turf/open/floor/iron/dark,
-/area/hallway/secondary/entry)
-"cCm" = (
-/obj/machinery/door/airlock/external{
-	name = "Arrival Shuttle Airlock";
-	safety_mode = 1
 	},
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
@@ -38413,7 +38402,7 @@
 	pixel_x = 4;
 	pixel_y = 4
 	},
-/obj/item/storage/pill_bottle/dice{
+/obj/item/storage/dice{
 	pixel_x = -4
 	},
 /obj/item/pen/red{
@@ -42560,7 +42549,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/obj/effect/spawner/randomarcade{
+/obj/effect/spawner/random/entertainment/arcade{
 	dir = 4
 	},
 /turf/open/floor/iron/dark,
@@ -46292,7 +46281,7 @@
 /obj/item/toy/cards/deck{
 	pixel_x = -9
 	},
-/obj/item/storage/pill_bottle/dice{
+/obj/item/storage/dice{
 	pixel_x = -8;
 	pixel_y = 11
 	},
@@ -47620,7 +47609,7 @@
 /turf/open/floor/iron,
 /area/service/hydroponics)
 "fXW" = (
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /turf/open/floor/iron/grimy,
 /area/security/prison)
 "fYs" = (
@@ -61690,7 +61679,7 @@
 	dir = 4
 	},
 /obj/machinery/newscaster/security_unit/directional/west,
-/obj/effect/spawner/randomarcade{
+/obj/effect/spawner/random/entertainment/arcade{
 	dir = 4
 	},
 /turf/open/floor/iron/dark,
@@ -74400,7 +74389,7 @@
 	pixel_x = -6;
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	desc = "A station exclusive. Consumption may result in seizures, blindness, drunkenness, or even death.";
 	list_reagents = list(/datum/reagent/consumable/ethanol/thirteenloko = 30);
 	name = "Kilo-Kocktail";
@@ -131031,7 +131020,7 @@ kQl
 rmc
 cCj
 fHr
-cCm
+cCk
 bUN
 bUN
 bUN

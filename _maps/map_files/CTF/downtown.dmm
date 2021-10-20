@@ -650,7 +650,7 @@
 /turf/open/floor/iron,
 /area/ctf)
 "mf" = (
-/obj/effect/spawner/randomarcade{
+/obj/effect/spawner/random/entertainment/arcade{
 	dir = 4;
 	resistance_flags = 64
 	},
@@ -982,7 +982,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/tile/bar,
-/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/bottle/beer,
 /obj/structure/table/wood{
 	resistance_flags = 64
 	},
@@ -1255,7 +1255,7 @@
 /turf/open/floor/iron,
 /area/ctf)
 "yi" = (
-/obj/effect/spawner/randomarcade{
+/obj/effect/spawner/random/entertainment/arcade{
 	dir = 8;
 	resistance_flags = 64
 	},
@@ -1641,7 +1641,7 @@
 	dir = 1
 	},
 /obj/effect/turf_decal/tile/bar,
-/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/bottle/beer,
 /obj/structure/table/reinforced/ctf,
 /turf/open/floor/iron,
 /area/ctf)

@@ -796,7 +796,7 @@
 	},
 /area/awaymission/snowdin/post/research)
 "cF" = (
-/obj/effect/spawner/randomcolavend,
+/obj/effect/spawner/random/vending/colavend,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -1176,7 +1176,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/research)
 "dm" = (
-/obj/effect/spawner/randomsnackvend,
+/obj/effect/spawner/random/vending/snackvend,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -1399,7 +1399,7 @@
 /area/awaymission/snowdin/post/kitchen)
 "dU" = (
 /obj/structure/table,
-/obj/item/kitchen/knife,
+/obj/item/knife/kitchen,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron,
 /area/awaymission/snowdin/post/kitchen)
@@ -1583,7 +1583,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/kitchen)
 "eC" = (
-/obj/item/kitchen/knife{
+/obj/item/knife/kitchen{
 	pixel_x = 6;
 	pixel_y = 6
 	},
@@ -2059,7 +2059,7 @@
 /turf/open/floor/iron,
 /area/awaymission/snowdin/post/hydro)
 "fS" = (
-/obj/item/kitchen/knife,
+/obj/item/knife/kitchen,
 /obj/effect/turf_decal/tile/green{
 	dir = 1
 	},
@@ -2117,7 +2117,7 @@
 	},
 /area/awaymission/snowdin/cave/cavern)
 "gd" = (
-/obj/effect/spawner/lootdrop/crate_spawner,
+/obj/effect/spawner/random/structure/crate_abandoned,
 /turf/open/floor/engine/cult{
 	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
 	temperature = 120
@@ -2128,7 +2128,7 @@
 /area/awaymission/snowdin/cave/cavern)
 "gf" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonheavy,
+/obj/effect/spawner/random/exotic/antag_gear_strong,
 /turf/open/floor/engine/cult{
 	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
 	temperature = 120
@@ -2964,7 +2964,7 @@
 /area/awaymission/snowdin/cave)
 "il" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonmid,
+/obj/effect/spawner/random/exotic/antag_gear,
 /turf/open/floor/engine/cult{
 	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
 	temperature = 120
@@ -3695,7 +3695,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/garage)
 "jN" = (
-/obj/effect/spawner/lootdrop/snowdin/dungeonmisc,
+/obj/effect/spawner/random/exotic/snow_gear,
 /turf/open/floor/plating/asteroid/snow,
 /area/awaymission/snowdin/outside)
 "jO" = (
@@ -4572,7 +4572,7 @@
 	},
 /area/awaymission/snowdin/post/hydro)
 "lM" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden{
 	piping_layer = 4;
@@ -4583,7 +4583,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/garage)
 "lN" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/garage)
@@ -4649,7 +4649,7 @@
 /area/awaymission/snowdin/outside)
 "lT" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /turf/open/floor/engine/cult{
 	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
 	temperature = 120
@@ -6259,14 +6259,14 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/secpost)
 "qr" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden,
 /obj/structure/barricade/wooden/crude,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post)
 "qs" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden{
 	piping_layer = 4;
 	pixel_x = 5;
@@ -6535,7 +6535,7 @@
 /turf/open/floor/iron,
 /area/awaymission/snowdin/post/engineering)
 "rc" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/structure/fans/tiny,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 4
@@ -6550,7 +6550,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/cavern2)
 "re" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 8
 	},
@@ -6686,7 +6686,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post)
 "rH" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/structure/barricade/wooden/crude/snow,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
@@ -6783,7 +6783,7 @@
 /area/awaymission/snowdin/cave/cavern)
 "rW" = (
 /obj/structure/lattice/catwalk,
-/obj/structure/window/plasma/reinforced/unanchored,
+/obj/structure/window/reinforced/plasma/unanchored,
 /turf/open/lava/plasma,
 /area/awaymission/snowdin/cave/cavern)
 "rZ" = (
@@ -6867,12 +6867,12 @@
 /area/awaymission/snowdin/cave/cavern)
 "sn" = (
 /obj/structure/lattice/catwalk,
-/obj/structure/window/plasma/reinforced/spawner/east,
+/obj/structure/window/reinforced/plasma/spawner/east,
 /turf/open/lava/plasma,
 /area/awaymission/snowdin/cave/cavern)
 "so" = (
 /obj/structure/lattice/catwalk,
-/obj/structure/window/plasma/reinforced/spawner/west,
+/obj/structure/window/reinforced/plasma/spawner/west,
 /turf/open/lava/plasma,
 /area/awaymission/snowdin/cave/cavern)
 "sp" = (
@@ -6999,7 +6999,7 @@
 /area/awaymission/snowdin/cave/cavern)
 "sG" = (
 /obj/structure/lattice/catwalk,
-/obj/structure/window/plasma/reinforced/spawner/north,
+/obj/structure/window/reinforced/plasma/spawner/north,
 /turf/open/lava/plasma,
 /area/awaymission/snowdin/cave/cavern)
 "sH" = (
@@ -7278,7 +7278,7 @@
 /area/awaymission/snowdin/outside)
 "ts" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonheavy,
+/obj/effect/spawner/random/exotic/antag_gear_strong,
 /turf/open/floor/plating/snowed/cavern,
 /area/awaymission/snowdin/cave/cavern)
 "tt" = (
@@ -7286,7 +7286,7 @@
 /turf/open/floor/plating/snowed/cavern,
 /area/awaymission/snowdin/cave/cavern)
 "tu" = (
-/obj/effect/spawner/lootdrop/crate_spawner,
+/obj/effect/spawner/random/structure/crate_abandoned,
 /turf/open/floor/plating/snowed/cavern,
 /area/awaymission/snowdin/cave/cavern)
 "tv" = (
@@ -7295,7 +7295,7 @@
 /area/awaymission/snowdin/cave/cavern)
 "tw" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonmid,
+/obj/effect/spawner/random/exotic/antag_gear,
 /turf/open/floor/plating/snowed/cavern,
 /area/awaymission/snowdin/cave/cavern)
 "tx" = (
@@ -7329,7 +7329,7 @@
 /area/awaymission/snowdin/outside)
 "tD" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /turf/open/floor/plating/snowed/cavern,
 /area/awaymission/snowdin/cave/cavern)
 "tE" = (
@@ -7361,7 +7361,7 @@
 /turf/open/floor/plating/ice/smooth,
 /area/awaymission/snowdin/outside)
 "tO" = (
-/obj/effect/spawner/lootdrop/snowdin/dungeonmid,
+/obj/effect/spawner/random/exotic/antag_gear,
 /turf/open/floor/plating/asteroid/snow/ice,
 /area/awaymission/snowdin/cave/cavern)
 "tP" = (
@@ -7647,7 +7647,7 @@
 /turf/open/floor/plating/asteroid/snow/ice,
 /area/awaymission/snowdin/cave/cavern)
 "uZ" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/structure/fans/tiny,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 4
@@ -7655,7 +7655,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/cavern1)
 "vb" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 8
 	},
@@ -7865,11 +7865,11 @@
 /turf/closed/wall/mineral/titanium,
 /area/awaymission/snowdin/post/broken_shuttle)
 "vM" = (
-/obj/effect/spawner/structure/window/shuttle,
+/obj/effect/spawner/structure/window/reinforced/shuttle,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/broken_shuttle)
 "vN" = (
-/obj/effect/spawner/structure/window/shuttle,
+/obj/effect/spawner/structure/window/reinforced/shuttle,
 /obj/effect/baseturf_helper/asteroid/snow,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/broken_shuttle)
@@ -8029,7 +8029,7 @@
 /area/awaymission/snowdin/cave)
 "wn" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /turf/open/floor/plating/asteroid/snow{
 	floor_variance = 0;
 	icon_state = "snow_dug";
@@ -8062,17 +8062,17 @@
 /area/awaymission/snowdin/cave)
 "wr" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /turf/open/floor/plating/asteroid/snow,
 /area/awaymission/snowdin/cave)
 "ws" = (
 /obj/structure/closet/crate/wooden,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /turf/open/floor/plating/ice/smooth,
 /area/awaymission/snowdin/cave)
 "wt" = (
 /obj/structure/table/wood,
-/obj/effect/spawner/lootdrop/snowdin/dungeonmisc,
+/obj/effect/spawner/random/exotic/snow_gear,
 /turf/open/floor/plating/asteroid/snow{
 	floor_variance = 0;
 	icon_state = "snow_dug";
@@ -8360,7 +8360,7 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xr" = (
-/obj/effect/spawner/lootdrop/crate_spawner,
+/obj/effect/spawner/random/structure/crate_abandoned,
 /turf/open/floor/plating{
 	icon_state = "platingdmg1"
 	},
@@ -8409,7 +8409,7 @@
 	},
 /area/awaymission/snowdin/post)
 "xx" = (
-/obj/effect/spawner/lootdrop/crate_spawner,
+/obj/effect/spawner/random/structure/crate_abandoned,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -8559,7 +8559,7 @@
 /obj/machinery/atmospherics/components/unary/portables_connector/visible{
 	dir = 8
 	},
-/obj/machinery/portable_atmospherics/canister/toxins,
+/obj/machinery/portable_atmospherics/canister/plasma,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xN" = (
@@ -8748,7 +8748,7 @@
 /obj/machinery/atmospherics/components/unary/portables_connector/visible{
 	dir = 8
 	},
-/obj/machinery/portable_atmospherics/canister/toxins,
+/obj/machinery/portable_atmospherics/canister/plasma,
 /turf/open/floor/plating/snowed/smoothed,
 /area/awaymission/snowdin/cave)
 "yp" = (
@@ -9076,8 +9076,8 @@
 /area/awaymission/snowdin/cave/cavern)
 "zl" = (
 /obj/structure/lattice/catwalk,
-/obj/structure/window/plasma/reinforced/spawner/north,
-/obj/structure/window/plasma/reinforced/unanchored,
+/obj/structure/window/reinforced/plasma/spawner/north,
+/obj/structure/window/reinforced/plasma/unanchored,
 /turf/open/lava/plasma,
 /area/awaymission/snowdin/cave/cavern)
 "zm" = (
@@ -9087,7 +9087,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_dock)
 "zn" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_dock)
@@ -9247,8 +9247,8 @@
 /area/awaymission/snowdin/outside)
 "zP" = (
 /obj/structure/table/wood,
-/obj/effect/spawner/lootdrop/snowdin/dungeonmisc,
-/obj/effect/spawner/lootdrop/snowdin/dungeonmisc,
+/obj/effect/spawner/random/exotic/snow_gear,
+/obj/effect/spawner/random/exotic/snow_gear,
 /turf/open/floor/wood,
 /area/awaymission/snowdin/igloo)
 "zQ" = (
@@ -9266,7 +9266,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_dock)
 "zS" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/structure/fans/tiny,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
@@ -9456,7 +9456,7 @@
 /turf/open/floor/plating/asteroid/snow,
 /area/awaymission/snowdin/outside)
 "Av" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/minipost)
 "Aw" = (
@@ -9504,7 +9504,7 @@
 	},
 /area/awaymission/snowdin/outside)
 "AC" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 4
 	},
@@ -9616,13 +9616,13 @@
 /area/awaymission/snowdin/cave)
 "AU" = (
 /obj/structure/table/wood,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /turf/open/floor/wood,
 /area/awaymission/snowdin/igloo)
 "AV" = (
 /obj/structure/table/wood,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /turf/open/floor/wood,
 /area/awaymission/snowdin/igloo)
 "AW" = (
@@ -10101,7 +10101,7 @@
 /turf/open/floor/iron/dark,
 /area/awaymission/snowdin/cave)
 "CI" = (
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /obj/effect/turf_decal/tile/neutral,
@@ -10318,7 +10318,7 @@
 /area/awaymission/snowdin/cave)
 "Df" = (
 /obj/item/stack/rods,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /obj/effect/turf_decal/tile/neutral,
@@ -10338,7 +10338,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /turf/open/floor/mineral/plastitanium/red,
@@ -10421,7 +10421,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /turf/open/floor/mineral/plastitanium/red,
@@ -10559,7 +10559,7 @@
 	},
 /area/awaymission/snowdin/outside)
 "DG" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Ready Room";
 	req_access_txt = "150"
 	},
@@ -10576,7 +10576,7 @@
 /turf/open/floor/iron/dark,
 /area/awaymission/snowdin/cave)
 "DH" = (
-/obj/structure/window/plasma/reinforced/plastitanium,
+/obj/structure/window/reinforced/plasma/plastitanium,
 /obj/structure/grille,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/cave)
@@ -10733,7 +10733,7 @@
 /turf/open/floor/iron/dark/snowdin,
 /area/awaymission/snowdin/cave)
 "Ea" = (
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /turf/open/floor/iron/dark,
@@ -10773,7 +10773,7 @@
 /turf/open/floor/plating/asteroid/snow,
 /area/awaymission/snowdin/cave)
 "Ef" = (
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /obj/effect/turf_decal/tile/neutral{
@@ -10843,7 +10843,7 @@
 /area/awaymission/snowdin/cave)
 "Eo" = (
 /obj/effect/turf_decal/weather/snow,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /turf/open/floor/iron/dark/snowdin,
@@ -10865,8 +10865,8 @@
 /area/awaymission/snowdin/cave)
 "Er" = (
 /obj/structure/table/reinforced,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -10912,7 +10912,7 @@
 /area/awaymission/snowdin/cave)
 "Eu" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /turf/open/floor/iron/dark,
@@ -10922,7 +10922,7 @@
 	dir = 4
 	},
 /obj/item/stack/rods,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /turf/open/floor/mineral/plastitanium/red,
@@ -10938,7 +10938,7 @@
 "Ex" = (
 /obj/structure/table/reinforced,
 /obj/structure/window/reinforced,
-/obj/effect/spawner/lootdrop/snowdin/dungeonlite,
+/obj/effect/spawner/random/exotic/antag_gear_weak,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -10971,7 +10971,7 @@
 	dir = 10
 	},
 /obj/item/shard,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	list_reagents = null
 	},
 /turf/open/floor/mineral/plastitanium/red,
@@ -11273,7 +11273,7 @@
 /area/awaymission/snowdin/outside)
 "Fn" = (
 /obj/machinery/atmospherics/components/unary/portables_connector/visible,
-/obj/machinery/portable_atmospherics/canister/toxins,
+/obj/machinery/portable_atmospherics/canister/plasma,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/outside)
 "Fo" = (
@@ -11334,7 +11334,7 @@
 /obj/item/clothing/head/helmet{
 	pixel_y = 8
 	},
-/obj/item/melee/baton{
+/obj/item/melee/baton/security{
 	pixel_x = 4
 	},
 /turf/open/floor/plating/asteroid/snow,
@@ -11460,7 +11460,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_main)
 "Gb" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_main)
@@ -13090,7 +13090,7 @@
 /turf/open/floor/iron,
 /area/awaymission/snowdin/post/mining_dock)
 "La" = (
-/obj/effect/spawner/lootdrop/crate_spawner,
+/obj/effect/spawner/random/structure/crate_abandoned,
 /turf/open/floor/plating/asteroid/snow/ice,
 /area/awaymission/snowdin/cave/cavern)
 "Lf" = (
@@ -13116,7 +13116,7 @@
 "Lm" = (
 /obj/structure/table/wood,
 /obj/structure/fireaxecabinet/directional/south,
-/obj/effect/spawner/lootdrop/snowdin/dungeonmisc,
+/obj/effect/spawner/random/exotic/snow_gear,
 /turf/open/floor/wood,
 /area/awaymission/snowdin/outside)
 "Ln" = (
@@ -13144,14 +13144,14 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/garage)
 "Lw" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 8
 	},
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/minipost)
 "Lx" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
 	},
@@ -13385,7 +13385,7 @@
 /area/awaymission/snowdin/cave)
 "NI" = (
 /obj/machinery/light/small/directional/north,
-/obj/effect/spawner/lootdrop/crate_spawner,
+/obj/effect/spawner/random/structure/crate_abandoned,
 /obj/structure/cable,
 /obj/machinery/power/apc/auto_name/north,
 /turf/open/floor/plating,
@@ -13507,7 +13507,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_dock)
 "OF" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Ready Room";
 	req_access_txt = "150"
 	},
@@ -13604,7 +13604,7 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/awaymission/snowdin/post/broken_shuttle)
 "PR" = (
-/obj/machinery/door/airlock/external{
+/obj/machinery/door/airlock/external/ruin{
 	name = "Ready Room";
 	req_access_txt = "150"
 	},
@@ -13877,7 +13877,7 @@
 /obj/machinery/atmospherics/components/unary/portables_connector/visible{
 	dir = 1
 	},
-/obj/machinery/portable_atmospherics/canister/toxins,
+/obj/machinery/portable_atmospherics/canister/plasma,
 /obj/machinery/light/small/directional/west,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
@@ -13890,7 +13890,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_dock)
 "SX" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
 	},
@@ -13958,7 +13958,7 @@
 /area/awaymission/snowdin/post/garage)
 "Ub" = (
 /obj/machinery/atmospherics/components/unary/portables_connector/visible,
-/obj/machinery/portable_atmospherics/canister/toxins,
+/obj/machinery/portable_atmospherics/canister/plasma,
 /obj/machinery/light/small/directional/east,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
@@ -14118,7 +14118,7 @@
 	},
 /area/awaymission/snowdin/cave)
 "VW" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/structure/fans/tiny,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /turf/open/floor/plating,
@@ -14173,12 +14173,12 @@
 /area/awaymission/snowdin/post/dorm)
 "Wx" = (
 /obj/machinery/light/broken/directional/west,
-/obj/effect/spawner/lootdrop/crate_spawner,
+/obj/effect/spawner/random/structure/crate_abandoned,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_dock)
 "WA" = (
 /obj/machinery/atmospherics/components/unary/portables_connector/visible,
-/obj/machinery/portable_atmospherics/canister/toxins,
+/obj/machinery/portable_atmospherics/canister/plasma,
 /obj/machinery/light/small/directional/north,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/outside)
@@ -14375,7 +14375,7 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_main)
 "Yn" = (
-/obj/machinery/door/airlock/external/glass,
+/obj/machinery/door/airlock/external/glass/ruin,
 /obj/effect/mapping_helpers/airlock/cyclelink_helper{
 	dir = 1
 	},
@@ -14481,7 +14481,7 @@
 /area/awaymission/snowdin/post/cavern2)
 "Zx" = (
 /obj/machinery/light/small/directional/north,
-/obj/effect/spawner/lootdrop/crate_spawner,
+/obj/effect/spawner/random/structure/crate_abandoned,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/mining_dock)
 "ZB" = (

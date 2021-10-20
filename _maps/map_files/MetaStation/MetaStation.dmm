@@ -335,7 +335,7 @@
 /turf/open/floor/iron,
 /area/security/prison)
 "acK" = (
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /obj/structure/cable,
 /turf/open/floor/iron,
 /area/security/prison)
@@ -2123,7 +2123,7 @@
 "apg" = (
 /obj/structure/closet,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	desc = "Takes you to a whole new level of thinking.";
 	name = "Meta-Cider"
 	},
@@ -10249,7 +10249,7 @@
 /area/maintenance/port/aft)
 "bUX" = (
 /obj/structure/closet/crate/bin,
-/obj/item/kitchen/knife,
+/obj/item/knife/kitchen,
 /turf/open/floor/plating,
 /area/maintenance/port/aft)
 "bUY" = (
@@ -12162,7 +12162,7 @@
 /turf/open/floor/wood,
 /area/maintenance/port/aft)
 "cnj" = (
-/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/bottle/beer,
 /obj/structure/table/wood,
 /turf/open/floor/wood,
 /area/maintenance/port/aft)
@@ -12812,7 +12812,7 @@
 /turf/open/floor/engine,
 /area/engineering/supermatter)
 "ctn" = (
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating,
 /area/maintenance/port/aft)
@@ -14505,7 +14505,7 @@
 /turf/open/floor/iron/dark,
 /area/hallway/secondary/exit/departure_lounge)
 "cJA" = (
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -16826,8 +16826,7 @@
 "djz" = (
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /obj/machinery/door/airlock/external{
-	name = "Arrival Airlock";
-	safety_mode = 1
+	name = "Arrival Airlock"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/entry)
@@ -16844,8 +16843,7 @@
 	dir = 1
 	},
 /obj/machinery/door/airlock/external{
-	name = "Arrival Airlock";
-	safety_mode = 1
+	name = "Arrival Airlock"
 	},
 /turf/open/floor/plating,
 /area/hallway/secondary/entry)
@@ -24331,7 +24329,7 @@
 /turf/open/floor/iron,
 /area/security/brig)
 "fCi" = (
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /obj/machinery/camera{
 	c_tag = "Bar - Starboard"
 	},
@@ -27715,7 +27713,7 @@
 	pixel_y = -32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
 	},
@@ -31842,7 +31840,7 @@
 /area/engineering/atmos)
 "ipV" = (
 /obj/structure/table,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /turf/open/floor/iron,
 /area/commons/locker)
 "ipW" = (
@@ -43525,7 +43523,7 @@
 /obj/item/poster/random_contraband,
 /obj/item/poster/random_contraband,
 /obj/item/poster/random_contraband,
-/obj/item/reagent_containers/food/drinks/beer{
+/obj/item/reagent_containers/food/drinks/bottle/beer{
 	pixel_x = -3;
 	pixel_y = 2
 	},
@@ -43571,7 +43569,7 @@
 "moL" = (
 /obj/structure/table,
 /obj/structure/extinguisher_cabinet/directional/east,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /obj/effect/turf_decal/tile/brown{
 	dir = 1
 	},
@@ -50482,7 +50480,7 @@
 /area/medical/treatment_center)
 "oyB" = (
 /obj/structure/table,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /turf/open/floor/iron,
 /area/commons/dorms)
 "oyN" = (
@@ -51463,7 +51461,7 @@
 /area/security/checkpoint/supply)
 "oOJ" = (
 /obj/structure/table,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2{
 	dir = 8
 	},
@@ -54754,7 +54752,7 @@
 /area/engineering/supermatter/room)
 "pTE" = (
 /obj/structure/table/wood/poker,
-/obj/item/storage/pill_bottle/dice,
+/obj/item/storage/dice,
 /turf/open/floor/wood,
 /area/service/bar)
 "pTP" = (
@@ -62708,10 +62706,7 @@
 /turf/open/floor/iron/dark,
 /area/science/robotics/lab)
 "syT" = (
-/mob/living/simple_animal/cow{
-	name = "Betsy";
-	real_name = "Betsy"
-	},
+/name = "Betsy";real_name = "Betsy"},
 /turf/open/floor/grass,
 /area/service/hydroponics/garden)
 "szv" = (
@@ -63635,7 +63630,7 @@
 	pixel_y = 4
 	},
 /obj/item/wrench,
-/obj/item/kitchen/knife,
+/obj/item/knife/kitchen,
 /turf/open/floor/iron/white,
 /area/science/cytology)
 "sQv" = (
@@ -70664,7 +70659,7 @@
 /turf/open/floor/iron,
 /area/service/bar)
 "vcz" = (
-/obj/effect/spawner/randomarcade,
+/obj/effect/spawner/random/entertainment/arcade,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
