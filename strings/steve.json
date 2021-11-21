@@ -15,6 +15,7 @@
         "We should store bank records in a webscale datastore, like /dev/null.",
         "You ever wonder if /dev/null supports sharding?",
         "Do you know who ate all the donuts?",
-        "What if we use a language that was written on a napkin and created over 1 weekend for all of our servers?"
+        "What if we use a language that was written on a napkin and created over 1 weekend for all of our servers?",
+        "Bro, what if we trained an AI to do our jobs for us? We've got all that perfectly good legacy code, may as well do something with it."
     ]
 }
