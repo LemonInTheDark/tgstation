@@ -2082,24 +2082,6 @@
 //Update the screentip to reflect what we're hoverin over
 /atom/MouseEntered(location, control, params)
 	. = ..()
-	var/randi = rand(1,2)
-	switch(randi)
-		if(1)
-			MouseEnteredOld()
-		if(2)
-			MouseEnteredNew()
-
-/atom/proc/MouseEnteredOld()
-	// Statusbar
-	status_bar_set_text(usr, name)
-	// Screentips
-	if(usr?.hud_used)
-		if(!usr.hud_used.screentips_enabled || (flags_1 & NO_SCREENTIPS_1))
-			usr.hud_used.screentip_text.maptext = ""
-		else
-			usr.hud_used.screentip_text.maptext = MAPTEXT("<span style='text-align: center'><span style='font-size: 32px'><span style='color:[usr.hud_used.screentip_color]: 32px'>[name]</span>")
-
-/atom/proc/MouseEnteredNew()
 	// Statusbar
 	var/client/our_client = usr.client //If you have no client, runtime like the bitch you are
 	// Stop a winset call if text didn't change.

@@ -218,3 +218,6 @@
 
 	/// Whether or not this client has the combo HUD enabled
 	var/combo_hud_enabled = FALSE
+
+	///The last text displayed to the client's status bar. Prevents needless winsets
+	var/status_bar_prev_text = ""
