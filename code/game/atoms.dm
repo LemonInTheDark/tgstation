@@ -2082,14 +2082,6 @@
 //Update the screentip to reflect what we're hoverin over
 /atom/MouseEntered(location, control, params)
 	. = ..()
-	// Statusbar
-	var/client/our_client = usr.client //If you have no client, runtime like the bitch you are
-	// Stop a winset call if text didn't change.
-	if(our_client.status_bar_prev_text != name)
-		our_client.status_bar_prev_text = name
-		winset(our_client, "mapwindow.status_bar",
-			"text=[url_encode(name)]&is-visible=[!!name]")
-
 	// Screentips
 	var/datum/hud/active_hud = usr.hud_used
 	if(active_hud)
