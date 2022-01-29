@@ -33,8 +33,19 @@ SUBSYSTEM_DEF(input)
 	for(var/i in 1 to clients.len)
 		var/client/user = clients[i]
 		user.set_macros()
-
+/datum/controller/subsystem/input/var/hhhh = 90
 /datum/controller/subsystem/input/fire()
+	for(var/i in 1 to hhhh)
+		if(prob(50))
+			old_fire()
+		else
+			new_fire()
+
+/datum/controller/subsystem/input/proc/old_fire()
+	for(var/mob/user as anything in GLOB.keyloop_list)
+		user.focus?.keyLoop(user.client)
+
+/datum/controller/subsystem/input/proc/new_fire()
 	for(var/mob/user as anything in GLOB.keyloop_list)
 		if(user.focus)
 			var/movement_dir = NONE
