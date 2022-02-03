@@ -29,7 +29,8 @@
 	*/
 	var/list/old_turfs = return_ordered_turfs(x, y, z, dir)
 	var/list/new_turfs = return_ordered_turfs(new_dock.x, new_dock.y, new_dock.z, new_dock.dir)
-	CHECK_TICK
+	if(CHECK_TICK)
+		log_world("[src] Slept after returning turfs, starting with a tick limit of [Master.current_ticklimit]")
 	/**************************************************************************************************************/
 
 	// The underlying old area is the area assumed to be under the shuttle's starting location
@@ -62,7 +63,8 @@
 	if(hidden)
 		new_hidden_turfs = list()
 		for(var/i in 1 to old_turfs.len)
-			CHECK_TICK
+			if(CHECK_TICK)
+				log_world("[src] Slept in hidden turf stuff, starting with a tick limit of [Master.current_ticklimit]")
 			var/turf/oldT = old_turfs[i]
 			if(old_turfs[oldT] & MOVE_TURF)
 				new_hidden_turfs += new_turfs[i]
@@ -82,11 +84,13 @@
 	// the ripples go away before it is safe.
 	takeoff(old_turfs, new_turfs, moved_atoms, rotation, movement_direction, old_dock, underlying_old_area)
 
-	CHECK_TICK
+	if(CHECK_TICK)
+		log_world("[src] Slept after takeoff, starting with a tick limit of [Master.current_ticklimit]")
 
 	cleanup_runway(new_dock, old_turfs, new_turfs, areas_to_move, moved_atoms, rotation, movement_direction, underlying_old_area)
 
-	CHECK_TICK
+	if(CHECK_TICK)
+		log_world("[src] Slept after clearing the runway, starting with a tick limit of [Master.current_ticklimit]")
 
 	/*******************************************Unhiding turfs if necessary******************************************/
 	if(new_hidden_turfs)
@@ -104,7 +108,9 @@
 
 /obj/docking_port/mobile/proc/preflight_check(list/old_turfs, list/new_turfs, list/areas_to_move, rotation)
 	for(var/i in 1 to old_turfs.len)
-		CHECK_TICK
+		if(CHECK_TICK)
+			log_world("[src] Slept in preflight turf iteration, starting with a tick limit of [Master.current_ticklimit]")
+
 		var/turf/oldT = old_turfs[i]
 		var/turf/newT = new_turfs[i]
 		if(!newT)
@@ -117,7 +123,8 @@
 
 		var/list/old_contents = oldT.contents
 		for(var/k in 1 to old_contents.len)
-			CHECK_TICK
+			if(CHECK_TICK)
+				log_world("[src] Slept in preflight contents iteration, starting with a tick limit of [Master.current_ticklimit]")
 			var/atom/movable/moving_atom = old_contents[k]
 			if(moving_atom.loc != oldT) //fix for multi-tile objects
 				continue
@@ -162,12 +169,14 @@
 	if(istype(new_dock, /obj/docking_port/stationary/transit))
 		new_parallax_dir = preferred_direction
 	for(var/i in 1 to areas_to_move.len)
-		CHECK_TICK
+		if(CHECK_TICK)
+			log_world("[src] Slept in runway area move calls, starting with a tick limit of [Master.current_ticklimit]")
 		var/area/internal_area = areas_to_move[i]
 		internal_area.afterShuttleMove(new_parallax_dir) //areas
 
 	for(var/i in 1 to old_turfs.len)
-		CHECK_TICK
+		if(CHECK_TICK)
+			log_world("[src] Slept in runway turf move calls, starting with a tick limit of [Master.current_ticklimit]")
 		if(!(old_turfs[old_turfs[i]] & MOVE_TURF))
 			continue
 		var/turf/oldT = old_turfs[i]
@@ -175,7 +184,8 @@
 		newT.afterShuttleMove(oldT, rotation) //turfs
 
 	for(var/i in 1 to moved_atoms.len)
-		CHECK_TICK
+		if(CHECK_TICK)
+			log_world("[src] Slept in runway atom move calls, starting with a tick limit of [Master.current_ticklimit]")
 		var/atom/movable/moved_object = moved_atoms[i]
 		if(QDELETED(moved_object))
 			continue
@@ -187,12 +197,14 @@
 	underlying_old_area.lateShuttleMove()
 
 	for(var/i in 1 to areas_to_move.len)
-		CHECK_TICK
+		if(CHECK_TICK)
+			log_world("[src] Slept in runway late area move calls, starting with a tick limit of [Master.current_ticklimit]")
 		var/area/internal_area = areas_to_move[i]
 		internal_area.lateShuttleMove()
 
 	for(var/i in 1 to old_turfs.len)
-		CHECK_TICK
+		if(CHECK_TICK)
+			log_world("[src] Slept in runway late turf move calls, starting with a tick limit of [Master.current_ticklimit]")
 		if(!(old_turfs[old_turfs[i]] & MOVE_CONTENTS | MOVE_TURF))
 			continue
 		var/turf/oldT = old_turfs[i]
@@ -200,7 +212,8 @@
 		newT.lateShuttleMove(oldT)
 
 	for(var/i in 1 to moved_atoms.len)
-		CHECK_TICK
+		if(CHECK_TICK)
+			log_world("[src] Slept in runway late atom move calls, starting with a tick limit of [Master.current_ticklimit]")
 		var/atom/movable/moved_object = moved_atoms[i]
 		if(QDELETED(moved_object))
 			continue
