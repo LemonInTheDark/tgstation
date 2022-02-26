@@ -150,6 +150,9 @@
 	food_reagents = list(/datum/reagent/consumable/nutriment = 1, /datum/reagent/consumable/lemonjuice = 5, /datum/reagent/consumable/limejuice = 5, /datum/reagent/consumable/orangejuice = 5, /datum/reagent/water = 11)
 	tastes = list("ice" = 1, "water" = 1, "oranges" = 5, "limes" = 5, "lemons" = 5, "citrus" = 5, "salad" = 5)
 	foodtypes = FRUIT | ORANGES
+	// This recipe autogens triple citrus. I've been told it's "a joke"
+	// Wouldn't understand, but it can't hurt I suppose
+	food_flags = FOOD_FINGER_FOOD | FOOD_IGNORE_REAGENTS_TEST
 
 /obj/item/food/snowcones/pineapple
 	name = "pineapple snowcone"

@@ -314,8 +314,7 @@
 	if(health < maxHealth)
 		adjustBruteLoss(-4 * delta_time) //Fast life regen
 	for(var/obj/item/food/donut/D in range(1, src)) //Frosts nearby donuts!
-		if(!D.is_decorated)
-			D.decorate_donut()
+		D.decorate_donut()
 
 /mob/living/simple_animal/pet/cat/cak/attack_hand(mob/living/user, list/modifiers)
 	..()

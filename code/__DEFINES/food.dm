@@ -49,6 +49,10 @@
 #define FOOD_FINGER_FOOD (1<<1)
 ///Is this food item spawned from a silver slime? Prevent it from exporting for profit from cargo.
 #define FOOD_SILVER_SPAWNED (1<<2)
+/// Only applicable to unit tests, is this food exempted from mandated food_reagent matching?
+/// Used for things that intentionally cause reactions. Do not use this to make the funny warning go away
+/// I will take your kneecaps
+#define FOOD_IGNORE_REAGENTS_TEST (1<<3)
 
 #define STOP_SERVING_BREAKFAST (15 MINUTES)
 

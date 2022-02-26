@@ -18,12 +18,11 @@
 	tastes = list("wishes" = 1)
 
 /obj/item/food/soup/wish/Initialize(mapload)
-	. = ..()
-	var/wish_true = prob(25)
-	if(wish_true)
+	if(prob(25))
 		desc = "A wish come true!"
-		reagents.add_reagent(/datum/reagent/consumable/nutriment, 9)
-		reagents.add_reagent(/datum/reagent/consumable/nutriment/vitamin, 1)
+		food_reagents[/datum/reagent/consumable/nutriment] += 9
+		food_reagents[/datum/reagent/consumable/nutriment/vitamin] += 1
+	return ..()
 
 /obj/item/food/soup/meatball
 	name = "meatball soup"
@@ -90,11 +89,10 @@
 	name = "mystery soup"
 	desc = "The mystery is, why aren't you eating it?"
 	icon_state = "mysterysoup"
-	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/nutriment/protein = 5)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 8, /datum/reagent/consumable/nutriment/protein = 5)
 	tastes = list("chaos" = 1)
 
 /obj/item/food/soup/mystery/Initialize(mapload)
-	. = ..()
 	var/extra_reagent = null
 	extra_reagent = pick(
 		/datum/reagent/blood,
@@ -107,8 +105,8 @@
 		/datum/reagent/toxin,
 		/datum/reagent/toxin/slimejelly,
 		)
-	reagents.add_reagent(extra_reagent, 5)
-	reagents.add_reagent(/datum/reagent/consumable/nutriment, 6)
+	food_reagents[extra_reagent] += 5
+	. = ..()
 
 /obj/item/food/soup/hotchili
 	name = "hot chili"

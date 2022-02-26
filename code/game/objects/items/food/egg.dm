@@ -34,8 +34,8 @@
 	desc = "An egg! It looks weird..."
 
 /obj/item/food/egg/gland/Initialize(mapload)
+	food_reagents[get_random_reagent_id()] += 15
 	. = ..()
-	reagents.add_reagent(get_random_reagent_id(), 15)
 
 	var/color = mix_color_from_reagents(reagents.reagent_list)
 	add_atom_colour(color, FIXED_COLOUR_PRIORITY)
