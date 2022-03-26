@@ -388,11 +388,6 @@
 	color = "#FF8888"
 	},
 /area/ruin/space/derelict/bridge/ai_upload)
-"bX" = (
-/obj/structure/rack,
-/obj/item/circuitboard/computer/turbine_computer,
-/turf/open/floor/iron,
-/area/ruin/space/derelict/bridge/ai_upload)
 "bY" = (
 /obj/structure/frame/computer{
 	dir = 1
@@ -915,13 +910,6 @@
 	icon_state = "damaged2"
 	},
 /area/ruin/space/derelict/singularity_engine)
-"eB" = (
-/obj/machinery/door/window/left/directional/east{
-	name = "Heads of Staff";
-	req_access_txt = "19"
-	},
-/turf/open/floor/iron,
-/area/ruin/space/derelict/bridge/access)
 "eC" = (
 /obj/structure/table,
 /obj/item/paicard,
@@ -2129,15 +2117,6 @@
 /obj/structure/cable,
 /turf/open/floor/iron/airless,
 /area/ruin/space/derelict/medical/chapel)
-"jN" = (
-/obj/machinery/door/window/left/directional/south,
-/obj/structure/cable,
-/turf/open/floor/iron/white/airless,
-/area/ruin/space/derelict/medical)
-"jO" = (
-/obj/machinery/door/window/right/directional/south,
-/turf/open/floor/iron/white/airless,
-/area/ruin/space/derelict/medical)
 "jQ" = (
 /obj/machinery/door/airlock/research{
 	name = "Toxins Research";
@@ -3190,6 +3169,10 @@
 "rK" = (
 /turf/template_noop,
 /area/ruin/space/derelict/medical)
+"rW" = (
+/obj/machinery/door/window/right/directional/south,
+/turf/open/floor/iron/white/airless,
+/area/ruin/space/derelict/medical)
 "sd" = (
 /obj/structure/chair/stool/directional/south,
 /turf/open/floor/iron/airless,
@@ -3280,6 +3263,11 @@
 /obj/effect/spawner/random/structure/crate_abandoned,
 /turf/open/floor/iron/airless,
 /area/ruin/space/derelict/bridge/access)
+"yg" = (
+/obj/machinery/door/window/left/directional/south,
+/obj/structure/cable,
+/turf/open/floor/iron/white/airless,
+/area/ruin/space/derelict/medical)
 "yE" = (
 /obj/structure/table,
 /obj/effect/spawner/random/maintenance,
@@ -3407,6 +3395,13 @@
 /obj/effect/spawner/random/maintenance,
 /turf/open/floor/iron,
 /area/ruin/space/derelict/bridge)
+"Ga" = (
+/obj/machinery/door/window/left/directional/east{
+	name = "Heads of Staff";
+	req_access_txt = "19"
+	},
+/turf/open/floor/iron,
+/area/ruin/space/derelict/bridge/access)
 "Gu" = (
 /obj/structure/grille,
 /turf/template_noop,
@@ -3582,11 +3577,6 @@
 "Oj" = (
 /turf/closed/wall/r_wall,
 /area/ruin/space/derelict/bridge/access)
-"Oo" = (
-/obj/structure/rack,
-/obj/item/circuitboard/machine/power_compressor,
-/turf/open/floor/iron,
-/area/ruin/space/derelict/bridge/ai_upload)
 "OD" = (
 /obj/structure/closet/wardrobe/genetics_white,
 /obj/effect/spawner/random/maintenance/two,
@@ -3713,11 +3703,6 @@
 	dir = 1
 	},
 /turf/closed/wall/r_wall,
-/area/ruin/space/derelict/bridge/ai_upload)
-"Vg" = (
-/obj/structure/rack,
-/obj/item/circuitboard/machine/power_turbine,
-/turf/open/floor/iron,
 /area/ruin/space/derelict/bridge/ai_upload)
 "Vt" = (
 /obj/structure/cable,
@@ -7005,7 +6990,7 @@ hY
 hX
 hX
 jD
-jN
+yg
 gc
 gc
 gc
@@ -7118,7 +7103,7 @@ hz
 hY
 hY
 jE
-jO
+rW
 go
 go
 go
@@ -8878,9 +8863,9 @@ ax
 ax
 ax
 bo
-Oo
-Vg
-bX
+by
+by
+by
 bg
 ax
 bV
@@ -11160,7 +11145,7 @@ cs
 dF
 dF
 eq
-eB
+Ga
 eJ
 eO
 dF
