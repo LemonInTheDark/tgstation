@@ -213,7 +213,7 @@
 /obj/machinery/atmospherics/components/return_pipenets()
 	. = list()
 	for(var/i in 1 to device_type)
-		. += return_pipenet(nodes[i])
+		. |= return_pipenet(nodes[i])
 
 /// When this machine is in a pipenet that is reconciling airs, this proc can add pipelines to the calculation.
 /// Can be either a list of pipenets or a single pipenet.

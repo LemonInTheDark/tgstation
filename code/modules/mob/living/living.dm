@@ -1605,11 +1605,21 @@
 		result += static_virus
 	return result
 
+// The changes here conflict directly with the optimization of update_pipe_vision
+// Figure out if we really do need to refresh each move, or if adding all pipes to our images list is ok
+// Todo:
+// Make bright things darker when in the pipes
+// Maybe add a halo?
+// Fix directional input weirdness
+// Smooth movement (is it possible?)
+// Slow down the mob a bit
 /mob/living/reset_perspective(atom/A)
+	var/atom/old_eye = client?.eye
 	if(..())
 		update_sight()
 		update_fullscreen()
-		update_pipe_vision()
+		if(istype(old_eye, /obj/machinery/atmospherics) && !istype(client?.eye, /obj/machinery/atmospherics))
+			update_pipe_vision()
 
 /// Proc used to handle the fullscreen overlay updates, realistically meant for the reset_perspective() proc.
 /mob/living/proc/update_fullscreen()
