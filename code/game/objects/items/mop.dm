@@ -119,3 +119,401 @@
 
 /obj/item/mop/advanced/cyborg
 	insertable = FALSE
+
+/proc/lmao_lol(text)
+	var/rust = rustg_url_encode(text)
+	var/stainless = url_encode(text)
+	//if(rust != stainless)
+		//log_world("Encoding [text] lead to two different outputs between rustg and url_encode:\n([rust])\nand ([stainless]) [istext(rust)] [istext(stainless)]")
+
+/proc/encoding_master(text)
+	return lmao_lol(json_encode(text))
+
+/atom/proc/check_encode()
+	set waitfor = FALSE
+	check_encode_base()
+	check_encode_no_round()
+	check_encode_no_round_time()
+	check_encode_no_server()
+	check_encode_default_data()
+	check_encode_no_station_time()
+	check_encode_no_td()
+	check_encode_nothing()
+	check_encode_paired()
+	check_encode_rand()
+	check_encode_no_map()
+	check_encode_no_null()
+	check_encode_rand_len()
+	check_encode_long()
+
+/* Obsoleted functions
+check_encode_no_td
+check_encode_no_station_time
+check_encode_no_round_time
+check_encode_no_round
+check_encode_base
+*/
+
+/atom/proc/check_encode_base()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		"Map: [SSmapping.config?.map_name || "Loading..."]",
+		null,
+		"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
+		"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
+		"Round Time: [ROUND_TIME]",
+		"Station Time: [station_time_timestamp()]",
+		"Time Dilation: [round(SStime_track.time_dilation_current,1)] AVG:([round(SStime_track.time_dilation_avg_fast,1)], [round(SStime_track.time_dilation_avg,1)], [round(SStime_track.time_dilation_avg_slow,1)])"
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_paired()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		"Map: [SSmapping.config?.map_name || "Loading..."]",
+		null,
+		"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_rand()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list()
+		for(var/i in 1 to 7)
+			global_data += "[rand(1,1000)]"
+
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_rand_len()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list()
+		for(var/i in 1 to rand(1, 5) * 100)
+			global_data += "haha fuck you kuler hdasudawdhs awjdsajsd lu vfwadaskwda dioasdj"
+
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_long()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	var/list/global_data = list()
+	for(var/i in 1 to 8000)
+		global_data += "haha fuck you kuler hdasudawdhs awjdsajsd lu vfwadaskwda dioasdj [rand(1,1000)]"
+
+	while(TRUE)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_no_map()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		null,
+		"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
+		"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
+		"Round Time: [ROUND_TIME]",
+		"Station Time: [station_time_timestamp()]",
+		"Time Dilation: [round(SStime_track.time_dilation_current,1)] AVG:([round(SStime_track.time_dilation_avg_fast,1)], [round(SStime_track.time_dilation_avg,1)], [round(SStime_track.time_dilation_avg_slow,1)])"
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_no_null()
+	set waitfor = FALSE
+
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		"Map: [SSmapping.config?.map_name || "Loading..."]",
+		"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
+		"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
+		"Round Time: [ROUND_TIME]",
+		"Station Time: [station_time_timestamp()]",
+		"Time Dilation: [round(SStime_track.time_dilation_current,1)] AVG:([round(SStime_track.time_dilation_avg_fast,1)], [round(SStime_track.time_dilation_avg,1)], [round(SStime_track.time_dilation_avg_slow,1)])"
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_no_round()
+	set waitfor = FALSE
+
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		"Map: [SSmapping.config?.map_name || "Loading..."]",
+		null,
+		"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
+		"Round Time: [ROUND_TIME]",
+		"Station Time: [station_time_timestamp()]",
+		"Time Dilation: [round(SStime_track.time_dilation_current,1)] AVG:([round(SStime_track.time_dilation_avg_fast,1)], [round(SStime_track.time_dilation_avg,1)], [round(SStime_track.time_dilation_avg_slow,1)])"
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_no_server()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		"Map: [SSmapping.config?.map_name || "Loading..."]",
+		null,
+		"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
+		"Round Time: [ROUND_TIME]",
+		"Station Time: [station_time_timestamp()]",
+		"Time Dilation: [round(SStime_track.time_dilation_current,1)] AVG:([round(SStime_track.time_dilation_avg_fast,1)], [round(SStime_track.time_dilation_avg,1)], [round(SStime_track.time_dilation_avg_slow,1)])"
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_no_round_time()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		"Map: [SSmapping.config?.map_name || "Loading..."]",
+		null,
+		"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
+		"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
+		"Station Time: [station_time_timestamp()]",
+		"Time Dilation: [round(SStime_track.time_dilation_current,1)] AVG:([round(SStime_track.time_dilation_avg_fast,1)], [round(SStime_track.time_dilation_avg,1)], [round(SStime_track.time_dilation_avg_slow,1)])"
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_no_station_time()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		"Map: [SSmapping.config?.map_name || "Loading..."]",
+		null,
+		"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
+		"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
+		"Round Time: [ROUND_TIME]",
+		"Time Dilation: [round(SStime_track.time_dilation_current,1)] AVG:([round(SStime_track.time_dilation_avg_fast,1)], [round(SStime_track.time_dilation_avg,1)], [round(SStime_track.time_dilation_avg_slow,1)])"
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_no_td()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+		"Map: [SSmapping.config?.map_name || "Loading..."]",
+		null,
+		"Round ID: [GLOB.round_id ? GLOB.round_id : "NULL"]",
+		"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
+		"Round Time: [ROUND_TIME]",
+		"Station Time: [station_time_timestamp()]",
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_default_data()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	var/list/data = list(
+		"Map: Tramstation",
+		null,
+		"Round ID: NULL",
+		"Server Time: 2022-04-13 22:51:50",
+		"Round Time: 23:06:52",
+		"Station Time: 12:18:31",
+		"Time Dilation: 0% AVG:(0%, 0%, 0%)"
+	)
+
+	while(TRUE)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
+
+/atom/proc/check_encode_nothing()
+	set waitfor = FALSE
+	var/iterations = 0
+
+	while(TRUE)
+		var/list/global_data = list(
+			"a",
+			"b"
+		)
+		iterations++
+		var/start_usage = world.tick_usage
+		var/list/output = encoding_master(global_data)
+		var/duration = world.tick_usage - start_usage
+		if(duration > 100)
+			log_world("a single json_encode() call took [duration] percent of a tick after [iterations] iterations! [__LINE__]")
+			return
+		if(iterations >= (1<<22))
+			log_world("wasnt found with a static list, trying again with a constantly changing list [__LINE__]")
+			break
+		sleep(world.tick_lag * 4)
+
+	iterations = 0
