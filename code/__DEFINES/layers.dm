@@ -34,7 +34,6 @@
 #define FRILL_PLANE -4
 #define OVER_FRILL_PLANE -3
 
-#define GAME_PLANE -6
 #define GAME_PLANE_FOV_HIDDEN -5
 #define GAME_PLANE_UPPER -4
 #define GAME_PLANE_UPPER_FOV_HIDDEN -3
@@ -98,7 +97,6 @@
 #define HIGH_OBJ_LAYER 3.6
 #define BELOW_MOB_LAYER 3.7
 
-// GAME_PLANE_FOV_HIDDEN layers
 #define LOW_MOB_LAYER 3.75
 #define LYING_MOB_LAYER 3.8
 #define VEHICLE_LAYER 3.9
@@ -109,21 +107,17 @@
 #define MOB_UPPER_LAYER 4.07
 #define HITSCAN_PROJECTILE_LAYER 4.09 //above all mob but still hidden by FoV
 
-// GAME_PLANE_UPPER layers
 #define ABOVE_MOB_LAYER 4.1
 #define WALL_OBJ_LAYER 4.25
 #define EDGED_TURF_LAYER 4.3
 #define ON_EDGED_TURF_LAYER 4.35
 #define SPACEVINE_LAYER 4.4
 
-// GAME_PLANE_UPPER_FOV_HIDDEN layers
 #define LARGE_MOB_LAYER 4.5
 #define SPACEVINE_MOB_LAYER 4.6
 
-// Intermediate layer used by both GAME_PLANE_FOV_HIDDEN and ABOVE_GAME_PLANE
 #define ABOVE_ALL_MOB_LAYER 4.7
 
-// ABOVE_GAME_PLANE layers
 //#define FLY_LAYER 5 //For easy recordkeeping; this is a byond define
 #define GASFIRE_LAYER 5.05
 #define RIPPLE_LAYER 5.1
