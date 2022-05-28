@@ -4,97 +4,99 @@
 //NEVER HAVE ANYTHING BELOW THIS PLANE ADJUST IF YOU NEED MORE SPACE
 #define LOWEST_EVER_PLANE -100
 
-#define FIELD_OF_VISION_BLOCKER_PLANE -90
+#define FIELD_OF_VISION_BLOCKER_PLANE (-90 + FLOAT_PLANE)
 #define FIELD_OF_VISION_BLOCKER_RENDER_TARGET "*FIELD_OF_VISION_BLOCKER_RENDER_TARGET"
 
-#define CLICKCATCHER_PLANE -80
+#define CLICKCATCHER_PLANE (-80 + FLOAT_PLANE)
 
-#define PLANE_SPACE -25
-#define PLANE_SPACE_PARALLAX -20
+#define PLANE_SPACE (-25 + FLOAT_PLANE)
+#define PLANE_SPACE_PARALLAX (-20 + FLOAT_PLANE)
 
-#define GRAVITY_PULSE_PLANE -11
+#define GRAVITY_PULSE_PLANE (-11 + FLOAT_PLANE)
 #define GRAVITY_PULSE_RENDER_TARGET "*GRAVPULSE_RENDER_TARGET"
 
 #define OPENSPACE_LAYER 600 //Openspace layer over all
 
-#define TRANSPARENT_FLOOR_PLANE -10 //Transparent plane that shows openspace underneath the floor
-#define OPENSPACE_PLANE -9 //Openspace plane below all turfs
-#define OPENSPACE_BACKDROP_PLANE -8 //Black square just over openspace plane to guaranteed cover all in openspace turf
+#define TRANSPARENT_FLOOR_PLANE (-10 + FLOAT_PLANE) //Transparent plane that shows openspace underneath the floor
+#define OPENSPACE_PLANE (-9 + FLOAT_PLANE) //Openspace plane below all turfs
+#define OPENSPACE_BACKDROP_PLANE (-8 + FLOAT_PLANE) //Black square just over openspace plane to guaranteed cover all in openspace turf
+
+#define UNFLOATIFY(plane) (plane - FLOAT_PLANE)
+
+#define FLOOR_PLANE (-7 + FLOAT_PLANE)
+
+#define GAME_PLANE (-6 + FLOAT_PLANE)
+#define GAME_PLANE_FOV_HIDDEN (-5 + FLOAT_PLANE)
+#define GAME_PLANE_UPPER (-4 + FLOAT_PLANE)
+#define GAME_PLANE_UPPER_FOV_HIDDEN (-3 + FLOAT_PLANE)
+
+#define ABOVE_GAME_PLANE (-2 + FLOAT_PLANE)
 
 
-#define FLOOR_PLANE -7
+#define BLACKNESS_PLANE (0 + FLOAT_PLANE) //To keep from conflicts with SEE_BLACKNESS internals
 
-#define GAME_PLANE -6
-#define GAME_PLANE_FOV_HIDDEN -5
-#define GAME_PLANE_UPPER -4
-#define GAME_PLANE_UPPER_FOV_HIDDEN -3
+#define AREA_PLANE (2 + FLOAT_PLANE)
+#define MASSIVE_OBJ_PLANE (3 + FLOAT_PLANE)
+#define GHOST_PLANE (4 + FLOAT_PLANE)
+#define POINT_PLANE (5 + FLOAT_PLANE)
 
-#define ABOVE_GAME_PLANE -2
-
-
-#define BLACKNESS_PLANE 0 //To keep from conflicts with SEE_BLACKNESS internals
-
-#define AREA_PLANE 2
-#define MASSIVE_OBJ_PLANE 3
-#define GHOST_PLANE 4
-#define POINT_PLANE 5
-
-#define RAD_TEXT_PLANE 6
+#define RAD_TEXT_PLANE (6 + FLOAT_PLANE)
 
 //---------- LIGHTING -------------
 ///Normal 1 per turf dynamic lighting underlays
-#define LIGHTING_PLANE 10
+#define LIGHTING_PLANE (10 + FLOAT_PLANE)
 
 ///Lighting objects that are "free floating"
-#define O_LIGHTING_VISUAL_PLANE 11
+#define O_LIGHTING_VISUAL_PLANE (11 + FLOAT_PLANE)
 #define O_LIGHTING_VISUAL_RENDER_TARGET "O_LIGHT_VISUAL_PLANE"
 
 ///Things that should render ignoring lighting
-#define ABOVE_LIGHTING_PLANE 12
+#define ABOVE_LIGHTING_PLANE (12 + FLOAT_PLANE)
 
 ///visibility + hiding of things outside of light source range
-#define BYOND_LIGHTING_PLANE 13
+#define BYOND_LIGHTING_PLANE (13 + FLOAT_PLANE)
 
 /// This plane masks out lighting to create an "emissive" effect, ie for glowing lights in otherwise dark areas.
-#define EMISSIVE_PLANE 14
+#define EMISSIVE_PLANE (14 + FLOAT_PLANE)
 
 ///---------------- MISC -----------------------
 
 ///Pipecrawling images
-#define PIPECRAWL_IMAGES_PLANE 20
+#define PIPECRAWL_IMAGES_PLANE (20 + FLOAT_PLANE)
 
 ///AI Camera Static
-#define CAMERA_STATIC_PLANE 21
+#define CAMERA_STATIC_PLANE (21 + FLOAT_PLANE)
 
 ///Debug Atmos Overlays
-#define ATMOS_GROUP_PLANE 22
+#define ATMOS_GROUP_PLANE (22 + FLOAT_PLANE)
 
-#define FULLSCREEN_PLANE 23
+#define FULLSCREEN_PLANE (23 + FLOAT_PLANE)
 
 ///--------------- FULLSCREEN RUNECHAT BUBBLES ------------
 
 ///Popup Chat Messages
-#define RUNECHAT_PLANE 30
+#define RUNECHAT_PLANE (30 + FLOAT_PLANE)
 /// Plane for balloon text (text that fades up)
-#define BALLOON_CHAT_PLANE 31
+#define BALLOON_CHAT_PLANE (31 + FLOAT_PLANE)
 
 //-------------------- HUD ---------------------
 //HUD layer defines
-#define HUD_PLANE 40
-#define ABOVE_HUD_PLANE 41
+#define HUD_PLANE (40 + FLOAT_PLANE)
+#define ABOVE_HUD_PLANE (41 + FLOAT_PLANE)
 
 ///Plane of the "splash" icon used that shows on the lobby screen. only render plate planes should be above this
-#define SPLASHSCREEN_PLANE 50
+#define SPLASHSCREEN_PLANE (50 + FLOAT_PLANE)
 
+// The use of float plane here makes no sense, fix later
 //-------------------- Rendering ---------------------
-#define RENDER_PLANE_GAME 100
-#define RENDER_PLANE_NON_GAME 101
-#define RENDER_PLANE_MASTER 102
+#define RENDER_PLANE_GAME (100 + FLOAT_PLANE)
+#define RENDER_PLANE_NON_GAME (101 + FLOAT_PLANE)
+#define RENDER_PLANE_MASTER (102 + FLOAT_PLANE)
 
 // Lummox I swear to god I will find you
 // NOTE! You can only ever have planes greater then -10000, if you add too many with large offsets you will brick multiz
 // Same can be said for large multiz maps. Tread carefully mappers
-#define HIGHEST_EVER_PLANE RENDER_PLANE_MASTER
+#define HIGHEST_EVER_PLANE UNFLOATIFY(RENDER_PLANE_MASTER)
 /// The range unique planes can be in
 #define PLANE_RANGE (HIGHEST_EVER_PLANE - LOWEST_EVER_PLANE)
 
