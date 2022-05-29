@@ -1,3 +1,30 @@
+#define MAX_NON_FLOATING_PLANE 10000
+#define FLOAT_WRAP_UPPER 32767
+#define FLOAT_WRAP_LOWER -32768
+#define UNSIGNED_BASE_16_MAX 65536
+// Float plane's value isn't actually important here, all that matters is it's big
+// But so you know
+//#define FLOAT_PLANE -32767
+
+// The below define is basically just this
+// We sub by max_plane (UNSIGNED_BASE_16_MAX since planes are 16 bit floats) to shift our plane value back into the negative
+// Basically to account for signed integer overflow
+// Then we just remove floating_plane from the negative value, and presto we have the "real" plane
+// This works because FLOAT_PLANE is negative, and because these boundries are large
+// if it was positive and still larger then MAX_NON_FLOATING_PLANE, we'd need to add max_plane, and flip our if check
+/*
+if(abs(plane) < MAX_NON_FLOATING_PLANE)
+	return plane
+if(plane > 0)
+	return plane - max_plane - floating_plane
+else
+	return plane - floating_plane
+*/
+#define UNFLOATIFY(plane) \
+	(abs(plane) < MAX_NON_FLOATING_PLANE ? (plane) : \
+		(plane) > 0 ? (plane) - UNSIGNED_BASE_16_MAX - FLOAT_PLANE : \
+			(plane) - FLOAT_PLANE)
+
 //Defines for atom layers and planes
 //KEEP THESE IN A NICE ACSCENDING ORDER, PLEASE
 
@@ -20,8 +47,6 @@
 #define TRANSPARENT_FLOOR_PLANE (-10 + FLOAT_PLANE) //Transparent plane that shows openspace underneath the floor
 #define OPENSPACE_PLANE (-9 + FLOAT_PLANE) //Openspace plane below all turfs
 #define OPENSPACE_BACKDROP_PLANE (-8 + FLOAT_PLANE) //Black square just over openspace plane to guaranteed cover all in openspace turf
-
-#define UNFLOATIFY(plane) (plane - FLOAT_PLANE)
 
 #define FLOOR_PLANE (-7 + FLOAT_PLANE)
 
