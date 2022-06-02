@@ -558,6 +558,10 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	QDEL_NULL(view_size)
 	QDEL_NULL(void)
 	QDEL_NULL(tooltips)
+	for(var/atom/seen_message_loc in seen_messages)
+		for(var/datum/chatmessage/seen_message in seen_messages[seen_message_loc])
+			seen_message.on_hearer_qdel(src)
+	seen_messages?.Cut()
 	seen_messages = null
 	Master.UpdateTickRate()
 	..() //Even though we're going to be hard deleted there are still some things that want to know the destroy is happening

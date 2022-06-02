@@ -1,30 +1,13 @@
-/// How long the chat message's spawn-in animation will occur for
-#define CHAT_MESSAGE_SPAWN_TIME 0.2 SECONDS
-/// How long the chat message will exist prior to any exponential decay
-#define CHAT_MESSAGE_LIFESPAN 5 SECONDS
-/// How long the chat message's end of life fading animation will occur for
-#define CHAT_MESSAGE_EOL_FADE 0.7 SECONDS
-/// Factor of how much the message index (number of messages) will account to exponential decay
-#define CHAT_MESSAGE_EXP_DECAY 0.7
-/// Factor of how much height will account to exponential decay
-#define CHAT_MESSAGE_HEIGHT_DECAY 0.9
-/// Approximate height in pixels of an 'average' line, used for height decay
-#define CHAT_MESSAGE_APPROX_LHEIGHT 11
-/// Max width of chat message in pixels
-#define CHAT_MESSAGE_WIDTH 96
-/// Max length of chat message in characters
-#define CHAT_MESSAGE_MAX_LENGTH 110
-/// The dimensions of the chat message icons
-#define CHAT_MESSAGE_ICON_SIZE 9
-
-///Base layer of chat elements
-#define CHAT_LAYER 1
-///Highest possible layer of chat elements
-#define CHAT_LAYER_MAX 2
-/// Maximum precision of float before rounding errors occur (in this context)
-#define CHAT_LAYER_Z_STEP 0.0001
-/// The number of z-layer 'slices' usable by the chat message layering
-#define CHAT_LAYER_MAX_Z (CHAT_LAYER_MAX - CHAT_LAYER) / CHAT_LAYER_Z_STEP
+///the layer value given to the message image in the last animation step after the image has faded.
+///used for either the initialization animation sequence or the edited stage 2 duration animation sequence.
+///to the server the images layer is set instantly to this value, but the client cant see it because its only adjusted for them
+/// after the message is inivisible. so this is used to mark what animation is being used for the server.
+#define MESSAGE_ANIMATION_DEFAULT_LAYER_MARK 1020
+///the layer value given to the message image for the animation sequence where the image is forced into fading.
+///used so that the server doesnt force the image to fade twice.
+#define MESSAGE_ANIMATION_FORCE_FADE_LAYER_MARK 1021
+///the layer mark given to the last stage of the animation sequence after it has been edited but not forced into the fading animation.
+#define MESSAGE_ANIMATION_EDIT_FADE_LAYER_MARK 1022
 
 /**
  * # Chat Message Overlay
@@ -32,28 +15,34 @@
  * Datum for generating a message overlay on the map
  */
 /datum/chatmessage
-	/// The visual element of the chat messsage
-	var/image/message
+	/// list of images generated for the message sent to each hearing client.
+	/// associative list of the form: list(message image = client using that image)
+	var/list/image/messages
+	/// The clients who heard this message. set when we first start working with a player in prepare_text(),
+	/// and then again later when we finish the runechat image.
+	/// this is so that we can associate clients with their image but not have race conditions from
+	/// MeasureText() causing us to sleep.
+	/// associative list of the form: list(client who hears this message = chat message image that client uses, or TRUE)
+	var/list/client/hearers
 	/// The location in which the message is appearing
 	var/atom/message_loc
-	/// The client who heard this message
-	var/client/owned_by
-	/// Contains the scheduled destruction time, used for scheduling EOL
-	var/scheduled_destruction
-	/// Contains the time that the EOL for the message will be complete, used for qdel scheduling
-	var/eol_complete
-	/// Contains the approximate amount of lines for height decay
-	var/approx_lines
-	/// Contains the reference to the next chatmessage in the bucket, used by runechat subsystem
-	var/datum/chatmessage/next
-	/// Contains the reference to the previous chatmessage in the bucket, used by runechat subsystem
-	var/datum/chatmessage/prev
+	/// Contains the approximate amount of lines for height decay for each message image.
+	/// associative list of the form: list(message image = approximate lines for that image)
+	var/list/approx_lines
+
 	/// The current index used for adjusting the layer of each sequential chat message such that recent messages will overlay older ones
 	var/static/current_z_idx = 0
-	/// Contains ID of assigned timer for end_of_life fading event
-	var/fadertimer = null
-	/// States if end_of_life is being executed
-	var/isFading = FALSE
+
+	///concatenated string of parameters given to us at creation
+	var/creation_parameters = ""
+	///if TRUE, then this datum was dropped from its spot in SSrunechat.messages_by_creation_string and thus wont remove that spot of the list.
+	var/dropped_hash = FALSE
+	///how long the main stage of this message lasts (maptext fully visible) by default.
+	var/lifespan = 0
+	///associative list of the form: list(message image = world.time that image is set to fade out)
+	var/list/fade_times_by_image
+	///what world.time this message datum was created.
+	var/creation_time = 0
 
 /**
  * Constructs a chat message overlay
@@ -66,52 +55,125 @@
  * * extra_classes - Extra classes to apply to the span that holds the text
  * * lifespan - The lifespan of the message in deciseconds
  */
-/datum/chatmessage/New(text, atom/target, mob/owner, datum/language/language, list/extra_classes = list(), lifespan = CHAT_MESSAGE_LIFESPAN)
+/datum/chatmessage/New(creation_parameters, text, atom/target, datum/language/language, list/extra_classes = list(), lifespan = CHAT_MESSAGE_LIFESPAN)
 	. = ..()
 	if (!istype(target))
 		CRASH("Invalid target given for chatmessage")
-	if(QDELETED(owner) || !istype(owner) || !owner.client)
-		stack_trace("/datum/chatmessage created with [isnull(owner) ? "null" : "invalid"] mob owner")
-		qdel(src)
-		return
-	INVOKE_ASYNC(src, .proc/generate_image, text, target, owner, language, extra_classes, lifespan)
+
+	if(istext(creation_parameters))
+		src.creation_parameters = creation_parameters
+	else
+		src.creation_parameters = "[text]-[REF(target)]-[language]-[list2params(extra_classes)]-[lifespan]-[world.time]"
+
+	current_z_idx++
+	// Reset z index if relevant
+	if (current_z_idx >= CHAT_LAYER_MAX_Z)
+		current_z_idx = 0
+
+	message_loc = isturf(target) ? target : get_atom_on_turf(target)
+	RegisterSignal(message_loc, COMSIG_PARENT_QDELETING, .proc/end_of_life)
+
+	creation_time = world.time
+	src.lifespan = lifespan
+	///how long this datum will actually exist for. its how long the default message animations take + 1 second buffer
+	var/total_existence_time = CHAT_MESSAGE_SPAWN_TIME + lifespan + CHAT_MESSAGE_EOL_FADE + 1 SECONDS
+	addtimer(CALLBACK(src, .proc/end_of_life), total_existence_time, TIMER_DELETE_ME, SSrunechat)
+
+	//in the case of a hash collision this will drop the older chatmessage datum from this list. this is fine however
+	//since the dropped datum will still properly handle itself including deletion etc.
+	//all this means is that you cant create message A on x listeners in some synchronous code execution loop,
+	//then later on start a message B with the exact same parameters (so theres a hash collision) on y listeners
+	//and then afterwards try to again add more listeners to message A.
+	//if A and B have the exact same creation_parameters then the code has to assume that all listeners after B belong to B not A
+	if(SSrunechat.messages_by_creation_string[creation_parameters])
+		var/datum/chatmessage/old_message = SSrunechat.messages_by_creation_string[creation_parameters]
+		old_message.dropped_hash = TRUE
+
+	SSrunechat.messages_by_creation_string[creation_parameters] = src
+
+	messages = list()
+	hearers = list()
+	approx_lines = list()
+	fade_times_by_image = list()
 
 /datum/chatmessage/Destroy()
-	if (owned_by)
-		if (owned_by.seen_messages)
-			LAZYREMOVEASSOC(owned_by.seen_messages, message_loc, src)
-		owned_by.images.Remove(message)
-	owned_by = null
+	. = ..()
+	for(var/client/hearer in hearers)
+		LAZYREMOVEASSOC(hearer.seen_messages, message_loc, src)
+
+		var/image/seen_image = hearers[hearer]
+		if(istype(seen_image))
+			hearer.images -= seen_image
+			seen_image.loc = null
+
+	for(var/datum/callback/queued_callback as anything in SSrunechat.message_queue)
+		if(!queued_callback)
+			SSrunechat.message_queue -= queued_callback
+			continue
+
+		if(queued_callback.object == src)
+			SSrunechat.message_queue -= queued_callback
+			qdel(queued_callback)
+			break
+
+	if(!dropped_hash)
+		SSrunechat.messages_by_creation_string -= creation_parameters
+
+	UnregisterSignal(message_loc, COMSIG_PARENT_QDELETING)
+
 	message_loc = null
-	message = null
-	..()
+
+	messages = null
+	hearers = null
+	approx_lines = null
+	fade_times_by_image = null
 	return QDEL_HINT_IFFAIL_FINDREFERENCE
 
-/**
- * Calls qdel on the chatmessage when its parent is deleted, used to register qdel signal
- */
-/datum/chatmessage/proc/on_parent_qdel()
+/datum/chatmessage/proc/end_of_life()
 	SIGNAL_HANDLER
 	qdel(src)
 
+/datum/chatmessage/proc/on_hearer_qdel(client/hearer)
+	if(!hearer)
+		CRASH("completely null hearer passed to on_hearer_qdel()!")
+
+	LAZYREMOVEASSOC(hearer.seen_messages, message_loc, src)
+
+	var/image/seen_image = hearers[hearer]
+	if(istype(seen_image))
+		messages -= seen_image
+		hearer.images -= seen_image
+
+	hearers -= hearer
+
+	if(!length(hearers) && !QDELETED(src))
+		qdel(src)
+
 /**
- * Generates a chat message image representation
+ * generates the spanned text used for the final image and creates a callback in SSrunechat to call generate_image() next tick.
+ * This proc exists solely to handle everything in the image creation process before MeasureText() returns, as otherwise when the client
+ * returns the results of MeasureText() we are in the verb execution portion of the tick which means we're in danger of overtiming.
+ * delaying the final image processing to SSrunechat's next fire() fixes this.
  *
  * Arguments:
- * * text - The text content of the overlay
- * * target - The target atom to display the overlay at
- * * owner - The mob that owns this overlay, only this mob will be able to view it
- * * language - The language this message was spoken in
- * * extra_classes - Extra classes to apply to the span that holds the text
- * * lifespan - The lifespan of the message in deciseconds
+ * * text - the text used in the image, gets edited if it holds non allowed characters and/or the listener doesnt understand the speakers language
+ * * target - the atom creating the message being heard by others. the image we create will have its loc assigned to this atom
+ * * owner - the mob hearing the message from target, must have a client
+ * * lanugage - the language typepath this message is spoken in
+ * * extra_classes - the spans used for this message
  */
-/datum/chatmessage/proc/generate_image(text, atom/target, mob/owner, datum/language/language, list/extra_classes, lifespan)
+/datum/chatmessage/proc/prepare_text(text, atom/target, mob/owner, datum/language/language, list/extra_classes)
+	set waitfor = FALSE //because this waits on info passed from the client
 	/// Cached icons to show what language the user is speaking
 	var/static/list/language_icons
 
-	// Register client who owns this message
-	owned_by = owner.client
-	RegisterSignal(owned_by, COMSIG_PARENT_QDELETING, .proc/on_parent_qdel)
+	var/client/owned_by = owner.client
+	if(!owned_by)
+		return FALSE
+
+	///before we create the image make sure that we know the client is being associated with us, because
+	///MeasureText() makes us sleep and thus this client could delete before we wake up
+	LAZYSET(hearers, owned_by, TRUE)
 
 	// Remove spans in the message from things like the recorder
 	var/static/regex/span_check = new(@"<\/?span[^>]*>", "gi")
@@ -135,6 +197,7 @@
 	// Reject whitespace
 	var/static/regex/whitespace = new(@"^\s*$")
 	if (whitespace.Find(text))
+		stack_trace("a message that was just whitespace was passed into prepare_text()")
 		qdel(src)
 		return
 
@@ -169,69 +232,148 @@
 
 	// Approximate text height
 	var/complete_text = "<span class='center [extra_classes.Join(" ")]' style='color: [tgt_color]'>[owner.say_emphasis(text)]</span>"
-	var/mheight = WXH_TO_HEIGHT(owned_by.MeasureText(complete_text, null, CHAT_MESSAGE_WIDTH))
-	approx_lines = max(1, mheight / CHAT_MESSAGE_APPROX_LHEIGHT)
+	var/mheight
+	WXH_TO_HEIGHT(owned_by.MeasureText(complete_text, null, CHAT_MESSAGE_WIDTH), mheight) //resolving it to a var so the macro doesnt call MeasureText() twice
 
-	// Translate any existing messages upwards, apply exponential decay factors to timers
-	message_loc = isturf(target) ? target : get_atom_on_turf(target)
-	if (owned_by.seen_messages)
-		var/idx = 1
-		var/combined_height = approx_lines
-		for(var/msg in owned_by.seen_messages[message_loc])
-			var/datum/chatmessage/m = msg
-			animate(m.message, pixel_y = m.message.pixel_y + mheight, time = CHAT_MESSAGE_SPAWN_TIME)
-			combined_height += m.approx_lines
+	//fun fact: MeasureText() works by waiting for the client to send back the measurements for the text. meaning it works like a verb.
+	//procs like this are called at the last section of hte tick before it ends, meaning if the other portions used up most of it,
+	//then everything after this point is likely to overtime. queuing the message completion if the server is overloaded fixes this
+	if(QDELETED(owned_by) || QDELETED(src) || QDELETED(message_loc) || !hearers?[owned_by])
+		return //we should already have been qdel'd() if this evaluates to TRUE, doing it now would throw an error
 
-			// When choosing to update the remaining time we have to be careful not to update the
-			// scheduled time once the EOL has been executed.
-			if (!m.isFading)
-				var/sched_remaining = timeleft(m.fadertimer, SSrunechat)
-				var/remaining_time = (sched_remaining) * (CHAT_MESSAGE_EXP_DECAY ** idx++) * (CHAT_MESSAGE_HEIGHT_DECAY ** combined_height)
-				if (remaining_time)
-					deltimer(m.fadertimer, SSrunechat)
-					m.fadertimer = addtimer(CALLBACK(m, .proc/end_of_life), remaining_time, TIMER_STOPPABLE|TIMER_DELETE_ME, SSrunechat)
-				else
-					m.end_of_life()
+	if(TICK_CHECK)
+		SSrunechat.message_queue += CALLBACK(src, .proc/generate_image, target, owner, complete_text, mheight)
+	else
+		generate_image(target, owner, complete_text, mheight)
 
-	// Reset z index if relevant
-	if (current_z_idx >= CHAT_LAYER_MAX_Z)
-		current_z_idx = 0
-
-	// Build message image
-	message = image(loc = message_loc, layer = CHAT_LAYER + CHAT_LAYER_Z_STEP * current_z_idx++)
-	message.plane = RUNECHAT_PLANE
-	message.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA | KEEP_APART
-	message.alpha = 0
-	message.pixel_y = target.maptext_height
-	message.pixel_x = (target.maptext_width * 0.5) - 16
-	message.maptext_width = CHAT_MESSAGE_WIDTH
-	message.maptext_height = mheight
-	message.maptext_x = (CHAT_MESSAGE_WIDTH - owner.bound_width) * -0.5
-	message.maptext = MAPTEXT(complete_text)
-
-	// View the message
-	LAZYADDASSOCLIST(owned_by.seen_messages, message_loc, src)
-	owned_by.images |= message
-	animate(message, alpha = 255, time = CHAT_MESSAGE_SPAWN_TIME)
-
-	// Register with the runechat SS to handle EOL and destruction
-	var/duration = lifespan - CHAT_MESSAGE_EOL_FADE
-	fadertimer = addtimer(CALLBACK(src, .proc/end_of_life), duration, TIMER_STOPPABLE|TIMER_DELETE_ME, SSrunechat)
 
 /**
- * Applies final animations to overlay CHAT_MESSAGE_EOL_FADE deciseconds prior to message deletion,
- * sets timer for scheduling deletion
+ * actually generates the runechat image for the message spoken by target and heard by owner.
  *
  * Arguments:
- * * fadetime - The amount of time to animate the message's fadeout for
+ * * target - the atom creating the message being heard by others. the image we create will have its loc assigned to this atom
+ * * owner - the mob hearing the message from target, must have a client
+ * * complete_text - the complete text used to create the images maptext
+ * * mheight - height of the complete text returned by MeasureText() in pixels i think idfk
  */
-/datum/chatmessage/proc/end_of_life(fadetime = CHAT_MESSAGE_EOL_FADE)
-	isFading = TRUE
-	animate(message, alpha = 0, time = fadetime, flags = ANIMATION_PARALLEL)
-	addtimer(CALLBACK(GLOBAL_PROC, /proc/qdel, src), fadetime, TIMER_DELETE_ME, SSrunechat)
+/datum/chatmessage/proc/generate_image(atom/target, mob/owner, complete_text, mheight)
+	var/client/owned_by = owner.client
+	if(QDELETED(owned_by) || QDELETED(target) || QDELETED(src) || QDELETED(message_loc) || !hearers?[owned_by])//possible since generate_image() is called via a queue
+		return
+
+	var/our_approx_lines = max(1, mheight / CHAT_MESSAGE_APPROX_LHEIGHT)
+
+	// Translate any existing messages upwards, apply exponential decay factors to timers
+	if (owned_by.seen_messages)
+		var/num_seen_messages = 1
+		var/combined_height = our_approx_lines
+
+		for(var/datum/chatmessage/preexisting_message as anything in owned_by.seen_messages[message_loc])
+			if(QDELETED(preexisting_message))
+				stack_trace("qdeleted message encountered in a clients seen_messages list!")
+				LAZYREMOVEASSOC(owned_by.seen_messages, message_loc, preexisting_message)
+				continue
+
+			var/image/other_message_image = preexisting_message.hearers[owned_by]
+
+			if(!istype(other_message_image))
+				continue //no image yet because the message hasnt been able to create an image.
+
+			combined_height += preexisting_message.approx_lines[other_message_image]
+
+			var/current_stage_2_time_left = preexisting_message.fade_times_by_image[other_message_image] - (world.time + CHAT_MESSAGE_SPAWN_TIME)
+
+			//how much time remains in the "fully visible" stage of animation, after we adjust it. round it down to the nearest tick
+			var/real_stage_2_time_left = round((current_stage_2_time_left) * (CHAT_MESSAGE_EXP_DECAY ** num_seen_messages) * (CHAT_MESSAGE_HEIGHT_DECAY ** combined_height), world.tick_lag)
+
+			num_seen_messages++
+
+			///used to take away time from CHAT_MESSAGE_SPAWN_TIME's addition to the fading time
+			var/non_abs_stage_2_time_left = real_stage_2_time_left
+			real_stage_2_time_left = max(real_stage_2_time_left, 0)
+
+			if(other_message_image.layer != MESSAGE_ANIMATION_FORCE_FADE_LAYER_MARK)
+				//if the message isnt in stage 3 of the animation, adjust the length of stage 2. assume that stage 1 is over since its short
+				//and taking that into account is harder than its worth. also check if theres enough time left after adjusting to bother
+				if(preexisting_message.fade_times_by_image[other_message_image] > world.time && real_stage_2_time_left > 1 && other_message_image.layer != MESSAGE_ANIMATION_EDIT_FADE_LAYER_MARK)
+					animate(other_message_image, alpha = 255, time = 0)
+					animate(time = real_stage_2_time_left)
+					animate(alpha = 0, time = CHAT_MESSAGE_EOL_FADE)
+					animate(layer = MESSAGE_ANIMATION_EDIT_FADE_LAYER_MARK, time = 0)
+
+					preexisting_message.fade_times_by_image[other_message_image] = world.time + non_abs_stage_2_time_left + CHAT_MESSAGE_SPAWN_TIME
+
+				//just start the fading early if theres no real time left. layer is only MESSAGE_ANIMATION_DEFAULT_LAYER_MARK to the server if this hasnt already happened to the image
+				else if(real_stage_2_time_left <= 1)
+
+					//to the server, animations complete their edits instantly, jumping to the last stage of the animation. so we need this step if the client
+					//was still in the second stage of animation. if the time was wrong and the client was in the third stage of animation when the updated step
+					//arrives, then this will look weird.
+					animate(other_message_image, alpha = 0, time = CHAT_MESSAGE_EOL_FADE, flags = ANIMATION_PARALLEL)
+					animate(layer = MESSAGE_ANIMATION_FORCE_FADE_LAYER_MARK, time = 0)
+
+					preexisting_message.fade_times_by_image[other_message_image] = world.time //make sure we can tell afterwards if its already fading
+
+			//make it move upwards
+			animate(other_message_image, pixel_y = other_message_image.pixel_y + mheight, time = CHAT_MESSAGE_SPAWN_TIME, flags = ANIMATION_PARALLEL)
+
+	var/maptext_used = MAPTEXT(complete_text)
+	var/maptext_x_used = (CHAT_MESSAGE_WIDTH - owner.bound_width) * -0.5
+
+	var/image/message = create_new_image(target, maptext_used, mheight, maptext_x_used)
+
+	//handle the client side animations for the image
+	animate(message, alpha = 255, time = CHAT_MESSAGE_SPAWN_TIME)
+	animate(alpha = 255, time = lifespan)
+	animate(alpha = 0, time = CHAT_MESSAGE_EOL_FADE)
+	animate(layer = MESSAGE_ANIMATION_DEFAULT_LAYER_MARK, time = 0)
+	//client wont see the results of this last step since it wont be visible. its just used to mark to the server whether the last animation stage was forced
+
+	handle_new_image_association(message, owned_by, our_approx_lines)
+
+/datum/chatmessage/proc/create_new_image(atom/target, maptext, mheight, maptext_x)
+	var/static/mutable_appearance/template = create_runechat_template()
+	template.layer = CHAT_LAYER + CHAT_LAYER_Z_STEP * current_z_idx
+	template.maptext_height = mheight
+	template.pixel_y = target.maptext_height
+	template.pixel_x = (target.maptext_width * 0.5) - 16
+	template.maptext_x = maptext_x
+	template.maptext = maptext
+
+	// Build message image
+	var/image/message = image(loc = message_loc)
+	message.appearance = template.appearance
+
+	return message
+
+/proc/create_runechat_template()
+	var/mutable_appearance/template = new()
+	template.maptext_width = CHAT_MESSAGE_WIDTH
+	template.plane = RUNECHAT_PLANE
+	template.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA | KEEP_APART
+	template.alpha = 0
+	template.maptext_width = CHAT_MESSAGE_WIDTH
+
+	return template
+
+
+/datum/chatmessage/proc/handle_new_image_association(image/message_image, client/associated_client, approximate_lines, set_time = TRUE)
+	if(QDELETED(message_image) || QDELETED(associated_client))
+		return
+
+	associated_client.images |= message_image
+
+	approx_lines[message_image] = approximate_lines
+	if(set_time)
+		fade_times_by_image[message_image] = world.time + lifespan + CHAT_MESSAGE_SPAWN_TIME
+
+	LAZYADDASSOCLIST(associated_client.seen_messages, message_loc, src)
+	LAZYSET(messages, message_image, associated_client)
+	// set hearers to be associated with the image now that the client has gone through the process fully
+	LAZYSET(hearers, associated_client, message_image)
 
 /**
- * Creates a message overlay at a defined location for a given speaker
+ * Creates a message overlay at a defined location for a given speaker. assumes that this mob has a client
  *
  * Arguments:
  * * speaker - The atom who is saying this message
@@ -240,10 +382,8 @@
  * * spans - Additional classes to be added to the message
  */
 /mob/proc/create_chat_message(atom/movable/speaker, datum/language/message_language, raw_message, list/spans, runechat_flags = NONE)
-	if(SSlag_switch.measures[DISABLE_RUNECHAT] && !HAS_TRAIT(speaker, TRAIT_BYPASS_MEASURES))
+	if(!client || SSlag_switch.measures[DISABLE_RUNECHAT] && !HAS_TRAIT(speaker, TRAIT_BYPASS_MEASURES))
 		return
-	// Ensure the list we are using, if present, is a copy so we don't modify the list provided to us
-	spans = spans ? spans.Copy() : list()
 
 	// Check for virtual speakers (aka hearing a message through a radio)
 	var/atom/movable/originalSpeaker = speaker
@@ -256,11 +396,24 @@
 	if (originalSpeaker != src && speaker == src)
 		return
 
-	// Display visual above source
+	var/datum/chatmessage/message_to_use
+	var/text_to_use
+
 	if(runechat_flags & EMOTE_MESSAGE)
-		new /datum/chatmessage(raw_message, speaker, src, message_language, list("emote", "italics"))
+		text_to_use = raw_message
+		spans = list("emote", "italics")
 	else
-		new /datum/chatmessage(lang_treat(speaker, message_language, raw_message, spans, null, TRUE), speaker, src, message_language, spans)
+		text_to_use = lang_treat(speaker, message_language, raw_message, spans, null, TRUE)
+		spans = spans ? spans.Copy() : list()
+
+	var/message_parameters = "[text_to_use]-[REF(speaker)]-[message_language]-[list2params(spans)]-[CHAT_MESSAGE_LIFESPAN]-[world.time]"
+	message_to_use = SSrunechat.messages_by_creation_string[message_parameters]
+	//if an already existing message already has processed us as a hearer then we have to assume that this is from a new, identical message sent in the same tick
+	//as the already existing one. thats the only time this can happen. if this is the case then create a new chatmessage
+	if(!message_to_use || (message_to_use && message_to_use.hearers?[client]))
+		message_to_use = new /datum/chatmessage(message_parameters, text_to_use, speaker, message_language, spans)
+
+	message_to_use.prepare_text(text_to_use, speaker, src, message_language, spans)
 
 
 // Tweak these defines to change the available color ranges
@@ -315,13 +468,5 @@
 		if(5)
 			return "#[num2hex(c, 2)][num2hex(m, 2)][num2hex(x, 2)]"
 
-#undef CHAT_MESSAGE_SPAWN_TIME
-#undef CHAT_MESSAGE_LIFESPAN
-#undef CHAT_MESSAGE_EOL_FADE
-#undef CHAT_MESSAGE_EXP_DECAY
-#undef CHAT_MESSAGE_HEIGHT_DECAY
-#undef CHAT_MESSAGE_APPROX_LHEIGHT
-#undef CHAT_MESSAGE_WIDTH
-#undef CHAT_LAYER_Z_STEP
-#undef CHAT_LAYER_MAX_Z
-#undef CHAT_MESSAGE_ICON_SIZE
+#undef MESSAGE_ANIMATION_DEFAULT_LAYER_MARK
+#undef MESSAGE_ANIMATION_FORCE_FADE_LAYER_MARK
