@@ -135,17 +135,11 @@
 	log_world(text)
 	return diff_found
 
-/mob/living/carbon/on_changed_z_level(turf/old_turf, turf/new_turf, same_z_layer, notify_contents)
-	. = ..()
-	if(same_z_layer)
-		return
-	update_z_overlays(GET_TURF_PLANE_OFFSET(new_turf), TRUE)
-
-/mob/living/carbon/proc/refresh_loop(iter_cnt, rebuild = FALSE)
+/mob/living/carbon/proc/refresh_loop(iter_cnt, offset_x = FALSE)
 	for(var/i in 1 to iter_cnt)
-		update_z_overlays(1, rebuild)
+		update_z_overlays(FALSE)
 		sleep(3)
-		update_z_overlays(0, rebuild)
+		update_z_overlays(offset_x)
 		sleep(3)
 
 // Lemon todo: See about actually properly optimizing this, or at least removing the now pointless work
@@ -165,7 +159,6 @@
 		queue = list(appearances)
 	var/queue_index = 0
 	var/list/parent_queue = list()
-	var/unique_plane_found = FALSE
 
 	// We are essentially going to unroll apperance overlays into a flattened list here, so we can filter out floating planes laster
 	// It will look like "overlay overlay overlay (change overlay parent), overlay overlay etc"
@@ -179,10 +172,6 @@
 
 		var/mutable_appearance/new_appearance = new /mutable_appearance()
 		new_appearance.appearance = appearance
-		// We don't need to process anything if no unqiues are found, so we track this
-		// It's unlikely, but better safe then sorry and all
-		if(new_appearance.plane != FLOAT_PLANE)
-			unique_plane_found = TRUE
 		// Now check its children
 		if(length(appearance.overlays))
 			queue += NEXT_PARENT_COMMAND
@@ -195,7 +184,7 @@
 	// (keeping in mind that overlays only update if an apperance is removed and added, and this pattern applies in a nested fashion)
 
 	// If we found no results, return null
-	if(!length(queue) || !unique_plane_found)
+	if(!length(queue))
 		return null
 
 	// ALRIGHT MOTHERFUCKER
@@ -248,9 +237,9 @@
 	var/list/return_pack = list(queue, parent_indexes)
 	return return_pack
 
-	// Rebuilding is a hack. We should really store a list of indexes into our existing overlay list or SOMETHING
-	// IDK. will work for now though, which is a lot better then not working at all
-/mob/living/carbon/proc/update_z_overlays(new_offset, rebuild = FALSE)
+// Rebuilding is a hack. We should really store a list of indexes into our existing overlay list or SOMETHING
+// IDK. will work for now though, which is a lot better then not working at all
+/mob/living/carbon/proc/update_z_overlays(offset_x = TRUE)
 	// Null entries will be filtered here
 	for(var/i in 1 to length(overlays_standing))
 		var/list/cache_grouping = overlays_standing[i]
@@ -259,9 +248,9 @@
 		// Need this so we can have an index, could build index into the list if we need to tho, check
 		if(!length(cache_grouping))
 			continue
-		overlays_standing[i] = update_appearance_planes(cache_grouping, new_offset)
+		overlays_standing[i] = update_appearance_planes(cache_grouping, offset = offset_x)
 
-/atom/proc/update_appearance_planes(list/mutable_appearance/appearances, new_offset)
+/atom/proc/update_appearance_planes(list/mutable_appearance/appearances, offset)
 	var/list/build_list = build_planeed_apperance_queue(appearances)
 
 	if(!length(build_list))
@@ -308,8 +297,9 @@
 			continue
 		var/mutable_appearance/new_iter = new /mutable_appearance()
 		new_iter.appearance = item
-		if(new_iter.plane != FLOAT_PLANE)
-			SET_PLANE_W_SCALAR(new_iter, PLANE_TO_TRUE(new_iter.plane), new_offset)
+		if(offset)
+			new_iter.pixel_x = 10
+
 		if(parents_index)
 			var/parent_src_index = parents_queue[parents_index]
 			var/mutable_appearance/parent = processing_queue[parent_src_index]
