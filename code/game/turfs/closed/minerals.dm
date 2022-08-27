@@ -36,8 +36,6 @@
 	M.Translate(-4, -4)
 	transform = M
 	icon = smooth_icon
-	var/static/list/behaviors = list(TOOL_MINING)
-	AddElement(/datum/element/bump_click, _bespoke_element_key = "mineral", tool_behaviours = behaviors, allow_unarmed = TRUE)
 
 /turf/closed/mineral/proc/Spread_Vein()
 	var/spreadChance = initial(mineralType.spreadChance)
@@ -64,6 +62,22 @@
 		return TRUE
 	return ..()
 
+// This is a reimplementation of /datum/element/bump_click, list(TOOL_MINING), allow_unarmed = TRUE
+// We're doing things like this because we spawn like 30k mineral turfs on lavaland, and
+// Adding that element would cost a full second of initialize. I'm sorry.
+/turf/closed/mineral/Bumped(atom/movable/bumped_atom)
+	. = ..()
+	if(!isliving(bumped_atom))
+		return
+	var/mob/living/bumping = bumped_atom
+	if(bumping.combat_mode)
+		return
+	var/obj/item/held_item = bumping.get_active_held_item()
+	if(!held_item)
+		bumping.ClickOn(src)
+		return
+	if(held_item.tool_behaviour == TOOL_MINING)
+		bumping.ClickOn(src)
 
 /turf/closed/mineral/attackby(obj/item/I, mob/user, params)
 	if (!ISADVANCEDTOOLUSER(user))
