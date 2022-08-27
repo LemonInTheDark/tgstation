@@ -33,20 +33,30 @@ PROCESSING_SUBSYSTEM_DEF(dcs)
 	var/datum/element/eletype = arguments[1]
 	var/list/fullid = list("[eletype]")
 	var/list/named_arguments = list()
+
 	for(var/i in initial(eletype.id_arg_index) to length(arguments))
 		var/key = arguments[i]
-		var/value
+		// If the first bit of the list is a string, we go here
 		if(istext(key))
-			value = arguments[key]
-		if(!(istext(key) || isnum(key)))
+			var/value = arguments[key]
+			// If this is an assoc entry, lets set in
+			if(value)
+				if(!(istext(value) || isnum(value)))
+					value = REF(value)
+				fullid[key] = value
+				named_arguments[key] = value
+			else
+				// Otherwise, just embed the string yeah brother?
+				fullid += key
+			continue
+
+		// This'll catch everything that isn't text or numbers
+		// So mostly datums
+		else if(!isnum(key))
 			key = REF(key)
-		key = "[key]" // Key is stringified so numbers dont break things
-		if(!isnull(value))
-			if(!(istext(value) || isnum(value)))
-				value = REF(value)
-			named_arguments["[key]"] = value
 		else
-			fullid += "[key]"
+			key = "[key]" // Key is stringified so numbers dont break things
+		fullid += key
 
 	if(length(named_arguments))
 		named_arguments = sort_list(named_arguments)
