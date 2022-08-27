@@ -53,7 +53,6 @@ PROCESSING_SUBSYSTEM_DEF(dcs)
 			if(value)
 				if(!(istext(value) || isnum(value)))
 					value = REF(value)
-				fullid[key] = value
 				named_arguments[key] = value
 			else
 				// Otherwise, just embed the string yeah brother?
