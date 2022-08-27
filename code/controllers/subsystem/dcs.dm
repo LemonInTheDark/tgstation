@@ -30,11 +30,21 @@ PROCESSING_SUBSYSTEM_DEF(dcs)
 	* We assume that no one will pass in a named argument with a value of null
 	**/
 /datum/controller/subsystem/processing/dcs/proc/GetIdFromArguments(list/arguments)
+	// We allow users to manually pass in a bespoke key to use with a _bespoke_element_key argument
+	// This is done as an optization for mass bespoke element placing, and not JUST because I hate you and wish to see you suffer
+	// Be careful with this, it's easy to misuse
+	var/argument_length = length(arguments)
+	if(argument_length >= 2 && arguments[2] == "_bespoke_element_key")
+		var/bespoke_key = arguments["_bespoke_element_key"]
+		if(bespoke_key)
+			arguments.Cut(2,3)
+			return bespoke_key
+
 	var/datum/element/eletype = arguments[1]
 	var/list/fullid = list("[eletype]")
 	var/list/named_arguments = list()
 
-	for(var/i in initial(eletype.id_arg_index) to length(arguments))
+	for(var/i in initial(eletype.id_arg_index) to argument_length)
 		var/key = arguments[i]
 		// If the first bit of the list is a string, we go here
 		if(istext(key))

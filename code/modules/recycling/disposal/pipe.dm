@@ -41,7 +41,7 @@
 		if(initialize_dirs & DISP_DIR_FLIP)
 			dpdir |= turn(dir, 180)
 
-	AddElement(/datum/element/undertile, TRAIT_T_RAY_VISIBLE)
+	AddElement(/datum/element/undertile, _bespoke_element_key = TRAIT_T_RAY_VISIBLE, TRAIT_T_RAY_VISIBLE)
 
 // pipe is deleted
 // ensure if holder is present, it is expelled

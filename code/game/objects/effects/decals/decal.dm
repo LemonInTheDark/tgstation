@@ -41,5 +41,6 @@
 	var/turf/T = loc
 	if(!istype(T)) //you know this will happen somehow
 		CRASH("Turf decal initialized in an object/nullspace")
-	T.AddElement(/datum/element/decal, icon, icon_state, dir, null, null, alpha, color, null, FALSE, null)
+	var/key = "[icon]-[icon_state]-[dir]-null-null-[alpha]-[color]-null-FALSE-null"
+	T.AddElement(/datum/element/decal, _bespoke_element_key = key, icon, icon_state, dir, null, null, alpha, color, null, FALSE, null)
 	return INITIALIZE_HINT_QDEL
