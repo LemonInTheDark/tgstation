@@ -85,7 +85,7 @@
 	AddElement(/datum/element/update_icon_updates_onmob)
 
 /obj/item/gun/energy/add_weapon_description()
-	AddElement(/datum/element/weapon_description, attached_proc = .proc/add_notes_energy)
+	AddElement(/datum/element/weapon_description, _bespoke_element_key = "energy", attached_proc = .proc/add_notes_energy)
 
 /**
  *

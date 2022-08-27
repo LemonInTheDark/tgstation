@@ -10,7 +10,7 @@
 	/**
 	  * The index of the first attach argument to consider for duplicate elements
 	  *
-	  * Is only used when flags contains [ELEMENT_BESPOKE]
+	  * Is only used when flags contains [ELEMENT_BESPOKE] amd no manual bespoke key is passed
 	  *
 	  * This is infinity so you must explicitly set this
 	  */

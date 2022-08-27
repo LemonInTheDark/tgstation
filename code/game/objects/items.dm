@@ -311,7 +311,7 @@ GLOBAL_DATUM_INIT(welding_sparks, /mutable_appearance, mutable_appearance('icons
 
 /// Adds the weapon_description element, which shows the 'warning label' for especially dangerous objects. Override this for item types with special notes.
 /obj/item/proc/add_weapon_description()
-	AddElement(/datum/element/weapon_description)
+	AddElement(/datum/element/weapon_description, _bespoke_element_key = "item")
 
 /obj/item/proc/check_allowed_items(atom/target, not_inside, target_self)
 	if(((src in target) && !target_self) || (!isturf(target.loc) && !isturf(target) && not_inside))

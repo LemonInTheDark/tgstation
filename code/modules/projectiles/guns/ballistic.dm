@@ -134,7 +134,7 @@
 	RegisterSignal(src, COMSIG_ITEM_RECHARGED, .proc/instant_reload)
 
 /obj/item/gun/ballistic/add_weapon_description()
-	AddElement(/datum/element/weapon_description, attached_proc = .proc/add_notes_ballistic)
+	AddElement(/datum/element/weapon_description, _bespoke_element_key = "ballistic", attached_proc = .proc/add_notes_ballistic)
 
 /obj/item/gun/ballistic/fire_sounds()
 	var/frequency_to_use = sin((90/magazine?.max_ammo) * get_ammo())

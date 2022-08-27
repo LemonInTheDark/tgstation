@@ -27,7 +27,7 @@
 	. = ..()
 
 	if(hide)
-		AddElement(/datum/element/undertile, TRAIT_T_RAY_VISIBLE) //if changing this, change the subtypes RemoveElements too, because thats how bespoke works
+		AddElement(/datum/element/undertile, _bespoke_element_key = TRAIT_T_RAY_VISIBLE, TRAIT_T_RAY_VISIBLE) //if changing this, change the subtypes RemoveElements too, because thats how bespoke works
 
 /obj/machinery/atmospherics/pipe/nullify_node(i)
 	var/obj/machinery/atmospherics/old_node = nodes[i]

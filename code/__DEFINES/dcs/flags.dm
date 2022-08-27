@@ -14,6 +14,7 @@
 /**
  * Only elements created with the same arguments given after `id_arg_index` share an element instance
  * The arguments are the same when the text and number values are the same and all other values have the same ref
+ * We also support MANUALLY	passing in a bespoke key to use, but it's not something you should be using, unless the element is applied a LOT
  */
 #define ELEMENT_BESPOKE (1 << 1)
 /// Causes all detach arguments to be passed to detach instead of only being used to identify the element
