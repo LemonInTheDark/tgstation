@@ -146,7 +146,9 @@
 	parsed_bounds = src.bounds
 
 /// Load the parsed map into the world. See [/proc/load_map] for arguments.
-/datum/parsed_map/proc/load(x_offset, y_offset, z_offset, cropMap, no_changeturf, x_lower, x_upper, y_lower, y_upper, placeOnTop)
+/datum/parsed_map/proc/load(x_offset, y_offset, z_offset, cropMap, no_changeturf, x_lower, x_upper, y_lower, y_upper, placeOnTop, whitelist = FALSE)
+	if(!whitelist)
+		return
 	//How I wish for RAII
 	Master.StartLoadingMap()
 	. = _load_impl(x_offset, y_offset, z_offset, cropMap, no_changeturf, x_lower, x_upper, y_lower, y_upper, placeOnTop)
@@ -164,6 +166,7 @@
 	//used for sending the maxx and maxy expanded global signals at the end of this proc
 	var/has_expanded_world_maxx = FALSE
 	var/has_expanded_world_maxy = FALSE
+	var/key_len = src.key_len
 
 	for(var/datum/grid_set/gset as anything in gridSets)
 		var/ycrd = gset.ycrd + y_offset - 1
@@ -185,44 +188,62 @@
 			if((ycrd - y_offset + 1) < y_lower || (ycrd - y_offset + 1) > y_upper) //Reverse operation and check if it is out of bounds of cropping.
 				--ycrd
 				continue
-			if(ycrd <= world.maxy && ycrd >= 1)
-				var/xcrd = gset.xcrd + x_offset - 1
-				for(var/tpos = 1 to length(line) - key_len + 1 step key_len)
-					if((xcrd - x_offset + 1) < x_lower || (xcrd - x_offset + 1) > x_upper) //Same as above.
-						++xcrd
-						continue //X cropping.
-					if(xcrd > world.maxx)
-						if(cropMap)
-							break
-						else
-							world.maxx = xcrd
-							has_expanded_world_maxx = TRUE
+			if(ycrd > world.maxy || ycrd < 1)
+				--ycrd
+				continue
 
-					if(xcrd >= 1)
-						var/model_key = copytext(line, tpos, tpos + key_len)
-						var/no_afterchange = no_changeturf || zexpansion
-						if(!no_afterchange || (model_key != space_key))
-							var/list/cache = modelCache[model_key]
-							if(!cache)
-								CRASH("Undefined model key in DMM: [model_key]")
-							build_coordinate(areaCache, cache, locate(xcrd, ycrd, zcrd), no_afterchange, placeOnTop)
+			var/relative_x = gset.xcrd
+			var/xcrd = relative_x + x_offset - 1
+			var/target = length(line) - key_len + 1
+			var/starting = 1
+			if(relative_x < x_lower)
+				// We're gonna increase starting by the delta between relative_x and the larger between our lower threshold and 0
+				// This will let us avoid extra work in the VERY hot loop below :)
+				// Think of this as cropping
+				var/delta = max(max(x_lower, 1) - relative_x, 0)
+				starting += delta * key_len
+				xcrd += delta
 
-							// only bother with bounds that actually exist
-							bounds[MAP_MINX] = min(bounds[MAP_MINX], xcrd)
-							bounds[MAP_MINY] = min(bounds[MAP_MINY], ycrd)
-							bounds[MAP_MINZ] = min(bounds[MAP_MINZ], zcrd)
-							bounds[MAP_MAXX] = max(bounds[MAP_MAXX], xcrd)
-							bounds[MAP_MAXY] = max(bounds[MAP_MAXY], ycrd)
-							bounds[MAP_MAXZ] = max(bounds[MAP_MAXZ], zcrd)
-						#ifdef TESTING
-						else
-							++turfsSkipped
-						#endif
-						CHECK_TICK
-					++xcrd
-			--ycrd
+			var/step_count = ROUND_UP(target / key_len)
+			var/final_x = relative_x + step_count
+			var/delta_with = x_upper
+			if(cropMap)
+				// Take our smaller crop threshold yes?
+				delta_with = min(delta_with, world.maxx)
+			if(final_x > delta_with)
+				// If our relative x is greater then X upper, well then we've gotta limit our expansion
+				var/delta = max(final_x - delta_with, 0)
+				step_count -= delta
+				final_x -= delta
+				target = step_count * key_len
+			if(final_x > world.maxx && !cropMap)
+				world.maxx = xcrd
+				has_expanded_world_maxx = TRUE
 
-		CHECK_TICK
+			for(var/tpos in starting to target step key_len)
+				var/model_key = copytext(line, tpos, tpos + key_len)
+				var/no_afterchange = no_changeturf || zexpansion
+				if(!no_afterchange || (model_key != space_key))
+					var/list/cache = modelCache[model_key]
+					if(!cache)
+						CRASH("Undefined model key in DMM: [model_key]")
+					build_coordinate(areaCache, cache, locate(xcrd, ycrd, zcrd), no_afterchange, placeOnTop)
+
+					// only bother with bounds that actually exist
+					bounds[MAP_MINX] = min(bounds[MAP_MINX], xcrd)
+					bounds[MAP_MINY] = min(bounds[MAP_MINY], ycrd)
+					bounds[MAP_MINZ] = min(bounds[MAP_MINZ], zcrd)
+					bounds[MAP_MAXX] = max(bounds[MAP_MAXX], xcrd)
+					bounds[MAP_MAXY] = max(bounds[MAP_MAXY], ycrd)
+					bounds[MAP_MAXZ] = max(bounds[MAP_MAXZ], zcrd)
+				#ifdef TESTING
+				else
+					++turfsSkipped
+				#endif
+				//CHECK_TICK
+				++xcrd
+			ycrd--
+		//CHECK_TICK
 
 	if(!no_changeturf)
 		for(var/turf/T as anything in block(locate(bounds[MAP_MINX], bounds[MAP_MINY], bounds[MAP_MINZ]), locate(bounds[MAP_MAXX], bounds[MAP_MAXY], bounds[MAP_MAXZ])))
@@ -292,7 +313,7 @@
 			members_attributes.len++
 			members_attributes[index++] = fields
 
-			CHECK_TICK
+			//CHECK_TICK
 
 		//check and see if we can just skip this turf
 		//So you don't have to understand this horrid statement, we can do this if
@@ -400,10 +421,10 @@
 		world.preloader_load(.)
 
 	//custom CHECK_TICK here because we don't want things created while we're sleeping to not initialize
-	if(TICK_CHECK)
-		SSatoms.map_loader_stop()
-		stoplag()
-		SSatoms.map_loader_begin()
+	//if(TICK_CHECK)
+		//SSatoms.map_loader_stop()
+		//stoplag()
+		//SSatoms.map_loader_begin()
 
 /datum/parsed_map/proc/create_atom(path, crds)
 	set waitfor = FALSE
