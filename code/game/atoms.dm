@@ -175,20 +175,45 @@
  *
  * We also generate a tag here if the DF_USE_TAG flag is set on the atom
  */
+GLOBAL_LIST_EMPTY(atom_init_cost)
+GLOBAL_LIST_EMPTY(atom_init_count)
 /atom/New(loc, ...)
+	var/static/list/costs = list()
+	var/static/list/count = list()
+	if(GLOB)
+		GLOB.atom_init_cost = costs
+		GLOB.atom_init_count = count
+	INIT_COST(costs, count)
 	//atom creation method that preloads variables at creation
 	if(GLOB.use_preloader && src.type == GLOB._preloader_path)//in case the instanciated atom is creating other atoms in New()
+		SET_COST("Check preloader")
 		world.preloader_load(src)
+		SET_COST("Preload vars")
+	else
+		SET_COST("Check preloader")
 
 	if(datum_flags & DF_USE_TAG)
+		SET_COST("Check DF_USE_TAG")
 		GenerateTag()
+		SET_COST("Generate tag")
+	else
+		SET_COST("Check DF_USE_TAG")
 
 	var/do_initialize = SSatoms.initialized
+	SET_COST("set do initialize")
 	if(do_initialize != INITIALIZATION_INSSATOMS)
+		SET_COST("check do initialize")
 		args[1] = do_initialize == INITIALIZATION_INNEW_MAPLOAD
+		SET_COST("set args 1")
 		if(SSatoms.InitAtom(src, FALSE, args))
+			SET_COST("init atom")
+			SET_COST("atom deleted")
 			//we were deleted
 			return
+		else
+			SET_COST("init atom")
+	else
+		SET_COST("check do initialize")
 
 /**
  * The primary method that objects are setup in SS13 with

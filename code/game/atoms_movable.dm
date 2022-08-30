@@ -94,26 +94,54 @@
 	/// The degree of pressure protection that mobs in list/contents have from the external environment, between 0 and 1
 	var/contents_pressure_protection = 0
 
+GLOBAL_LIST_EMPTY(movable_init_cost)
+GLOBAL_LIST_EMPTY(movable_init_count)
 /atom/movable/Initialize(mapload)
+	INIT_COST(GLOB.movable_init_cost, GLOB.movable_init_count)
 	. = ..()
+	SET_COST("Parent call")
 	switch(blocks_emissive)
 		if(EMISSIVE_BLOCK_GENERIC)
+			SET_COST("Check blocks emissive")
 			var/mutable_appearance/gen_emissive_blocker = mutable_appearance(icon, icon_state, plane = EMISSIVE_PLANE, alpha = src.alpha)
+			SET_COST("create emissive blocking mutable")
 			gen_emissive_blocker.color = GLOB.em_block_color
+			SET_COST("color emissive blocking mutable")
 			gen_emissive_blocker.dir = dir
+			SET_COST("dir emissive blocking mutable")
 			gen_emissive_blocker.appearance_flags |= appearance_flags
+			SET_COST("flags emissive blocking mutable")
 			add_overlay(list(gen_emissive_blocker))
+			SET_COST("add appearance emissive blocking mutable")
 		if(EMISSIVE_BLOCK_UNIQUE)
+			SET_COST("Check blocks emissive")
 			render_target = ref(src)
+			SET_COST("emissive blocking render target")
 			em_block = new(src, render_target)
+			SET_COST("new emissive blocking render target")
 			add_overlay(list(em_block))
+			SET_COST("add overlay emissive blocking render target")
+		else
+			SET_COST("Check blocks emissive")
+			SET_COST("do nothing emissive")
+
 	if(opacity)
+		SET_COST("check opacity")
 		AddElement(/datum/element/light_blocking)
+		SET_COST("add lightblocking")
+	else
+		SET_COST("check opacity")
 	switch(light_system)
 		if(MOVABLE_LIGHT)
+			SET_COST("check light system")
 			AddComponent(/datum/component/overlay_lighting)
+			SET_COST("add overlay lighting")
 		if(MOVABLE_LIGHT_DIRECTIONAL)
+			SET_COST("check light system")
 			AddComponent(/datum/component/overlay_lighting, is_directional = TRUE)
+			SET_COST("add overlay lighting directional")
+		else
+			SET_COST("check light system")
 
 
 /atom/movable/Destroy(force)
