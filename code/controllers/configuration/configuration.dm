@@ -374,10 +374,9 @@ Example config:
 				log_config("Unknown command in map vote config: '[command]'")
 
 /datum/controller/configuration/proc/LoadChatFilter()
-	if(!fexists("[directory]/word_filter.toml"))
-		load_legacy_chat_filter()
-		return
+	load_legacy_chat_filter()
 
+	/*
 	log_config("Loading config file word_filter.toml...")
 	var/list/result = rustg_raw_read_toml_file("[directory]/word_filter.toml")
 	if(!result["success"])
@@ -395,6 +394,7 @@ Example config:
 	soft_shared_filter_reasons = try_extract_from_word_filter(word_filter, "soft_shared")
 
 	update_chat_filter_regexes()
+*/
 
 /datum/controller/configuration/proc/load_legacy_chat_filter()
 	if (!fexists("[directory]/in_character_filter.txt"))

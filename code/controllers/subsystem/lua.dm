@@ -22,6 +22,8 @@ SUBSYSTEM_DEF(lua)
 	var/gc_guard
 
 /datum/controller/subsystem/lua/Initialize(start_timeofday)
+	return
+	/*
 	try
 
 		// Initialize the auxtools library
@@ -42,6 +44,7 @@ SUBSYSTEM_DEF(lua)
 		to_chat(world, span_boldwarning("[msg]"))
 		warning(e.name)
 		return time
+*/
 
 /datum/controller/subsystem/lua/OnConfigLoad()
 	// Read the paths from the config file

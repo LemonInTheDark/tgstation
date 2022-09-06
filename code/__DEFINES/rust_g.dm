@@ -1,3 +1,4 @@
+/*
 // rust_g.dm - DM API for rust_g extension library
 //
 // To configure, create a `rust_g.config.dm` and set what you care about from
@@ -168,3 +169,4 @@
 	#define url_decode(text) rustg_url_decode(text)
 #endif
 
+*/

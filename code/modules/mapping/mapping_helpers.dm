@@ -374,7 +374,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/mapping_helpers/no_lava)
 	log_asset("Custom Icon Helper fetching dmi from: [icon_url]")
 	var/datum/http_request/request = new()
 	var/file_name = "tmp/custom_map_icon.dmi"
-	request.prepare(RUSTG_HTTP_METHOD_GET, icon_url, "", "", file_name)
+	//request.prepare(RUSTG_HTTP_METHOD_GET, icon_url, "", "", file_name)
 	query_in_progress = TRUE
 	request.begin_async()
 	UNTIL(request.is_complete())
@@ -419,7 +419,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/mapping_helpers/no_lava)
 	log_asset("Custom Sound Helper fetching sound from: [sound_url]")
 	var/datum/http_request/request = new()
 	var/file_name = "tmp/custom_map_sound.ogg"
-	request.prepare(RUSTG_HTTP_METHOD_GET, sound_url, "", "", file_name)
+	//request.prepare(RUSTG_HTTP_METHOD_GET, sound_url, "", "", file_name)
 	query_in_progress = TRUE
 	request.begin_async()
 	UNTIL(request.is_complete())
@@ -745,7 +745,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/mapping_helpers/no_lava)
 		return json_cache[json_url]
 	log_asset("Circuit Spawner fetching json from: [json_url]")
 	var/datum/http_request/request = new()
-	request.prepare(RUSTG_HTTP_METHOD_GET, json_url, "")
+	//request.prepare(RUSTG_HTTP_METHOD_GET, json_url, "")
 	query_in_progress = TRUE
 	request.begin_async()
 	UNTIL(request.is_complete())

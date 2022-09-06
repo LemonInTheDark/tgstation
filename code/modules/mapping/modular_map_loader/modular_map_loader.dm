@@ -19,9 +19,9 @@ INITIALIZE_IMMEDIATE(/obj/modular_map_root)
 
 /// Randonly selects a map file from the TOML config specified in config_file, loads it, then deletes itself.
 /obj/modular_map_root/proc/load_map()
-	var/turf/spawn_area = get_turf(src)
+	//var/turf/spawn_area = get_turf(src)
 
-	var/datum/map_template/map_module/map = new()
+	//var/datum/map_template/map_module/map = new()
 
 	if(!config_file)
 		return
@@ -29,11 +29,11 @@ INITIALIZE_IMMEDIATE(/obj/modular_map_root)
 	if(!key)
 		return
 
-	var/config = rustg_read_toml_file(config_file)
+	//var/config = rustg_read_toml_file(config_file)
 
-	var/mapfile = config["directory"] + pick(config["rooms"][key]["modules"])
+	//var/mapfile = config["directory"] + pick(config["rooms"][key]["modules"])
 
-	map.load(spawn_area, FALSE, mapfile)
+	//map.load(spawn_area, FALSE, mapfile)
 
 	qdel(src, force=TRUE)
 

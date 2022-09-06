@@ -137,7 +137,7 @@ SUBSYSTEM_DEF(dbcore)
 /datum/controller/subsystem/dbcore/proc/run_query(datum/db_query/query)
 	if(IsAdminAdvancedProcCall())
 		return
-	query.job_id = rustg_sql_query_async(connection, query.sql, json_encode(query.arguments))
+	//query.job_id = rustg_sql_query_async(connection, query.sql, json_encode(query.arguments))
 
 /datum/controller/subsystem/dbcore/proc/queue_query(datum/db_query/query)
 	if(IsAdminAdvancedProcCall())
@@ -209,6 +209,7 @@ SUBSYSTEM_DEF(dbcore)
 	if(!CONFIG_GET(flag/sql_enabled))
 		return FALSE
 
+	/*
 	var/user = CONFIG_GET(string/feedback_login)
 	var/pass = CONFIG_GET(string/feedback_password)
 	var/db = CONFIG_GET(string/feedback_database)
@@ -216,10 +217,10 @@ SUBSYSTEM_DEF(dbcore)
 	var/port = CONFIG_GET(number/port)
 	var/timeout = max(CONFIG_GET(number/async_query_timeout), CONFIG_GET(number/blocking_query_timeout))
 	var/thread_limit = CONFIG_GET(number/bsql_thread_limit)
-
+*/
 	max_concurrent_queries = CONFIG_GET(number/max_concurrent_queries)
 
-	var/result = json_decode(rustg_sql_connect_pool(json_encode(list(
+	var/result/* = json_decode(rustg_sql_connect_pool(json_encode(list(
 		"host" = address,
 		"port" = port,
 		"user" = user,
@@ -228,7 +229,7 @@ SUBSYSTEM_DEF(dbcore)
 		"read_timeout" = timeout,
 		"write_timeout" = timeout,
 		"max_threads" = thread_limit,
-	))))
+	))))*/
 	. = (result["status"] == "ok")
 	if (.)
 		connection = result["handle"]
@@ -292,8 +293,8 @@ SUBSYSTEM_DEF(dbcore)
 
 /datum/controller/subsystem/dbcore/proc/Disconnect()
 	failed_connections = 0
-	if (connection)
-		rustg_sql_disconnect_pool(connection)
+	//if (connection)
+		//rustg_sql_disconnect_pool(connection)
 	connection = null
 
 /datum/controller/subsystem/dbcore/proc/IsConnected()
@@ -301,7 +302,7 @@ SUBSYSTEM_DEF(dbcore)
 		return FALSE
 	if (!connection)
 		return FALSE
-	return json_decode(rustg_sql_connected(connection))["status"] == "online"
+	//return json_decode(rustg_sql_connected(connection))["status"] == "online"
 
 /datum/controller/subsystem/dbcore/proc/ErrorMsg()
 	if(!CONFIG_GET(flag/sql_enabled))
@@ -338,7 +339,7 @@ SUBSYSTEM_DEF(dbcore)
 			queries -= query
 			stack_trace("Invalid query passed to QuerySelect: `[query]` [REF(query)]")
 			continue
-		
+
 		if (warn)
 			INVOKE_ASYNC(query, /datum/db_query.proc/warn_execute)
 		else
@@ -499,9 +500,9 @@ Delayed insert mode was removed in mysql 7 and only works with MyISAM type table
 		else
 			SSdbcore.queue_query(src)
 		sync()
-	else
-		var/job_result_str = rustg_sql_query_blocking(connection, sql, json_encode(arguments))
-		store_data(json_decode(job_result_str))
+	//else
+		//var/job_result_str = rustg_sql_query_blocking(connection, sql, json_encode(arguments))
+	//	store_data(json_decode(job_result_str))
 
 	. = (status != DB_QUERY_BROKEN)
 	var/timed_out = !. && findtext(last_error, "Operation timed out")
@@ -524,11 +525,11 @@ Delayed insert mode was removed in mysql 7 and only works with MyISAM type table
 		return
 
 	status = DB_QUERY_STARTED
-	var/job_result = rustg_sql_check_query(job_id)
-	if(job_result == RUSTG_JOB_NO_RESULTS_YET)
-		return
+	//var/job_result = rustg_sql_check_query(job_id)
+	//if(job_result == RUSTG_JOB_NO_RESULTS_YET)
+	//	return
 
-	store_data(json_decode(job_result))
+	//store_data(json_decode(job_result))
 	return TRUE
 
 /datum/db_query/proc/store_data(result)

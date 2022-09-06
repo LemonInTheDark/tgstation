@@ -259,7 +259,7 @@
 	initialized = TRUE
 	SEND_SIGNAL(src, COMSIG_SUBSYSTEM_POST_INITIALIZE)
 
-	var/time = rustg_time_milliseconds(SS_INIT_TIMER_KEY)
+	var/time = 0
 	var/seconds = round(time / 1000, 0.01)
 
 	var/msg = "Initialized [name] subsystem within [seconds] second[seconds == 1 ? "" : "s"]!"

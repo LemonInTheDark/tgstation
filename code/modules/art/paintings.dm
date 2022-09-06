@@ -275,9 +275,9 @@
 		return
 	var/png_filename = "data/paintings/temp_painting.png"
 	var/image_data = get_data_string()
-	var/result = rustg_dmi_create_png(png_filename, "[width]", "[height]", image_data)
-	if(result)
-		CRASH("Error generating painting png : [result]")
+	//var/result = rustg_dmi_create_png(png_filename, "[width]", "[height]", image_data)
+	//if(result)
+	//	CRASH("Error generating painting png : [result]")
 	painting_metadata.md5 = md5(lowertext(image_data))
 	generated_icon = new(png_filename)
 	icon_generated = TRUE
@@ -606,11 +606,11 @@
 		current_canvas.painting_metadata.tags = list(persistence_id)
 	else
 		current_canvas.painting_metadata.tags |= persistence_id
-	var/png_directory = "data/paintings/images/"
-	var/png_path = png_directory + "[md5].png"
-	var/result = rustg_dmi_create_png(png_path,"[current_canvas.width]","[current_canvas.height]",data)
-	if(result)
-		CRASH("Error saving persistent painting: [result]")
+	//var/png_directory = "data/paintings/images/"
+	//var/png_path = png_directory + "[md5].png"
+	//var/result = rustg_dmi_create_png(png_path,"[current_canvas.width]","[current_canvas.height]",data)
+//	if(result)
+//		CRASH("Error saving persistent painting: [result]")
 	SSpersistent_paintings.paintings += current_canvas.painting_metadata
 
 /obj/item/canvas/proc/fill_grid_from_icon(icon/I)
