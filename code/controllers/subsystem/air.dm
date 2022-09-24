@@ -179,7 +179,7 @@ SUBSYSTEM_DEF(air)
 		timer = TICK_USAGE_REAL
 		if(!resumed)
 			cached_cost = 0
-		process_excited_groups(resumed)
+		process_pressure_action(resumed)
 		cached_cost += TICK_USAGE_REAL - timer
 		if(state != SS_RUNNING)
 			return
@@ -377,20 +377,15 @@ SUBSYSTEM_DEF(air)
 		if (MC_TICK_CHECK)
 			return
 
-/datum/controller/subsystem/air/proc/process_excited_groups(resumed = FALSE)
+/datum/controller/subsystem/air/proc/process_pressure_action(resumed = FALSE)
 	if (!resumed)
 		src.currentrun = excited_groups.Copy()
 	//cache for sanic speed (lists are references anyways)
 	var/list/currentrun = src.currentrun
 	while(currentrun.len)
-		var/datum/excited_group/EG = currentrun[currentrun.len]
+		var/turf/open/pressure_process = currentrun[currentrun.len]
 		currentrun.len--
-		EG.breakdown_cooldown++
-		EG.dismantle_cooldown++
-		if(EG.breakdown_cooldown >= EXCITED_GROUP_BREAKDOWN_CYCLES)
-			EG.self_breakdown(poke_turfs = TRUE)
-		else if(EG.dismantle_cooldown >= EXCITED_GROUP_DISMANTLE_CYCLES)
-			EG.dismantle()
+	//	pressure_process.handle_forces()
 		if (MC_TICK_CHECK)
 			return
 
@@ -470,28 +465,11 @@ SUBSYSTEM_DEF(air)
 	#endif
 	if(istype(T))
 		T.excited = FALSE
-		if(T.excited_group)
-			//If this fires during active turfs it'll cause a slight removal of active turfs, as they breakdown if they have no excited group
-			//The group also expands by a tile per rebuild on each edge, suffering
-			T.excited_group.garbage_collect() //Kill the excited group, it'll reform on its own later
-
-///Puts an active turf to sleep so it doesn't process. Do this without cleaning up its excited group.
-/datum/controller/subsystem/air/proc/sleep_active_turf(turf/open/T)
-	active_turfs -= T
-	if(currentpart == SSAIR_ACTIVETURFS)
-		currentrun -= T
-	#ifdef VISUALIZE_ACTIVE_TURFS
-	T.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, COLOR_VIBRANT_LIME)
-	#endif
-	if(istype(T))
-		T.excited = FALSE
 
 ///Adds a turf to active processing, handles duplicates. Call this with blockchanges == TRUE if you want to nuke the assoc excited group
 /datum/controller/subsystem/air/proc/add_to_active(turf/open/T, blockchanges = FALSE)
 	if(istype(T) && T.air)
 		T.significant_share_ticker = 0
-		if(blockchanges && T.excited_group) //This is used almost exclusivly for shuttles, so the excited group doesn't stay behind
-			T.excited_group.garbage_collect() //Nuke it
 		if(T.excited) //Don't keep doing it if there's no point
 			return
 		#ifdef VISUALIZE_ACTIVE_TURFS
@@ -544,68 +522,6 @@ SUBSYSTEM_DEF(air)
 		T.Initalize_Atmos(time)
 		if(CHECK_TICK)
 			time++
-
-	if(active_turfs.len)
-		var/starting_ats = active_turfs.len
-		sleep(world.tick_lag)
-		var/timer = world.timeofday
-
-		log_mapping("There are [starting_ats] active turfs at roundstart caused by a difference of the air between the adjacent turfs. \
-		To locate these active turfs, go into the \"Debug\" tab of your stat-panel. Then hit the verb that says \"Mapping Verbs - Enable\". \
-		Now, you can see all of the associated coordinates using \"Mapping -> Show roundstart AT list\" verb.")
-
-		for(var/turf/T in active_turfs)
-			GLOB.active_turfs_startlist += T
-
-		//now lets clear out these active turfs
-		var/list/turfs_to_check = active_turfs.Copy()
-		do
-			var/list/new_turfs_to_check = list()
-			for(var/turf/open/T in turfs_to_check)
-				new_turfs_to_check += T.resolve_active_graph()
-			CHECK_TICK
-
-			active_turfs += new_turfs_to_check
-			turfs_to_check = new_turfs_to_check
-		while (turfs_to_check.len)
-
-		var/ending_ats = active_turfs.len
-		for(var/thing in excited_groups)
-			var/datum/excited_group/EG = thing
-			EG.self_breakdown(roundstart = TRUE)
-			EG.dismantle()
-			CHECK_TICK
-
-		var/msg = "HEY! LISTEN! [DisplayTimeText(world.timeofday - timer, 0.00001)] were wasted processing [starting_ats] turf(s) (connected to [ending_ats - starting_ats] other turfs) with atmos differences at round start."
-		to_chat(world, span_boldannounce("[msg]"))
-		warning(msg)
-
-/turf/open/proc/resolve_active_graph()
-	. = list()
-	var/datum/excited_group/EG = excited_group
-	if (blocks_air || !air)
-		return
-	if (!EG)
-		EG = new
-		EG.add_turf(src)
-
-	for (var/turf/open/ET in atmos_adjacent_turfs)
-		if (ET.blocks_air || !ET.air)
-			continue
-
-		var/ET_EG = ET.excited_group
-		if (ET_EG)
-			if (ET_EG != EG)
-				EG.merge_groups(ET_EG)
-				EG = excited_group //merge_groups() may decide to replace our current EG
-		else
-			EG.add_turf(ET)
-		if (!ET.excited)
-			ET.excited = TRUE
-			. += ET
-
-/turf/open/space/resolve_active_graph()
-	return list()
 
 /datum/controller/subsystem/air/proc/setup_atmos_machinery()
 	for (var/obj/machinery/atmospherics/AM in atmos_machinery)
@@ -756,25 +672,6 @@ GLOBAL_LIST_EMPTY(colored_images)
 /datum/controller/subsystem/air/ui_data(mob/user)
 	var/list/data = list()
 	data["excited_groups"] = list()
-	for(var/datum/excited_group/group in excited_groups)
-		var/turf/T = group.turf_list[1]
-		var/area/target = get_area(T)
-		var/max = 0
-		#ifdef TRACK_MAX_SHARE
-		for(var/who in group.turf_list)
-			var/turf/open/lad = who
-			max = max(lad.max_share, max)
-		#endif
-		data["excited_groups"] += list(list(
-			"jump_to" = REF(T), //Just go to the first turf
-			"group" = REF(group),
-			"area" = target.name,
-			"breakdown" = group.breakdown_cooldown,
-			"dismantle" = group.dismantle_cooldown,
-			"size" = group.turf_list.len,
-			"should_show" = group.should_display,
-			"max_share" = max
-		))
 	data["active_size"] = active_turfs.len
 	data["hotspots_size"] = hotspots.len
 	data["excited_size"] = excited_groups.len
@@ -806,24 +703,9 @@ GLOBAL_LIST_EMPTY(colored_images)
 			can_fire = !can_fire
 			return TRUE
 		if("toggle_show_group")
-			var/datum/excited_group/group = locate(params["group"])
-			if(!group)
-				return
-			group.should_display = !group.should_display
-			if(display_all_groups)
-				return TRUE
-			if(group.should_display)
-				group.display_turfs()
-			else
-				group.hide_turfs()
 			return TRUE
 		if("toggle_show_all")
 			display_all_groups = !display_all_groups
-			for(var/datum/excited_group/group in excited_groups)
-				if(display_all_groups)
-					group.display_turfs()
-				else if(!group.should_display) //Don't flicker yeah?
-					group.hide_turfs()
 			return TRUE
 		if("toggle_user_display")
 			var/atom/movable/screen/plane_master/plane = ui.user.hud_used.plane_masters["[ATMOS_GROUP_PLANE]"]

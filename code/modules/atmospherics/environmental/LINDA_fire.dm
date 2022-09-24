@@ -245,9 +245,6 @@
 		qdel(src)
 		return
 
-	if(location.excited_group)
-		location.excited_group.reset_cooldowns()
-
 	cold_fire = FALSE
 	if(temperature <= FREON_MAXIMUM_BURN_TEMPERATURE)
 		cold_fire = TRUE
