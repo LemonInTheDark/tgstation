@@ -335,7 +335,7 @@ INITIALIZE_IMMEDIATE(/turf/closed/indestructible/splashscreen)
 /turf/closed/indestructible/riveted/hierophant
 	name = "wall"
 	desc = "A wall made out of a strange metal. The squares on it pulse in a predictable pattern."
-// wallening todo:	icon = 'icons/turf/walls/hierophant_wall.dmi'
+	icon = 'icons/turf/walls/hierophant_wall.dmi'
 	icon_state = "wall"
 	smoothing_flags = SMOOTH_CORNERS
 	smoothing_groups = list(SMOOTH_GROUP_HIERO_WALL)
