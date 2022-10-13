@@ -15,8 +15,8 @@
 		var/icon_state = initial(item.icon_state)
 
 		#ifdef UNIT_TESTS
-		var/icon_states_list = icon_states(icon_file)
-		if (!(icon_state in icon_states_list))
+		var/icon_states_list = cached_icon_states(icon_file)
+		if (!icon_states_list[icon_state])
 			var/icon_states_string
 			for (var/an_icon_state in icon_states_list)
 				if (!icon_states_string)

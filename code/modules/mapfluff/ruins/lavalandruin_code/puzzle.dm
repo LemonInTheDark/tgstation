@@ -139,7 +139,7 @@
 
 /obj/effect/sliding_puzzle/proc/get_base_icon()
 	var/icon/I = new('icons/obj/puzzle.dmi')
-	var/list/puzzles = icon_states(I)
+	var/list/puzzles = cached_icon_states(I)
 	var/puzzle_state = pick(puzzles)
 	var/icon/P = new('icons/obj/puzzle.dmi',puzzle_state)
 	return P

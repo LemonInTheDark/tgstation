@@ -14,7 +14,7 @@
 	add_verb(src, /client/proc/ClearCredits)
 	var/static/list/credit_order_for_this_round
 	if(isnull(credit_order_for_this_round))
-		credit_order_for_this_round = list("Thanks for playing!") + (shuffle(icon_states(credits_icon)) - "Thanks for playing!")
+		credit_order_for_this_round = list("Thanks for playing!") + (shuffle(cached_icon_states(credits_icon)) - "Thanks for playing!")
 	for(var/I in credit_order_for_this_round)
 		if(!credits)
 			return

@@ -14,7 +14,7 @@
 			icon_file = initial(D.research_icon)
 			icon_state = initial(D.research_icon_state)
 			#ifdef UNIT_TESTS
-			if(!(icon_state in icon_states(icon_file)))
+			if(!icon_exists(icon_file, icon_state))
 				stack_trace("design [D] with icon '[icon_file]' missing state '[icon_state]'")
 				continue
 			#endif
@@ -47,7 +47,7 @@
 
 			icon_state = initial(item.icon_state)
 			#ifdef UNIT_TESTS
-			if(!(icon_state in icon_states(icon_file)))
+			if(!icon_exists(icon_file, icon_state)))
 				stack_trace("design [D] with icon '[icon_file]' missing state '[icon_state]'")
 				continue
 			#endif
@@ -58,10 +58,10 @@
 				var/obj/machinery/computer/C = item
 				var/screen = initial(C.icon_screen)
 				var/keyboard = initial(C.icon_keyboard)
-				var/all_states = icon_states(icon_file)
-				if (screen && (screen in all_states))
+				var/list/all_states = cached_icon_states(icon_file)
+				if (screen && all_states[screen])
 					I.Blend(icon(icon_file, screen, SOUTH), ICON_OVERLAY)
-				if (keyboard && (keyboard in all_states))
+				if (keyboard && all_states[keyboard])
 					I.Blend(icon(icon_file, keyboard, SOUTH), ICON_OVERLAY)
 
 		Insert(initial(D.id), I)

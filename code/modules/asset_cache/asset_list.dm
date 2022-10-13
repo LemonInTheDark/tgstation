@@ -331,16 +331,33 @@ GLOBAL_LIST_EMPTY(asset_datums)
 	if(load_immediately)
 		queuedInsert(sprite_name, I, icon_state, dir, frame, moving)
 	else
-		to_generate += list(args.Copy())
+		// Temp, for testing total cost by source
+		queuedInsert(sprite_name, I, icon_state, dir, frame, moving)
+	//	to_generate += list(args.Copy())
 
+GLOBAL_LIST_EMPTY(insert_cost)
+GLOBAL_LIST_EMPTY(insert_count)
 // LEMON NOTE
 // A GOON CODER SAYS BAD ICON ERRORS CAN BE THROWN BY THE "ICON CACHE"
 // APPARENTLY IT MAKES ICONS IMMUTABLE
 // LOOK INTO USING THE MUTABLE APPEARANCE PATTERN HERE
 /datum/asset/spritesheet/proc/queuedInsert(sprite_name, icon/I, icon_state="", dir=SOUTH, frame=1, moving=FALSE)
-	I = icon(I, icon_state=icon_state, dir=dir, frame=frame, moving=moving)
-	if (!I || !length(icon_states(I)))  // that direction or state doesn't exist
+	INIT_COST(GLOB.insert_cost, GLOB.insert_count)
+	// Lemon todo: does removing this cached_icon_states save time? if not, does changing how insert is called do so?
+	var/key = "[I]-[icon_state]"
+	SET_COST("keygen [key]")
+	var/list/icon_states = cached_icon_states(I)
+	SET_COST("cache get [key]")
+	if (!icon_states[icon_state])  // that state doesn't exist
+		SET_COST("icon empty [key]")
 		return
+	SET_COST("icon filled [key]")
+	I = icon(I, icon_state=icon_state, dir=dir, frame=frame, moving=moving)
+	SET_COST("iconify [key]")
+	if(!I) // that direction doesn't exist
+		SET_COST("no icon [key]")
+		return
+	SET_COST("yes icon [key]")
 	//any sprite modifications we want to do (aka, coloring a greyscaled asset)
 	I = ModifyInserted(I)
 	var/size_id = "[I.Width()]x[I.Height()]"
@@ -378,7 +395,7 @@ GLOBAL_LIST_EMPTY(asset_datums)
 	if (!directions)
 		directions = list(SOUTH)
 
-	for (var/icon_state_name in icon_states(I))
+	for (var/icon_state_name in cached_icon_states(I))
 		for (var/direction in directions)
 			var/prefix2 = (directions.len > 1) ? "[dir2text(direction)]-" : ""
 			Insert("[prefix][prefix2][icon_state_name]", I, icon_state=icon_state_name, dir=direction)
@@ -461,7 +478,7 @@ GLOBAL_LIST_EMPTY(asset_datums)
 	var/generic_icon_names = FALSE //generate icon filenames using generate_asset_name() instead the above format
 
 /datum/asset/simple/icon_states/register(_icon = icon)
-	for(var/icon_state_name in icon_states(_icon))
+	for(var/icon_state_name in cached_icon_states(_icon))
 		for(var/direction in directions)
 			var/asset = icon(_icon, icon_state_name, direction, frame, movement_states)
 			if (!asset)

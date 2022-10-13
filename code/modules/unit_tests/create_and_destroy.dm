@@ -103,6 +103,9 @@ GLOBAL_VAR_INIT(running_create_and_destroy, FALSE)
 	var/baseturf_count = length(spawn_at.baseturfs)
 
 	GLOB.running_create_and_destroy = TRUE
+
+	var/list/atoms_to_exclude = typecacheof(list(/atom/movable/screen))
+
 	for(var/type_path in typesof(/atom/movable, /turf) - ignore) //No areas please
 		if(ispath(type_path, /turf))
 			spawn_at.ChangeTurf(type_path, /turf/baseturf_skipover)
@@ -111,10 +114,25 @@ GLOBAL_VAR_INIT(running_create_and_destroy, FALSE)
 			if(baseturf_count != length(spawn_at.baseturfs))
 				TEST_FAIL("[type_path] changed the amount of baseturfs we have [baseturf_count] -> [length(spawn_at.baseturfs)]")
 				baseturf_count = length(spawn_at.baseturfs)
+
+			// If there is a GAGS config value, its covered by greyscale_config.dm. Checking for a valid GAGS config again here would be pointless.
+			if(!spawn_at.greyscale_config && \
+				!is_type_in_typecache(spawn_at, atoms_to_exclude) && \
+				spawn_at.icon && spawn_at.icon_state) // This catches edge cases where we get the path to an abstract atom; i.e. mob holders
+				var/list/states = cached_icon_states(spawn_at.icon)
+				if(!states[spawn_at.icon_state])
+					TEST_FAIL("cannot find icon_state '[spawn_at.icon_state]' for icon '[spawn_at.icon]' for '[spawn_at.type]'")
 		else
 			var/atom/creation = new type_path(spawn_at)
 			if(QDELETED(creation))
 				continue
+			// If there is a GAGS config value, its covered by greyscale_config.dm. Checking for a valid GAGS config again here would be pointless.
+			if(!creation.greyscale_config && \
+				!is_type_in_typecache(creation, atoms_to_exclude) && \
+				creation.icon && creation.icon_state) // This catches edge cases where we get the path to an abstract atom; i.e. mob holders
+				var/list/states = cached_icon_states(creation.icon)
+				if(!states[creation.icon_state])
+					TEST_FAIL("cannot find icon_state '[creation.icon_state]' for icon '[creation.icon]' for '[creation.type]'")
 			//Go all in
 			qdel(creation, force = TRUE)
 			//This will hold a ref to the last thing we process unless we set it to null

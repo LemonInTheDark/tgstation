@@ -207,7 +207,7 @@
 
 	if(!syndicate_icon_states)
 		syndicate_icon_states = list()
-		for(var/state in icon_states(delusion_icon_file))
+		for(var/state in cached_icon_states(delusion_icon_file))
 			if(!findtext(state, "syndicate"))
 				continue
 

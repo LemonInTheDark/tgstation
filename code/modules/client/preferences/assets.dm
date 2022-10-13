@@ -4,8 +4,11 @@
 	early = TRUE
 	cross_round_cachable = TRUE
 
+GLOBAL_LIST_EMPTY(preferences_icons_cost)
+GLOBAL_LIST_EMPTY(preferences_icons_count)
 /datum/asset/spritesheet/preferences/create_spritesheets()
 	var/list/to_insert = list()
+	INIT_COST(GLOB.preferences_icons_cost, GLOB.preferences_icons_count)
 
 	for (var/preference_key in GLOB.preference_entries_by_key)
 		var/datum/preference/choiced/preference = GLOB.preference_entries_by_key[preference_key]
@@ -22,17 +25,20 @@
 			var/icon/icon
 			var/icon_state
 
+			SET_COST("unrelated stuff")
 			if (ispath(create_icon_of, /atom))
 				var/atom/atom_icon_source = create_icon_of
 				icon = initial(atom_icon_source.icon)
 				icon_state = initial(atom_icon_source.icon_state)
+				SET_COST("atom passed [create_icon_of] [preference_key]")
 			else if (isicon(create_icon_of))
 				icon = create_icon_of
+				SET_COST("icon passed ([icon]) [preference_key]")
 			else
 				CRASH("[create_icon_of] is an invalid preference value (from [preference_key]:[preference_value]).")
 
 			to_insert[preference.get_spritesheet_key(preference_value)] = list(icon, icon_state)
-	
+
 	for (var/spritesheet_key in to_insert)
 		var/list/inserting = to_insert[spritesheet_key]
 		Insert(spritesheet_key, inserting[1], inserting[2])

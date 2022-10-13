@@ -10,11 +10,12 @@
 
 	cut_overlays() //remove portraits
 	var/old_icon = icon_state
-	if("[icon_state]_dead" in icon_states(icon))
+	var/list/icon_states = cached_icon_states(icon)
+	if(icon_states["[icon_state]_dead"])
 		icon_state = "[icon_state]_dead"
 	else
 		icon_state = "ai_dead"
-	if("[old_icon]_death_transition" in icon_states(icon))
+	if(icon_states["[old_icon]_death_transition"])
 		flick("[old_icon]_death_transition", src)
 
 	cameraFollow = null

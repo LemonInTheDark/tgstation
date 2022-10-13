@@ -1,3 +1,4 @@
+#define cached_icon_states(icon) _cached_icon_states(icon, __LINE__, __FILE__)
 /*
 IconProcs README
 
@@ -762,9 +763,9 @@ world
 	var/render_icon = curicon
 
 	if (render_icon)
-		var/curstates = icon_states(curicon)
-		if(!(curstate in curstates))
-			if ("" in curstates)
+		var/list/current_states = cached_icon_states(curicon)
+		if(!current_states[curstate])
+			if (current_states[""])
 				curstate = ""
 			else
 				render_icon = FALSE
@@ -775,9 +776,9 @@ world
 	//Determines if there's directionals.
 	if(render_icon && curdir != SOUTH)
 		if (
-			!length(icon_states(icon(curicon, curstate, NORTH))) \
-			&& !length(icon_states(icon(curicon, curstate, EAST))) \
-			&& !length(icon_states(icon(curicon, curstate, WEST))) \
+			!length(cached_icon_states(icon(curicon, curstate, NORTH))) \
+			&& !length(cached_icon_states(icon(curicon, curstate, EAST))) \
+			&& !length(cached_icon_states(icon(curicon, curstate, WEST))) \
 		)
 			base_icon_dir = SOUTH
 
@@ -1457,25 +1458,44 @@ GLOBAL_LIST_EMPTY(transformation_animation_objects)
 	pixel_x = initialpixelx
 	pixel_y = initialpixely
 
-///Checks if the given iconstate exists in the given file, caching the result. Setting scream to TRUE will print a stack trace ONCE.
-/proc/icon_exists(file, state, scream)
-	var/static/list/icon_states_cache = list()
-	if(icon_states_cache[file]?[state])
-		return TRUE
+GLOBAL_LIST_EMPTY(icon_states_cache)
+GLOBAL_VAR_INIT(icon_cache_hit, 0)
+GLOBAL_VAR_INIT(icon_cache_miss, 0)
+GLOBAL_LIST_EMPTY(icon_states_cost)
+GLOBAL_LIST_EMPTY(icon_states_count)
+/// Takes an icon, returns its icon states in the form list(state -> TRUE)
+/// We cache the icon_states call because it ALWAYS reads from memory, which is expensive as hell
+/proc/_cached_icon_states(icon, line, file)
+	INIT_COST_GLOBAL(GLOB.icon_states_cost, GLOB.icon_states_count)
+	var/list/cached_states = GLOB.icon_states_cache[icon]
+	if(cached_states)
+		GLOB.icon_cache_hit += 1
+		SET_COST("cache hit [line]-[file]")
+		return cached_states.Copy()
 
-	if(icon_states_cache[file]?[state] == FALSE)
-		return FALSE
+	GLOB.icon_cache_miss += 1
+	cached_states = list()
 
-	var/list/states = icon_states(file)
+	for(var/store_state in icon_states(icon))
+		cached_states[store_state] = TRUE
+	SET_COST("cache miss [line]-[file]")
 
-	if(!icon_states_cache[file])
-		icon_states_cache[file] = list()
-
-	if(state in states)
-		icon_states_cache[file][state] = TRUE
-		return TRUE
+	var/string_icon = "[icon]" // If the icon is static, this will be its location
+	if(string_icon != "/icon" && !string_icon) // Otherwise, it's just "/icon", or for some reason, ""
+		GLOB.icon_states_cache[icon] = cached_states
+		SET_COST("cache successful [icon]")
 	else
-		icon_states_cache[file][state] = FALSE
-		if(scream)
-			stack_trace("Icon Lookup for state: [state] in file [file] failed.")
-		return FALSE
+		SET_COST("cache failed [icon] [line]-[file]")
+
+	return cached_states.Copy()
+
+///Checks if the given iconstate exists in the given file. Setting scream to TRUE will print a stack trace ONCE.
+/proc/icon_exists(file, state, scream = FALSE)
+	var/list/states = cached_icon_states(file)
+	if(states[state])
+		return TRUE
+	var/static/list/screamed_icons = list()
+	if(scream && !screamed_icons["[file]-[state]"])
+		screamed_icons["[file]-[state]"] = TRUE
+		stack_trace("Icon Lookup for state: [state] in file [file] failed.")
+	return FALSE
