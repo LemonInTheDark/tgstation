@@ -132,7 +132,7 @@
 
 /mob/living/simple_animal/bot/secbot/turn_off()
 	..()
-	mode = BOT_IDLE
+	set_mode(BOT_IDLE)
 
 /mob/living/simple_animal/bot/secbot/bot_reset()
 	..()
@@ -145,7 +145,7 @@
 /mob/living/simple_animal/bot/secbot/electrocute_act(shock_damage, source, siemens_coeff = 1, flags = NONE)//shocks only make him angry
 	if(base_speed < initial(base_speed) + 3)
 		base_speed += 3
-		addtimer(VARSET_CALLBACK(src, base_speed, base_speed - 3), 60)
+		addtimer(VARSET_CALLBACK(src, base_speed, base_speed - 3), 6 SECONDS)
 		playsound(src, 'sound/machines/defib_zap.ogg', 50)
 		visible_message(span_warning("[src] shakes and speeds up!"))
 
@@ -190,7 +190,7 @@
 	threatlevel += 6
 	if(threatlevel >= 4)
 		target = attacking_human
-		mode = BOT_HUNT
+		set_mode(BOT_HUNT)
 
 /mob/living/simple_animal/bot/secbot/proc/judgement_criteria()
 	var/final = FALSE
@@ -286,7 +286,7 @@
 	..()
 
 /mob/living/simple_animal/bot/secbot/proc/start_handcuffing(mob/living/carbon/current_target)
-	mode = BOT_ARREST
+	set_mode(BOT_ARREST)
 	playsound(src, 'sound/weapons/cablecuff.ogg', 30, TRUE, -2)
 	current_target.visible_message(span_danger("[src] is trying to put zipties on [current_target]!"),\
 						span_userdanger("[src] is trying to put zipties on you!"))
@@ -332,7 +332,7 @@
 							span_userdanger("[src] stuns you!"))
 
 	target_lastloc = target.loc
-	mode = BOT_PREP_ARREST
+	set_mode(BOT_PREP_ARREST)
 
 /mob/living/simple_animal/bot/secbot/handle_automated_action()
 	. = ..()
@@ -345,7 +345,7 @@
 			SSmove_manager.stop_looping(src)
 			look_for_perp() // see if any criminals are in range
 			if((mode == BOT_IDLE) && bot_mode_flags & BOT_MODE_AUTOPATROL) // didn't start hunting during look_for_perp, and set to patrol
-				mode = BOT_START_PATROL // switch to patrol mode
+				set_mode(BOT_START_PATROL) // switch to patrol mode
 
 		if(BOT_HUNT) // hunting for perp
 			// if can't reach perp for long enough, go idle
@@ -394,7 +394,7 @@
 		if(BOT_ARREST)
 			if(!target)
 				set_anchored(FALSE)
-				mode = BOT_IDLE
+				set_mode(BOT_IDLE)
 				last_found = world.time
 				frustration = 0
 				return
@@ -410,7 +410,7 @@
 				back_to_hunt()
 				return
 			else //Try arresting again if the target escapes.
-				mode = BOT_PREP_ARREST
+				set_mode(BOT_PREP_ARREST)
 				set_anchored(FALSE)
 
 		if(BOT_START_PATROL)
@@ -423,7 +423,7 @@
 
 /mob/living/simple_animal/bot/secbot/proc/back_to_idle()
 	set_anchored(FALSE)
-	mode = BOT_IDLE
+	set_mode(BOT_IDLE)
 	target = null
 	last_found = world.time
 	frustration = 0
@@ -432,7 +432,7 @@
 /mob/living/simple_animal/bot/secbot/proc/back_to_hunt()
 	set_anchored(FALSE)
 	frustration = 0
-	mode = BOT_HUNT
+	set_mode(BOT_HUNT)
 	INVOKE_ASYNC(src, .proc/handle_automated_action)
 // look for a criminal in view of the bot
 
@@ -466,7 +466,7 @@
 					playsound(src, pick('sound/voice/beepsky/criminal.ogg', 'sound/voice/beepsky/justice.ogg', 'sound/voice/beepsky/freeze.ogg'), 50, FALSE)
 
 			visible_message("<b>[src]</b> points at [nearby_carbons.name]!")
-			mode = BOT_HUNT
+			set_mode(BOT_HUNT)
 			INVOKE_ASYNC(src, .proc/handle_automated_action)
 			break
 
@@ -517,7 +517,7 @@
 	..()
 	if(!isalien(target))
 		target = user
-		mode = BOT_HUNT
+		set_mode(BOT_HUNT)
 
 /mob/living/simple_animal/bot/secbot/proc/on_entered(datum/source, atom/movable/AM)
 	SIGNAL_HANDLER

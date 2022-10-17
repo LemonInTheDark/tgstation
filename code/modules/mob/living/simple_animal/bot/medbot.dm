@@ -155,9 +155,9 @@
 	update_appearance()
 
 /mob/living/simple_animal/bot/medbot/proc/soft_reset() //Allows the medibot to still actively perform its medical duties without being completely halted as a hard reset does.
-	path = list()
+	set_path(null)
 	patient = null
-	mode = BOT_IDLE
+	set_mode(BOT_IDLE)
 	last_found = world.time
 	update_appearance()
 
@@ -195,7 +195,7 @@
 			medical_mode_flags ^= MEDBOT_DECLARE_CRIT
 		if("stationary_mode")
 			medical_mode_flags ^= MEDBOT_STATIONARY_MODE
-			path = list()
+			set_path(null)
 		if("sync_tech")
 			var/oldheal_amount = heal_amount
 			var/tech_boosters
@@ -274,7 +274,7 @@
  * user - the mob who tipped us over
  */
 /mob/living/simple_animal/bot/medbot/proc/after_tip_over(mob/user)
-	mode = BOT_TIPPED
+	set_mode(BOT_TIPPED)
 	tipper_name = user.name
 	playsound(src, 'sound/machines/warning-buzzer.ogg', 50)
 
@@ -300,7 +300,7 @@
 		speak(message)
 		playsound(src, messagevoice[message], 70)
 	tipped_status = MEDBOT_PANIC_NONE
-	mode = BOT_IDLE
+	set_mode(BOT_IDLE)
 
 /// if someone tipped us over, check whether we should ask for help or just right ourselves eventually
 /mob/living/simple_animal/bot/medbot/proc/handle_panic()
@@ -346,7 +346,7 @@
 	if(IsStun() || IsParalyzed())
 		oldpatient = patient
 		patient = null
-		mode = BOT_IDLE
+		set_mode(BOT_IDLE)
 		return
 
 	if(frustration > 8)
@@ -375,7 +375,7 @@
 
 	if(patient && (get_dist(src,patient) <= 1) && !tending) //Patient is next to us, begin treatment!
 		if(mode != BOT_HEALING)
-			mode = BOT_HEALING
+			set_mode(BOT_HEALING)
 			update_appearance()
 			frustration = 0
 			medicate_patient(patient)
@@ -383,8 +383,8 @@
 
 	//Patient has moved away from us!
 	else if(patient && path.len && (get_dist(patient,path[path.len]) > 2))
-		path = list()
-		mode = BOT_IDLE
+		set_path(null)
+		set_mode(BOT_IDLE)
 		last_found = world.time
 
 	else if(medical_mode_flags & MEDBOT_STATIONARY_MODE && patient) //Since we cannot move in this mode, ignore the patient and wait for another.
@@ -392,15 +392,15 @@
 		return
 
 	if(patient && path.len == 0 && (get_dist(src,patient) > 1))
-		path = get_path_to(src, patient, 30,id=access_card)
-		mode = BOT_MOVING
+		set_path(get_path(src, patient, 30, id=access_card))
+		set_mode(BOT_MOVING)
 		if(!path.len) //try to get closer if you can't reach the patient directly
-			path = get_path_to(src, patient, 30,1,id=access_card)
+			set_path(get_path(src, patient, 30,1,id=access_card))
 			if(!path.len) //Do not chase a patient we cannot reach.
 				soft_reset()
 
 	if(path.len > 0 && patient)
-		if(!bot_move(path[path.len]))
+		if(path_failed)
 			oldpatient = patient
 			soft_reset()
 		return
@@ -472,7 +472,7 @@
 	if(iscarbon(A) && !tending)
 		var/mob/living/carbon/C = A
 		patient = C
-		mode = BOT_HEALING
+		set_mode(BOT_HEALING)
 		update_appearance()
 		medicate_patient(C)
 		update_appearance()

@@ -229,6 +229,7 @@
 		update_appearance(UPDATE_ICON)
 	return ..()
 
+// LEMON TODO: we will need to react to mode changing, because we only want to patrol in some cases, etc etc etc
 /mob/living/simple_animal/bot/cleanbot/handle_automated_action()
 	. = ..()
 	if(!.)
@@ -259,32 +260,26 @@
 	else if(target)
 		if(QDELETED(target) || !isturf(target.loc))
 			target = null
-			mode = BOT_IDLE
+			set_mode(BOT_IDLE)
 			return
 
 		if(loc == get_turf(target))
 			if(check_bot(target))
 				shuffle_adjacent = TRUE //Shuffle the list the next time we scan so we dont both go the same way.
-				path = list()
+				set_path(null)
 			else
 				UnarmedAttack(target) //Rather than check at every step of the way, let's check before we do an action, so we can rescan before the other bot.
 				if(QDELETED(target)) //We done here.
 					target = null
-					mode = BOT_IDLE
+					set_mode(BOT_IDLE)
 					return
 
 		if(!length(path)) //No path, need a new one
 			//Try to produce a path to the target, and ignore airlocks to which it has access.
-			path = get_path_to(src, target, 30, id=access_card)
-			if(!bot_move(target))
-				add_to_ignore(target)
-				target = null
-				path = list()
-				return
-			mode = BOT_MOVING
-		else if(!bot_move(target))
+			set_path(get_path(src, target, 30, id=access_card))
+		else if(path_failed)
 			target = null
-			mode = BOT_IDLE
+			set_mode(BOT_IDLE)
 			return
 
 /mob/living/simple_animal/bot/cleanbot/proc/get_targets()
@@ -335,12 +330,12 @@
 		return
 	. = ..()
 	if(ismopable(attack_target))
-		mode = BOT_CLEANING
+		set_mode(BOT_CLEANING)
 		update_icon_state()
 		var/turf/turf_to_clean = get_turf(attack_target)
 		start_cleaning(src, turf_to_clean, src)
 		target = null
-		mode = BOT_IDLE
+		set_mode(BOT_IDLE)
 
 	else if(isitem(attack_target) || istype(attack_target, /obj/effect/decal))
 		visible_message(span_danger("[src] sprays hydrofluoric acid at [attack_target]!"))

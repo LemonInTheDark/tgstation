@@ -441,6 +441,41 @@
 		return FALSE
 	return TRUE
 
+/**
+ * Reads over a list of turfs to step to (taked in the assumption that they are adjacent to each other)
+ * Steps from turf to turf until it reaches the end
+ *
+ * Arguments:
+ * moving - The atom we want to move
+ * list/path - The list of turfs we're walking over
+ * delay - How many deci-seconds to wait between fires. Defaults to the lowest value, 0.1
+ * timeout - Time in deci-seconds until the moveloop self expires. Defaults to infinity
+ * subsystem - The movement subsystem to use. Defaults to SSmovement. Only one loop can exist for any one subsystem
+ * priority - Defines how different move loops override each other. Lower numbers beat higher numbers, equal defaults to what currently exists. Defaults to MOVEMENT_DEFAULT_PRIORITY
+ * flags - Set of bitflags that effect move loop behavior in some way. Check _DEFINES/movement.dm
+ *
+**/
+/datum/controller/subsystem/move_manager/proc/walk_path(moving, list/path, delay, timeout, subsystem, priority, flags, datum/extra_info)
+	return add_to_loop(moving, subsystem, /datum/move_loop/walk_path, priority, flags, extra_info, delay, timeout, path)
+
+/datum/move_loop/walk_path
+	var/list/turf/path
+
+/datum/move_loop/walk_path/setup(delay, timeout, list/path)
+	. = ..()
+	if(!.)
+		return
+	src.path = path
+
+/datum/move_loop/walk_path/move()
+	if(length(path) < 1)
+		return FALSE
+	var/turf/target = path[1]
+	step_to(moving, target)
+	var/successful = (moving?.loc == target)
+	if(successful) // If the move was successful cut the step
+		path.Cut(1, 2)
+	return successful
 
 /**
  * Wrapper around walk_to()

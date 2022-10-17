@@ -413,7 +413,7 @@
 			return
 
 	load = AM
-	mode = BOT_IDLE
+	set_mode(BOT_IDLE)
 	update_appearance()
 
 ///resolves the name to display for the loaded mob. primarily needed for the paranormal subtype since we don't want to show the name of ghosts riding it.
@@ -442,7 +442,7 @@
 			update_appearance()
 		return
 
-	mode = BOT_IDLE
+	set_mode(BOT_IDLE)
 
 	var/atom/movable/cached_load = load //cache the load since unbuckling mobs clears the var.
 
@@ -503,6 +503,26 @@
 	num_steps = round(10/speed) //10, 5, or 3 steps, depending on how many wires we have cut
 	START_PROCESSING(SSfastprocess, src)
 
+/mob/living/simple_animal/bot/mulebot/failed_move()
+	tries += 1
+	set_mode(BOT_BLOCKED)
+	if(tries == 3)
+		buzz(ANNOYED)
+
+	if(tries > 10) // attempt 10 times before recomputing
+		// find new path excluding blocked turf
+		buzz(SIGH)
+		set_mode(BOT_WAIT_FOR_NAV)
+		path_failed = TRUE
+		addtimer(CALLBACK(src, .proc/process_blocked, next), 2 SECONDS)
+
+/mob/living/simple_animal/bot/mulebot/postmove(datum/move_loop/walk_path/source, succeeded, visual_delay)
+	. = ..()
+	if(destination == home_destination)
+		set_mode(BOT_GO_HOME)
+	else
+		set_mode(BOT_DELIVER)
+
 /mob/living/simple_animal/bot/mulebot/process()
 	if(!(bot_mode_flags & BOT_MODE_ON) || client || (num_steps <= 0) || !has_power())
 		return PROCESS_KILL
@@ -517,76 +537,37 @@
 				at_target()
 				return
 
-			else if(length(path) && target) // valid path
-				var/turf/next = path[1]
-				reached_target = FALSE
-				if(next == loc)
-					path -= next
-					return
-				if(isturf(next))
-					if(SEND_SIGNAL(src, COMSIG_MOB_BOT_PRE_STEP) & COMPONENT_MOB_BOT_BLOCK_PRE_STEP)
-						return
-					var/oldloc = loc
-					var/moved = step_towards(src, next) // attempt to move
-					if(moved && oldloc!=loc) // successful move
-						SEND_SIGNAL(src, COMSIG_MOB_BOT_STEP)
-						blockcount = 0
-						path -= loc
-						if(destination == home_destination)
-							mode = BOT_GO_HOME
-						else
-							mode = BOT_DELIVER
-
-					else // failed to move
-
-						blockcount++
-						mode = BOT_BLOCKED
-						if(blockcount == 3)
-							buzz(ANNOYED)
-
-						if(blockcount > 10) // attempt 10 times before recomputing
-							// find new path excluding blocked turf
-							buzz(SIGH)
-							mode = BOT_WAIT_FOR_NAV
-							blockcount = 0
-							addtimer(CALLBACK(src, .proc/process_blocked, next), 2 SECONDS)
-							return
-						return
-				else
-					buzz(ANNOYED)
-					mode = BOT_NAV
-					return
-			else
-				mode = BOT_NAV
+			else if(!length(path) || !target)
+				set_mode(BOT_NAV)
 				return
 
 		if(BOT_NAV) // calculate new path
-			mode = BOT_WAIT_FOR_NAV
+			set_mode(BOT_WAIT_FOR_NAV)
 			INVOKE_ASYNC(src, .proc/process_nav)
 
 /mob/living/simple_animal/bot/mulebot/proc/process_blocked(turf/next)
 	calc_path(avoid=next)
 	if(length(path))
 		buzz(DELIGHT)
-	mode = BOT_BLOCKED
+	set_mode(BOT_BLOCKED)
 
 /mob/living/simple_animal/bot/mulebot/proc/process_nav()
 	calc_path()
 
 	if(length(path))
 		blockcount = 0
-		mode = BOT_BLOCKED
+		set_mode(BOT_BLOCKED)
 		buzz(DELIGHT)
 
 	else
 		buzz(SIGH)
 
-		mode = BOT_NO_ROUTE
+		set_mode(BOT_NO_ROUTE)
 
 // calculates a path to the current destination
 // given an optional turf to avoid
 /mob/living/simple_animal/bot/mulebot/calc_path(turf/avoid = null)
-	path = get_path_to(src, target, 250, id=access_card, exclude=avoid)
+	set_path(get_path(src, target, 250, id=access_card, exclude=avoid))
 
 // sets the current destination
 // signals all beacons matching the delivery code
@@ -600,9 +581,9 @@
 	if(!(bot_mode_flags & BOT_MODE_ON))
 		return
 	if(destination == home_destination)
-		mode = BOT_GO_HOME
+		set_mode(BOT_GO_HOME)
 	else
-		mode = BOT_DELIVER
+		set_mode(BOT_DELIVER)
 	get_nav()
 
 // starts bot moving to home
@@ -614,7 +595,7 @@
 
 /mob/living/simple_animal/bot/mulebot/proc/do_start_home()
 	set_destination(home_destination)
-	mode = BOT_BLOCKED
+	set_mode(BOT_BLOCKED)
 
 // called when bot reaches current target
 /mob/living/simple_animal/bot/mulebot/proc/at_target()
@@ -655,7 +636,7 @@
 		if(auto_return && home_destination && destination != home_destination)
 			// auto return set and not at home already
 			start_home()
-			mode = BOT_BLOCKED
+			set_mode(BOT_BLOCKED)
 		else
 			bot_reset() // otherwise go idle
 
@@ -839,7 +820,7 @@
 			return
 
 	load = AM
-	mode = BOT_IDLE
+	set_mode(BOT_IDLE)
 	update_appearance()
 
 /mob/living/simple_animal/bot/mulebot/paranormal/update_overlays()
