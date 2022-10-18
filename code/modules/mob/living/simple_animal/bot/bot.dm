@@ -623,8 +623,6 @@ GLOBAL_LIST_EMPTY(scan_typecaches)
 		path_failed = TRUE
 		set_path(null)
 
-// Lemon todo: why do bots loop around on themselves when doors open? what?
-// Also: maybe we should speed bots up a bit
 /mob/living/simple_animal/bot/proc/loop_deleted(datum/move_loop/walk_path/source)
 	SIGNAL_HANDLER
 	bot_loop = null
