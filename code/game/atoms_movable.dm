@@ -3,7 +3,10 @@
 	glide_size = 8
 	appearance_flags = TILE_BOUND|PIXEL_SCALE|LONG_GLIDE
 
+	/// Our direction the last time we moved
 	var/last_move = null
+	/// The last time we finished a move
+	var/last_moved = 0
 	var/anchored = FALSE
 	var/move_resist = MOVE_RESIST_DEFAULT
 	var/move_force = MOVE_FORCE_DEFAULT
@@ -662,8 +665,6 @@
 	if(glide_size_override)
 		set_glide_size(glide_size_override)
 
-	last_move = direct
-
 	if(set_dir_on_move && dir != direct)
 		setDir(direct)
 	if(. && has_buckled_mobs() && !handle_buckled_mob_movement(loc, direct, glide_size_override)) //movement failed due to buckled mob(s)
@@ -730,6 +731,8 @@
 		else if(new_turf && !old_turf)
 			SSspatial_grid.enter_cell(src, new_turf)
 
+	last_moved = world.time
+	last_move = movement_dir
 	return TRUE
 
 // Make sure you know what you're doing if you call this, this is intended to only be called by byond directly.

@@ -18,6 +18,11 @@ GLOBAL_VAR_INIT(glide_size_multiplier, 1.0)
 ///Similar to DELAY_TO_GLIDE_SIZE, except without the clamping, and it supports piping in an unrelated scalar
 #define MOVEMENT_ADJUSTED_GLIDE_SIZE(delay, movement_disparity) (world.icon_size / ((delay) / world.tick_lag) * movement_disparity * GLOB.glide_size_multiplier)
 
+/// Converts glide sizes into the delay they represent
+/// We discard clamping and the multiplier, because this attempts to pull out the time until we visually finish moving
+/// Not trying to devine the next time we're gonna move or anything
+#define GLIDE_SIZE_TO_DELAY(glide_size) (world.icon_size / glide_size * world.tick_lag)
+
 //Movement loop priority. Only one loop can run at a time, this dictates that
 // Higher numbers beat lower numbers
 ///Standard, go lower then this if you want to override, higher otherwise

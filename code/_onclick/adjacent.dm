@@ -65,13 +65,24 @@
 	Adjacency (to anything else):
 	* Must be on a turf
 */
-/atom/movable/Adjacent(atom/neighbor, atom/target, atom/movable/mover)
-	if(neighbor == loc)
+/atom/movable/Adjacent(atom/neighbor, atom/target, atom/movable/mover, glide_handling = FALSE)
+	var/atom/our_position = loc
+	var/atom/their_home = neighbor
+	if(glide_handling)
+		// We need to get the pixel distance between the two, and go off that
+		// If neighbor is a turf its position is 0, etc
+		our_position = get_moving_loc() || our_position
+	// If we're clicking on a turf/thing we're inside, go off
+	if(neighbor == our_position)
 		return TRUE
-	var/turf/T = loc
-	if(!istype(T))
+	if(!isturf(our_position))
 		return FALSE
-	if(T.Adjacent(neighbor,target = neighbor, mover = src))
+	var/turf/home = our_position
+	if(ismovable(neighbor))
+		var/atom/movable/movable_neighbor = neighbor
+		their_home = movable_neighbor.get_moving_loc() || neighbor
+
+	if(home.Adjacent(their_home,target = neighbor, mover = src))
 		return TRUE
 	return FALSE
 
@@ -84,6 +95,20 @@
 			return loc.Adjacent(neighbor, target, mover, recurse - 1)
 		return FALSE
 	return ..()
+
+// Lemon todo: do a pass on adjacent() usage
+GLOBAL_VAR_INIT(glide_distance_lieniency, 8)
+/// Returns our OLD turf if we're moving, and in the first section of it
+/// otherwise returns null
+/atom/movable/proc/get_moving_loc()
+	// Lemon todo: I hate this. we get the wrong numbers, and either under or overshoot our estimation of pixels moved in a second
+	// It's annoying. current state is untested, give it a whirl
+	var/our_glide_delay = GLIDE_SIZE_TO_DELAY(glide_size)
+	var/our_time_remaining = max(our_glide_delay - (world.time - last_moved), 0)
+	var/our_pixels_off = world.icon_size * (1 - (our_time_remaining / our_glide_delay))
+	if(our_pixels_off <= GLOB.glide_distance_lieniency)
+		return get_step(src, turn(last_move, 180)) // take a step back to where we were
+	return null
 
 /*
 	This checks if you there is uninterrupted airspace between that turf and this one.
