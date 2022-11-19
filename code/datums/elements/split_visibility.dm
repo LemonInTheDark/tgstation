@@ -74,6 +74,7 @@ GLOBAL_LIST_EMPTY(split_visibility_objects)
 	var/junction = new_junction
 	if(isnull(junction))
 		junction = target_turf.smoothing_junction
+	var/diagonal_connections = junction_to_diag_dir(junction)
 
 	// Lookup table for diagonal -> junction
 	// This lets us do O(1) logic down later, and ensure logic works as we'd like
@@ -126,7 +127,8 @@ GLOBAL_LIST_EMPTY(split_visibility_objects)
 
 	for(var/direction in GLOB.diagonals)
 		// If we're connected in the two components of this direction
-		if((junction & direction) != direction)
+		// But we aren't drawing anything TO it
+		if((junction & direction) != direction || (diagonal_connections & direction) == direction)
 			continue
 		// AND if we're not connected to anything in the SUM of those directions
 		var/diagonal_junction = diagonal_to_junction[direction]
