@@ -382,6 +382,247 @@
 
 	UNSETEMPTY(src.effect_str)
 
+/datum/light_source/directional
+	/// The angle we are facing in
+	var/angle = 0
+	/// What additional angle ahead/behind the facing angle we find acceptable
+	var/acceptable_range = 180
+	/// How far off of the acceptable range you can be, before we just discount you entirely
+	/// Anything between this and the acceptable range will have an exponential falloff
+	var/sharpness = 0
+
+// This exists so we can cache the vars used in this macro, and save MASSIVE time :)
+// Most of this is saving off datum var accesses, tho some of it does actually cache computation
+// You will NEED to call this before you call APPLY_CORNER
+#define SETUP_DIRECTED_CORNERS_CACHE(lighting_source)                       \
+	var/_turf_x = lighting_source.pixel_turf.x;                             \
+	var/_turf_y = lighting_source.pixel_turf.y;                             \
+	var/_turf_z = lighting_source.pixel_turf.z;                             \
+	var/_range_divisor = max(1, lighting_source.light_range);               \
+	var/_light_power = lighting_source.light_power;                         \
+	var/_applied_lum_r = lighting_source.applied_lum_r;                     \
+	var/_applied_lum_g = lighting_source.applied_lum_g;                     \
+	var/_applied_lum_b = lighting_source.applied_lum_b;                     \
+	var/_lum_r = lighting_source.lum_r;                                     \
+	var/_lum_g = lighting_source.lum_g;                                     \
+	var/_lum_b = lighting_source.lum_b;                                     \
+	var/_min_angle = WRAP(lighting_source.angle - acceptable_range, 0, 360);\
+	var/_max_angle = WRAP(lighting_source.angle + acceptable_range, 0, 360);\
+	var/_inverted = _min_angle > _max_angle;                                \
+	var/_sharpness = lighting_source.sharpness + acceptable_range;
+
+
+
+// Directed corners get dimmer depending on how closely they obey the angle range
+#define DIRECTED_LUM_FALLOFF(C) (1 - CLAMP01(sqrt(delta_x ** 2 + delta_y ** 2 + LIGHTING_HEIGHT) / _range_divisor))
+// You may notice we still use squares here even though there are three components
+// Because z diffs are so functionally small, cubes and cube roots are too aggressive
+#define DIRECTED_LUM_FALLOFF_MULTIZ(C) (1 - CLAMP01(sqrt(delta_x ** 2 + delta_y ** 2 + abs(C.z - _turf_z) ** 2 + LIGHTING_HEIGHT) / _range_divisor))
+
+// Macro that applies light to a new corner.
+// It is a macro in the interest of speed, yet not having to copy paste it.
+// If you're wondering what's with the backslashes, the backslashes cause BYOND to not automatically end the line.
+// As such this all gets counted as a single line.
+// The braces and semicolons are there to be able to do this on a single line.
+#define DIRECTED_APPLY_CORNER(C)                    \
+	var/delta_x = C.x - _turf_x;                    \
+	var/delta_y = C.y - _turf_y;                    \
+	if(C.z == _turf_z) {                            \
+		. = DIRECTED_LUM_FALLOFF(C);                \
+	}                                               \
+	else {                                          \
+		. = DIRECTED_LUM_FALLOFF_MULTIZ(C)          \
+	}                                               \
+	var/angle = get_pixel_angle(delta_x, delta_y);  \
+	if(_inverted) {                                 \
+		if(angle < _min_angle && angle > _max_angle) { \
+			var/delta = min(_min_angle - angle, angle - _max_angle);\
+			. *= max(1 - (delta / _sharpness), 0);  \
+		}                                           \
+	}                                               \
+	else {                                          \
+		if(angle < _min_angle) {                    \
+			var/delta = abs(angle - _min_angle);    \
+			. *= max(1 - (delta / _sharpness), 0);  \
+		}                                           \
+		else if(angle > _max_angle) {               \
+			var/delta = abs(_max_angle - angle);    \
+			. *= max(1 - (delta / _sharpness), 0);  \
+		}                                           \
+	}                                               \
+	. *= _light_power;                              \
+	var/OLD = effect_str[C];                        \
+	                                                \
+	C.update_lumcount                               \
+	(                                               \
+		(. * _lum_r) - (OLD * _applied_lum_r),      \
+		(. * _lum_g) - (OLD * _applied_lum_g),      \
+		(. * _lum_b) - (OLD * _applied_lum_b)       \
+	);
+
+/datum/light_source/directional/recalc_corner(datum/lighting_corner/corner)
+	SETUP_DIRECTED_CORNERS_CACHE(src)
+	LAZYINITLIST(effect_str)
+	if (effect_str[corner]) // Already have one.
+		REMOVE_CORNER(corner)
+		effect_str[corner] = 0
+
+	DIRECTED_APPLY_CORNER(corner)
+	effect_str[corner] = .
+
+/datum/light_source/directional/update_corners()
+	var/update = FALSE
+	var/atom/source_atom = src.source_atom
+
+	if (QDELETED(source_atom))
+		qdel(src)
+		return
+
+	if (source_atom.light_power != light_power)
+		light_power = source_atom.light_power
+		update = TRUE
+
+	if (source_atom.light_range != light_range)
+		light_range = source_atom.light_range
+		update = TRUE
+
+	if (!top_atom)
+		top_atom = source_atom
+		update = TRUE
+
+	if (!light_range || !light_power)
+		qdel(src)
+		return
+
+	if (isturf(top_atom))
+		if (source_turf != top_atom)
+			source_turf = top_atom
+			pixel_turf = source_turf
+			update = TRUE
+	else if (top_atom.loc != source_turf)
+		source_turf = top_atom.loc
+		pixel_turf = get_turf_pixel(top_atom)
+		update = TRUE
+	else
+		var/pixel_loc = get_turf_pixel(top_atom)
+		if (pixel_loc != pixel_turf)
+			pixel_turf = pixel_loc
+			update = TRUE
+
+	if (!isturf(source_turf))
+		if (applied)
+			remove_lum()
+		return
+
+	if (light_range && light_power && !applied)
+		update = TRUE
+
+	if (source_atom.light_color != light_color)
+		light_color = source_atom.light_color
+		PARSE_LIGHT_COLOR(src)
+		update = TRUE
+
+	else if (applied_lum_r != lum_r || applied_lum_g != lum_g || applied_lum_b != lum_b)
+		update = TRUE
+
+	if (update)
+		needs_update = LIGHTING_CHECK_UPDATE
+		applied = TRUE
+	else if (needs_update == LIGHTING_CHECK_UPDATE)
+		return //nothing's changed
+
+	var/list/datum/lighting_corner/corners = list()
+	// We use a max of 45 degrees here because we need to ensure we don't ignore turfs that are relevant to the display
+	var/cutoff = max(45, acceptable_range + sharpness)
+	var/min_angle = WRAP(angle - cutoff, 0, 360)
+	var/max_angle = WRAP(angle + cutoff, 0, 360)
+	var/invert = min_angle > max_angle // If the min is more then the max, then invert the check
+
+	if (source_turf)
+		var/uses_multiz = !!GET_LOWEST_STACK_OFFSET(source_turf.z)
+		var/oldlum = source_turf.luminosity
+		source_turf.luminosity = CEILING(light_range, 1)
+		if(uses_multiz)
+			for(var/turf/T in view(CEILING(light_range, 1), source_turf))
+				if(IS_OPAQUE_TURF(T))
+					continue
+				INSERT_CORNERS(corners, T)
+
+				var/turf/below = SSmapping.get_turf_below(T)
+				var/turf/previous = T
+				while(below)
+					// If we find a non transparent previous, end
+					if(!istransparentturf(previous))
+						break
+					if(IS_OPAQUE_TURF(below))
+						// If we're opaque but the tile above us is transparent, then we should be counted as part of the potential "space"
+						// Of this corner
+						break
+					// Now we do lighting things to it
+					INSERT_CORNERS(corners, below)
+					// ANNND then we add the one below it
+					previous = below
+					below = SSmapping.get_turf_below(below)
+
+				var/turf/above = SSmapping.get_turf_above(T)
+				while(above)
+					// If we find a non transparent turf, end
+					if(!istransparentturf(above) || IS_OPAQUE_TURF(above))
+						break
+					INSERT_CORNERS(corners, above)
+					above = SSmapping.get_turf_above(above)
+		else // Yes I know this could be acomplished with an if in the for loop, but it's fukin lighting code man
+			for(var/turf/T in view(CEILING(light_range, 1), source_turf))
+				if(IS_OPAQUE_TURF(T))
+					continue
+				var/angle = get_pixel_angle(T.x - source_turf.x, T.y - source_turf.y)
+				if(invert ? (angle < min_angle && angle > max_angle) : \
+					(angle < min_angle || angle > max_angle))
+					continue
+
+				INSERT_CORNERS(corners, T)
+
+		source_turf.luminosity = oldlum
+
+	SETUP_DIRECTED_CORNERS_CACHE(src)
+
+	var/list/datum/lighting_corner/new_corners = (corners - src.effect_str)
+	LAZYINITLIST(src.effect_str)
+	var/list/effect_str = src.effect_str
+	if (needs_update == LIGHTING_VIS_UPDATE)
+		for (var/datum/lighting_corner/corner as anything in new_corners)
+			DIRECTED_APPLY_CORNER(corner)
+			if (. != 0)
+				LAZYADD(corner.affecting, src)
+				effect_str[corner] = .
+	else
+		for (var/datum/lighting_corner/corner as anything in new_corners)
+			DIRECTED_APPLY_CORNER(corner)
+			if (. != 0)
+				LAZYADD(corner.affecting, src)
+				effect_str[corner] = .
+		// New corners are a subset of corners. so if they're both the same length, there are NO old corners!
+		if(length(corners) != length(new_corners))
+			for (var/datum/lighting_corner/corner as anything in corners - new_corners) // Existing corners
+				DIRECTED_APPLY_CORNER(corner)
+				if (. != 0)
+					effect_str[corner] = .
+				else
+					LAZYREMOVE(corner.affecting, src)
+					effect_str -= corner
+
+	var/list/datum/lighting_corner/gone_corners = effect_str - corners
+	for (var/datum/lighting_corner/corner as anything in gone_corners)
+		REMOVE_CORNER(corner)
+		LAZYREMOVE(corner.affecting, src)
+	effect_str -= gone_corners
+
+	applied_lum_r = lum_r
+	applied_lum_g = lum_g
+	applied_lum_b = lum_b
+
+	UNSETEMPTY(src.effect_str)
+
 #undef EFFECT_UPDATE
 #undef LUM_FALLOFF
 #undef REMOVE_CORNER

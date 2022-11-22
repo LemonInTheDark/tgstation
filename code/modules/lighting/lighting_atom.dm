@@ -45,9 +45,10 @@
 
 		if (light) // Update the light or create it if it does not exist.
 			light.update(.)
+		else if(light_directional)
+			light = new /datum/light_source/directional(src, .)
 		else
-			light = new/datum/light_source(src, .)
-
+			light = new /datum/light_source(src, .)
 
 /**
  * Updates the atom's opacity value.
