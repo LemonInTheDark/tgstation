@@ -404,9 +404,9 @@
 	is_pathing = FALSE
 	var/end_time = world.time - start_time
 	if(movement_path)
-		message_admins("Finished a JPS path after [end_time]ms! the length of the path is [movement_path.len]")
+		message_admins("Finished a JPS path after [end_time]ds! the length of the path is [movement_path.len]")
 	else
-		message_admins("No path after [end_time]ms!")
+		message_admins("No path after [end_time]ds!")
 
 /datum/move_loop/has_target/jps/move()
 	if(!length(movement_path))
