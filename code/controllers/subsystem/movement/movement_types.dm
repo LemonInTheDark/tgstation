@@ -109,11 +109,11 @@
 		return
 
 	var/visual_delay = controller.visual_delay
-	var/success = move()
+	var/success = move() //Is not necesarily a bool, can also return MOVELOOP_NOT_READY
 
 	SEND_SIGNAL(src, COMSIG_MOVELOOP_POSTPROCESS, success, delay * visual_delay)
 
-	if(QDELETED(src) || !success) //Can happen
+	if(QDELETED(src) || success != TRUE) //Can happen
 		return
 
 	if(flags & MOVEMENT_LOOP_IGNORE_GLIDE)
@@ -356,6 +356,8 @@
 	var/list/movement_path
 	///Cooldown for repathing, prevents spam
 	COOLDOWN_DECLARE(repath_cooldown)
+	///Are we currently making a new path?
+	var/is_pathing = FALSE
 
 /datum/move_loop/has_target/jps/setup(delay, timeout, atom/chasing, repath_delay, max_path_length, minimum_distance, obj/item/card/id/id, simulated_only, turf/avoid, skip_first)
 	. = ..()
@@ -394,14 +396,24 @@
 	if(!COOLDOWN_FINISHED(src, repath_cooldown))
 		return
 	COOLDOWN_START(src, repath_cooldown, repath_delay)
+	var/start_time = world.time
+	message_admins("Making a JPS path!")
+	is_pathing = TRUE
 	SEND_SIGNAL(src, COMSIG_MOVELOOP_JPS_REPATH)
 	movement_path = get_path_to(moving, target, max_path_length, minimum_distance, id, simulated_only, avoid, skip_first)
+	is_pathing = FALSE
+	var/end_time = world.time - start_time
+	if(movement_path)
+		message_admins("Finished a JPS path after [end_time]ms! the length of the path is [movement_path.len]")
+	else
+		message_admins("No path after [end_time]ms!")
 
 /datum/move_loop/has_target/jps/move()
 	if(!length(movement_path))
+		if(is_pathing)
+			return MOVELOOP_NOT_READY
 		INVOKE_ASYNC(src, PROC_REF(recalculate_path))
-		if(!length(movement_path))
-			return FALSE
+		return FALSE
 
 	var/turf/next_step = movement_path[1]
 	var/atom/old_loc = moving.loc
