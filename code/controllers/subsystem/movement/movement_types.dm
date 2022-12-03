@@ -358,6 +358,14 @@
 	COOLDOWN_DECLARE(repath_cooldown)
 	///Are we currently making a new path?
 	var/is_pathing = FALSE
+	/// Proc to call when we get a response from JPS
+	var/datum/callback/move_finishes
+	// TMP var
+	var/start_time
+
+/datum/move_loop/has_target/jps/New(datum/movement_packet/owner, datum/controller/subsystem/movement/controller, atom/moving, priority, flags, datum/extra_info)
+	. = ..()
+	move_finishes = CALLBACK(src, PROC_REF(path_built))
 
 /datum/move_loop/has_target/jps/setup(delay, timeout, atom/chasing, repath_delay, max_path_length, minimum_distance, obj/item/card/id/id, simulated_only, turf/avoid, skip_first)
 	. = ..()
@@ -396,11 +404,17 @@
 	if(!COOLDOWN_FINISHED(src, repath_cooldown))
 		return
 	COOLDOWN_START(src, repath_cooldown, repath_delay)
-	var/start_time = world.time
-	message_admins("Making a JPS path!")
-	is_pathing = TRUE
+
 	SEND_SIGNAL(src, COMSIG_MOVELOOP_JPS_REPATH)
-	movement_path = get_path_to(moving, target, max_path_length, minimum_distance, id, simulated_only, avoid, skip_first)
+
+	if(SSpathfinder.pathfind(moving, target, max_path_length, minimum_distance, id, simulated_only, avoid, skip_first, on_finish=move_finishes))
+		start_time = world.time
+		is_pathing = TRUE
+		message_admins("Making a JPS path!")
+		return
+
+/datum/move_loop/has_target/jps/proc/path_built(list/path)
+	movement_path = path || list() // In case we get a null
 	is_pathing = FALSE
 	var/end_time = world.time - start_time
 	if(movement_path)
