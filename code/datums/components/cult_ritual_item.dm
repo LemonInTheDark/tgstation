@@ -54,7 +54,7 @@
 		RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
 
 /datum/component/cult_ritual_item/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_ITEM_ATTACK_SELF,
 		COMSIG_ITEM_ATTACK,
 		COMSIG_ITEM_ATTACK_OBJ,

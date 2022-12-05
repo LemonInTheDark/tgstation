@@ -29,7 +29,7 @@
 	RegisterSignal(parent, COMSIG_MOVABLE_IMPACT, PROC_REF(return_hit_throw))
 
 /datum/component/boomerang/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_MOVABLE_POST_THROW, COMSIG_MOVABLE_THROW_LANDED, COMSIG_MOVABLE_IMPACT))
+	UnregisterSignals(parent, list(COMSIG_MOVABLE_POST_THROW, COMSIG_MOVABLE_THROW_LANDED, COMSIG_MOVABLE_IMPACT))
 
 /**
  * Proc'd before the first thrown is performed in order to gather information regarding each throw as well as handle throw_mode as necessary.

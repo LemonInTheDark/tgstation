@@ -31,7 +31,7 @@
 	AddComponent(/datum/component/connect_containers, parent, loc_connections)
 
 /datum/component/stationloving/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_MOVABLE_Z_CHANGED,
 		COMSIG_PARENT_PREQDELETED,
 		COMSIG_ITEM_IMBUE_SOUL,

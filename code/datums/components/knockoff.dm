@@ -25,11 +25,11 @@
 	RegisterSignal(parent, COMSIG_ITEM_DROPPED, PROC_REF(on_dropped))
 
 /datum/component/knockoff/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 
 	var/obj/item/item_parent = parent
 	if(ismob(item_parent.loc))
-		UnregisterSignal(item_parent.loc, list(COMSIG_HUMAN_DISARM_HIT, COMSIG_LIVING_STATUS_KNOCKDOWN))
+		UnregisterSignals(item_parent.loc, list(COMSIG_HUMAN_DISARM_HIT, COMSIG_LIVING_STATUS_KNOCKDOWN))
 
 /// Signal proc for [COMSIG_HUMAN_DISARM_HIT] on the mob who's equipped our parent
 /// Rolls a chance for knockoff whenever we're disarmed
@@ -85,7 +85,7 @@
 		return
 
 	if(slots_knockoffable && !(slot & slots_knockoffable))
-		UnregisterSignal(equipper, list(COMSIG_HUMAN_DISARM_HIT, COMSIG_LIVING_STATUS_KNOCKDOWN))
+		UnregisterSignals(equipper, list(COMSIG_HUMAN_DISARM_HIT, COMSIG_LIVING_STATUS_KNOCKDOWN))
 		return
 
 	RegisterSignal(equipper, COMSIG_HUMAN_DISARM_HIT, PROC_REF(on_equipped_mob_disarm), TRUE)
@@ -96,4 +96,4 @@
 /datum/component/knockoff/proc/on_dropped(datum/source, mob/living/dropper)
 	SIGNAL_HANDLER
 
-	UnregisterSignal(dropper, list(COMSIG_HUMAN_DISARM_HIT, COMSIG_LIVING_STATUS_KNOCKDOWN))
+	UnregisterSignals(dropper, list(COMSIG_HUMAN_DISARM_HIT, COMSIG_LIVING_STATUS_KNOCKDOWN))

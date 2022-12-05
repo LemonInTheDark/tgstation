@@ -22,7 +22,7 @@ clamping the Knockback_Force value below. */
 
 /datum/element/selfknockback/Detach(datum/source)
 	. = ..()
-	UnregisterSignal(source, list(COMSIG_ITEM_AFTERATTACK, COMSIG_PROJECTILE_FIRE))
+	UnregisterSignals(source, list(COMSIG_ITEM_AFTERATTACK, COMSIG_PROJECTILE_FIRE))
 
 /datum/element/selfknockback/proc/Get_Knockback_Force(default_force)
 	if(override_throw_val)

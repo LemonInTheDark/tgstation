@@ -31,7 +31,7 @@
 	RegisterSignal(parent, COMSIG_ITEM_DROPPED, PROC_REF(check_drop))
 
 /datum/component/bumpattack/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 
 /datum/component/bumpattack/proc/check_equip(obj/item/source, mob/living/user, slot)
 	SIGNAL_HANDLER

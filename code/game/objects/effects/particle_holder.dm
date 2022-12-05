@@ -31,7 +31,7 @@
 		additional_attached = weak_additional.resolve()
 	if(attached)
 		attached.vis_contents -= src
-		UnregisterSignal(loc, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
+		UnregisterSignals(loc, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
 	if(additional_attached)
 		additional_attached.vis_contents -= src
 	QDEL_NULL(particles)

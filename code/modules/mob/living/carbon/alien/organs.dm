@@ -222,7 +222,7 @@
 	if(source.loc == src || source.loc == owner) // not in us? out da list then
 		return
 	stomach_contents -= source
-	UnregisterSignal(source, list(COMSIG_MOVABLE_MOVED, COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	UnregisterSignals(source, list(COMSIG_MOVABLE_MOVED, COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 
 /obj/item/organ/internal/stomach/alien/Insert(mob/living/carbon/stomach_owner, special = FALSE, drop_if_replaced = TRUE)
 	RegisterSignal(stomach_owner, COMSIG_ATOM_RELAYMOVE, PROC_REF(something_moved))

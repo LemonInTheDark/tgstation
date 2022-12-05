@@ -33,7 +33,7 @@
 	return ..() //Run parent at end
 
 /datum/ai_controller/hostile_friend/UnpossessPawn(destroy)
-	UnregisterSignal(pawn, list(
+	UnregisterSignals(pawn, list(
 		COMSIG_ATOM_ATTACK_HAND,
 		COMSIG_PARENT_EXAMINE,
 		COMSIG_CLICK_ALT,
@@ -89,7 +89,7 @@
 	var/datum/weakref/friend_ref = blackboard[BB_HOSTILE_FRIEND]
 	var/mob/living/old_friend = friend_ref?.resolve()
 	if(old_friend)
-		UnregisterSignal(old_friend, list(COMSIG_MOB_POINTED, COMSIG_MOB_SAY))
+		UnregisterSignals(old_friend, list(COMSIG_MOB_POINTED, COMSIG_MOB_SAY))
 	blackboard[BB_HOSTILE_FRIEND] = null
 
 /// Someone is looking at us, if we're currently carrying something then show what it is, and include a message if they're our friend

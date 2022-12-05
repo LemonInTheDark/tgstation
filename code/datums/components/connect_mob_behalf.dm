@@ -49,7 +49,7 @@
 	if(isnull(tracked_mob))
 		return
 
-	parent.UnregisterSignal(tracked_mob, connections)
+	parent.UnregisterSignals(tracked_mob, connections)
 	UnregisterSignal(tracked_mob, COMSIG_MOB_LOGOUT)
 
 	tracked_mob = null

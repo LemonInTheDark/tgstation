@@ -32,7 +32,7 @@
 /datum/element/chewable/Detach(datum/source, force)
 	. = ..()
 	processing -= source
-	UnregisterSignal(source, list(COMSIG_ITEM_DROPPED, COMSIG_ITEM_EQUIPPED))
+	UnregisterSignals(source, list(COMSIG_ITEM_DROPPED, COMSIG_ITEM_EQUIPPED))
 
 /datum/element/chewable/process(delta_time)
 	if (processing.len == 0)

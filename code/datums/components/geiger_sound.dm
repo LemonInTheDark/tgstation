@@ -31,7 +31,7 @@
 		register_to_loc(atom_parent.loc)
 
 /datum/component/geiger_sound/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_MOVABLE_MOVED,
 		COMSIG_IN_RANGE_OF_IRRADIATION,
 	))

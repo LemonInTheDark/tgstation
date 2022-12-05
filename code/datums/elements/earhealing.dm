@@ -11,7 +11,7 @@
 
 /datum/element/earhealing/Detach(datum/target)
 	. = ..()
-	UnregisterSignal(target, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(target, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 	user_by_item -= target
 
 /datum/element/earhealing/proc/on_equip(datum/source, mob/living/carbon/user, slot)

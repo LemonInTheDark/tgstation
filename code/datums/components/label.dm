@@ -26,7 +26,7 @@
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(Examine))
 
 /datum/component/label/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_PARENT_ATTACKBY, COMSIG_PARENT_EXAMINE))
+	UnregisterSignals(parent, list(COMSIG_PARENT_ATTACKBY, COMSIG_PARENT_EXAMINE))
 
 /**
 	This proc will fire after the parent is hit by a hand labeler which is trying to apply another label.

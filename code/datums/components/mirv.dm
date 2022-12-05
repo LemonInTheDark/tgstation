@@ -19,7 +19,7 @@
 		RegisterSignal(parent, COMSIG_PROJECTILE_ON_HIT, PROC_REF(projectile_hit))
 
 /datum/component/mirv/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_PROJECTILE_ON_HIT))
+	UnregisterSignals(parent, list(COMSIG_PROJECTILE_ON_HIT))
 
 /datum/component/mirv/proc/projectile_hit(datum/fired_from, atom/movable/firer, atom/target, Angle)
 	SIGNAL_HANDLER

@@ -24,7 +24,7 @@
 	RegisterSignal(parent, COMSIG_TRY_WIRES_INTERACT, PROC_REF(on_try_wires_interact))
 
 /datum/component/technoshy/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_TRY_USE_MACHINE, COMSIG_TRY_WIRES_INTERACT))
+	UnregisterSignals(parent, list(COMSIG_TRY_USE_MACHINE, COMSIG_TRY_WIRES_INTERACT))
 
 /datum/component/technoshy/PostTransfer()
 	if(!ismob(parent))

@@ -23,7 +23,7 @@
 	RegisterSignal(parent, COMSIG_CLOTHING_VISOR_TOGGLE, PROC_REF(on_visor_toggle))
 
 /datum/component/clothing_fov_visor/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED, COMSIG_CLOTHING_VISOR_TOGGLE))
+	UnregisterSignals(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED, COMSIG_CLOTHING_VISOR_TOGGLE))
 	if(wearer)
 		wearer.remove_fov_trait(src, fov_angle)
 		UnregisterSignal(wearer, COMSIG_PARENT_QDELETING)

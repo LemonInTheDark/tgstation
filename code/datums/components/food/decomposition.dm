@@ -57,7 +57,7 @@
 
 
 /datum/component/decomposition/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_ITEM_PICKUP,
 		COMSIG_ATOM_ENTERED,
 		COMSIG_MOVABLE_MOVED,

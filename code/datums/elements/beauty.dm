@@ -55,7 +55,7 @@
 	var/area/current_area = get_area(source)
 	if(QDELETED(source))
 		. = ..()
-		UnregisterSignal(source, list(COMSIG_ENTER_AREA, COMSIG_EXIT_AREA))
+		UnregisterSignals(source, list(COMSIG_ENTER_AREA, COMSIG_EXIT_AREA))
 		if(current_area)
 			exit_area(source, current_area)
 		beauty_counter -= source
@@ -69,7 +69,7 @@
 			current_area.update_beauty()
 		if(!beauty_counter[source])
 			. = ..()
-			UnregisterSignal(source, list(COMSIG_ENTER_AREA, COMSIG_EXIT_AREA))
+			UnregisterSignals(source, list(COMSIG_ENTER_AREA, COMSIG_EXIT_AREA))
 			beauty_counter -= source
 			var/atom/movable/movable_source = source
 			if(istype(movable_source))

@@ -75,7 +75,7 @@
 /datum/action/boss/wizard_summon_minions/proc/lost_minion(mob/source)
 	SIGNAL_HANDLER
 
-	UnregisterSignal(source, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+	UnregisterSignals(source, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
 	summoned_minions--
 
 //Mimic Ability

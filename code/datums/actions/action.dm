@@ -122,7 +122,7 @@
 		UnregisterSignal(owner, COMSIG_PARENT_QDELETING)
 
 		// Clean up our check_flag signals
-		UnregisterSignal(owner, list(
+		UnregisterSignals(owner, list(
 			COMSIG_LIVING_SET_BODY_POSITION,
 			COMSIG_MOB_STATCHANGE,
 			SIGNAL_ADDTRAIT(TRAIT_HANDS_BLOCKED),

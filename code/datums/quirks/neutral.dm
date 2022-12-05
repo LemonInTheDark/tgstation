@@ -340,7 +340,7 @@
 	var/mob/living/carbon/human/human_holder = quirk_holder
 	human_holder.hairstyle = old_hair
 	human_holder.update_body_parts()
-	UnregisterSignal(human_holder, list(COMSIG_CARBON_EQUIP_HAT, COMSIG_CARBON_UNEQUIP_HAT))
+	UnregisterSignals(human_holder, list(COMSIG_CARBON_EQUIP_HAT, COMSIG_CARBON_UNEQUIP_HAT))
 	human_holder.clear_mood_event("bad_hair_day")
 
 ///Checks if the headgear equipped is a wig and sets the mood event accordingly

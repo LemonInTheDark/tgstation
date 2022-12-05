@@ -633,7 +633,7 @@
 				if(!owner || !HAS_TRAIT(owner, TRAIT_NOLIMBDISABLE))
 					set_can_be_disabled(initial(can_be_disabled))
 					needs_update_disabled = TRUE
-			UnregisterSignal(old_owner, list(
+			UnregisterSignals(old_owner, list(
 				SIGNAL_REMOVETRAIT(TRAIT_NOLIMBDISABLE),
 				SIGNAL_ADDTRAIT(TRAIT_NOLIMBDISABLE),
 				SIGNAL_REMOVETRAIT(TRAIT_NOBLEED),
@@ -678,7 +678,7 @@
 		update_disabled()
 	else if(.)
 		if(owner)
-			UnregisterSignal(owner, list(
+			UnregisterSignals(owner, list(
 				SIGNAL_ADDTRAIT(TRAIT_PARALYSIS),
 				SIGNAL_REMOVETRAIT(TRAIT_PARALYSIS),
 				))

@@ -23,7 +23,7 @@
 	RegisterSignal(added_to, COMSIG_CIRCUIT_PRE_SAVE_TO_JSON, PROC_REF(on_pre_save_to_json))
 
 /obj/item/circuit_component/save_shell/removed_from(obj/item/integrated_circuit/removed_from)
-	UnregisterSignal(removed_from, list(COMSIG_CIRCUIT_POST_LOAD, COMSIG_CIRCUIT_PRE_SAVE_TO_JSON))
+	UnregisterSignals(removed_from, list(COMSIG_CIRCUIT_POST_LOAD, COMSIG_CIRCUIT_PRE_SAVE_TO_JSON))
 	return ..()
 
 /obj/item/circuit_component/save_shell/proc/on_post_load(datum/source)

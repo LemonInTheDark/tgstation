@@ -22,7 +22,7 @@
 
 /datum/component/udder/UnregisterFromParent()
 	QDEL_NULL(udder)
-	UnregisterSignal(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_PARENT_ATTACKBY))
+	UnregisterSignals(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_PARENT_ATTACKBY))
 
 ///signal called on parent being examined
 /datum/component/udder/proc/on_examine(datum/source, mob/user, list/examine_list)

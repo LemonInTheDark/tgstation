@@ -136,7 +136,7 @@
 /datum/action/cooldown/spell/touch/proc/unregister_hand_signals()
 	SHOULD_CALL_PARENT(TRUE)
 
-	UnregisterSignal(attached_hand, list(
+	UnregisterSignals(attached_hand, list(
 		COMSIG_ITEM_AFTERATTACK,
 		COMSIG_ITEM_AFTERATTACK_SECONDARY,
 		COMSIG_ITEM_DROPPED,

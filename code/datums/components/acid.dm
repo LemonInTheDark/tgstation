@@ -73,7 +73,7 @@
 		RegisterSignal(parent, COMSIG_ATOM_ENTERED, PROC_REF(on_entered))
 
 /datum/component/acid/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_PARENT_EXAMINE,
 		COMSIG_COMPONENT_CLEAN_ACT,
 		COMSIG_ATOM_ATTACK_HAND,

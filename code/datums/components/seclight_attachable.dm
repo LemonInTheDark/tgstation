@@ -100,7 +100,7 @@
 	RegisterSignal(parent, COMSIG_PARENT_QDELETING, PROC_REF(on_parent_deleted))
 
 /datum/component/seclite_attachable/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_OBJ_DECONSTRUCT,
 		COMSIG_ATOM_EXITED,
 		COMSIG_ATOM_TOOL_ACT(TOOL_SCREWDRIVER),

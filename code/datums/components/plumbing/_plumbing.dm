@@ -61,7 +61,7 @@
 	RegisterSignal(parent, COMSIG_MOVABLE_CHANGE_DUCT_LAYER, PROC_REF(change_ducting_layer))
 
 /datum/component/plumbing/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING, COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH, COMSIG_OBJ_HIDE, \
+	UnregisterSignals(parent, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING, COMSIG_OBJ_DEFAULT_UNFASTEN_WRENCH, COMSIG_OBJ_HIDE, \
 	COMSIG_ATOM_UPDATE_OVERLAYS, COMSIG_ATOM_DIR_CHANGE, COMSIG_MOVABLE_CHANGE_DUCT_LAYER, COMSIG_COMPONENT_ADDED))
 
 /datum/component/plumbing/Destroy()
@@ -224,7 +224,7 @@
 /datum/component/plumbing/proc/enable(obj/object, datum/component/component)
 	SIGNAL_HANDLER
 	if(active || (component && component != src))
-		UnregisterSignal(parent, list(COMSIG_COMPONENT_ADDED))
+		UnregisterSignals(parent, list(COMSIG_COMPONENT_ADDED))
 		return
 
 	update_dir()

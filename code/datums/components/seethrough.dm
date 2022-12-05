@@ -127,7 +127,7 @@
 	SIGNAL_HANDLER
 
 	for(var/turf in watched_turfs)
-		UnregisterSignal(turf, list(COMSIG_ATOM_ENTERED, COMSIG_ATOM_EXITED))
+		UnregisterSignals(turf, list(COMSIG_ATOM_ENTERED, COMSIG_ATOM_EXITED))
 
 	watched_turfs = null
 	clear_all_images()

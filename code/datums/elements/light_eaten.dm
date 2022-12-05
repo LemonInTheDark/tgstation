@@ -25,7 +25,7 @@
 			target.set_light_on(FALSE)
 
 /datum/element/light_eaten/Detach(datum/source)
-	UnregisterSignal(source, list(
+	UnregisterSignals(source, list(
 		COMSIG_ATOM_SET_LIGHT_POWER,
 		COMSIG_ATOM_SET_LIGHT_RANGE,
 		COMSIG_ATOM_SET_LIGHT_ON,

@@ -41,7 +41,7 @@
 
 /datum/component/curse_of_hunger/UnregisterFromParent()
 	. = ..()
-	UnregisterSignal(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_POST_UNEQUIP, COMSIG_ITEM_PICKUP, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_POST_UNEQUIP, COMSIG_ITEM_PICKUP, COMSIG_ITEM_DROPPED))
 
 ///signal called on parent being examined
 /datum/component/curse_of_hunger/proc/on_examine(datum/source, mob/user, list/examine_list)
@@ -98,7 +98,7 @@
 	REMOVE_TRAIT(uncursed, TRAIT_CLUMSY, CURSED_ITEM_TRAIT(at_least_item.type))
 	REMOVE_TRAIT(uncursed, TRAIT_PACIFISM, CURSED_ITEM_TRAIT(at_least_item.type))
 	//remove either one of the signals that could have called this proc
-	UnregisterSignal(parent, list(COMSIG_ITEM_POST_UNEQUIP, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(parent, list(COMSIG_ITEM_POST_UNEQUIP, COMSIG_ITEM_DROPPED))
 
 	var/turf/vomit_turf = get_turf(at_least_item)
 	playsound(vomit_turf, 'sound/effects/splat.ogg', 50, TRUE)

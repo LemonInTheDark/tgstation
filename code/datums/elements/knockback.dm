@@ -26,7 +26,7 @@
 	src.throw_gentle = throw_gentle
 
 /datum/element/knockback/Detach(datum/source)
-	UnregisterSignal(source, list(COMSIG_ITEM_AFTERATTACK, COMSIG_HOSTILE_POST_ATTACKINGTARGET, COMSIG_PROJECTILE_ON_HIT))
+	UnregisterSignals(source, list(COMSIG_ITEM_AFTERATTACK, COMSIG_HOSTILE_POST_ATTACKINGTARGET, COMSIG_PROJECTILE_ON_HIT))
 	return ..()
 
 /// triggered after an item attacks something

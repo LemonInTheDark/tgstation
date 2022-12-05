@@ -122,6 +122,7 @@
 /**
  * Internal proc to handle behaviour when being removed from a parent
  */
+#warn much of our del cost comes from here. why?
 /datum/component/proc/_RemoveFromParent()
 	var/datum/parent = src.parent
 	var/list/parents_components = parent.datum_components
@@ -229,42 +230,66 @@
  *
  * Arguments:
  * * datum/target Datum to stop listening to signals from
- * * sig_typeor_types Signal string key or list of signal keys to stop listening to specifically
+ * * list/sig_types List of signal keys to stop listening to specifically
  */
-/datum/proc/UnregisterSignal(datum/target, sig_type_or_types)
+/datum/proc/UnregisterSignals(datum/target, list/sig_types)
+#ifdef UNIT_TESTS
+	if(!islist(sig_types))
+		var/static/list/failures = list()
+		if(!failures[sig_types])
+			stack_trace("([target.type]) is unregistering [sig_types] as a list, despite it being passed in as a single entry. Change it to UnregisterSignal().")
+		sig_types = list(sig_types)
+#endif
 	var/list/lookup = target.comp_lookup
-	if(!signal_procs || !signal_procs[target] || !lookup)
+	var/list/target_signals = signal_procs?[target]
+	FAST_IFNOT_NEVER_USE(target_signals && lookup)
 		return
-	if(!islist(sig_type_or_types))
-		sig_type_or_types = list(sig_type_or_types)
-	for(var/sig in sig_type_or_types)
-		if(!signal_procs[target][sig])
-			if(!istext(sig))
+
+	for(var/sig in sig_types)
+		FAST_IFNOT_NEVER_USE(target_signals[sig])
+			FAST_IFNOT_NEVER_USE(istext(sig))
 				stack_trace("We're unregistering with something that isn't a valid signal \[[sig]\], you fucked up")
 			continue
-		switch(length(lookup[sig]))
+		target_signals -= sig
+		var/listening_targets = lookup[sig] // either a list or a single entry. Just barely worth caching
+		switch(length(listening_targets))
 			if(2)
-				lookup[sig] = (lookup[sig]-src)[1]
+				lookup[sig] = (listening_targets-src)[1]
 			if(1)
 				stack_trace("[target] ([target.type]) somehow has single length list inside comp_lookup")
-				if(src in lookup[sig])
+				if(src in listening_targets)
 					lookup -= sig
-					if(!length(lookup))
+					FAST_IFNOT_NEVER_USE(length(lookup))
 						target.comp_lookup = null
 						break
 			if(0)
-				if(lookup[sig] != src)
+				if(listening_targets != src)
 					continue
 				lookup -= sig
-				if(!length(lookup))
+				FAST_IFNOT_NEVER_USE(length(lookup))
 					target.comp_lookup = null
 					break
 			else
-				lookup[sig] -= src
+				listening_targets -= src
 
-	signal_procs[target] -= sig_type_or_types
-	if(!signal_procs[target].len)
+	FAST_IFNOT_NEVER_USE(length(target_signals))
 		signal_procs -= target
+
+/**
+ * Stop listening to a given signal from target
+ *
+ * Breaks the relationship between target and source datum, removing the callback when the signal fires
+ *
+ * Doesn't care if a registration exists or not
+ *
+ * Arguments:
+ * * datum/target Datum to stop listening to signals from
+ * * sig_type signal key to stop listening to
+ */
+/datum/proc/UnregisterSignal(datum/target, sig_type)
+	// This is the cooler path between us and unreg all, so we're putting the complex logic here
+	// God I wish I had inlined procs
+	UnregisterSignals(target, list(sig_type))
 
 /**
  * Called on a component when a component of the same type was added to the same parent

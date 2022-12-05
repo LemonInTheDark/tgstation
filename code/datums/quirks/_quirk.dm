@@ -88,7 +88,7 @@
 	if(!quirk_holder)
 		CRASH("Attempted to remove quirk from the current holder when it has no current holder.")
 
-	UnregisterSignal(quirk_holder, list(COMSIG_MOB_LOGIN, COMSIG_PARENT_QDELETING))
+	UnregisterSignals(quirk_holder, list(COMSIG_MOB_LOGIN, COMSIG_PARENT_QDELETING))
 
 	quirk_holder.quirks -= src
 

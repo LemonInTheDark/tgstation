@@ -28,7 +28,7 @@
 	RegisterSignal(parent, COMSIG_ITEM_UNWRAPPED, PROC_REF(on_parent_unwrap))
 
 /datum/component/pricetag/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_ITEM_EXPORTED,
 		COMSIG_ITEM_UNWRAPPED,
 		))

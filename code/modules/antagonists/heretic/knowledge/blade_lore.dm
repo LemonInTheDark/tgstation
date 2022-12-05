@@ -264,7 +264,7 @@
 		REMOVE_TRAIT(user, TRAIT_HARDLY_WOUNDED, type)
 		REMOVE_TRAIT(user, TRAIT_BATON_RESISTANCE, type)
 
-	UnregisterSignal(user, list(COMSIG_PARENT_EXAMINE, COMSIG_CARBON_GAIN_WOUND, COMSIG_CARBON_HEALTH_UPDATE))
+	UnregisterSignals(user, list(COMSIG_PARENT_EXAMINE, COMSIG_CARBON_GAIN_WOUND, COMSIG_CARBON_HEALTH_UPDATE))
 
 /datum/heretic_knowledge/duel_stance/proc/on_examine(mob/living/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER

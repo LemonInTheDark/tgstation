@@ -37,7 +37,7 @@
 	RegisterSignals(shell, list(COMSIG_ASSEMBLY_PULSED, COMSIG_ITEM_ATTACK_SELF), PROC_REF(on_pulsed))
 
 /obj/item/circuit_component/assembly_input/unregister_shell(atom/movable/shell)
-	UnregisterSignal(shell, list(COMSIG_ASSEMBLY_PULSED, COMSIG_ITEM_ATTACK_SELF))
+	UnregisterSignals(shell, list(COMSIG_ASSEMBLY_PULSED, COMSIG_ITEM_ATTACK_SELF))
 
 /obj/item/circuit_component/assembly_input/proc/on_pulsed(datum/source, mob/pulser)
 	SIGNAL_HANDLER

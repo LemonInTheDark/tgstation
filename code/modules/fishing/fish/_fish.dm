@@ -153,7 +153,7 @@
 	SIGNAL_HANDLER
 	if(src != gone)
 		return
-	UnregisterSignal(source,list(COMSIG_ATOM_EXITED,COMSIG_PARENT_ATTACKBY))
+	UnregisterSignals(source,list(COMSIG_ATOM_EXITED,COMSIG_PARENT_ATTACKBY))
 
 /// Our aquarium is hit with stuff
 /obj/item/fish/proc/attack_reaction(datum/source, obj/item/thing, mob/user, params)

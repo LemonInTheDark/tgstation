@@ -30,7 +30,7 @@
 
 /datum/component/living_heart/UnregisterFromParent()
 	REMOVE_TRAIT(parent, TRAIT_LIVING_HEART, REF(src))
-	UnregisterSignal(parent, list(COMSIG_ORGAN_REMOVED, COMSIG_ORGAN_BEING_REPLACED))
+	UnregisterSignals(parent, list(COMSIG_ORGAN_REMOVED, COMSIG_ORGAN_BEING_REPLACED))
 
 /datum/component/living_heart/PostTransfer()
 	if(!isorgan(parent))

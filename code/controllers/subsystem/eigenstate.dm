@@ -70,7 +70,7 @@ SUBSYSTEM_DEF(eigenstates)
 	eigen_id -= entry
 	entry.color = COLOR_WHITE
 	entry.alpha = 255
-	UnregisterSignal(entry, list(
+	UnregisterSignals(entry, list(
 		COMSIG_PARENT_QDELETING,
 		COMSIG_CLOSET_INSERT,
 		COMSIG_ATOM_TOOL_ACT(TOOL_WELDER),

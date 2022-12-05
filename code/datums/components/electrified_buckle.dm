@@ -104,12 +104,12 @@
 
 	if(parent)
 		REMOVE_TRAIT(parent_as_movable, TRAIT_ELECTRIFIED_BUCKLE, INNATE_TRAIT)
-		UnregisterSignal(parent, list(COMSIG_MOVABLE_BUCKLE, COMSIG_ATOM_TOOL_ACT(TOOL_SCREWDRIVER)))
+		UnregisterSignals(parent, list(COMSIG_MOVABLE_BUCKLE, COMSIG_ATOM_TOOL_ACT(TOOL_SCREWDRIVER)))
 		if(requested_signal_parent_emits)
 			UnregisterSignal(parent, requested_signal_parent_emits)
 
 	if(required_object)
-		UnregisterSignal(required_object, list(COMSIG_PARENT_QDELETING, COMSIG_ASSEMBLY_PULSED))
+		UnregisterSignals(required_object, list(COMSIG_PARENT_QDELETING, COMSIG_ASSEMBLY_PULSED))
 		if(parent_as_movable && (required_object in parent_as_movable.contents))
 			required_object.Move(parent_as_movable.loc)
 

@@ -55,7 +55,7 @@
  * * target - Datum which the element is attached to.
  */
 /datum/element/item_scaling/Detach(atom/target)
-	UnregisterSignal(target, list(
+	UnregisterSignals(target, list(
 		COMSIG_ITEM_PICKUP,
 		COMSIG_ITEM_DROPPED,
 		COMSIG_ATOM_ENTERED,

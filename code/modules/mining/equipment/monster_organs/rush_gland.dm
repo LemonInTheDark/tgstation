@@ -50,7 +50,7 @@
 
 /datum/status_effect/lobster_rush/on_remove()
 	. = ..()
-	UnregisterSignal(owner, list(COMSIG_MOVABLE_PRE_MOVE, COMSIG_MOVABLE_BUMP))
+	UnregisterSignals(owner, list(COMSIG_MOVABLE_PRE_MOVE, COMSIG_MOVABLE_BUMP))
 	REMOVE_TRAIT(owner, TRAIT_IGNORESLOWDOWN, TRAIT_STATUS_EFFECT(id))
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/lobster_rush)
 	to_chat(owner, span_notice("Your pulse returns to normal."))

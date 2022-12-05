@@ -35,7 +35,7 @@
 
 /datum/component/hazard_area/UnregisterFromParent()
 	var/mob/parent_mob = parent
-	UnregisterSignal(parent_mob, list(COMSIG_ENTER_AREA, COMSIG_LADDER_TRAVEL, COMSIG_VEHICLE_RIDDEN))
+	UnregisterSignals(parent_mob, list(COMSIG_ENTER_AREA, COMSIG_LADDER_TRAVEL, COMSIG_VEHICLE_RIDDEN))
 	UnregisterSignal(SSdcs, COMSIG_AREA_CREATED)
 	parent_mob.lose_area_sensitivity(type)
 

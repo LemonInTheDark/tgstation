@@ -19,7 +19,7 @@
 
 /datum/element/digitalcamo/Detach(datum/target)
 	. = ..()
-	UnregisterSignal(target, list(COMSIG_PARENT_EXAMINE, COMSIG_LIVING_CAN_TRACK))
+	UnregisterSignals(target, list(COMSIG_PARENT_EXAMINE, COMSIG_LIVING_CAN_TRACK))
 	for(var/mob/living/silicon/ai/AI in GLOB.player_list)
 		AI.client.images -= attached_mobs[target]
 	attached_mobs -= target

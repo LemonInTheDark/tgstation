@@ -34,7 +34,7 @@
 			UnregisterSignal(target, succeed_signals)
 		if(fail_signals)
 			UnregisterSignal(target, fail_signals)
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_TRAITOR_OBJECTIVE_COMPLETED,
 		COMSIG_TRAITOR_OBJECTIVE_FAILED
 	))

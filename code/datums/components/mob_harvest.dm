@@ -90,7 +90,7 @@
 		living_parent.update_appearance(UPDATE_ICON_STATE)
 
 /datum/component/mob_harvest/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_PARENT_ATTACKBY, COMSIG_ATOM_UPDATE_ICON_STATE))
+	UnregisterSignals(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_PARENT_ATTACKBY, COMSIG_ATOM_UPDATE_ICON_STATE))
 
 ///signal called on parent being examined
 /datum/component/mob_harvest/proc/on_examine(datum/source, mob/user, list/examine_list)

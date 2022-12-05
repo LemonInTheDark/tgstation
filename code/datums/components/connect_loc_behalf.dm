@@ -26,7 +26,7 @@
 
 /datum/component/connect_loc_behalf/UnregisterFromParent()
 	unregister_signals()
-	UnregisterSignal(tracked, list(
+	UnregisterSignals(tracked, list(
 		COMSIG_MOVABLE_MOVED,
 		COMSIG_PARENT_QDELETING,
 	))
@@ -59,7 +59,7 @@
 	if(isnull(tracked_loc))
 		return
 
-	parent.UnregisterSignal(tracked_loc, connections)
+	parent.UnregisterSignals(tracked_loc, connections)
 
 	tracked_loc = null
 

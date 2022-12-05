@@ -37,7 +37,7 @@
 	master.slot_flags |= ITEM_SLOT_POCKETS
 
 /datum/component/spill/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 	var/obj/item/master = parent
 	if(!(preexisting_slot_flags & ITEM_SLOT_POCKETS))
 		master.slot_flags &= ~ITEM_SLOT_POCKETS

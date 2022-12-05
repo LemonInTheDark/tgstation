@@ -46,7 +46,7 @@
 	RegisterSignal(parent, COMSIG_ITEM_ATTACK_SELF, PROC_REF(on_attack_self))
 
 /datum/component/spin2win/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_ITEM_ATTACK_SECONDARY))
+	UnregisterSignals(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_ITEM_ATTACK_SECONDARY))
 
 ///signal called on parent being examined
 /datum/component/spin2win/proc/on_examine(datum/source, mob/user, list/examine_list)
@@ -91,7 +91,7 @@
 /datum/component/spin2win/proc/stop_spinning(mob/living/user)
 	//user might not exist for the end
 	STOP_PROCESSING(SSprocessing, src)
-	UnregisterSignal(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(parent, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 	deltimer(stop_spinning_timer_id)
 	playsound(user, 'sound/weapons/fwoosh.ogg', 75, FALSE)
 	if(user && end_spin_message)

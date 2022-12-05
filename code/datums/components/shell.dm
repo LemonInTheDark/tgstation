@@ -87,7 +87,7 @@
 
 
 /datum/component/shell/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_PARENT_ATTACKBY,
 		COMSIG_ATOM_TOOL_ACT(TOOL_SCREWDRIVER),
 		COMSIG_ATOM_TOOL_ACT(TOOL_MULTITOOL),
@@ -333,7 +333,7 @@
 /datum/component/shell/proc/remove_circuit()
 	attached_circuit.on = TRUE
 	attached_circuit.remove_current_shell()
-	UnregisterSignal(attached_circuit, list(
+	UnregisterSignals(attached_circuit, list(
 		COMSIG_MOVABLE_MOVED,
 		COMSIG_PARENT_QDELETING,
 		COMSIG_CIRCUIT_ADD_COMPONENT_MANUALLY,

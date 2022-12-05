@@ -21,7 +21,7 @@
 	source.remove_movespeed_modifier(/datum/movespeed_modifier/nerfed_bump)
 	source.remove_movespeed_modifier(/datum/movespeed_modifier/nerfed_pull)
 
-	UnregisterSignal(source, list(COMSIG_LIVING_PUSHING_MOVABLE, COMSIG_LIVING_UPDATING_PULL_MOVESPEED))
+	UnregisterSignals(source, list(COMSIG_LIVING_PUSHING_MOVABLE, COMSIG_LIVING_UPDATING_PULL_MOVESPEED))
 
 	return ..()
 

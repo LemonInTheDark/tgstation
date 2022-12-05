@@ -48,7 +48,7 @@
 
 /datum/component/clickbox/UnregisterFromParent()
 	var/atom/movable/mov_parent = parent
-	UnregisterSignal(mov_parent, list(COMSIG_ATOM_VV_MODIFY_TRANSFORM, COMSIG_LIVING_POST_UPDATE_TRANSFORM, COMSIG_LIVING_DEATH, COMSIG_LIVING_REVIVE))
+	UnregisterSignals(mov_parent, list(COMSIG_ATOM_VV_MODIFY_TRANSFORM, COMSIG_LIVING_POST_UPDATE_TRANSFORM, COMSIG_LIVING_DEATH, COMSIG_LIVING_REVIVE))
 	mov_parent.underlays -= clickbox_undelay
 
 /// Removes the old underlay and adds a new one if conditions are met. The underlay is scaled up/down if necessary

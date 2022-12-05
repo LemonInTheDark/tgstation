@@ -53,7 +53,7 @@
 	RegisterSignal(parent, COMSIG_GEIGER_COUNTER_SCAN, PROC_REF(on_geiger_counter_scan))
 
 /datum/component/irradiated/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_COMPONENT_CLEAN_ACT,
 		COMSIG_GEIGER_COUNTER_SCAN,
 	))

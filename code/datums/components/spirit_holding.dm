@@ -24,7 +24,7 @@
 	RegisterSignal(parent, COMSIG_PARENT_QDELETING, PROC_REF(on_destroy))
 
 /datum/component/spirit_holding/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_ITEM_ATTACK_SELF, COMSIG_PARENT_QDELETING))
+	UnregisterSignals(parent, list(COMSIG_PARENT_EXAMINE, COMSIG_ITEM_ATTACK_SELF, COMSIG_PARENT_QDELETING))
 
 ///signal fired on examining the parent
 /datum/component/spirit_holding/proc/on_examine(datum/source, mob/user, list/examine_list)
@@ -107,7 +107,7 @@
 	if(!do_after(exorcist, 4 SECONDS, target = exorcised_movable))
 		return
 	playsound(parent, 'sound/effects/pray_chaplain.ogg',60,TRUE)
-	UnregisterSignal(exorcised_movable, list(COMSIG_ATOM_RELAYMOVE, COMSIG_BIBLE_SMACKED))
+	UnregisterSignals(exorcised_movable, list(COMSIG_ATOM_RELAYMOVE, COMSIG_BIBLE_SMACKED))
 	RegisterSignal(exorcised_movable, COMSIG_ITEM_ATTACK_SELF, PROC_REF(on_attack_self))
 	to_chat(bound_spirit, span_userdanger("You were exorcised!"))
 	QDEL_NULL(bound_spirit)

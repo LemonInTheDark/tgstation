@@ -113,7 +113,7 @@
 /datum/action/cooldown/spell/Remove(mob/living/remove_from)
 
 	remove_from.client?.stat_panel.send_message("check_spells")
-	UnregisterSignal(remove_from, list(
+	UnregisterSignals(remove_from, list(
 		COMSIG_MOB_AFTER_EXIT_JAUNT,
 		COMSIG_MOB_ENTER_JAUNT,
 		COMSIG_MOB_EQUIPPED_ITEM,

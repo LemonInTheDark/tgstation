@@ -45,7 +45,7 @@
 	RegisterSignal(parent, COMSIG_CIRCUIT_COMPONENT_LOAD_DATA, PROC_REF(on_data_loaded))
 
 /datum/component/circuit_component_add_port/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_CIRCUIT_COMPONENT_PERFORM_ACTION,
 		COMSIG_CIRCUIT_COMPONENT_SAVE_DATA,
 		COMSIG_CIRCUIT_COMPONENT_LOAD_DATA,

@@ -12,7 +12,7 @@
 
 /datum/element/delete_on_drop/Detach(datum/source)
 	. = ..()
-	UnregisterSignal(source, list(COMSIG_ITEM_DROPPED, COMSIG_CASING_EJECTED))
+	UnregisterSignals(source, list(COMSIG_ITEM_DROPPED, COMSIG_CASING_EJECTED))
 
 /datum/element/delete_on_drop/proc/del_on_drop(atom/source)
 	SIGNAL_HANDLER

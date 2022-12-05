@@ -106,7 +106,7 @@
 	deltimer(next_phase_timer)
 	completed = TRUE
 	if(user)
-		UnregisterSignal(user, list(COMSIG_MOB_CLICKON, COMSIG_MOVABLE_MOVED))
+		UnregisterSignals(user, list(COMSIG_MOB_CLICKON, COMSIG_MOVABLE_MOVED))
 		REMOVE_TRAIT(user, TRAIT_GONE_FISHING, REF(src))
 	if(used_rod)
 		UnregisterSignal(used_rod, COMSIG_ITEM_DROPPED)

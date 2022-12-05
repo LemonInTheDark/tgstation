@@ -117,7 +117,7 @@
 
 	if(brain.brainmob)
 		update_mmi_mob(brain, brain.brainmob)
-	UnregisterSignal(brain, list(
+	UnregisterSignals(brain, list(
 		COMSIG_PARENT_QDELETING,
 		COMSIG_MOVABLE_MOVED
 	))

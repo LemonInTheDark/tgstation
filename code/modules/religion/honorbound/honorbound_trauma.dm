@@ -30,7 +30,7 @@
 
 /datum/brain_trauma/special/honorbound/on_lose(silent)
 	owner.clear_mood_event("honorbound")
-	UnregisterSignal(owner, list(
+	UnregisterSignals(owner, list(
 		COMSIG_PARENT_ATTACKBY,
 		COMSIG_ATOM_HULK_ATTACK,
 		COMSIG_ATOM_ATTACK_HAND,

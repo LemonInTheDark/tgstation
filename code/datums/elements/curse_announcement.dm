@@ -33,7 +33,7 @@
 
 /datum/element/curse_announcement/Detach(datum/target)
 	. = ..()
-	UnregisterSignal(target, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_PICKUP))
+	UnregisterSignals(target, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_PICKUP))
 
 /datum/element/curse_announcement/proc/on_equipped(obj/item/cursed_item, mob/equipper, slot)
 	SIGNAL_HANDLER

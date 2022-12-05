@@ -46,7 +46,7 @@
 	remove_item(deleting_item)
 
 /obj/structure/dispenser_bot/proc/remove_item(obj/item/to_remove)
-	UnregisterSignal(to_remove, list(
+	UnregisterSignals(to_remove, list(
 		COMSIG_MOVABLE_MOVED,
 		COMSIG_PARENT_QDELETING,
 	))
@@ -127,7 +127,7 @@
 	RegisterSignal(shell, COMSIG_DISPENSERBOT_REMOVE_ITEM, PROC_REF(on_shell_remove_item))
 
 /obj/item/circuit_component/dispenser_bot/unregister_shell(atom/movable/shell)
-	UnregisterSignal(shell, list(
+	UnregisterSignals(shell, list(
 		COMSIG_DISPENSERBOT_ADD_ITEM,
 		COMSIG_DISPENSERBOT_REMOVE_ITEM,
 	))
@@ -147,7 +147,7 @@
 
 /obj/item/circuit_component/dispenser_bot/proc/remove_vendor_component(obj/item/circuit_component/vendor_component/vendor_component)
 	SIGNAL_HANDLER
-	UnregisterSignal(vendor_component, list(
+	UnregisterSignals(vendor_component, list(
 		COMSIG_PARENT_QDELETING,
 		COMSIG_CIRCUIT_COMPONENT_REMOVED,
 	))

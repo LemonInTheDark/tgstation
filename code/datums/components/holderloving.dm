@@ -40,8 +40,8 @@
 	), PROC_REF(check_my_loc))
 
 /datum/component/holderloving/UnregisterFromParent()
-	UnregisterSignal(holder, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
-	UnregisterSignal(parent, list(
+	UnregisterSignals(holder, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
+	UnregisterSignals(parent, list(
 		COMSIG_ITEM_DROPPED,
 		COMSIG_ITEM_EQUIPPED,
 		COMSIG_ATOM_ENTERED,

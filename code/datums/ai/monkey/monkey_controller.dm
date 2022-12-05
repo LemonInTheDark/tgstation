@@ -71,7 +71,7 @@ have ways of interacting with a specific mob and control it.
 
 /datum/ai_controller/monkey/UnpossessPawn(destroy)
 
-	UnregisterSignal(pawn, list(
+	UnregisterSignals(pawn, list(
 		COMSIG_PARENT_ATTACKBY,
 		COMSIG_ATOM_ATTACK_HAND,
 		COMSIG_ATOM_ATTACK_PAW,

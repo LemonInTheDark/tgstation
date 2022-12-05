@@ -145,7 +145,7 @@
 /obj/effect/client_image_holder/proc/remove_seer(mob/source)
 	SIGNAL_HANDLER
 
-	UnregisterSignal(source, list(COMSIG_MOB_LOGIN, COMSIG_PARENT_QDELETING))
+	UnregisterSignals(source, list(COMSIG_MOB_LOGIN, COMSIG_PARENT_QDELETING))
 	hide_image_from(source)
 	who_sees_us -= source
 

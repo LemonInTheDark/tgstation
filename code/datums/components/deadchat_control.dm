@@ -141,7 +141,7 @@
 	SIGNAL_HANDLER
 
 	if(orbiter in orbiters)
-		UnregisterSignal(orbiter, list(
+		UnregisterSignals(orbiter, list(
 			COMSIG_MOB_DEADSAY,
 			COMSIG_MOB_AUTOMUTE_CHECK,
 		))

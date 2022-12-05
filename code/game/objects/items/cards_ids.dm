@@ -905,7 +905,7 @@
 	RegisterSignal(src, COMSIG_ITEM_DROPPED, PROC_REF(remove_intern_status))
 
 /obj/item/card/id/advanced/Destroy()
-	UnregisterSignal(src, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(src, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 
 	return ..()
 
@@ -962,7 +962,7 @@
 /obj/item/card/id/advanced/proc/on_holding_card_slot_moved(obj/item/modular_computer/pda/source, atom/old_loc, dir, forced)
 	SIGNAL_HANDLER
 	if(istype(old_loc, /obj/item/modular_computer/pda))
-		UnregisterSignal(old_loc, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+		UnregisterSignals(old_loc, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 
 	if(source)
 		RegisterSignal(source, COMSIG_ITEM_EQUIPPED, PROC_REF(update_intern_status))
@@ -973,7 +973,7 @@
 
 	//Old loc
 	if(istype(old_loc, /obj/item/storage/wallet))
-		UnregisterSignal(old_loc, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+		UnregisterSignals(old_loc, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 
 	if(istype(old_loc, /obj/item/modular_computer/pda))
 		UnregisterSignal(old_loc, COMSIG_MOVABLE_MOVED)

@@ -51,7 +51,7 @@
 	RegisterSignal(parent, COMSIG_TRY_ALT_ACTION, PROC_REF(on_try_alt_action))
 
 /datum/component/shy/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_MOB_CLICKON,
 		COMSIG_LIVING_TRY_PULL,
 		COMSIG_LIVING_UNARMED_ATTACK, COMSIG_HUMAN_EARLY_UNARMED_ATTACK,

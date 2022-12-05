@@ -40,7 +40,7 @@
 		pawn.visible_message(span_danger("[pawn] drops [carried_item]"))
 		carried_item.forceMove(pawn.drop_location())
 		blackboard[BB_SIMPLE_CARRY_ITEM] = null
-	UnregisterSignal(pawn, list(COMSIG_ATOM_ATTACK_HAND, COMSIG_PARENT_EXAMINE, COMSIG_CLICK_ALT, COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	UnregisterSignals(pawn, list(COMSIG_ATOM_ATTACK_HAND, COMSIG_PARENT_EXAMINE, COMSIG_CLICK_ALT, COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	UnregisterSignal(SSdcs, COMSIG_GLOB_CARBON_THROW_THING)
 	return ..() //Run parent at end
 
@@ -79,7 +79,7 @@
 /datum/ai_controller/dog/proc/listen_throw_land(obj/item/thrown_thing, datum/thrownthing/throwing_datum)
 	SIGNAL_HANDLER
 
-	UnregisterSignal(thrown_thing, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_THROW_LANDED))
+	UnregisterSignals(thrown_thing, list(COMSIG_PARENT_QDELETING, COMSIG_MOVABLE_THROW_LANDED))
 	if(!istype(thrown_thing) || !isturf(thrown_thing.loc) || !can_see(pawn, thrown_thing, length=AI_DOG_VISION_RANGE))
 		return
 
@@ -132,7 +132,7 @@
 /datum/ai_controller/dog/proc/unfriend(mob/living/ex_friend)
 	var/list/friends = blackboard[BB_DOG_FRIENDS]
 	friends -= WEAKREF(ex_friend)
-	UnregisterSignal(ex_friend, list(COMSIG_MOB_POINTED, COMSIG_MOB_SAY))
+	UnregisterSignals(ex_friend, list(COMSIG_MOB_POINTED, COMSIG_MOB_SAY))
 
 /// Someone is looking at us, if we're currently carrying something then show what it is, and include a message if they're our friend
 /datum/ai_controller/dog/proc/on_examined(datum/source, mob/user, list/examine_text)

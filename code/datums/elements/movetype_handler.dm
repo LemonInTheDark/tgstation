@@ -36,7 +36,7 @@
 	)
 	signals_to_remove += GLOB.movement_type_addtrait_signals
 	signals_to_remove += GLOB.movement_type_removetrait_signals
-	UnregisterSignal(source, signals_to_remove)
+	UnregisterSignals(source, signals_to_remove)
 
 	attached_atoms -= source
 	paused_floating_anim_atoms -= source

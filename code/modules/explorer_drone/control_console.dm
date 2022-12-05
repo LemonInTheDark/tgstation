@@ -37,7 +37,7 @@
 /obj/machinery/computer/exodrone_control_console/proc/end_drone_control()
 	if(controlled_drone)
 		controlled_drone.controlled = FALSE
-		UnregisterSignal(controlled_drone,list(COMSIG_PARENT_QDELETING,COMSIG_EXODRONE_STATUS_CHANGED))
+		UnregisterSignals(controlled_drone,list(COMSIG_PARENT_QDELETING,COMSIG_EXODRONE_STATUS_CHANGED))
 		controlled_drone = null
 		update_icon()
 

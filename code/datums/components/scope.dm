@@ -21,7 +21,7 @@
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
 
 /datum/component/scope/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_MOVABLE_MOVED,
 		COMSIG_ITEM_AFTERATTACK_SECONDARY,
 		COMSIG_GUN_TRY_FIRE,

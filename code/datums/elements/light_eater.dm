@@ -28,7 +28,7 @@
 	return ..()
 
 /datum/element/light_eater/Detach(datum/source)
-	UnregisterSignal(source, list(
+	UnregisterSignals(source, list(
 		COMSIG_MOVABLE_IMPACT,
 		COMSIG_ITEM_AFTERATTACK,
 		COMSIG_ITEM_HIT_REACT,

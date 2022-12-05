@@ -71,7 +71,7 @@
 
 /datum/component/customizable_reagent_holder/UnregisterFromParent()
 	. = ..()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_PARENT_ATTACKBY,
 		COMSIG_PARENT_EXAMINE,
 		COMSIG_ATOM_PROCESSED,

@@ -19,7 +19,7 @@
 
 /datum/element/light_blocking/Detach(datum/target)
 	. = ..()
-	UnregisterSignal(target, list(COMSIG_MOVABLE_MOVED))
+	UnregisterSignals(target, list(COMSIG_MOVABLE_MOVED))
 	var/atom/movable/movable_target = target
 	if(!isturf(movable_target.loc))
 		return

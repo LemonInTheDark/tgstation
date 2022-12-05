@@ -23,7 +23,7 @@
 
 
 /datum/component/shy_in_room/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_MOB_CLICKON,
 		COMSIG_LIVING_TRY_PULL,
 		COMSIG_LIVING_UNARMED_ATTACK,

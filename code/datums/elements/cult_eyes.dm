@@ -45,5 +45,5 @@
 		human_parent.dna.update_ui_block(DNA_EYE_COLOR_LEFT_BLOCK)
 		human_parent.dna.update_ui_block(DNA_EYE_COLOR_RIGHT_BLOCK)
 		human_parent.update_body()
-	UnregisterSignal(target, list(COMSIG_CHANGELING_TRANSFORM, COMSIG_HUMAN_MONKEYIZE, COMSIG_MONKEY_HUMANIZE))
+	UnregisterSignals(target, list(COMSIG_CHANGELING_TRANSFORM, COMSIG_HUMAN_MONKEYIZE, COMSIG_MONKEY_HUMANIZE))
 	return ..()

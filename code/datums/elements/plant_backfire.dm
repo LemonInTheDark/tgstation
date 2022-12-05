@@ -27,7 +27,7 @@
 
 /datum/element/plant_backfire/Detach(datum/target)
 	. = ..()
-	UnregisterSignal(target, list(COMSIG_ITEM_PRE_ATTACK, COMSIG_ITEM_PICKUP, COMSIG_MOVABLE_PRE_THROW))
+	UnregisterSignals(target, list(COMSIG_ITEM_PRE_ATTACK, COMSIG_ITEM_PICKUP, COMSIG_MOVABLE_PRE_THROW))
 
 /**
  * Checks before we attack if we're okay to continue.

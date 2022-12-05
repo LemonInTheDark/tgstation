@@ -45,7 +45,7 @@
 	RegisterSignal(shell, COMSIG_ITEM_ATTACK_SELF_SECONDARY, PROC_REF(send_right_signal))
 
 /obj/item/circuit_component/controller/unregister_shell(atom/movable/shell)
-	UnregisterSignal(shell, list(
+	UnregisterSignals(shell, list(
 		COMSIG_ITEM_ATTACK_SELF,
 		COMSIG_ITEM_ATTACK_SELF_SECONDARY,
 		COMSIG_CLICK_ALT,

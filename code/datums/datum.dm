@@ -147,7 +147,7 @@
 		comp_lookup = lookup = null
 
 	for(var/target in signal_procs)
-		UnregisterSignal(target, signal_procs[target])
+		UnregisterSignals(target, signal_procs[target])
 
 #ifdef DATUMVAR_DEBUGGING_MODE
 /datum/proc/save_vars()

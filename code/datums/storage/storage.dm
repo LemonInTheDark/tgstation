@@ -214,7 +214,7 @@
 	resolve_location.flags_1 &= ~HAS_DISASSOCIATED_STORAGE_1
 	real.flags_1 |= HAS_DISASSOCIATED_STORAGE_1
 
-	UnregisterSignal(resolve_location, list(COMSIG_ATOM_ENTERED, COMSIG_ATOM_EXITED))
+	UnregisterSignals(resolve_location, list(COMSIG_ATOM_ENTERED, COMSIG_ATOM_EXITED))
 
 	RegisterSignal(real, COMSIG_ATOM_ENTERED, PROC_REF(handle_enter))
 	RegisterSignal(real, COMSIG_ATOM_EXITED, PROC_REF(handle_exit))

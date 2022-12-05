@@ -24,7 +24,7 @@
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
 
 /datum/component/toggle_icon/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_CLICK_ALT, COMSIG_PARENT_EXAMINE))
+	UnregisterSignals(parent, list(COMSIG_CLICK_ALT, COMSIG_PARENT_EXAMINE))
 
 /*
  * Signal proc for COMSIG_CLICK_ALT.

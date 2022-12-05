@@ -186,7 +186,7 @@ GLOBAL_DATUM_INIT(steal_item_handler, /datum/objective_item_handler, new())
 /datum/traitor_objective/steal_item/ungenerate_objective()
 	STOP_PROCESSING(SSprocessing, src)
 	if(bug)
-		UnregisterSignal(bug, list(COMSIG_TRAITOR_BUG_PLANTED_OBJECT, COMSIG_TRAITOR_BUG_PRE_PLANTED_OBJECT))
+		UnregisterSignals(bug, list(COMSIG_TRAITOR_BUG_PLANTED_OBJECT, COMSIG_TRAITOR_BUG_PRE_PLANTED_OBJECT))
 	bug = null
 
 /datum/traitor_objective/steal_item/generate_ui_buttons(mob/user)

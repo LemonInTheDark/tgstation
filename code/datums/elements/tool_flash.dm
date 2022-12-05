@@ -21,7 +21,7 @@
 
 /datum/element/tool_flash/Detach(datum/source)
 	. = ..()
-	UnregisterSignal(source, list(COMSIG_TOOL_IN_USE, COMSIG_TOOL_START_USE))
+	UnregisterSignals(source, list(COMSIG_TOOL_IN_USE, COMSIG_TOOL_START_USE))
 
 /datum/element/tool_flash/proc/prob_flash(datum/source, mob/living/user)
 	SIGNAL_HANDLER

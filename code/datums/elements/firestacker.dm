@@ -22,7 +22,7 @@
 
 /datum/element/firestacker/Detach(datum/source)
 	. = ..()
-	UnregisterSignal(source, list(COMSIG_MOVABLE_IMPACT, COMSIG_ITEM_ATTACK, COMSIG_ITEM_ATTACK_SELF))
+	UnregisterSignals(source, list(COMSIG_MOVABLE_IMPACT, COMSIG_ITEM_ATTACK, COMSIG_ITEM_ATTACK_SELF))
 
 /datum/element/firestacker/proc/stack_on(datum/owner, mob/living/target)
 	target.adjust_fire_stacks(amount)

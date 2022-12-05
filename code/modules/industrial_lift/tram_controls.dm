@@ -164,7 +164,7 @@
 /obj/item/circuit_component/tram_controls/unregister_usb_parent(atom/movable/shell)
 	var/datum/lift_master/tram/tram_part = computer.tram_ref?.resolve()
 	computer = null
-	UnregisterSignal(tram_part, list(COMSIG_TRAM_SET_TRAVELLING, COMSIG_TRAM_TRAVEL))
+	UnregisterSignals(tram_part, list(COMSIG_TRAM_SET_TRAVELLING, COMSIG_TRAM_TRAVEL))
 	return ..()
 
 /obj/item/circuit_component/tram_controls/input_received(datum/port/input/port)

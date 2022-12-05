@@ -95,7 +95,7 @@
 			to_chat(parent, span_warning("The song was interrupted, you cannot activate the finishing ability!"))
 
 	linked_song.parent?.remove_filter("smooth_tunes_outline")
-	UnregisterSignal(linked_song.parent, list(
+	UnregisterSignals(linked_song.parent, list(
 		COMSIG_INSTRUMENT_TEMPO_CHANGE,
 		COMSIG_INSTRUMENT_END,
 		COMSIG_INSTRUMENT_REPEAT,

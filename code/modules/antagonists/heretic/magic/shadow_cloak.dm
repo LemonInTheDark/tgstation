@@ -159,7 +159,7 @@
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/shadow_cloak)
 	owner.remove_actionspeed_modifier(/datum/actionspeed_modifier/shadow_cloak)
 	// Clear signals
-	UnregisterSignal(owner, list(
+	UnregisterSignals(owner, list(
 		COMSIG_ATOM_DIR_CHANGE,
 		COMSIG_LIVING_SET_BODY_POSITION,
 		COMSIG_MOB_STATCHANGE,

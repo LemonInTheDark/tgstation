@@ -28,7 +28,7 @@
 
 /datum/element/weapon_description/Detach(datum/target)
 	. = ..()
-	UnregisterSignal(target, list(COMSIG_PARENT_EXAMINE, COMSIG_TOPIC))
+	UnregisterSignals(target, list(COMSIG_PARENT_EXAMINE, COMSIG_TOPIC))
 
 /**
  *

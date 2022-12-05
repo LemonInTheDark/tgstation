@@ -57,7 +57,7 @@
 /datum/sparring_match/proc/unhook_signals(mob/living/carbon/human/sparring)
 	if(!sparring)
 		return
-	UnregisterSignal(sparring, list(
+	UnregisterSignals(sparring, list(
 		COMSIG_MOB_FIRED_GUN,
 		COMSIG_MOB_GRENADE_ARMED,
 		COMSIG_MOB_ITEM_ATTACK,

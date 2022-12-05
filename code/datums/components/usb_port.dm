@@ -55,7 +55,7 @@
 		component.register_usb_parent(parent)
 
 /datum/component/usb_port/UnregisterFromParent()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_ATOM_USB_CABLE_TRY_ATTACH,
 		COMSIG_MOVABLE_MOVED,
 		COMSIG_PARENT_EXAMINE,
@@ -102,7 +102,7 @@
 	if (isnull(attached_circuit))
 		return
 
-	UnregisterSignal(attached_circuit, list(
+	UnregisterSignals(attached_circuit, list(
 		COMSIG_CIRCUIT_SHELL_REMOVED,
 		COMSIG_PARENT_QDELETING,
 		COMSIG_CIRCUIT_SET_SHELL,
@@ -112,7 +112,7 @@
 	if (isnull(physical_object))
 		return
 
-	UnregisterSignal(physical_object, list(
+	UnregisterSignals(physical_object, list(
 		COMSIG_MOVABLE_MOVED,
 		COMSIG_PARENT_EXAMINE,
 	))

@@ -194,7 +194,7 @@ GLOBAL_LIST_EMPTY(pillars_by_z)
 	var/turf/our_turf = source
 	clear_multiz(our_turf)
 
-	UnregisterSignal(our_turf, list(COMSIG_TURF_MULTIZ_NEW, COMSIG_TURF_MULTIZ_DEL))
+	UnregisterSignals(our_turf, list(COMSIG_TURF_MULTIZ_NEW, COMSIG_TURF_MULTIZ_DEL))
 	REMOVE_TRAIT(our_turf, TURF_Z_TRANSPARENT_TRAIT, ELEMENT_TRAIT(type))
 
 ///Updates the viscontents or underlays below this tile.

@@ -27,7 +27,7 @@
 	return ..()
 
 /datum/brain_trauma/special/burdened/on_lose()
-	UnregisterSignal(owner, list(
+	UnregisterSignals(owner, list(
 		COMSIG_CARBON_GAIN_ORGAN,
 		COMSIG_CARBON_LOSE_ORGAN,
 		COMSIG_CARBON_ATTACH_LIMB,

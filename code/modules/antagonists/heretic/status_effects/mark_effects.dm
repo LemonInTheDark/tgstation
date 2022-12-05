@@ -148,7 +148,7 @@
 	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(on_move))
 
 /datum/status_effect/eldritch/blade/on_remove()
-	UnregisterSignal(owner, list(
+	UnregisterSignals(owner, list(
 		COMSIG_MOVABLE_PRE_THROW,
 		COMSIG_MOVABLE_TELEPORTED,
 		COMSIG_MOVABLE_MOVED,

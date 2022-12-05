@@ -157,7 +157,7 @@
 		bci.actions -= charge_action
 		QDEL_NULL(charge_action)
 
-	UnregisterSignal(shell, list(
+	UnregisterSignals(shell, list(
 		COMSIG_ORGAN_IMPLANTED,
 		COMSIG_ORGAN_REMOVED,
 	))
@@ -194,7 +194,7 @@
 	user_port.set_output(null)
 	user = null
 
-	UnregisterSignal(owner, list(
+	UnregisterSignals(owner, list(
 		COMSIG_PARENT_EXAMINE,
 		COMSIG_PROCESS_BORGCHARGER_OCCUPANT,
 		COMSIG_LIVING_ELECTROCUTE_ACT,

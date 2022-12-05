@@ -33,7 +33,7 @@
 
 /datum/element/chemical_transfer/Detach(datum/target)
 	. = ..()
-	UnregisterSignal(target, list(COMSIG_ITEM_ATTACK, COMSIG_PARENT_EXAMINE))
+	UnregisterSignals(target, list(COMSIG_ITEM_ATTACK, COMSIG_PARENT_EXAMINE))
 
 ///signal called on parent being examined
 /datum/element/chemical_transfer/proc/on_examine(datum/target, mob/user, list/examine_list)

@@ -33,7 +33,7 @@
 	QDEL_NULL(admin_popup)
 
 	if (!QDELETED(ticket))
-		UnregisterSignal(ticket, list(
+		UnregisterSignals(ticket, list(
 			COMSIG_ADMIN_HELP_MADE_INACTIVE,
 			COMSIG_ADMIN_HELP_REPLIED,
 			COMSIG_PARENT_QDELETING,

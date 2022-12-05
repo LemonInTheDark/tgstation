@@ -284,7 +284,7 @@
 /datum/action/vehicle/sealed/mecha/ivanov_strike/proc/end_missile_targeting()
 	aiming_missile = FALSE
 	rockets_left = 0
-	UnregisterSignal(chassis, list(COMSIG_MECHA_MELEE_CLICK, COMSIG_MECHA_EQUIPMENT_CLICK))
+	UnregisterSignals(chassis, list(COMSIG_MECHA_MELEE_CLICK, COMSIG_MECHA_EQUIPMENT_CLICK))
 	owner.client.mouse_override_icon = null
 	owner.update_mouse_pointer()
 	owner.clear_fullscreen("ivanov")

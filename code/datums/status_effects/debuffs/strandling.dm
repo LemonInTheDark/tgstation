@@ -16,7 +16,7 @@
 	return TRUE
 
 /datum/status_effect/strandling/on_remove()
-	UnregisterSignal(owner, list(COMSIG_CARBON_PRE_BREATHE, COMSIG_ATOM_TOOL_ACT(TOOL_WIRECUTTER), COMSIG_CARBON_PRE_MISC_HELP))
+	UnregisterSignals(owner, list(COMSIG_CARBON_PRE_BREATHE, COMSIG_ATOM_TOOL_ACT(TOOL_WIRECUTTER), COMSIG_CARBON_PRE_MISC_HELP))
 
 /datum/status_effect/strandling/get_examine_text()
 	return span_warning("[owner.p_they(TRUE)] seem[owner.p_s()] to be being choked by some durathread strands. You may be able to <b>cut</b> them off.")

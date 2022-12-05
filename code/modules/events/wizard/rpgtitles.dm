@@ -21,7 +21,7 @@ GLOBAL_DATUM(rpgtitle_controller, /datum/rpgtitle_controller)
 	handle_current_jobs()
 
 /datum/rpgtitle_controller/Destroy(force)
-	UnregisterSignal(SSdcs, list(COMSIG_GLOB_CREWMEMBER_JOINED, COMSIG_GLOB_MOB_LOGGED_IN))
+	UnregisterSignals(SSdcs, list(COMSIG_GLOB_CREWMEMBER_JOINED, COMSIG_GLOB_MOB_LOGGED_IN))
 	. = ..()
 
 ///signal sent by a player list expanding

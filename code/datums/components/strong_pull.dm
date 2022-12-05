@@ -43,7 +43,7 @@ Basically, the items they pull cannot be pulled (except by the puller)
  * Unregisters signals and stops any buffs to pulling.
  */
 /datum/component/strong_pull/proc/lose_strong_grip()
-	UnregisterSignal(strongpulling, list(COMSIG_ATOM_CAN_BE_PULLED, COMSIG_ATOM_NO_LONGER_PULLED))
+	UnregisterSignals(strongpulling, list(COMSIG_ATOM_CAN_BE_PULLED, COMSIG_ATOM_NO_LONGER_PULLED))
 	if(istype(strongpulling, /obj/structure/closet))
 		var/obj/structure/closet/ungrabbed_closet = strongpulling
 		ungrabbed_closet.strong_grab = FALSE

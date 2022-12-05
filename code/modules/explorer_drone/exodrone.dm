@@ -244,14 +244,14 @@ GLOBAL_LIST_EMPTY(exodrone_launchers)
 	switch(result)
 		if(ADVENTURE_RESULT_SUCCESS)
 			award_adventure_loot()
-			UnregisterSignal(current_adventure,list(COMSIG_ADVENTURE_FINISHED,COMSIG_ADVENTURE_QUALITY_INIT,COMSIG_ADVENTURE_DELAY_START,COMSIG_ADVENTURE_DELAY_END))
+			UnregisterSignals(current_adventure,list(COMSIG_ADVENTURE_FINISHED,COMSIG_ADVENTURE_QUALITY_INIT,COMSIG_ADVENTURE_DELAY_START,COMSIG_ADVENTURE_DELAY_END))
 			current_adventure = null
 			set_status(EXODRONE_EXPLORATION)
 			return
 		if(ADVENTURE_RESULT_DAMAGE)
 			damage(max_integrity*0.5) //Half health lost
 			if(!QDELETED(src)) // Don't bother if we just blown up from the damage
-				UnregisterSignal(current_adventure,list(COMSIG_ADVENTURE_FINISHED,COMSIG_ADVENTURE_QUALITY_INIT,COMSIG_ADVENTURE_DELAY_START,COMSIG_ADVENTURE_DELAY_END))
+				UnregisterSignals(current_adventure,list(COMSIG_ADVENTURE_FINISHED,COMSIG_ADVENTURE_QUALITY_INIT,COMSIG_ADVENTURE_DELAY_START,COMSIG_ADVENTURE_DELAY_END))
 				current_adventure = null
 				set_status(EXODRONE_EXPLORATION)
 			return

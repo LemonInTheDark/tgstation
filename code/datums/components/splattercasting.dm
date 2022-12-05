@@ -24,7 +24,7 @@
 
 /datum/component/splattercasting/UnregisterFromParent()
 	. = ..()
-	UnregisterSignal(parent, list(COMSIG_SPECIES_LOSS, COMSIG_MOB_SPELL_PROJECTILE, COMSIG_MOB_BEFORE_SPELL_CAST, COMSIG_MOB_AFTER_SPELL_CAST))
+	UnregisterSignals(parent, list(COMSIG_SPECIES_LOSS, COMSIG_MOB_SPELL_PROJECTILE, COMSIG_MOB_BEFORE_SPELL_CAST, COMSIG_MOB_AFTER_SPELL_CAST))
 
 ///signal sent when a spell casts a projectile
 /datum/component/splattercasting/proc/on_species_change(mob/living/carbon/source, datum/species/lost_species)

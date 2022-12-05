@@ -183,7 +183,7 @@
 	internal_circuit.set_cell(null)
 	internal_circuit.set_on(FALSE)
 	internal_circuit.remove_current_shell()
-	UnregisterSignal(removed_from, list(
+	UnregisterSignals(removed_from, list(
 		COMSIG_CIRCUIT_SET_CELL,
 		COMSIG_CIRCUIT_SET_ON,
 		COMSIG_CIRCUIT_SET_SHELL,

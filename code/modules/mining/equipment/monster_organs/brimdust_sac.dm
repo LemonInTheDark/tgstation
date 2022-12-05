@@ -130,7 +130,7 @@
 /datum/status_effect/stacking/brimdust_coating/on_remove()
 	. = ..()
 	owner.cut_overlay(dust_overlay)
-	UnregisterSignal(owner, list(COMSIG_MOB_APPLY_DAMAGE, COMSIG_COMPONENT_CLEAN_ACT))
+	UnregisterSignals(owner, list(COMSIG_MOB_APPLY_DAMAGE, COMSIG_COMPONENT_CLEAN_ACT))
 
 /// When you are cleaned, wash off the buff
 /datum/status_effect/stacking/brimdust_coating/proc/on_cleaned()

@@ -35,7 +35,7 @@
 /datum/element/deliver_first/Detach(datum/target)
 	. = ..()
 	REMOVE_TRAIT(target, TRAIT_BANNED_FROM_CARGO_SHUTTLE, REF(src))
-	UnregisterSignal(target, list(
+	UnregisterSignals(target, list(
 		COMSIG_PARENT_EXAMINE,
 		COMSIG_MOVABLE_MOVED,
 		COMSIG_ATOM_EMAG_ACT,

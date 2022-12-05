@@ -60,7 +60,7 @@
 		rotated_obj.verbs -= /atom/movable/proc/SimpleRotateCounterclockwise
 
 /datum/component/simple_rotation/proc/RemoveSignals()
-	UnregisterSignal(parent, list(COMSIG_CLICK_ALT, COMSIG_CLICK_ALT_SECONDARY, COMSIG_PARENT_EXAMINE, COMSIG_ATOM_REQUESTING_CONTEXT_FROM_ITEM))
+	UnregisterSignals(parent, list(COMSIG_CLICK_ALT, COMSIG_CLICK_ALT_SECONDARY, COMSIG_PARENT_EXAMINE, COMSIG_ATOM_REQUESTING_CONTEXT_FROM_ITEM))
 
 /datum/component/simple_rotation/RegisterWithParent()
 	AddVerbs()
@@ -73,11 +73,13 @@
 	//instead (there's no real state worth transferring)
 	return COMPONENT_NOTRANSFER
 
+#warn bit of cost here too, weird
 /datum/component/simple_rotation/UnregisterFromParent()
 	RemoveVerbs()
 	RemoveSignals()
 	. = ..()
 
+#warn callbacks aren't managed so this qdel issilly
 /datum/component/simple_rotation/Destroy()
 	QDEL_NULL(AfterRotation)
 	//Signals + verbs removed via UnRegister

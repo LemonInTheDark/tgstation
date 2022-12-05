@@ -94,7 +94,7 @@
 
 /obj/item/circuit_component/airlock/unregister_shell(atom/movable/shell)
 	attached_airlock = null
-	UnregisterSignal(shell, list(
+	UnregisterSignals(shell, list(
 		COMSIG_AIRLOCK_SET_BOLT,
 		COMSIG_AIRLOCK_OPEN,
 		COMSIG_AIRLOCK_CLOSE,
@@ -163,7 +163,7 @@
 
 /obj/item/circuit_component/airlock_access_event/unregister_shell(atom/movable/shell)
 	attached_airlock = null
-	UnregisterSignal(shell, list(
+	UnregisterSignals(shell, list(
 		COMSIG_OBJ_ALLOWED,
 		COMSIG_AIRLOCK_SHELL_ALLOWED
 	))

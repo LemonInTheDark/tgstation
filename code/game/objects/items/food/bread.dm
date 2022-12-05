@@ -290,7 +290,7 @@
 	RegisterSignal(src, COMSIG_ITEM_DROPPED, PROC_REF(on_sword_dropped))
 
 /obj/item/food/baguette/proc/end_swordplay(mob/user)
-	UnregisterSignal(src, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(src, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 
 	REMOVE_TRAIT(src, TRAIT_CUSTOM_TAP_SOUND, SWORDPLAY_TRAIT)
 	attack_verb_continuous = initial(attack_verb_continuous)

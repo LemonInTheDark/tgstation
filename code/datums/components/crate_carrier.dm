@@ -33,7 +33,7 @@
 	RegisterSignal(parent, COMSIG_LIVING_DEATH, PROC_REF(on_death))
 
 /datum/component/crate_carrier/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_LIVING_UNARMED_ATTACK, COMSIG_LIVING_DEATH, COMSIG_PARENT_EXAMINE))
+	UnregisterSignals(parent, list(COMSIG_LIVING_UNARMED_ATTACK, COMSIG_LIVING_DEATH, COMSIG_PARENT_EXAMINE))
 
 /// Signal proc for [COMSIG_PARENT_EXAMINE] to show when we're carrying crates
 /datum/component/crate_carrier/proc/on_examine(mob/living/source, mob/examiner, list/examine_list)

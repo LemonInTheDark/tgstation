@@ -344,7 +344,7 @@
 		return
 	UnregisterSignal(target, COMSIG_MIND_TRANSFERRED)
 	if(target.current)
-		UnregisterSignal(target.current, list(COMSIG_PARENT_QDELETING, COMSIG_MOB_MIND_TRANSFERRED_INTO))
+		UnregisterSignals(target.current, list(COMSIG_PARENT_QDELETING, COMSIG_MOB_MIND_TRANSFERRED_INTO))
 	target = null
 
 /datum/objective/sacrifice/find_target(dupe_search_range)
@@ -390,13 +390,13 @@
 	if(!isliving(target.current))
 		INVOKE_ASYNC(src, PROC_REF(find_target))
 		return
-	UnregisterSignal(previous_body, list(COMSIG_PARENT_QDELETING, COMSIG_MOB_MIND_TRANSFERRED_INTO))
+	UnregisterSignals(previous_body, list(COMSIG_PARENT_QDELETING, COMSIG_MOB_MIND_TRANSFERRED_INTO))
 	RegisterSignal(target.current, COMSIG_PARENT_QDELETING, PROC_REF(on_target_body_del))
 	RegisterSignal(target.current, COMSIG_MOB_MIND_TRANSFERRED_INTO, PROC_REF(on_possible_mindswap))
 
 /datum/objective/sacrifice/proc/on_possible_mindswap(mob/source)
 	SIGNAL_HANDLER
-	UnregisterSignal(target.current, list(COMSIG_PARENT_QDELETING, COMSIG_MOB_MIND_TRANSFERRED_INTO))
+	UnregisterSignals(target.current, list(COMSIG_PARENT_QDELETING, COMSIG_MOB_MIND_TRANSFERRED_INTO))
 	//we check if the mind is bodyless only after mindswap shenanigeans to avoid issues.
 	addtimer(CALLBACK(src, PROC_REF(do_we_have_a_body)), 0 SECONDS)
 

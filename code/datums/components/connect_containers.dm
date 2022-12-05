@@ -32,7 +32,7 @@
 
 /datum/component/connect_containers/proc/set_tracked(atom/movable/new_tracked)
 	if(tracked)
-		UnregisterSignal(tracked, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
+		UnregisterSignals(tracked, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
 		unregister_signals(tracked.loc)
 	tracked = new_tracked
 	if(!tracked)
@@ -60,7 +60,7 @@
 
 	for(var/atom/movable/target as anything in (get_nested_locs(location) + location))
 		UnregisterSignal(target, COMSIG_MOVABLE_MOVED)
-		parent.UnregisterSignal(target, connections)
+		parent.UnregisterSignals(target, connections)
 
 /datum/component/connect_containers/proc/on_moved(atom/movable/listener, atom/old_loc)
 	SIGNAL_HANDLER

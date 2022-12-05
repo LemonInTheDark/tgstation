@@ -126,7 +126,7 @@
 /// Handles removing signal hooks incase someone is crazy enough to reset the reagents datum.
 /mob/living/simple_animal/slime/proc/on_reagents_del(datum/reagents/reagents)
 	SIGNAL_HANDLER
-	UnregisterSignal(reagents, list(COMSIG_REAGENTS_NEW_REAGENT, COMSIG_REAGENTS_DEL_REAGENT, COMSIG_PARENT_QDELETING))
+	UnregisterSignals(reagents, list(COMSIG_REAGENTS_NEW_REAGENT, COMSIG_REAGENTS_DEL_REAGENT, COMSIG_PARENT_QDELETING))
 	return NONE
 
 /mob/living/simple_animal/slime/proc/set_colour(new_colour)

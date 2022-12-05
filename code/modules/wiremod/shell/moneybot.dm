@@ -109,7 +109,7 @@
 		attached_bot.locked = parent.locked
 
 /obj/item/circuit_component/money_bot/unregister_shell(atom/movable/shell)
-	UnregisterSignal(shell, list(
+	UnregisterSignals(shell, list(
 		COMSIG_PARENT_ATTACKBY,
 		COMSIG_MONEYBOT_ADD_MONEY,
 	))

@@ -355,7 +355,7 @@
 		qdel(GetComponent(/datum/component/shy_in_room))
 		qdel(GetComponent(/datum/component/technoshy))
 		qdel(GetComponent(/datum/component/itempicky))
-		UnregisterSignal(src, list(COMSIG_TRY_USE_MACHINE, COMSIG_TRY_WIRES_INTERACT))
+		UnregisterSignals(src, list(COMSIG_TRY_USE_MACHINE, COMSIG_TRY_WIRES_INTERACT))
 
 /mob/living/simple_animal/drone/handle_temperature_damage()
 	return

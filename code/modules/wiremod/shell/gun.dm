@@ -61,7 +61,7 @@
 		RegisterSignal(shell, COMSIG_GUN_CHAMBER_PROCESSED, PROC_REF(handle_chamber))
 
 /obj/item/circuit_component/wiremod_gun/unregister_shell(atom/movable/shell)
-	UnregisterSignal(shell, list(COMSIG_PROJECTILE_ON_HIT, COMSIG_GUN_CHAMBER_PROCESSED))
+	UnregisterSignals(shell, list(COMSIG_PROJECTILE_ON_HIT, COMSIG_GUN_CHAMBER_PROCESSED))
 
 /**
  * Called when the shell item shoots something

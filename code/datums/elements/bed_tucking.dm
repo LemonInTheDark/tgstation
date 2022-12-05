@@ -23,7 +23,7 @@
 
 /datum/element/bed_tuckable/Detach(obj/target)
 	. = ..()
-	UnregisterSignal(target, list(COMSIG_ITEM_ATTACK_OBJ, COMSIG_ITEM_PICKUP))
+	UnregisterSignals(target, list(COMSIG_ITEM_ATTACK_OBJ, COMSIG_ITEM_PICKUP))
 
 /**
  * Tuck our object into bed.

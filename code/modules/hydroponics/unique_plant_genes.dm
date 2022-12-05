@@ -622,7 +622,7 @@
 	stinky_seed = WEAKREF(new_seed)
 
 /datum/plant_gene/trait/gas_production/on_removed(obj/item/seeds/old_seed)
-	UnregisterSignal(old_seed, list(COMSIG_PARENT_QDELETING, COMSIG_SEED_ON_PLANTED, COMSIG_SEED_ON_GROW))
+	UnregisterSignals(old_seed, list(COMSIG_PARENT_QDELETING, COMSIG_SEED_ON_PLANTED, COMSIG_SEED_ON_GROW))
 	stop_gas()
 
 /*

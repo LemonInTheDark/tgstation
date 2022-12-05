@@ -319,30 +319,45 @@ SUBSYSTEM_DEF(garbage)
 /// Should be treated as a replacement for the 'del' keyword.
 ///
 /// Datums passed to this will be given a chance to clean up references to allow the GC to collect them.
+GLOBAL_LIST_EMPTY(qdel_cost)
+GLOBAL_LIST_EMPTY(qdel_count)
 /proc/qdel(datum/D, force=FALSE, ...)
+	INIT_COST(GLOB.qdel_cost, GLOB.qdel_count)
+	//EXPORT_STATS_TO_FILE_LATER("lemon.log", GLOB.qdel_cost, GLOB.qdel_count)
 	if(!istype(D))
+		SET_COST("isdatum")
 		del(D)
+		SET_COST("raw del")
 		return
+	SET_COST("isdatum")
 
 	var/datum/qdel_item/I = SSgarbage.items[D.type]
 	if (!I)
 		I = SSgarbage.items[D.type] = new /datum/qdel_item(D.type)
 	I.qdels++
+	SET_COST("New item")
 
 	if(isnull(D.gc_destroyed))
+		SET_COST("Check GC destroyed")
 		if (SEND_SIGNAL(D, COMSIG_PARENT_PREQDELETED, force)) // Give the components a chance to prevent their parent from being deleted
 			return
+		SET_COST("Check send preqdeleted")
 		D.gc_destroyed = GC_CURRENTLY_BEING_QDELETED
 		var/start_time = world.time
 		var/start_tick = world.tick_usage
+		SET_COST("setup timing")
 		SEND_SIGNAL(D, COMSIG_PARENT_QDELETING, force) // Let the (remaining) components know about the result of Destroy
+		SET_COST("Check send qdeleting")
 		var/hint = D.Destroy(arglist(args.Copy(2))) // Let our friend know they're about to get fucked up.
+		SET_COST("do destroy")
 		if(world.time != start_time)
 			I.slept_destroy++
 		else
 			I.destroy_time += TICK_USAGE_TO_MS(start_tick)
+		SET_COST("manage destroy aftereffects")
 		if(!D)
 			return
+		SET_COST("check D")
 		switch(hint)
 			if (QDEL_HINT_QUEUE) //qdel should queue the object for deletion.
 				SSgarbage.Queue(D)
@@ -385,5 +400,9 @@ SUBSYSTEM_DEF(garbage)
 				#endif
 				I.no_hint++
 				SSgarbage.Queue(D)
+		SET_COST("do queuing")
 	else if(D.gc_destroyed == GC_CURRENTLY_BEING_QDELETED)
+		SET_COST("Check GC destroyed")
 		CRASH("[D.type] destroy proc was called multiple times, likely due to a qdel loop in the Destroy logic")
+	else
+		SET_COST("Check GC destroyed (what?)")

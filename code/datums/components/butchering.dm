@@ -199,7 +199,7 @@
 
 /datum/component/butchering/mecha/UnregisterFromParent()
 	. = ..()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_MECHA_DRILL_MOB,
 		COMSIG_MECHA_EQUIPMENT_ATTACHED,
 		COMSIG_MECHA_EQUIPMENT_DETACHED,
@@ -219,7 +219,7 @@
 
 /datum/component/butchering/wearable/UnregisterFromParent()
 	. = ..()
-	UnregisterSignal(parent, list(
+	UnregisterSignals(parent, list(
 		COMSIG_ITEM_EQUIPPED,
 		COMSIG_ITEM_DROPPED,
 	))

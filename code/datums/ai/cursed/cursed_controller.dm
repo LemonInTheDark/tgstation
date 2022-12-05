@@ -23,7 +23,7 @@
 	return ..() //Run parent at end
 
 /datum/ai_controller/cursed/UnpossessPawn()
-	UnregisterSignal(pawn, list(COMSIG_MOVABLE_IMPACT, COMSIG_ITEM_EQUIPPED))
+	UnregisterSignals(pawn, list(COMSIG_MOVABLE_IMPACT, COMSIG_ITEM_EQUIPPED))
 	return ..() //Run parent at end
 
 ///signal called by the pawn hitting something after a throw

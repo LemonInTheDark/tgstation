@@ -73,7 +73,7 @@ GLOBAL_LIST_EMPTY(parasites) //all currently existing/living guardians
 /// Setter for our summoner mob.
 /mob/living/simple_animal/hostile/guardian/proc/set_summoner(mob/to_who)
 	if(summoner)
-		UnregisterSignal(summoner, list(COMSIG_LIVING_ON_WABBAJACKED, COMSIG_LIVING_SHAPESHIFTED, COMSIG_LIVING_UNSHAPESHIFTED))
+		UnregisterSignals(summoner, list(COMSIG_LIVING_ON_WABBAJACKED, COMSIG_LIVING_SHAPESHIFTED, COMSIG_LIVING_UNSHAPESHIFTED))
 
 	summoner = to_who
 	Recall(TRUE)

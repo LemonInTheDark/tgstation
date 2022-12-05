@@ -26,7 +26,7 @@
 	return ..() //Run parent at end
 
 /datum/ai_controller/robot_customer/UnpossessPawn(destroy)
-	UnregisterSignal(pawn, list(COMSIG_PARENT_ATTACKBY, COMSIG_LIVING_GET_PULLED, COMSIG_ATOM_ATTACK_HAND))
+	UnregisterSignals(pawn, list(COMSIG_PARENT_ATTACKBY, COMSIG_LIVING_GET_PULLED, COMSIG_ATOM_ATTACK_HAND))
 	return ..() //Run parent at end
 
 /datum/ai_controller/robot_customer/proc/on_attackby(datum/source, obj/item/I, mob/living/user)

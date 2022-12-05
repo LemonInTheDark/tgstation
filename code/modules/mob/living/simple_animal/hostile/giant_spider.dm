@@ -319,7 +319,7 @@
 
 /datum/action/innate/spider/lay_web/Remove(mob/removed_from)
 	. = ..()
-	UnregisterSignal(removed_from, list(COMSIG_MOVABLE_MOVED, COMSIG_DO_AFTER_BEGAN, COMSIG_DO_AFTER_ENDED))
+	UnregisterSignals(removed_from, list(COMSIG_MOVABLE_MOVED, COMSIG_DO_AFTER_BEGAN, COMSIG_DO_AFTER_ENDED))
 
 /datum/action/innate/spider/lay_web/IsAvailable(feedback = FALSE)
 	. = ..()
@@ -389,7 +389,7 @@
 
 /datum/action/cooldown/wrap/Remove(mob/removed_from)
 	. = ..()
-	UnregisterSignal(removed_from, list(COMSIG_DO_AFTER_BEGAN, COMSIG_DO_AFTER_ENDED))
+	UnregisterSignals(removed_from, list(COMSIG_DO_AFTER_BEGAN, COMSIG_DO_AFTER_ENDED))
 
 /datum/action/cooldown/wrap/IsAvailable(feedback = FALSE)
 	. = ..()
@@ -502,7 +502,7 @@
 
 /datum/action/innate/spider/lay_eggs/Remove(mob/removed_from)
 	. = ..()
-	UnregisterSignal(removed_from, list(COMSIG_MOVABLE_MOVED, COMSIG_DO_AFTER_BEGAN, COMSIG_DO_AFTER_ENDED))
+	UnregisterSignals(removed_from, list(COMSIG_MOVABLE_MOVED, COMSIG_DO_AFTER_BEGAN, COMSIG_DO_AFTER_ENDED))
 
 /datum/action/innate/spider/lay_eggs/IsAvailable(feedback = FALSE)
 	. = ..()

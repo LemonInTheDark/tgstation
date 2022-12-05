@@ -23,7 +23,7 @@
 	if(new_host == host)
 		return
 	if(host) //No need to delete the connect range and containers comps. They'll be updated with the new tracked host.
-		UnregisterSignal(host, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
+		UnregisterSignals(host, list(COMSIG_MOVABLE_MOVED, COMSIG_PARENT_QDELETING))
 	if(hasprox_receiver)
 		UnregisterSignal(hasprox_receiver, COMSIG_PARENT_QDELETING)
 	if(new_receiver)

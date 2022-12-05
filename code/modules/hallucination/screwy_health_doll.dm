@@ -62,7 +62,7 @@
 /datum/hallucination/fake_health_doll/proc/remove_bodypart(obj/item/bodypart/source)
 	SIGNAL_HANDLER
 
-	UnregisterSignal(source, list(COMSIG_PARENT_QDELETING, COMSIG_BODYPART_REMOVED, COMSIG_BODYPART_UPDATING_HEALTH_HUD, COMSIG_BODYPART_CHECKED_FOR_INJURY))
+	UnregisterSignals(source, list(COMSIG_PARENT_QDELETING, COMSIG_BODYPART_REMOVED, COMSIG_BODYPART_UPDATING_HEALTH_HUD, COMSIG_BODYPART_CHECKED_FOR_INJURY))
 	bodyparts -= source
 
 /// Whenever a bodypart we're tracking has their health hud updated, override it with our fake overlay

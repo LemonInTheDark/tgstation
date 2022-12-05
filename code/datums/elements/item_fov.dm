@@ -15,7 +15,7 @@
 	RegisterSignal(target, COMSIG_ITEM_DROPPED, PROC_REF(on_drop))
 
 /datum/element/item_fov/Detach(datum/target)
-	UnregisterSignal(target, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
+	UnregisterSignals(target, list(COMSIG_ITEM_EQUIPPED, COMSIG_ITEM_DROPPED))
 	return ..()
 
 /// On dropping the item, remove the FoV trait.

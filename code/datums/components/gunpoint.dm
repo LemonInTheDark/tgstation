@@ -74,7 +74,7 @@
 	UnregisterSignal(parent, COMSIG_MOB_APPLY_DAMAGE)
 	UnregisterSignal(parent, COMSIG_MOB_UPDATE_SIGHT)
 	UnregisterSignal(parent, COMSIG_MOB_ATTACK_HAND)
-	UnregisterSignal(parent, list(COMSIG_LIVING_START_PULL, COMSIG_MOVABLE_BUMP))
+	UnregisterSignals(parent, list(COMSIG_LIVING_START_PULL, COMSIG_MOVABLE_BUMP))
 
 ///If the shooter bumps the target, cancel the holdup to avoid cheesing and forcing the charged shot
 /datum/component/gunpoint/proc/check_bump(atom/B, atom/A)

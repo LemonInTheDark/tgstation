@@ -50,7 +50,7 @@
 /datum/component/connect_range/proc/set_tracked(atom/new_tracked)
 	if(tracked) //Unregister the signals from the old tracked and its surroundings
 		unregister_signals(isturf(tracked) ? tracked : tracked.loc)
-		UnregisterSignal(tracked, list(
+		UnregisterSignals(tracked, list(
 			COMSIG_MOVABLE_MOVED,
 			COMSIG_PARENT_QDELETING,
 		))
@@ -100,7 +100,7 @@
 		return
 	var/turf/previous_turf = get_turf(location)
 	for(var/turf/target_turf in RANGE_TURFS(range, previous_turf))
-		parent.UnregisterSignal(target_turf, connections)
+		parent.UnregisterSignals(target_turf, connections)
 
 /datum/component/connect_range/proc/on_moved(atom/movable/movable, atom/old_loc)
 	SIGNAL_HANDLER

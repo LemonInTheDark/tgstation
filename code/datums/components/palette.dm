@@ -42,7 +42,7 @@
 /datum/component/palette/Destroy()
 	QDEL_NULL(color_picker_menu)
 	QDEL_LIST(menu_choices)
-	UnregisterSignal(parent, list(COMSIG_ITEM_ATTACK_SELF_SECONDARY, COMSIG_PARENT_EXAMINE,
+	UnregisterSignals(parent, list(COMSIG_ITEM_ATTACK_SELF_SECONDARY, COMSIG_PARENT_EXAMINE,
 		COMSIG_ITEM_DROPPED, COMSIG_PAINTING_TOOL_SET_COLOR, COMSIG_PAINTING_TOOL_GET_ADDITIONAL_DATA))
 	return ..()
 

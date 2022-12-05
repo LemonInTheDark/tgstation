@@ -179,7 +179,7 @@
 		if (module_to_select.possible_options.len)
 			module_to_select.set_value(module_to_select.possible_options[1])
 	else if(istype(old_loc, /obj/item/mod/control))
-		UnregisterSignal(old_loc, list(COMSIG_MOD_MODULE_SELECTED, COMSIG_ITEM_EQUIPPED))
+		UnregisterSignals(old_loc, list(COMSIG_MOD_MODULE_SELECTED, COMSIG_ITEM_EQUIPPED))
 		UnregisterSignal(old_loc, COMSIG_MOD_DEPLOYED)
 		UnregisterSignal(old_loc, COMSIG_MOD_RETRACTED)
 		UnregisterSignal(old_loc, COMSIG_MOD_TOGGLED)

@@ -69,7 +69,7 @@
 /datum/forensics/Destroy(force, ...)
 	var/atom/parent_atom = parent.resolve()
 	if (!isnull(parent_atom))
-		UnregisterSignal(parent_atom, list(COMSIG_COMPONENT_CLEAN_ACT))
+		UnregisterSignals(parent_atom, list(COMSIG_COMPONENT_CLEAN_ACT))
 	return ..()
 
 /// Empties the fingerprints list

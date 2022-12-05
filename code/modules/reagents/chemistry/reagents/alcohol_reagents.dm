@@ -679,7 +679,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	if(src != reagents.get_master_reagent())
 		var/obj/item/reagent_containers/cup/glass/drinkingglass/drink = reagents.my_atom
 		drink.tool_behaviour = initial(drink.tool_behaviour)
-		UnregisterSignal(reagents, list(
+		UnregisterSignals(reagents, list(
 			COMSIG_REAGENTS_ADD_REAGENT,
 			COMSIG_REAGENTS_NEW_REAGENT,
 			COMSIG_REAGENTS_REM_REAGENT,

@@ -73,8 +73,8 @@
 		CRASH("Mob shapechange effect called restore_caster while the owner was qdeleted, this shouldn't happen.")
 
 	already_restored = TRUE
-	UnregisterSignal(owner, list(COMSIG_LIVING_PRE_WABBAJACKED, COMSIG_LIVING_DEATH))
-	UnregisterSignal(caster_mob, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
+	UnregisterSignals(owner, list(COMSIG_LIVING_PRE_WABBAJACKED, COMSIG_LIVING_DEATH))
+	UnregisterSignals(caster_mob, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
 
 	caster_mob.forceMove(owner.loc)
 	caster_mob.notransform = FALSE

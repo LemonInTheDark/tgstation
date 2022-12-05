@@ -20,6 +20,7 @@
 #include "code\world.dm"
 #include "code\__DEFINES\_bitfields.dm"
 #include "code\__DEFINES\_click.dm"
+#include "code\__DEFINES\_cursed.dm"
 #include "code\__DEFINES\_globals.dm"
 #include "code\__DEFINES\_helpers.dm"
 #include "code\__DEFINES\_profile.dm"

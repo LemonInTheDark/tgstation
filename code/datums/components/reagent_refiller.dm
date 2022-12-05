@@ -33,7 +33,7 @@
 	RegisterSignal(parent, COMSIG_ATOM_EXITED, PROC_REF(delete_self))
 
 /datum/component/reagent_refiller/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_ITEM_AFTERATTACK, COMSIG_ATOM_EXITED))
+	UnregisterSignals(parent, list(COMSIG_ITEM_AFTERATTACK, COMSIG_ATOM_EXITED))
 
 /datum/component/reagent_refiller/proc/delete_self()
 	SIGNAL_HANDLER

@@ -38,7 +38,7 @@
 	RegisterSignal(SSdcs, COMSIG_GLOB_REVOLUTION_VICTORY, PROC_REF(clean_up))
 
 /datum/component/payment/UnregisterFromParent()
-	UnregisterSignal(parent, list(COMSIG_OBJ_ATTEMPT_CHARGE, COMSIG_OBJ_ATTEMPT_CHARGE_CHANGE))
+	UnregisterSignals(parent, list(COMSIG_OBJ_ATTEMPT_CHARGE, COMSIG_OBJ_ATTEMPT_CHARGE_CHANGE))
 	UnregisterSignal(SSdcs, COMSIG_GLOB_REVOLUTION_VICTORY)
 
 /datum/component/payment/proc/attempt_charge(datum/source, atom/movable/target, extra_fees = 0)

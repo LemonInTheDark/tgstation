@@ -992,13 +992,13 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/airalarm, 24)
 
 /obj/item/circuit_component/air_alarm_general/unregister_usb_parent(atom/movable/shell)
 	if(connected_alarm)
-		UnregisterSignal(connected_alarm.alarm_manager, list(
+		UnregisterSignals(connected_alarm.alarm_manager, list(
 			COMSIG_ALARM_TRIGGERED,
 			COMSIG_ALARM_CLEARED,
 		))
 	connected_alarm = null
 
-	UnregisterSignal(shell, list(
+	UnregisterSignals(shell, list(
 		COMSIG_AIRALARM_UPDATE_MODE,
 	))
 	return ..()

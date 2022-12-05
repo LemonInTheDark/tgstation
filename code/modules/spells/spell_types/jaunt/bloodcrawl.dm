@@ -289,7 +289,7 @@
 	for(var/mob/living/friend as anything in consumed_mobs)
 
 		// Unregister the signals first
-		UnregisterSignal(friend, list(COMSIG_MOB_STATCHANGE, COMSIG_PARENT_QDELETING))
+		UnregisterSignals(friend, list(COMSIG_MOB_STATCHANGE, COMSIG_PARENT_QDELETING))
 
 		friend.forceMove(release_turf)
 		// Heals them back to state one
