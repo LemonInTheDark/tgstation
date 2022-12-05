@@ -11,3 +11,6 @@
 	/// When returned on a signal hooked to [COMSIG_ATOM_EXPLODE], [COMSIG_ATOM_INTERNAL_EXPLOSION], or [COMSIG_AREA_INTERNAL_EXPLOSION] it prevents the explosion from being propagated further.
 	#define COMSIG_CANCEL_EXPLOSION (1<<0)
 
+/// from [/atom/proc/set_explosion_resistance] : (old_block, new_block)
+/// NOT SENT FROM TURFS, look into their override if you ever need to change this
+#define COMSIG_EXPLOSION_BLOCK_CHANGED "explosion_block_changed"

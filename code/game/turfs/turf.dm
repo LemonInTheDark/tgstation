@@ -176,6 +176,10 @@ GLOBAL_LIST_EMPTY(station_turfs)
 		else if (!armor)
 			armor = getArmor()
 
+#warn profile this too
+	if(density)
+		explosive_resistance = explosion_block
+
 	return INITIALIZE_HINT_NORMAL
 
 /// Initializes our adjacent turfs. If you want to avoid this, do not override it, instead set init_air to FALSE
@@ -678,6 +682,17 @@ GLOBAL_LIST_EMPTY(station_turfs)
 			continue
 		movable_content.wash(clean_types)
 
+/turf/set_density(new_value)
+	var/old_density = density
+	. = ..()
+	if(old_density == density)
+		return
+
+	if(old_density)
+		explosive_resistance -= explosion_block
+	if(density)
+		explosive_resistance += explosion_block
+		
 /**
  * Returns adjacent turfs to this turf that are reachable, in all cardinal directions
  *
@@ -707,3 +722,11 @@ GLOBAL_LIST_EMPTY(station_turfs)
 
 /turf/proc/TakeTemperature(temp)
 	temperature += temp
+
+// I'm sorry, this is the only way that both makes sense and is cheap
+/turf/set_explosion_block(new_block)
+	SHOULD_CALL_PARENT(FALSE)
+	if(density)
+		explosive_resistance -= explosion_block
+		explosive_resistance += new_block
+	explosion_block = new_block

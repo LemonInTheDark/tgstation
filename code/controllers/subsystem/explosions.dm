@@ -1,6 +1,14 @@
 #define EXPLOSION_THROW_SPEED 4
+// How much we bias towards the most protected cell behind us. Could be used to diffuse
+// Based off the ratio here
+#define EXPLOSION_CLOSEST_BIAS 1.2
+/// Takes an x, a y, and a side len and returns a unique list entry for them
+#define POS_TO_INDEX(x, y, side_len) (((((x) - 1) * side_len) + (y) - 1) + 1)
+/// Takes a position and targets, returns its rise/run pointing at that target, or 0 if they're on the same row
+#define RISE_OVER_RUN(start_x, start_y, target_x, target_y)  (start_x == target_x ? 0 : (start_y - target_y) / (start_x- target_x))
 GLOBAL_LIST_EMPTY(explosions)
 
+GLOBAL_VAR_INIT(explosion_bias, EXPLOSION_CLOSEST_BIAS)
 SUBSYSTEM_DEF(explosions)
 	name = "Explosions"
 	init_order = INIT_ORDER_EXPLOSIONS
@@ -85,7 +93,7 @@ SUBSYSTEM_DEF(explosions)
 	set name = "Check Bomb Impact"
 	set category = "Debug"
 
-	var/newmode = tgui_alert(usr, "Use reactionary explosions?","Check Bomb Impact", list("Yes", "No"))
+	var/newmode = tgui_alert(usr, "Use dist explosions?","Check Bomb Impact", list("Yes", "No"))
 	var/turf/epicenter = get_turf(mob)
 	if(!epicenter)
 		return
@@ -118,31 +126,130 @@ SUBSYSTEM_DEF(explosions)
 	var/max_range = max(dev, heavy, light)
 	var/x0 = epicenter.x
 	var/y0 = epicenter.y
+	var/bias = GLOB.explosion_bias
 	var/list/wipe_colours = list()
-	for(var/turf/T in spiral_range_turfs(max_range, epicenter))
+	var/list/cached_exp_block = list()
+	for(var/turf/T in prepare_explosion_turfs(max_range, epicenter))
 		wipe_colours += T
-		var/dist = cheap_hypotenuse(T.x, T.y, x0, y0)
-
+		var/our_x = T.x
+		var/our_y = T.y
+		var/dist = 0
 		if(newmode == "Yes")
-			var/turf/TT = T
-			while(TT != epicenter)
-				TT = get_step_towards(TT,epicenter)
-				if(TT.density)
-					dist += TT.explosion_block
+			dist = CHEAP_HYPOTENUSE(our_x, our_y, x0, y0)
+		var/our_block = T.explosive_resistance + cached_exp_block[T]
+		// Because we assert that we walk away from the center, we know that the turf between us and the center will already have been calculated
+		// So this is always faster
+		// I want to account for the turfs adjacent to the turf between us and the target
+		// But that'll have to wait a bit, yeah?
 
-				for(var/obj/O in T)
-					var/the_block = O.explosion_block
-					dist += the_block == EXPLOSION_BLOCK_PROC ? O.GetExplosionBlock() : the_block
+		// If we're on a diagonal, logic changes massively
+		var/x_diff = our_x - x0
+		var/y_diff = our_y - y0
+		// Need to add a case for the center and the tiles
+		if(our_block && (x_diff != 0 || y_diff != 0))
+			var/our_ratio
+			var/bias_towards
+			if(x_diff)
+				our_ratio = y_diff / x_diff //approaches infinity if we're on a y side, and 1 if we're on an x side
+				bias_towards = abs(our_ratio)  //approaches infinity if we're on a y side, and 1 if we're on an x side
+			else
+				our_ratio = 0 // no xdiff? must be 0 then
+				bias_towards = 1.1 // we'll tell the bias logic to go y still tho, cause otherwise it doesn't makes nse
 
+			// the turfs one step behind us, to share with
+			var/turf/center
+			var/turf/adjacent_a
+			var/turf/adjacent_b
+
+			if(bias_towards == 1) // diagonal case
+				var/dir_to_us = get_dir(epicenter, T)
+				center = get_step(T, dir_to_us)
+				switch(dir_to_us)
+					if(NORTHEAST)
+						adjacent_a = get_step(T, NORTH)
+						adjacent_b = get_step(T, EAST)
+					if(NORTHWEST)
+						adjacent_a = get_step(T, NORTH)
+						adjacent_b = get_step(T, WEST)
+					if(SOUTHEAST)
+						adjacent_a = get_step(T, SOUTH)
+						adjacent_b = get_step(T, EAST)
+					if(SOUTHWEST)
+						adjacent_a = get_step(T, SOUTH)
+						adjacent_b = get_step(T, WEST)
+			// Bias towards Y rather then X
+			else if(bias_towards > 1)
+				if(our_y > y0) // We're to the center's north
+					center = get_step(T, NORTH)
+				else
+					center = get_step(T, SOUTH)
+				// Now we're gonna go east, and then west
+				adjacent_a = get_step(center, EAST)
+				adjacent_b = get_step(center, WEST)
+
+			// Bias towards X rather then Y
+			else
+				// Lemon todo: rethink things. I want resitances to spread out to adjacent tiles, but only slightly, and with falloff
+				// That or hand back block only from things that already have it, and take advantage of angle knowlege to do spread right
+				if(our_x > x0) // We're to the center's east
+					center = get_step(T, EAST)
+				else
+					center = get_step(T, WEST)
+
+				// Now we're gonna go north, and then south
+				adjacent_a = get_step(center, NORTH)
+				adjacent_b = get_step(center, SOUTH)
+
+			// The key thing to know here is we're using rise/run as an approxamite for angle
+			// To start, it'll be the difference between their rise/run towards the source and ours (the source of the block)
+#warn you should cache rise/run, idiot
+#warn Also, you need to add logic for stuff close to the center, and corners getting projected onto (cause they don't currently)
+			var/center_ratio = abs(our_ratio - RISE_OVER_RUN(center.x, center.y, x0, y0))
+			var/adjacent_a_ratio = abs(our_ratio - RISE_OVER_RUN(adjacent_a.x, adjacent_a.y, x0, y0))
+			var/adjacent_b_ratio = abs(our_ratio - RISE_OVER_RUN(adjacent_b.x, adjacent_b.y, x0, y0))
+
+			var/sum = center_ratio + adjacent_a_ratio + adjacent_b_ratio
+
+			// We're gonna bias the defense towards the cell with the highest distance (lowest ratio)
+			// This is done for gameplay reasons, I want it to feel SHARP (ish)
+			var/greatest_ratio = min(center_ratio, adjacent_a_ratio, adjacent_b_ratio)
+			if(center_ratio == greatest_ratio) // we bias middle, all else equal
+				adjacent_a_ratio = min(adjacent_a_ratio * bias, sum)
+				adjacent_b_ratio = min(adjacent_b_ratio * bias, sum)
+			else if(adjacent_a_ratio == greatest_ratio)
+				center_ratio = min(center_ratio * bias, sum)
+				adjacent_b_ratio = min(adjacent_b_ratio * bias, sum)
+			else
+				center_ratio = min(center_ratio * bias, sum)
+				adjacent_a_ratio = min(adjacent_a_ratio * bias, sum)
+
+			// Alright, we now have all the turfs we want, now we just need to process them
+			// We're gonna decide how much of our block to share with them. we'll do it by
+			// the inverse of their share in the distance between us and them
+			// So to start, we're gonna walk the turfs and divy out their inverse percentages
+			center_ratio = 1 - (center_ratio / sum)
+			adjacent_a_ratio = 1 - (adjacent_a_ratio / sum)
+			adjacent_b_ratio = 1 - (adjacent_b_ratio / sum)
+
+			// Now we actually hand out block, based off the ratio between their inverse ratio and the inverse sum
+			var/amount_to_give = our_block / (center_ratio + adjacent_a_ratio + adjacent_b_ratio)
+
+			cached_exp_block[center] += center_ratio * amount_to_give
+			cached_exp_block[adjacent_a] += adjacent_a_ratio * amount_to_give
+			cached_exp_block[adjacent_b] += adjacent_b_ratio * amount_to_give
+
+		dist += our_block
+
+		dist = round(dist, 0.01)
 		if(dist < dev)
 			T.color = "red"
-			T.maptext = MAPTEXT("Dev")
+			T.maptext = MAPTEXT("[dist]")
 		else if (dist < heavy)
 			T.color = "yellow"
-			T.maptext = MAPTEXT("Heavy")
+			T.maptext = MAPTEXT("[dist]")
 		else if (dist < light)
 			T.color = "blue"
-			T.maptext = MAPTEXT("Light")
+			T.maptext = MAPTEXT("[dist]")
 		else
 			continue
 
@@ -379,59 +486,68 @@ SUBSYSTEM_DEF(explosions)
 		for(var/mob/living/L in viewers(flash_range, epicenter))
 			L.flash_act()
 
-	var/list/affected_turfs = GatherSpiralTurfs(max_range, epicenter)
+	var/list/affected_turfs = prepare_explosion_turfs(max_range, epicenter)
 
 	var/reactionary = CONFIG_GET(flag/reactionary_explosions)
-	var/list/cached_exp_block
+	// this list is setup in the form position -> block for that position
+	// we assert that turfs will be processed closed to farthest, so we can build this as we go along
+	// This is gonna be an array, index'd by turfs
+	var/list/cached_exp_block = list()
+	#warn is this enough cost that it'd be faster to make it an array?
 
-	if(reactionary)
-		cached_exp_block = CaculateExplosionBlock(affected_turfs)
-
+	/*
+	// Offset to make the lowest x position 1
+	var/offset_x = (max(x0 - (max_range + 1), 0))
+	// Offset to make the lowest y position 1
+	var/offset_y = (max(y0 - (max_range + 1), 0))
+	// The length of the perimiter of our square
+	var/side_len = (max_range * 2) + 1
+	*/
 	//lists are guaranteed to contain at least 1 turf at this point
-
+	//we presuppose that we'll be iterating away from the epicenter
 	for(var/TI in affected_turfs)
 		var/turf/T = TI
-		var/init_dist = cheap_hypotenuse(T.x, T.y, x0, y0)
-		var/dist = init_dist
+		var/our_x = T.x
+		var/our_y = T.y
+		var/dist = CHEAP_HYPOTENUSE(our_x, our_y, x0, y0)
 
+		// Using this pattern, block will flow out from blocking turfs, essentially caching the recursion
+		// This is safe because if get_step_towards is ever anything but caridnally off, it'll do a diagonal move
+		// So we always sample from a "loop" closer
+		// It's kind of behaviorly unimpressive that that's a problem for the future
 		if(reactionary)
-			var/turf/Trajectory = T
-			while(Trajectory != epicenter)
-				Trajectory = get_step_towards(Trajectory, epicenter)
-				dist += cached_exp_block[Trajectory]
+			if(T != epicenter)
+				var/our_block = cached_exp_block[get_step_towards(T, epicenter)]
+				dist += our_block
+				cached_exp_block[T] = our_block + T.explosive_resistance
+			else
+				cached_exp_block[T] = T.explosive_resistance
 
-		var/flame_dist = dist < flame_range
-		var/throw_dist = dist
 
+		var/severity = EXPLODE_NONE
 		if(dist < devastation_range)
-			dist = EXPLODE_DEVASTATE
+			severity = EXPLODE_DEVASTATE
 		else if(dist < heavy_impact_range)
-			dist = EXPLODE_HEAVY
+			severity = EXPLODE_HEAVY
 		else if(dist < light_impact_range)
-			dist = EXPLODE_LIGHT
-		else
-			dist = EXPLODE_NONE
+			severity = EXPLODE_LIGHT
 
 		if(T == epicenter) // Ensures explosives detonating from bags trigger other explosives in that bag
 			var/list/items = list()
-			for(var/I in T)
-				var/atom/A = I
-				if (length(A.contents) && !(A.flags_1 & PREVENT_CONTENTS_EXPLOSION_1)) //The atom/contents_explosion() proc returns null if the contents ex_acting has been handled by the atom, and TRUE if it hasn't.
-					items += A.get_all_contents(ignore_flag_1 = PREVENT_CONTENTS_EXPLOSION_1)
-				if(isliving(A))
-					items -= A		//Stops mobs from taking double damage from explosions originating from them/their turf, such as from projectiles
-			for(var/thing in items)
-				var/atom/movable/movable_thing = thing
-				if(QDELETED(movable_thing))
-					continue
-				switch(dist)
+			for(var/atom/holder as anything in T)
+				if (length(holder.contents) && !(holder.flags_1 & PREVENT_CONTENTS_EXPLOSION_1)) //The atom/contents_explosion() proc returns null if the contents ex_acting has been handled by the atom, and TRUE if it hasn't.
+					items += holder.get_all_contents(ignore_flag_1 = PREVENT_CONTENTS_EXPLOSION_1)
+				if(isliving(holder))
+					items -= holder		//Stops mobs from taking double damage from explosions originating from them/their turf, such as from projectiles
+			for(var/atom/movable/movable_thing as anything in items)
+				switch(severity)
 					if(EXPLODE_DEVASTATE)
 						SSexplosions.high_mov_atom += movable_thing
 					if(EXPLODE_HEAVY)
 						SSexplosions.med_mov_atom += movable_thing
 					if(EXPLODE_LIGHT)
 						SSexplosions.low_mov_atom += movable_thing
-		switch(dist)
+		switch(severity)
 			if(EXPLODE_DEVASTATE)
 				SSexplosions.highturf += T
 			if(EXPLODE_HEAVY)
@@ -439,21 +555,18 @@ SUBSYSTEM_DEF(explosions)
 			if(EXPLODE_LIGHT)
 				SSexplosions.lowturf += T
 
-
-		if(flame_dist && prob(40) && !isspaceturf(T) && !T.density)
+		if(prob(40) && dist < flame_range && !isspaceturf(T) && !T.density)
 			flameturf += T
 
 		//--- THROW ITEMS AROUND ---
-		var/throw_dir = get_dir(epicenter,T)
-		var/throw_range = max_range-throw_dist
-		var/list/throwingturf = T.explosion_throw_details
-		if (throwingturf)
-			if (throwingturf[1] < throw_range)
-				throwingturf[1] = throw_range
-				throwingturf[2] = throw_dir
+		if (T.explosion_throw_details)
+			var/list/throwingturf = T.explosion_throw_details
+			if (throwingturf[1] < max_range - dist)
+				throwingturf[1] = max_range - dist
+				throwingturf[2] = get_dir(epicenter,T)
 				throwingturf[3] = max_range
 		else
-			T.explosion_throw_details = list(throw_range, throw_dir, max_range)
+			T.explosion_throw_details = list(max_range - dist, get_dir(epicenter,T), max_range)
 			throwturf += T
 
 
@@ -572,68 +685,34 @@ SUBSYSTEM_DEF(explosions)
 #undef FREQ_UPPER
 #undef FREQ_LOWER
 
-/datum/controller/subsystem/explosions/proc/GatherSpiralTurfs(range, turf/epicenter)
+/// Returns a list of turfs in X range from the epicenter
+/// Returns in a unique order, spiraling outwards
+/// This is done to ensure our progressive cache of blast resistance is always valid
+/// This is quite fast
+/proc/prepare_explosion_turfs(range, turf/epicenter)
 	var/list/outlist = list()
-	var/center = epicenter
-	var/dist = range
-	if(!dist)
-		outlist += center
-		return outlist
+	// Add in the center
+	outlist += epicenter
 
-	var/turf/t_center = get_turf(center)
-	if(!t_center)
-		return outlist
+	var/our_x = epicenter.x
+	var/our_y = epicenter.y
+	var/our_z = epicenter.z
 
-	var/list/L = outlist
-	var/turf/T
-	var/y
-	var/x
-	var/c_dist = 1
-	L += t_center
+	for(var/i in 1 to range)
+		var/lowest_x = our_x - i
+		var/lowest_y = our_y - i
+		var/highest_x = our_x + i
+		var/highest_y = our_y + i
+		// top left to one before top right
+		outlist += block(locate(lowest_x, highest_y, our_z), locate(highest_x - 1, highest_y, our_z))
+		// top right to one before bottom right
+		outlist += block(locate(highest_x, highest_y, our_z), locate(highest_x, lowest_y + 1, our_z))
+		// bottom right to one before bottom left
+		outlist += block(locate(highest_x, lowest_y, our_z), locate(lowest_x + 1, lowest_y, our_z))
+		// bottom left to one before top left
+		outlist += block(locate(lowest_x, lowest_y, our_z), locate(lowest_x, highest_y - 1, our_z))
 
-	while( c_dist <= dist )
-		y = t_center.y + c_dist
-		x = t_center.x - c_dist + 1
-		for(x in x to t_center.x+c_dist)
-			T = locate(x,y,t_center.z)
-			if(T)
-				L += T
-
-		y = t_center.y + c_dist - 1
-		x = t_center.x + c_dist
-		for(y in t_center.y-c_dist to y)
-			T = locate(x,y,t_center.z)
-			if(T)
-				L += T
-
-		y = t_center.y - c_dist
-		x = t_center.x + c_dist - 1
-		for(x in t_center.x-c_dist to x)
-			T = locate(x,y,t_center.z)
-			if(T)
-				L += T
-
-		y = t_center.y - c_dist + 1
-		x = t_center.x - c_dist
-		for(y in y to t_center.y+c_dist)
-			T = locate(x,y,t_center.z)
-			if(T)
-				L += T
-		c_dist++
-	. = L
-
-/datum/controller/subsystem/explosions/proc/CaculateExplosionBlock(list/affected_turfs)
-	. = list()
-	var/I
-	for(I in 1 to affected_turfs.len) // we cache the explosion block rating of every turf in the explosion area
-		var/turf/T = affected_turfs[I]
-		var/current_exp_block = T.density ? T.explosion_block : 0
-
-		for(var/obj/O in T)
-			var/the_block = O.explosion_block
-			current_exp_block += the_block == EXPLOSION_BLOCK_PROC ? O.GetExplosionBlock() : the_block
-
-		.[T] = current_exp_block
+	return outlist
 
 /datum/controller/subsystem/explosions/fire(resumed = 0)
 	if (!is_exploding())

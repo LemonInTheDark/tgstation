@@ -40,7 +40,12 @@
 	var/list/hud_possible
 
 	///Value used to increment ex_act() if reactionary_explosions is on
+	///How much we as a source block explosions by
+	///Will not automatically apply to the turf below you, use /datum/element/block_explosives for that
 	var/explosion_block = 0
+
+	///How much this atom resists explosions by, in the end
+	var/explosive_resistance = 0
 
 	/**
 	 * used to store the different colors on an atom
@@ -1811,6 +1816,14 @@
 	base_pixel_y = new_value
 
 	pixel_y = pixel_y + base_pixel_y - .
+
+/atom/proc/set_explosion_block(new_block)
+	SHOULD_CALL_PARENT(TRUE)
+	var/old_block = explosion_block
+	explosive_resistance -= old_block
+	explosion_block = new_block
+	explosive_resistance += new_block
+	SEND_SIGNAL(src, COMSIG_EXPLOSION_BLOCK_CHANGED, old_block, new_block)
 
 /**
  * Returns true if this atom has gravity for the passed in turf

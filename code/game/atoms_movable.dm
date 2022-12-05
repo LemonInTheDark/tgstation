@@ -104,6 +104,13 @@
 
 /atom/movable/Initialize(mapload)
 	. = ..()
+#ifdef UNIT_TESTS
+	if(explosion_block && !HAS_TRAIT(src, TRAIT_BLOCKING_EXPLOSIVES))
+		stack_trace("[type] blocks explosives, but does not have the managing element applied")
+#endif
+	#warn profile this
+	explosive_resistance = explosion_block
+
 	switch(blocks_emissive)
 		if(EMISSIVE_BLOCK_GENERIC)
 			var/static/mutable_appearance/emissive_blocker/blocker = new()
@@ -503,7 +510,7 @@
 	if(set_dir_on_move && dir != direction)
 		setDir(direction)
 
-	var/is_multi_tile_object = bound_width > 32 || bound_height > 32
+	var/is_multi_tile_object = is_multi_tile_object(src)
 
 	var/list/old_locs
 	if(is_multi_tile_object && isturf(loc))
