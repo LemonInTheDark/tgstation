@@ -976,29 +976,33 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 
 /obj/item/MouseEntered(location, control, params)
 	. = ..()
-	if(((get(src, /mob) == usr) || loc?.atom_storage || (item_flags & IN_STORAGE)) && !QDELETED(src)) //nullspace exists.
-		var/mob/living/L = usr
-		if(usr.client.prefs.read_preference(/datum/preference/toggle/enable_tooltips))
-			var/timedelay = usr.client.prefs.read_preference(/datum/preference/numeric/tooltip_delay) / 100
-			tip_timer = addtimer(CALLBACK(src, PROC_REF(openTip), location, control, params, usr), timedelay, TIMER_STOPPABLE)//timer takes delay in deciseconds, but the pref is in milliseconds. dividing by 100 converts it.
-		if(usr.client.prefs.read_preference(/datum/preference/toggle/item_outlines))
-			if(istype(L) && L.incapacitated())
-				apply_outline(COLOR_RED_GRAY) //if they're dead or handcuffed, let's show the outline as red to indicate that they can't interact with that right now
-			else
-				apply_outline() //if the player's alive and well we send the command with no color set, so it uses the theme's color
+	var/mob/living/L = usr
+	if(usr.client.prefs.read_preference(/datum/preference/toggle/enable_tooltips))
+		var/timedelay = usr.client.prefs.read_preference(/datum/preference/numeric/tooltip_delay) / 100
+		tip_timer = addtimer(CALLBACK(src, PROC_REF(openTip), location, control, params, usr), timedelay, TIMER_STOPPABLE)//timer takes delay in deciseconds, but the pref is in milliseconds. dividing by 100 converts it.
+
+/atom/movable/MouseEntered(location, control, params)
+	var/mob/living/L = usr
+	if(usr.client.prefs.read_preference(/datum/preference/toggle/item_outlines))
+		if(istype(L) && L.incapacitated())
+			apply_outline(COLOR_RED_GRAY) //if they're dead or handcuffed, let's show the outline as red to indicate that they can't interact with that right now
+		else
+			apply_outline() //if the player's alive and well we send the command with no color set, so it uses the theme's color
 
 /obj/item/MouseDrop(atom/over, src_location, over_location, src_control, over_control, params)
 	. = ..()
 	remove_filter(HOVER_OUTLINE_FILTER) //get rid of the hover effect in case the mouse exit isn't called if someone drags and drops an item and somthing goes wrong
 
-/obj/item/MouseExited()
+/obj/item/MouseExited(location, control, params)
+	. = ..()
 	deltimer(tip_timer) //delete any in-progress timer if the mouse is moved off the item before it finishes
 	closeToolTip(usr)
-	remove_filter(HOVER_OUTLINE_FILTER)
 
-/obj/item/proc/apply_outline(outline_color = null)
-	if(((get(src, /mob) != usr) && !loc?.atom_storage && !(item_flags & IN_STORAGE)) || QDELETED(src) || isobserver(usr)) //cancel if the item isn't in an inventory, is being deleted, or if the person hovering is a ghost (so that people spectating you don't randomly make your items glow)
-		return FALSE
+/atom/movable/MouseExited(location, control, params)
+	. = ..()
+	remove_outline(usr)
+
+/atom/movable/proc/apply_outline(outline_color = null)
 	var/theme = lowertext(usr.client?.prefs?.read_preference(/datum/preference/choiced/ui_style))
 	if(!outline_color) //if we weren't provided with a color, take the theme's color
 		switch(theme) //yeah it kinda has to be this way
@@ -1021,7 +1025,63 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 	if(color)
 		outline_color = COLOR_WHITE //if the item is recolored then the outline will be too, let's make the outline white so it becomes the same color instead of some ugly mix of the theme and the tint
 
-	add_filter(HOVER_OUTLINE_FILTER, 1, list("type" = "outline", "size" = 1, "color" = outline_color))
+	var/client/us = usr.client
+
+	if(!us.outline)
+		us.outline = new()
+		us.images += us.outline
+		us.outline.override = TRUE
+		us.outline.appearance_flags = KEEP_APART
+
+	us.outline.filters = list(filter(type ="outline", size = 1, color = outline_color))
+
+	if(!outline_source)
+		var/static/target_uid = 0
+		target_uid++
+		render_target = "*[target_uid]"
+		outline_source = new()
+		outline_source.render_source = render_target
+		outline_source.appearance_flags |= KEEP_APART|PASS_MOUSE
+		outline_source.vis_flags = VIS_INHERIT_LAYER|VIS_INHERIT_DIR|VIS_INHERIT_PLANE|VIS_INHERIT_ID
+		vis_contents += outline_source
+		appearance_flags |= KEEP_TOGETHER
+
+	us.RegisterSignal(src, COMSIG_ATOM_UPDATED_ICON, TYPE_PROC_REF(/client, on_hovered_icon_change))
+	us.outline.overlays = overlays
+	us.outline.loc = outline_source
+	us.outline.render_source = render_target
+	us.outline.layer = layer
+	us.outline.plane = plane
+	us.images += us.outline
+	outline_viewers++
+
+/atom/movable/update_icon(updates)
+	. = ..()
+	if(outline_source)
+		outline_source.overlays = overlays
+
+/atom/movable/outline_backup
+
+/client
+	var/image/outline
+
+/client/proc/on_hovered_icon_change(obj/item/source)
+	outline.overlays = source.overlays
+	outline.layer = source.layer
+	outline.plane = source.plane
+
+/atom/movable
+	var/outline_viewers = 0
+	var/atom/movable/outline_backup/outline_source
+
+/atom/movable/proc/remove_outline(mob/remove_from)
+	var/client/us = remove_from.client
+	us.outline.loc = null
+	outline_viewers--
+	UnregisterSignal(remove_from.client, COMSIG_ATOM_UPDATED_ICON)
+	//if(!outline_viewers)
+	//	QDEL_NULL(outline_source)
+	//	render_target = ""
 
 /// Called when a mob tries to use the item as a tool. Handles most checks.
 /obj/item/proc/use_tool(atom/target, mob/living/user, delay, amount=0, volume=0, datum/callback/extra_checks)
@@ -1362,6 +1422,7 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 	if(!istype(loc, /turf))
 		return
 	var/image/pickup_animation = image(icon = src, loc = loc, layer = layer + 0.1)
+	pickup_animation.render_target = "" // Reset from outline shenanigins
 	SET_PLANE(pickup_animation, GAME_PLANE, loc)
 	pickup_animation.transform.Scale(0.75)
 	pickup_animation.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
