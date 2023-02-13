@@ -1,1 +1,2 @@
 #define SPACE_SIGNAL_GPSTAG "Distant Signal"
+#define SPACE_STARLIGHT_RANGE 2

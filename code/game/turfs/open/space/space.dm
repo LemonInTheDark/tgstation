@@ -80,6 +80,11 @@
 
 	return INITIALIZE_HINT_NORMAL
 
+/turf/open/space/Destroy()
+	if(light_range)
+		GLOB.lit_stars -= src
+	. = ..()
+
 //ATTACK GHOST IGNORING PARENT RETURN VALUE
 /turf/open/space/attack_ghost(mob/dead/observer/user)
 	if(destination_z)
@@ -112,13 +117,22 @@
 			continue
 		enable_starlight()
 		return TRUE
-	set_light(0)
+	disable_starlight()
 	return FALSE
+
+GLOBAL_LIST_EMPTY(lit_stars)
 
 /// Turns on the stars, if they aren't already
 /turf/open/space/proc/enable_starlight()
 	if(!light_range)
-		set_light(2)
+		set_light(SPACE_STARLIGHT_RANGE)
+		GLOB.lit_stars += src
+
+/// Come turn out the stars and away
+/turf/open/space/proc/disable_starlight()
+	if(light_range)
+		set_light(0)
+		GLOB.lit_stars -= src
 
 /turf/open/space/attack_paw(mob/user, list/modifiers)
 	return attack_hand(user, modifiers)
@@ -300,10 +314,8 @@
 		return
 	set_light(2)
 
-/turf/open/space/openspace/update_starlight()
+/turf/open/space/openspace/disable_starlight()
 	. = ..()
-	if(.)
-		return
 	// If we're here, the starlight is not to be
 	var/turf/below = SSmapping.get_turf_below(src)
 	UnregisterSignal(below, COMSIG_TURF_CHANGE)
