@@ -871,7 +871,11 @@
 
 /obj/machinery/vending/ui_assets(mob/user)
 	return list(
+#ifdef EXPERIMENT_515_ATOM_SPRITESHEETS
+		get_asset_datum(/datum/asset/atom_spritesheet/vending),
+#else
 		get_asset_datum(/datum/asset/spritesheet/vending),
+#endif
 	)
 
 /obj/machinery/vending/ui_interact(mob/user, datum/tgui/ui)

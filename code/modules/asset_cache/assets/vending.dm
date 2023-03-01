@@ -1,3 +1,50 @@
+#ifdef EXPERIMENT_515_ATOM_SPRITESHEETS
+/datum/asset/atom_spritesheet/vending
+	name = "vending"
+
+/datum/asset/atom_spritesheet/vending/create_spritesheets()
+	// initialising the list of items we need
+	var/target_items = list()
+	for(var/obj/machinery/vending/vendor as anything in typesof(/obj/machinery/vending))
+		vendor = new vendor() // It seems `initial(list var)` has nothing. need to make a type.
+		for(var/each in list(vendor.products, vendor.premium, vendor.contraband))
+			target_items |= each
+		qdel(vendor)
+
+	// building icons for each item
+	for (var/atom/item_path as anything in target_items)
+		if (!ispath(item_path))
+			continue
+
+		var/icon_file
+		if (initial(item_path.greyscale_colors) && initial(item_path.greyscale_config))
+			icon_file = SSgreyscale.GetColoredIconByType(initial(item_path.greyscale_config), initial(item_path.greyscale_colors))
+		else
+			icon_file = initial(item_path.icon)
+		var/icon_state = initial(item_path.icon_state)
+
+		if (PERFORM_ALL_TESTS(focus_only/invalid_vending_machine_icon_states))
+			var/icon_states_list = icon_states(icon_file)
+			if (!(icon_state in icon_states_list))
+				var/icon_states_string
+				for (var/an_icon_state in icon_states_list)
+					if (!icon_states_string)
+						icon_states_string = "[json_encode(an_icon_state)]([text_ref(an_icon_state)])"
+					else
+						icon_states_string += ", [json_encode(an_icon_state)]([text_ref(an_icon_state)])"
+
+				stack_trace("[item_path] does not have a valid icon state, icon=[icon_file], icon_state=[json_encode(icon_state)]([text_ref(icon_state)]), icon_states=[icon_states_string]")
+				continue
+
+		var/mutable_appearance/appearance = mutable_appearance(icon_file, icon_state)
+		appearance.color = initial(item_path.color)
+
+		// You can't directly pass in an appearance, or else BYOND won't save the icon
+		var/atom/movable/dummy_atom = new
+		dummy_atom.appearance = appearance
+
+		insert(replacetext(replacetext("[item_path]", "/obj/item/", ""), "/", "-"), dummy_atom)
+#else
 /datum/asset/spritesheet/vending
 	name = "vending"
 
@@ -44,3 +91,4 @@
 		var/imgid = replacetext(replacetext("[item]", "/obj/item/", ""), "/", "-")
 
 		Insert(imgid, I)
+#endif
