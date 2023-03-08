@@ -65,7 +65,7 @@
 			}"
 
 		lines += ".[name][size_id].[atom_name] {\
-			background-image: url('\\ref[text_ref(atom.appearance)]'); \
+			background-image: url('[text_ref(atom)]'); \
 		}"
 
 	var/css = size_classes.Join() + lines.Join("\n")

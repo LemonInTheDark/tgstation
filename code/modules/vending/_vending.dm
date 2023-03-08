@@ -909,13 +909,19 @@
 
 	var/list/out_records = list()
 
+	var/static/list/path_to_atom = list()
 	for (var/datum/data/vending_product/record as anything in records)
+		var/atom/test = path_to_atom[record.product_path]
+		if(!test)
+			test = new record.product_path()
+			path_to_atom[record.product_path] = test
 		var/list/static_record = list(
 			path = replacetext(replacetext("[record.product_path]", "/obj/item/", ""), "/", "-"),
 			name = record.name,
 			price = premium ? (record.custom_premium_price || extra_price) : (record.custom_price || default_price),
 			max_amount = record.max_amount,
 			ref = REF(record),
+			img = "\ref[test]"
 		)
 
 		var/list/category = record.category || default_category
