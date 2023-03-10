@@ -10,7 +10,7 @@
 	var/name
 
 	/// name -> atom
-	VAR_PRIVATE/list/atoms = list()
+	var/list/atoms = list()
 
 /datum/asset/atom_spritesheet/register()
 	SHOULD_NOT_OVERRIDE(TRUE)
@@ -43,14 +43,11 @@
 	PRIVATE_PROC(TRUE)
 
 	var/list/lines = list()
-
-	var/list/hit_sizes = list()
-	var/list/size_classes = list()
-
 	for (var/atom_name in atoms)
-		var/atom/atom = atoms[atom_name]
-		var/icon/icon = icon(atom.icon)
+		var/atom/display = atoms[atom_name]
 
+		/*
+		var/icon/icon = icon(display.icon)
 		var/width = icon.Width()
 		var/height = icon.Height()
 
@@ -58,22 +55,32 @@
 
 		if (!(size_id in hit_sizes))
 			hit_sizes += size_id
-			size_classes += ".[name][size_id] {\
+			size_classes += ".[atom_name][size_id] {\
 				display: inline-block; \
 				width: [width]px; \
 				height: [height]px; \
 			}"
+		*/
 
-		lines += ".[name][size_id].[atom_name] {\
-			background-image: url('\\ref[text_ref(atom.appearance)]'); \
-		}"
+		lines += "<img src='\ref[display]' />"
 
-	var/css = size_classes.Join() + lines.Join("\n")
+	var/html = lines.Join("")
 
-	var/resource_name = "spritesheet_[name].css"
+	var/resource_name = "spritesheet_[name].html"
 	var/filename = "data/spritesheets/[resource_name]"
-	rustg_file_write(css, filename)
+	rustg_file_write(html, filename)
 	SSassets.transport.register_asset(resource_name, fcopy_rsc(filename))
 
 /datum/asset/atom_spritesheet/send(client/client)
-	return SSassets.transport.send_assets(client, "spritesheet_[name].css")
+	var/datum/asset_cache_item/asset_cache = SSassets.cache["spritesheet_[name].html"]
+	var/atom/movable/shown = new()
+	client.screen += shown
+	var/cnt = 0
+	for(var/key in atoms)
+		if(cnt >= 10)
+			break
+		cnt++
+		client << output(atoms[key], "THISCONTROLDOESN'TEXIST")
+
+		//shown.vis_contents += atoms[key]
+	client << browse(asset_cache.resource, "window=[name]")

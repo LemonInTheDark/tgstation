@@ -901,21 +901,27 @@
 
 	return data
 
+/proc/improve_ref(thing)
+	return "ref[copytext(text_ref(thing), 4, -1)].png"
+
 /obj/machinery/vending/proc/collect_records_for_static_data(list/records, list/categories, premium)
 	var/static/list/default_category = list(
 		"name" = "Products",
 		"icon" = "cart-shopping",
 	)
+	var/datum/asset/atom_spritesheet/spritesheet = get_asset_datum(/datum/asset/atom_spritesheet/vending)
 
 	var/list/out_records = list()
-
+	var/list/static/path_to_atom = list()
 	for (var/datum/data/vending_product/record as anything in records)
+		var/name = replacetext(replacetext("[record.product_path]", "/obj/item/", ""), "/", "-")
 		var/list/static_record = list(
-			path = replacetext(replacetext("[record.product_path]", "/obj/item/", ""), "/", "-"),
+			path = name,
 			name = record.name,
 			price = premium ? (record.custom_premium_price || extra_price) : (record.custom_price || default_price),
 			max_amount = record.max_amount,
 			ref = REF(record),
+			img = improve_ref(spritesheet.atoms[name])
 		)
 
 		var/list/category = record.category || default_category

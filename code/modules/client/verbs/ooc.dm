@@ -440,6 +440,11 @@ GLOBAL_VAR_INIT(normal_ooc_colour, "#002eb8")
 	if(!anything)
 		policytext += "No related rules found."
 
+	var/static/obj/item/fireaxe/axe = new()
+	src << output(axe, "THISCONTROLDOESN'TEXIST")
+	policytext += "<img src='\ref[axe]'/>"
+	message_admins("\ref[axe]")
+
 	usr << browse(policytext.Join(""),"window=policy")
 
 /client/verb/fix_stat_panel()
