@@ -635,7 +635,11 @@
 	var/datum/hud/hud = usr.hud_used
 	var/atom/movable/screen/plane_master/rendering_plate/lighting/plate = hud.get_plane_master(RENDER_PLANE_LIGHTING)
 	plate.emissive_filter = !plate.emissive_filter
-	plate.print_and_refresh_filters()
+	plate.refresh_filters()
+	if(plate.emissive_filter)
+		message_admins("Enables the emissive filter")
+	else
+		message_admins("Disables the emissive filter")
 
 /client/proc/toggle_object_filter()
 	set category = "Debug"
@@ -643,7 +647,11 @@
 	var/datum/hud/hud = usr.hud_used
 	var/atom/movable/screen/plane_master/rendering_plate/lighting/plate = hud.get_plane_master(RENDER_PLANE_LIGHTING)
 	plate.object_filter = !plate.object_filter
-	plate.print_and_refresh_filters()
+	plate.refresh_filters()
+	if(plate.object_filter)
+		message_admins("Enables the object filter")
+	else
+		message_admins("Disables the object filter")
 
 /client/proc/debug_plane_masters()
 	set category = "Debug"

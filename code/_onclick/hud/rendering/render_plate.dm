@@ -155,17 +155,6 @@
 	if(object_filter)
 		add_filter("object_lighting", 2, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(O_LIGHTING_VISUAL_RENDER_TARGET, offset), flags = MASK_INVERSE))
 
-/atom/movable/screen/plane_master/rendering_plate/lighting/proc/print_and_refresh_filters()
-	refresh_filters()
-	if(emissive_filter)
-		message_admins("The emissive filter is enabled")
-	else
-		message_admins("The emissive filter is disabled")
-	if(object_filter)
-		message_admins("The object filter is enabled")
-	else
-		message_admins("The object filter is disabled")
-
 /atom/movable/screen/plane_master/rendering_plate/lighting/show_to(mob/mymob)
 	. = ..()
 	if(!.)
