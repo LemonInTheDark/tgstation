@@ -28,7 +28,7 @@
 /atom/movable/screen/plane_master/rendering_plate
 	name = "Default rendering plate"
 	multiz_scaled = FALSE
-
+/*
 ///this plate renders the final screen to show to the player
 /atom/movable/screen/plane_master/rendering_plate/master
 	name = "Master rendering plate"
@@ -96,8 +96,9 @@
 	// Don't display us if we're below everything else yeah?
 	AddComponent(/datum/component/plane_hide_highest_offset)
 	color = list(0.9,0,0,0, 0,0.9,0,0, 0,0,0.9,0, 0,0,0,1, 0,0,0,0)
-
+*/
 ///Contains most things in the game world
+/*
 /atom/movable/screen/plane_master/rendering_plate/game_world
 	name = "Game world plate"
 	documentation = "Contains most of the objects in the world. Mobs, machines, etc. Note the drop shadow, it gives a very nice depth effect."
@@ -112,6 +113,7 @@
 	remove_filter("AO")
 	if(istype(mymob) && mymob.client?.prefs?.read_preference(/datum/preference/toggle/ambient_occlusion))
 		add_filter("AO", 1, drop_shadow_filter(x = 0, y = -2, size = 4, color = "#04080FAA"))
+*/
 
 ///Contains all lighting objects
 /atom/movable/screen/plane_master/rendering_plate/lighting
@@ -124,9 +126,11 @@
 		<br>Masks us out so it has the breathing room to apply its effect.\
 		<br>Oh and we quite often have our alpha changed to achive night vision effects, or things of that sort."
 	plane = RENDER_PLANE_LIGHTING
-	blend_mode_override = BLEND_MULTIPLY
+	blend_mode = BLEND_MULTIPLY
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	critical = PLANE_CRITICAL_DISPLAY
+	var/emissive_filter = TRUE
+	var/object_filter = TRUE
 	/// A list of light cutoffs we're actively using, (mass, r, g, b) to avoid filter churn
 	var/list/light_cutoffs
 
@@ -142,9 +146,25 @@
  */
 /atom/movable/screen/plane_master/rendering_plate/lighting/Initialize(mapload)
 	. = ..()
-	add_filter("emissives", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(EMISSIVE_RENDER_TARGET, offset), flags = MASK_INVERSE))
-	add_filter("object_lighting", 2, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(O_LIGHTING_VISUAL_RENDER_TARGET, offset), flags = MASK_INVERSE))
-	set_light_cutoff(10)
+	refresh_filters()
+
+/atom/movable/screen/plane_master/rendering_plate/lighting/proc/refresh_filters()
+	remove_filter(list("emissives", "object_lighting"))
+	if(emissive_filter)
+		add_filter("emissives", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(EMISSIVE_RENDER_TARGET, offset), flags = MASK_INVERSE))
+	if(object_filter)
+		add_filter("object_lighting", 2, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(O_LIGHTING_VISUAL_RENDER_TARGET, offset), flags = MASK_INVERSE))
+
+/atom/movable/screen/plane_master/rendering_plate/lighting/proc/print_and_refresh_filters()
+	refresh_filters()
+	if(emissive_filter)
+		message_admins("The emissive filter is enabled")
+	else
+		message_admins("The emissive filter is disabled")
+	if(object_filter)
+		message_admins("The object filter is enabled")
+	else
+		message_admins("The object filter is disabled")
 
 /atom/movable/screen/plane_master/rendering_plate/lighting/show_to(mob/mymob)
 	. = ..()
@@ -164,22 +184,22 @@
 	// Sorry, this is a bit annoying
 	// Basically, we only want the lighting plane we can actually see to attempt to render
 	// If we don't our lower plane gets totally overriden by the black void of the upper plane
-	var/datum/hud/hud = home.our_hud
+	//var/datum/hud/hud = home.our_hud
 	// show_to can be called twice successfully with no hide_from call. Ensure no runtimes off the registers from this
-	if(hud)
-		RegisterSignal(hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change), override = TRUE)
-	offset_change(hud?.current_plane_offset || 0)
-	set_light_cutoff(mymob.lighting_cutoff, mymob.lighting_color_cutoffs)
+	//if(hud)
+	//	RegisterSignal(hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change), override = TRUE)
+	//offset_change(hud?.current_plane_offset || 0)
+	//set_light_cutoff(mymob.lighting_cutoff, mymob.lighting_color_cutoffs)
 
 
 /atom/movable/screen/plane_master/rendering_plate/lighting/hide_from(mob/oldmob)
 	. = ..()
 	oldmob.clear_fullscreen("lighting_backdrop_lit_[home.key]#[offset]")
 	oldmob.clear_fullscreen("lighting_backdrop_unlit_[home.key]#[offset]")
-	var/datum/hud/hud = home.our_hud
-	if(hud)
-		UnregisterSignal(hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
-
+	//var/datum/hud/hud = home.our_hud
+	//if(hud)
+	//	UnregisterSignal(hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
+/*
 /atom/movable/screen/plane_master/rendering_plate/lighting/proc/on_offset_change(datum/source, old_offset, new_offset)
 	SIGNAL_HANDLER
 	offset_change(new_offset)
@@ -190,13 +210,13 @@
 		disable_alpha()
 	else
 		enable_alpha()
-
+*/
 /atom/movable/screen/plane_master/rendering_plate/lighting/proc/set_light_cutoff(light_cutoff, list/color_cutoffs)
+/*
 	var/list/new_cutoffs = list(light_cutoff)
 	new_cutoffs += color_cutoffs
 	if(new_cutoffs ~= light_cutoffs)
 		return
-
 	remove_filter(list("light_cutdown", "light_cutup"))
 
 	var/ratio = light_cutoff/100
@@ -208,7 +228,7 @@
 	var/blue = color_cutoffs[3] / 100
 	add_filter("light_cutdown", 3, color_matrix_filter(list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, -(ratio + red),-(ratio+green),-(ratio+blue),0)))
 	add_filter("light_cutup", 4, color_matrix_filter(list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, ratio+red,ratio+green,ratio+blue,0)))
-
+*/
 /atom/movable/screen/plane_master/rendering_plate/emissive_slate
 	name = "Emissive Plate"
 	documentation = "This system works by exploiting BYONDs color matrix filter to use layers to handle emissive blockers.\
@@ -228,9 +248,10 @@
 /atom/movable/screen/plane_master/rendering_plate/emissive_slate/Initialize(mapload, datum/plane_master_group/home, offset)
 	. = ..()
 	add_filter("em_block_masking", 2, color_matrix_filter(GLOB.em_mask_matrix))
-	if(offset != 0)
-		add_relay_to(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset - 1), relay_layer = EMISSIVE_Z_BELOW_LAYER)
+	//if(offset != 0)
+	//	add_relay_to(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset - 1), relay_layer = EMISSIVE_Z_BELOW_LAYER)
 
+/*
 /atom/movable/screen/plane_master/rendering_plate/light_mask
 	name = "Light Mask"
 	documentation = "Any part of this plane that is transparent will be black below it on the game rendering plate.\
@@ -288,7 +309,7 @@
 	documentation = "Renders anything that's out of character. Mostly useful as a converse to the game rendering plate."
 	plane = RENDER_PLANE_NON_GAME
 	render_relay_planes = list(RENDER_PLANE_MASTER)
-
+*/
 /**
  * Plane master proc called in Initialize() that creates relay objects, and sets them uo as needed
  * Sets:
