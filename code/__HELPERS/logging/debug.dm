@@ -34,7 +34,7 @@
 /// Logging for game performance
 /proc/log_perf(list/perf_info)
 	. = "[perf_info.Join(",")]\n"
-	WRITE_LOG_NO_FORMAT(GLOB.perf_log, .)
+	//WRITE_LOG_NO_FORMAT(GLOB.perf_log, .)
 
 /// Logging for hard deletes
 /proc/log_qdel(text)

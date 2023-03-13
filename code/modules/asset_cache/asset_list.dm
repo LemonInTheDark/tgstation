@@ -247,7 +247,7 @@ GLOBAL_LIST_EMPTY(asset_datums)
 		// save flattened version
 		var/fname = "data/spritesheets/[name]_[size_id].png"
 		fcopy(size[SPRSZ_ICON], fname)
-		var/error = rustg_dmi_strip_metadata(fname)
+		var/error// = rustg_dmi_strip_metadata(fname)
 		if(length(error))
 			stack_trace("Failed to strip [name]_[size_id].png: [error]")
 		size[SPRSZ_STRIPPED] = icon(fname)
@@ -289,7 +289,7 @@ GLOBAL_LIST_EMPTY(asset_datums)
 		LAZYADD(cached_spritesheets_needed, asset_id)
 
 	var/replaced_css_filename = "data/spritesheets/spritesheet_[name].css"
-	rustg_file_write(replaced_css, replaced_css_filename)
+	//rustg_file_write(replaced_css, replaced_css_filename)
 	SSassets.transport.register_asset("spritesheet_[name].css", replaced_css_filename)
 
 	fdel(replaced_css_filename)
@@ -315,10 +315,10 @@ GLOBAL_LIST_EMPTY(asset_datums)
 		fcopy(SSassets.cache["[name]_[size_id].png"].resource, "[ASSET_CROSS_ROUND_CACHE_DIRECTORY]/spritesheet.[name]_[size_id].png")
 
 	generating_cache = TRUE
-	var/mock_css = generate_css()
+	//var/mock_css = generate_css()
 	generating_cache = FALSE
 
-	rustg_file_write(mock_css, "[ASSET_CROSS_ROUND_CACHE_DIRECTORY]/spritesheet.[name].css")
+	//rustg_file_write(mock_css, "[ASSET_CROSS_ROUND_CACHE_DIRECTORY]/spritesheet.[name].css")
 
 /datum/asset/spritesheet/proc/get_cached_url_mappings()
 	var/list/mappings = list()

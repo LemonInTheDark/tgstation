@@ -5,10 +5,10 @@
 	var/list/testmerge = list()
 
 /datum/getrev/New()
-	commit = rustg_git_revparse("HEAD")
-	if(commit)
-		date = rustg_git_commit_date(commit)
-	originmastercommit = rustg_git_revparse("origin/master")
+	//commit = rustg_git_revparse("HEAD")
+	//if(commit)
+	//	date = rustg_git_commit_date(commit)
+	//originmastercommit = rustg_git_revparse("origin/master")
 
 /datum/getrev/proc/load_tgs_info()
 	testmerge = world.TgsTestMerges()
@@ -16,7 +16,7 @@
 	if(revinfo)
 		commit = revinfo.commit
 		originmastercommit = revinfo.origin_commit
-		date = revinfo.timestamp || rustg_git_commit_date(commit)
+		date = revinfo.timestamp// || rustg_git_commit_date(commit)
 
 	// goes to DD log and config_error.txt
 	log_world(get_log_message())

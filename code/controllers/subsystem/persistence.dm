@@ -162,7 +162,7 @@ SUBSYSTEM_DEF(persistence)
 
 	log_world("Loaded [prison_tattoos_to_use.len] prison tattoos")
 
-///Saves all tattoos, so they can appear on prisoners in future rounds 
+///Saves all tattoos, so they can appear on prisoners in future rounds
 /datum/controller/subsystem/persistence/proc/save_prisoner_tattoos()
 	var/json_file = file(PRISONER_TATTOO_SAVE_FILE)
 	var/list/saved_data = list()
@@ -295,7 +295,7 @@ SUBSYSTEM_DEF(persistence)
 	for(var/obj/structure/displaycase/trophy/trophy_case in GLOB.trophy_cases)
 		if(!valid_trophies.len)
 			break
-		
+
 		if(trophy_case.showpiece)
 			continue
 
@@ -543,6 +543,6 @@ SUBSYSTEM_DEF(persistence)
 		sign.update_count(rounds_since_engine_exploded)
 
 /datum/controller/subsystem/persistence/proc/save_delamination_counter()
-	rustg_file_write("[rounds_since_engine_exploded + 1]", DELAMINATION_COUNT_FILEPATH)
+	//("[rounds_since_engine_exploded + 1]", DELAMINATION_COUNT_FILEPATH)
 
 #undef DELAMINATION_COUNT_FILEPATH

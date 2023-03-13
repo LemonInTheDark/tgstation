@@ -223,11 +223,12 @@
 	var/payload
 	if(href_list["payload"])
 		var/payload_text = href_list["payload"]
+		/*
 
 		if (!rustg_json_is_valid(payload_text))
 			log_tgui(usr, "Error: Invalid JSON")
 			return TRUE
-
+		*/
 		payload = json_decode(payload_text)
 
 	// Pass message to window

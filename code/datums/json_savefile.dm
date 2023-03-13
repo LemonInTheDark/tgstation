@@ -47,15 +47,15 @@ GENERAL_PROTECT_DATUM(/datum/json_savefile)
 	if(!path || !fexists(path))
 		return FALSE
 	try
-		tree = json_decode(rustg_file_read(path))
+		//tree = json_decode(rustg_file_read(path))
 		return TRUE
 	catch(var/exception/err)
 		stack_trace("failed to load json savefile at '[path]': [err]")
 		return FALSE
 
 /datum/json_savefile/proc/save()
-	if(path)
-		rustg_file_write(json_encode(tree), path)
+	//if(path)
+		//rustg_file_write(json_encode(tree), path)
 
 /datum/json_savefile/serialize_list(list/options)
 	return tree.Copy()

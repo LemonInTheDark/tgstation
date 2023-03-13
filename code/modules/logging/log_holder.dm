@@ -42,13 +42,14 @@ GLOBAL_PROTECT(logger)
 			disabled_categories[category] = TRUE
 			continue
 		category_type = log_categories[category] = new category_type
+		/*
 		var/list/log_start_entry = list(
 			LOG_HEADER_CATEGORY = category,
 			LOG_HEADER_INIT_TIMESTAMP = big_number_to_text(logging_start_timestamp),
 			LOG_HEADER_ROUND_ID = big_number_to_text(GLOB.round_id),
 		)
 		rustg_file_write("[json_encode(log_start_entry)]\n", category_type.get_output_file(null))
-
+*/
 /// Tells the log_holder to not allow any more logging to be done, and dumps all categories to their json file
 /datum/log_holder/proc/shutdown_logging()
 	if(shutdown)
