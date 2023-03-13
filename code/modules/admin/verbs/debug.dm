@@ -629,6 +629,22 @@
 		return
 	holder.color_test.ui_interact(mob)
 
+/client/proc/toggle_emissive_filter()
+	set category = "Debug"
+	set name = "Toggle Emissive Filter"
+	var/datum/hud/hud = usr.hud_used
+	var/atom/movable/screen/plane_master/rendering_plate/lighting/plate = hud.get_plane_master(RENDER_PLANE_LIGHTING)
+	plate.emissive_filter = !plate.emissive_filter
+	plate.print_and_refresh_filters()
+
+/client/proc/toggle_object_filter()
+	set category = "Debug"
+	set name = "Toggle Object Filter"
+	var/datum/hud/hud = usr.hud_used
+	var/atom/movable/screen/plane_master/rendering_plate/lighting/plate = hud.get_plane_master(RENDER_PLANE_LIGHTING)
+	plate.object_filter = !plate.object_filter
+	plate.print_and_refresh_filters()
+
 /client/proc/debug_plane_masters()
 	set category = "Debug"
 	set name = "Edit/Debug Planes"
