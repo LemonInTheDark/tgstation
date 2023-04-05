@@ -100,11 +100,12 @@
 	name = "darkness plane master"
 	plane = BLACKNESS_PLANE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	color = list(null, null, null, "#0000", "#000f")
-	blend_mode = BLEND_MULTIPLY
-	appearance_flags = PLANE_MASTER | NO_CLIENT_COLOR | PIXEL_SCALE
+	//color = list(null, null, null, "#0000", "#000f")
+	//blend_mode = BLEND_MULTIPLY
+	//appearance_flags = PLANE_MASTER | NO_CLIENT_COLOR | PIXEL_SCALE
 	//byond internal end
-	render_relay_plane = RENDER_PLANE_GAME
+	//render_relay_plane = RENDER_PLANE_GAME
+
 
 ///Contains all lighting objects
 /atom/movable/screen/plane_master/lighting
