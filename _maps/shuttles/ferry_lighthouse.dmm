@@ -3,13 +3,13 @@
 /turf/template_noop,
 /area/template_noop)
 "ab" = (
-/obj/structure/shuttle/engine/propulsion/left{
+/obj/machinery/power/shuttle_engine/propulsion/left{
 	dir = 4
 	},
 /turf/open/floor/plating/airless,
 /area/shuttle/transport)
 "ac" = (
-/obj/structure/shuttle/engine/heater{
+/obj/machinery/power/shuttle_engine/heater{
 	dir = 8
 	},
 /turf/open/floor/plating/airless,
@@ -86,12 +86,8 @@
 /obj/machinery/door/airlock/wood,
 /turf/open/floor/wood,
 /area/shuttle/transport)
-"aw" = (
-/obj/effect/spawner/structure/window/shuttle,
-/turf/closed/wall/mineral/titanium,
-/area/shuttle/transport)
 "az" = (
-/obj/effect/spawner/structure/window/shuttle,
+/obj/effect/spawner/structure/window/reinforced/shuttle,
 /turf/open/floor/plating,
 /area/shuttle/transport)
 "aB" = (
@@ -121,9 +117,7 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/transport)
 "aH" = (
-/obj/machinery/newscaster{
-	pixel_y = 30
-	},
+/obj/machinery/newscaster/directional/north,
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/transport)
 "aI" = (
@@ -147,7 +141,7 @@
 /turf/closed/wall/mineral/titanium/nodiagonal,
 /area/shuttle/transport)
 "aN" = (
-/obj/machinery/power/grounding_rod{
+/obj/machinery/power/energy_accumulator/grounding_rod{
 	anchored = 1
 	},
 /turf/open/floor/mineral/titanium/blue,
@@ -156,12 +150,9 @@
 /obj/machinery/door/airlock/titanium,
 /obj/docking_port/mobile{
 	dir = 8;
-	dwidth = 8;
-	height = 27;
-	id = "ferry";
+	shuttle_id = "ferry";
 	name = "The Lighthouse";
-	port_direction = 2;
-	width = 16
+	port_direction = 2
 	},
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/transport)
@@ -207,10 +198,6 @@
 "aX" = (
 /obj/structure/window/fulltile,
 /turf/open/floor/mineral/titanium/blue,
-/area/shuttle/transport)
-"aY" = (
-/obj/effect/spawner/structure/window/reinforced,
-/turf/closed/wall/mineral/titanium,
 /area/shuttle/transport)
 "ba" = (
 /obj/machinery/conveyor{
@@ -269,11 +256,11 @@
 /turf/open/floor/plating/airless,
 /area/shuttle/transport)
 "bi" = (
-/obj/structure/shuttle/engine/heater,
+/obj/machinery/power/shuttle_engine/heater,
 /turf/open/floor/plating/airless,
 /area/shuttle/transport)
 "bj" = (
-/obj/structure/shuttle/engine/propulsion/right,
+/obj/machinery/power/shuttle_engine/propulsion/right,
 /turf/open/floor/plating/airless,
 /area/shuttle/transport)
 
@@ -518,7 +505,7 @@ aa
 aa
 aa
 aa
-aw
+az
 aE
 aN
 aE
@@ -536,7 +523,7 @@ aa
 aa
 aa
 aa
-aw
+az
 aE
 aE
 aE
@@ -558,7 +545,7 @@ ad
 ak
 aE
 ak
-aY
+ad
 aa
 aa
 aa
@@ -576,7 +563,7 @@ ad
 aF
 aE
 aT
-aw
+az
 aa
 aa
 aa

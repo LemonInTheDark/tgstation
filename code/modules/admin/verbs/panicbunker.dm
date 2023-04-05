@@ -2,7 +2,7 @@
 	set category = "Server"
 	set name = "Toggle Panic Bunker"
 	if (!CONFIG_GET(flag/sql_enabled))
-		to_chat(usr, "<span class='adminnotice'>The Database is not enabled!</span>", confidential = TRUE)
+		to_chat(usr, span_adminnotice("The Database is not enabled!"), confidential = TRUE)
 		return
 
 	var/new_pb = !CONFIG_GET(flag/panic_bunker)
@@ -10,13 +10,13 @@
 	var/time_rec = 0
 	var/message = ""
 	if(new_pb)
-		time_rec = input(src, "How many living minutes should they need to play?", "Shit's fucked isn't it", CONFIG_GET(number/panic_bunker_living)) as num
+		time_rec = input(src, "How many living minutes should they need to play? 0 to disable.", "Shit's fucked isn't it", CONFIG_GET(number/panic_bunker_living)) as num
 		message = input(src, "What should they see when they log in?", "MMM", CONFIG_GET(string/panic_bunker_message)) as text
 		message = replacetext(message, "%minutes%", time_rec)
 		CONFIG_SET(number/panic_bunker_living, time_rec)
 		CONFIG_SET(string/panic_bunker_message, message)
 
-		var/interview_sys = alert(src, "Should the interview system be enabled? (Allows players to connect under the hour limit and force them to be manually approved to play)", "Enable interviews?", "Enable", "Disable")
+		var/interview_sys = tgui_alert(usr, "Should the interview system be enabled? (Allows players to connect under the hour limit and force them to be manually approved to play)", "Enable interviews?", list("Enable", "Disable"))
 		interview = interview_sys == "Enable"
 		CONFIG_SET(flag/panic_bunker_interview, interview)
 	CONFIG_SET(flag/panic_bunker, new_pb)
@@ -30,7 +30,7 @@
 	set category = "Server"
 	set name = "Toggle PB Interviews"
 	if (!CONFIG_GET(flag/panic_bunker))
-		to_chat(usr, "<span class='adminnotice'>NOTE: The panic bunker is not enabled, so this change will not effect anything until it is enabled.</span>", confidential = TRUE)
+		to_chat(usr, span_adminnotice("NOTE: The panic bunker is not enabled, so this change will not effect anything until it is enabled."), confidential = TRUE)
 	var/new_interview = !CONFIG_GET(flag/panic_bunker_interview)
 	CONFIG_SET(flag/panic_bunker_interview, new_interview)
 	log_admin("[key_name(usr)] has toggled the Panic Bunker's interview system, it is now [new_interview ? "enabled" : "disabled"].")

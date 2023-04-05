@@ -18,7 +18,9 @@
 	var/initialized = FALSE
 
 /datum/tgs_api/v5/ApiVersion()
-	return new /datum/tgs_version(TGS_DMAPI_VERSION)
+	return new /datum/tgs_version(
+		#include "__interop_version.dm"
+	)
 
 /datum/tgs_api/v5/OnWorldNew(minimum_required_security_level)
 	server_port = world.params[DMAPI5_PARAM_SERVER_PORT]
@@ -48,6 +50,7 @@
 	if(istype(revisionData))
 		revision = new
 		revision.commit = revisionData[DMAPI5_REVISION_INFORMATION_COMMIT_SHA]
+		revision.timestamp = revisionData[DMAPI5_REVISION_INFORMATION_TIMESTAMP]
 		revision.origin_commit = revisionData[DMAPI5_REVISION_INFORMATION_ORIGIN_COMMIT_SHA]
 	else
 		TGS_ERROR_LOG("Failed to decode [DMAPI5_RUNTIME_INFORMATION_REVISION] from runtime information!")
@@ -63,15 +66,18 @@
 			if(revInfo)
 				tm.commit = revisionData[DMAPI5_REVISION_INFORMATION_COMMIT_SHA]
 				tm.origin_commit = revisionData[DMAPI5_REVISION_INFORMATION_ORIGIN_COMMIT_SHA]
+				tm.timestamp = entry[DMAPI5_REVISION_INFORMATION_TIMESTAMP]
 			else
 				TGS_WARNING_LOG("Failed to decode [DMAPI5_TEST_MERGE_REVISION] from test merge #[tm.number]!")
 
-			tm.time_merged = text2num(entry[DMAPI5_TEST_MERGE_TIME_MERGED])
+			if(!tm.timestamp)
+				tm.timestamp = entry[DMAPI5_TEST_MERGE_TIME_MERGED]
+
 			tm.title = entry[DMAPI5_TEST_MERGE_TITLE_AT_MERGE]
 			tm.body = entry[DMAPI5_TEST_MERGE_BODY_AT_MERGE]
 			tm.url = entry[DMAPI5_TEST_MERGE_URL]
 			tm.author = entry[DMAPI5_TEST_MERGE_AUTHOR]
-			tm.pull_request_commit = entry[DMAPI5_TEST_MERGE_PULL_REQUEST_REVISION]
+			tm.head_commit = entry[DMAPI5_TEST_MERGE_PULL_REQUEST_REVISION]
 			tm.comment = entry[DMAPI5_TEST_MERGE_COMMENT]
 
 			test_merges += tm
@@ -98,17 +104,19 @@
 	return json_encode(response)
 
 /datum/tgs_api/v5/OnTopic(T)
-	if(!initialized)
-		return FALSE	//continue world/Topic
-
+	RequireInitialBridgeResponse()
 	var/list/params = params2list(T)
 	var/json = params[DMAPI5_TOPIC_DATA]
 	if(!json)
-		return FALSE
+		return FALSE // continue to /world/Topic
 
 	var/list/topic_parameters = json_decode(json)
 	if(!topic_parameters)
 		return TopicResponse("Invalid topic parameters json!");
+
+	if(!initialized)
+		TGS_WARNING_LOG("Missed topic due to not being initialized: [T]")
+		return TRUE // too early to handle, but it's still our responsibility
 
 	var/their_sCK = topic_parameters[DMAPI5_PARAMETER_ACCESS_IDENTIFIER]
 	if(their_sCK != access_identifier)
@@ -262,11 +270,11 @@
 	if(!result)
 		return
 
-	//okay so the standard TGS4 proceedure is: right before rebooting change the port to whatever was sent to us in the above json's data parameter
+	//okay so the standard TGS proceedure is: right before rebooting change the port to whatever was sent to us in the above json's data parameter
 
 	var/port = result[DMAPI5_BRIDGE_RESPONSE_NEW_PORT]
 	if(!isnum(port))
-		return	//this is valid, server may just want use to reboot
+		return //this is valid, server may just want use to reboot
 
 	if(port == 0)
 		//to byond 0 means any port and "none" means close vOv
@@ -290,7 +298,15 @@
 	RequireInitialBridgeResponse()
 	return revision
 
-/datum/tgs_api/v5/ChatBroadcast(message, list/channels)
+// Common proc b/c it's used by the V3/V4 APIs
+/datum/tgs_api/proc/UpgradeDeprecatedChatMessage(datum/tgs_message_content/message)
+	if(!istext(message))
+		return message
+
+	TGS_WARNING_LOG("Received legacy string when a [/datum/tgs_message_content] was expected. Please audit all calls to TgsChatBroadcast, TgsChatTargetedBroadcast, and TgsChatPrivateMessage to ensure they use the new /datum.")
+	return new /datum/tgs_message_content(message)
+
+/datum/tgs_api/v5/ChatBroadcast(datum/tgs_message_content/message, list/channels)
 	if(!length(channels))
 		channels = ChatChannelInfo()
 
@@ -299,26 +315,33 @@
 		var/datum/tgs_chat_channel/channel = I
 		ids += channel.id
 
-	message = list(DMAPI5_CHAT_MESSAGE_TEXT = message, DMAPI5_CHAT_MESSAGE_CHANNEL_IDS = ids)
+	message = UpgradeDeprecatedChatMessage(message)
+	message = message._interop_serialize()
+	message[DMAPI5_CHAT_MESSAGE_CHANNEL_IDS] = ids
 	if(intercepted_message_queue)
 		intercepted_message_queue += list(message)
 	else
 		Bridge(DMAPI5_BRIDGE_COMMAND_CHAT_SEND, list(DMAPI5_BRIDGE_PARAMETER_CHAT_MESSAGE = message))
 
-/datum/tgs_api/v5/ChatTargetedBroadcast(message, admin_only)
+/datum/tgs_api/v5/ChatTargetedBroadcast(datum/tgs_message_content/message, admin_only)
 	var/list/channels = list()
 	for(var/I in ChatChannelInfo())
 		var/datum/tgs_chat_channel/channel = I
 		if (!channel.is_private_channel && ((channel.is_admin_channel && admin_only) || (!channel.is_admin_channel && !admin_only)))
 			channels += channel.id
-	message = list(DMAPI5_CHAT_MESSAGE_TEXT = message, DMAPI5_CHAT_MESSAGE_CHANNEL_IDS = channels)
+
+	message = UpgradeDeprecatedChatMessage(message)
+	message = message._interop_serialize()
+	message[DMAPI5_CHAT_MESSAGE_CHANNEL_IDS] = channels
 	if(intercepted_message_queue)
 		intercepted_message_queue += list(message)
 	else
 		Bridge(DMAPI5_BRIDGE_COMMAND_CHAT_SEND, list(DMAPI5_BRIDGE_PARAMETER_CHAT_MESSAGE = message))
 
-/datum/tgs_api/v5/ChatPrivateMessage(message, datum/tgs_chat_user/user)
-	message = list(DMAPI5_CHAT_MESSAGE_TEXT = message, DMAPI5_CHAT_MESSAGE_CHANNEL_IDS = list(user.channel.id))
+/datum/tgs_api/v5/ChatPrivateMessage(datum/tgs_message_content/message, datum/tgs_chat_user/user)
+	message = UpgradeDeprecatedChatMessage(message)
+	message = message._interop_serialize()
+	message[DMAPI5_CHAT_MESSAGE_CHANNEL_IDS] = list(user.channel.id)
 	if(intercepted_message_queue)
 		intercepted_message_queue += list(message)
 	else
@@ -347,6 +370,7 @@
 	channel.is_admin_channel = channel_json[DMAPI5_CHAT_CHANNEL_IS_ADMIN_CHANNEL]
 	channel.is_private_channel = channel_json[DMAPI5_CHAT_CHANNEL_IS_PRIVATE_CHANNEL]
 	channel.custom_tag = channel_json[DMAPI5_CHAT_CHANNEL_TAG]
+	channel.embeds_supported = channel_json[DMAPI5_CHAT_CHANNEL_EMBEDS_SUPPORTED]
 	return channel
 
 /datum/tgs_api/v5/SecurityLevel()

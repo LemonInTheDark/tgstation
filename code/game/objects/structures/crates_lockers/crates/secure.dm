@@ -5,18 +5,21 @@
 	secure = TRUE
 	locked = TRUE
 	max_integrity = 500
-	armor = list(MELEE = 30, BULLET = 50, LASER = 50, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 80)
+	armor_type = /datum/armor/crate_secure
 	var/tamperproof = 0
 	damage_deflection = 25
 
-/obj/structure/closet/crate/secure/update_overlays()
+/datum/armor/crate_secure
+	melee = 30
+	bullet = 50
+	laser = 50
+	energy = 100
+	fire = 80
+	acid = 80
+
+/obj/structure/closet/crate/secure/Initialize(mapload)
 	. = ..()
-	if(broken)
-		. += "securecrateemag"
-	else if(locked)
-		. += "securecrater"
-	else
-		. += "securecrateg"
+	ADD_TRAIT(src, TRAIT_NO_MISSING_ITEM_ERROR, TRAIT_GENERIC)
 
 /obj/structure/closet/crate/secure/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1)
 	if(prob(tamperproof) && damage_amount >= DAMAGE_PRECISION)
@@ -24,14 +27,12 @@
 	else
 		return ..()
 
-
 /obj/structure/closet/crate/secure/proc/boom(mob/user)
 	if(user)
-		to_chat(user, "<span class='danger'>The crate's anti-tamper system activates!</span>")
+		to_chat(user, span_danger("The crate's anti-tamper system activates!"))
 		log_bomber(user, "has detonated a", src)
-	for(var/atom/movable/AM in src)
-		qdel(AM)
-	explosion(get_turf(src), 0, 1, 5, 5)
+	dump_contents()
+	explosion(src, heavy_impact_range = 1, light_impact_range = 5, flash_range = 5)
 	qdel(src)
 
 /obj/structure/closet/crate/secure/weapon
@@ -53,6 +54,21 @@
 	desc = "A crate with a lock on it, painted in the scheme of the station's botanists."
 	name = "secure hydroponics crate"
 	icon_state = "hydrosecurecrate"
+
+/obj/structure/closet/crate/secure/freezer //for consistency with other "freezer" closets/crates
+	desc = "An insulated crate with a lock on it, used to secure perishables."
+	name = "secure kitchen crate"
+	icon_state = "kitchen_secure_crate"
+
+/obj/structure/closet/crate/secure/freezer/pizza
+	name = "secure pizza crate"
+	desc = "An insulated crate with a lock on it, used to secure pizza."
+	req_access = list(ACCESS_KITCHEN)
+	tamperproof = 10
+
+/obj/structure/closet/crate/secure/freezer/pizza/PopulateContents()
+	. = ..()
+	new /obj/effect/spawner/random/food_or_drink/pizzaparty(src)
 
 /obj/structure/closet/crate/secure/engineering
 	desc = "A crate with a lock on it, painted in the scheme of the station's engineers."
@@ -79,7 +95,7 @@
 
 /obj/structure/closet/crate/secure/owned/examine(mob/user)
 	. = ..()
-	. += "<span class='notice'>It's locked with a privacy lock, and can only be unlocked by the buyer's ID.</span>"
+	. += span_notice("It's locked with a privacy lock, and can only be unlocked by the buyer's ID.")
 
 /obj/structure/closet/crate/secure/owned/Initialize(mapload, datum/bank_account/_buyer_account)
 	. = ..()
@@ -98,16 +114,16 @@
 						if(iscarbon(user))
 							add_fingerprint(user)
 						locked = !locked
-						user.visible_message("<span class='notice'>[user] unlocks [src]'s privacy lock.</span>",
-										"<span class='notice'>You unlock [src]'s privacy lock.</span>")
+						user.visible_message(span_notice("[user] unlocks [src]'s privacy lock."),
+										span_notice("You unlock [src]'s privacy lock."))
 						privacy_lock = FALSE
-						update_icon()
+						update_appearance()
 					else if(!silent)
-						to_chat(user, "<span class='notice'>Bank account does not match with buyer!</span>")
+						to_chat(user, span_warning("Bank account does not match with buyer!"))
 				else if(!silent)
-					to_chat(user, "<span class='notice'>No linked bank account detected!</span>")
+					to_chat(user, span_warning("No linked bank account detected!"))
 			else if(!silent)
-				to_chat(user, "<span class='notice'>No ID detected!</span>")
+				to_chat(user, span_warning("No ID detected!"))
 		else if(!silent)
-			to_chat(user, "<span class='warning'>[src] is broken!</span>")
+			to_chat(user, span_warning("[src] is broken!"))
 	else ..()

@@ -8,6 +8,7 @@
 	anchored = TRUE
 	density = FALSE
 	layer = RIPPLE_LAYER
+	plane = ABOVE_GAME_PLANE
 	mouse_opacity = MOUSE_OPACITY_ICON
 	alpha = 0
 
@@ -22,8 +23,8 @@
 	src.incoming_shuttle = incoming_shuttle
 
 	animate(src, alpha=255, time=time_left)
-	addtimer(CALLBACK(src, .proc/set_still_icon), 8, TIMER_CLIENT_TIME)
-	addtimer(CALLBACK(src, .proc/actualize), time_left, TIMER_CLIENT_TIME)
+	addtimer(CALLBACK(src, PROC_REF(set_still_icon)), 8, TIMER_CLIENT_TIME)
+	addtimer(CALLBACK(src, PROC_REF(actualize)), time_left, TIMER_CLIENT_TIME)
 
 /// Switch to non-animating icon
 /obj/effect/abstract/ripple/proc/set_still_icon()

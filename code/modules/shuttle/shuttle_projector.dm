@@ -41,7 +41,7 @@
 		// make it slightly invisible so we don't obstruct the full game view
 		docking_alpha = 80
 		layer = ABOVE_LIGHTING_LAYER
-		plane = ABOVE_LIGHTING_PLANE
+		SET_PLANE_IMPLICIT(src, ABOVE_LIGHTING_PLANE)
 	else
 		scale_factor = 0.4
 		translate_factor = 1 - scale_factor
