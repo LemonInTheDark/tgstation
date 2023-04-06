@@ -1,7 +1,6 @@
 /// Projects a shuttle with visual juice while it docks/launches with vis_contents
 /obj/effect/abstract/shuttle_projector
-	layer = LOWER_SHUTTLE_MOVEMENT_LAYER
-	plane = LOWER_SHUTTLE_MOVEMENT_PLANE
+	plane = LOWER_SHUTTLE_ANIMATION_PLANE
 	appearance_flags = KEEP_TOGETHER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	icon = 'icons/effects/alphacolors.dmi'
@@ -12,6 +11,8 @@
 	var/obj/docking_port/mobile/shuttle_port
 	/// The bottom left turf of the bounding box where the shuttle will dock in the stationary port
 	var/turf/bottom_left
+
+	var/list/affected_movables
 
 /obj/effect/abstract/shuttle_projector/Initialize(mapload, obj/docking_port/mobile/shuttle_port, obj/docking_port/stationary/stationary_port, inbound, total_animate_time = null)
 	. = ..()
@@ -40,8 +41,7 @@
 
 		// make it slightly invisible so we don't obstruct the full game view
 		docking_alpha = 80
-		layer = ABOVE_LIGHTING_LAYER
-		SET_PLANE_IMPLICIT(src, ABOVE_LIGHTING_PLANE)
+		SET_PLANE_IMPLICIT(src, HIGHER_SHUTTLE_ANIMATION_PLANE)
 	else
 		scale_factor = 0.4
 		translate_factor = 1 - scale_factor
@@ -147,8 +147,17 @@
 	else
 		transform = docked_transform
 
-	vis_contents = projected_turfs
+	// apply VIS_INHERIT_PLANE to contents which is necessary to view the shuttle's contents
+	affected_movables = list()
+	for(var/turf/projected_turf as anything in projected_turfs)
+		for(var/atom/movable as anything in projected_turf)
+			affect_movable(movable)
+
+		projected_turf.vis_flags |= VIS_INHERIT_PLANE
+		RegisterSignals(projected_turf, list(COMSIG_ATOM_ENTERED, COMSIG_ATOM_INITIALIZED_ON), PROC_REF(affect_movable))
+
 	forceMove(bottom_left)
+	vis_contents = projected_turfs
 
 	if (inbound)
 		animate(src, transform = undock_transform, easing = CIRCULAR_EASING | EASE_OUT, alpha = docking_alpha, time = move_animation_time)
@@ -159,12 +168,37 @@
 
 	if(!inbound)
 		// rely on remove_ripples to delete us otherwise
-		addtimer(CALLBACK(src, .proc/on_initialization_end), total_animate_time, TIMER_CLIENT_TIME)
+		addtimer(CALLBACK(src, PROC_REF(on_initialization_end)), total_animate_time, TIMER_CLIENT_TIME)
 
+/obj/effect/abstract/shuttle_projector/proc/affect_movable(atom/movable/movable)
+	if(affected_movables[movable] || (movable.vis_flags & VIS_INHERIT_PLANE)) // don't re-affect or touch stuff that already has the flag
+		return
+
+	movable.vis_flags |= VIS_INHERIT_PLANE
+	RegisterSignal(movable, COMSIG_PARENT_QDELETING, PROC_REF(movable_deleted))
+	affected_movables[movable] = TRUE
+
+/obj/effect/abstract/shuttle_projector/proc/unaffect_movable(atom/movable/movable)
+	UnregisterSignal(movable, COMSIG_PARENT_QDELETING)
+	affected_movables -= movable
+	movable.vis_flags &= ~VIS_INHERIT_PLANE
+
+/obj/effect/abstract/shuttle_projector/proc/movable_deleted(atom/movable/movable)
+	affected_movables -= movable
 
 /// Handles the aftermath of initializing, after all the deeds are done.
 /obj/effect/abstract/shuttle_projector/proc/on_initialization_end()
 	qdel(src)
+
 /obj/effect/abstract/shuttle_projector/Destroy(force)
+	if(affected_movables)
+		for(var/atom/movable/movable as anything in affected_movables)
+			movable.vis_flags &= ~VIS_INHERIT_PLANE
+
+		affected_movables.Cut()
+
+	for(var/turf/projected_turf as anything in vis_contents)
+		projected_turf.vis_flags &= ~VIS_INHERIT_PLANE
+
 	shuttle_port = null
 	return ..()

@@ -12,13 +12,12 @@
 #define PLANE_SPACE -25
 #define PLANE_SPACE_PARALLAX -20
 
-#define LOWER_SHUTTLE_MOVEMENT_PLANE -17
-#define LOWER_SHUTTLE_MOVEMENT_RENDER_TARGET "LOWER_SHUTTLE_MOVEMENT_PLANE"
-
-#define GRAVITY_PULSE_PLANE -13
+#define GRAVITY_PULSE_PLANE -14
 #define GRAVITY_PULSE_RENDER_TARGET "*GRAVPULSE_RENDER_TARGET"
 
-#define RENDER_PLANE_TRANSPARENT -12 //Transparent plane that shows openspace underneath the floor
+#define RENDER_PLANE_TRANSPARENT -13 //Transparent plane that shows openspace underneath the floor
+
+#define LOWER_SHUTTLE_ANIMATION_PLANE -12
 
 #define TRANSPARENT_FLOOR_PLANE -11
 
@@ -73,6 +72,8 @@
 #define ABOVE_LIGHTING_PLANE 17
 #define ABOVE_LIGHTING_LAYER 17
 
+#define HIGHER_SHUTTLE_ANIMATION_PLANE 18
+
 ///---------------- MISC -----------------------
 
 ///Pipecrawling images
@@ -124,8 +125,6 @@
 
 // PLANE_SPACE layer(s)
 #define SPACE_LAYER 1.8
-
-#define LOWER_SHUTTLE_MOVEMENT_LAYER 1.9
 
 //#define TURF_LAYER 2 //For easy recordkeeping; this is a byond define. Most floors (FLOOR_PLANE) and walls (WALL_PLANE) use this.
 
