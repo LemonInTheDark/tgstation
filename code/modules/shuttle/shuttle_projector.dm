@@ -11,7 +11,7 @@
 	var/obj/docking_port/mobile/shuttle_port
 	/// The bottom left turf of the bounding box where the shuttle will dock in the stationary port
 	var/turf/bottom_left
-
+	/// List of [/atom/movable]s that we've affected
 	var/list/affected_movables
 
 /obj/effect/abstract/shuttle_projector/Initialize(mapload, obj/docking_port/mobile/shuttle_port, obj/docking_port/stationary/stationary_port, inbound, total_animate_time = null)
@@ -154,6 +154,7 @@
 			affect_movable(src, movable)
 
 		projected_turf.vis_flags |= VIS_INHERIT_PLANE
+		RegisterSignal(projected_turf, COMSIG_ATOM_EXITED, PROC_REF(unaffect_movable))
 		RegisterSignal(projected_turf, COMSIG_ATOM_ENTERED, PROC_REF(affect_movable))
 		RegisterSignal(projected_turf, COMSIG_ATOM_INITIALIZED_ON, PROC_REF(affect_movable))
 
@@ -183,12 +184,12 @@
 	RegisterSignal(movable, COMSIG_PARENT_QDELETING, PROC_REF(movable_deleted))
 	affected_movables[movable] = TRUE
 
-/obj/effect/abstract/shuttle_projector/proc/unaffect_movable(atom/movable/movable)
+/obj/effect/abstract/shuttle_projector/proc/unaffect_movable(datum/source, atom/movable/movable)
 	UnregisterSignal(movable, COMSIG_PARENT_QDELETING)
 	affected_movables -= movable
 	movable.vis_flags &= ~VIS_INHERIT_PLANE
 
-/obj/effect/abstract/shuttle_projector/proc/movable_deleted(atom/movable/movable)
+/obj/effect/abstract/shuttle_projector/proc/movable_deleted(datum/source, atom/movable/movable)
 	affected_movables -= movable
 
 /// Handles the aftermath of initializing, after all the deeds are done.
