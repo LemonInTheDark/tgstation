@@ -151,10 +151,11 @@
 	affected_movables = list()
 	for(var/turf/projected_turf as anything in projected_turfs)
 		for(var/atom/movable as anything in projected_turf)
-			affect_movable(movable)
+			affect_movable(src, movable)
 
 		projected_turf.vis_flags |= VIS_INHERIT_PLANE
-		RegisterSignals(projected_turf, list(COMSIG_ATOM_ENTERED, COMSIG_ATOM_INITIALIZED_ON), PROC_REF(affect_movable))
+		RegisterSignal(projected_turf, COMSIG_ATOM_ENTERED, PROC_REF(affect_movable))
+		RegisterSignal(projected_turf, COMSIG_ATOM_INITIALIZED_ON, PROC_REF(affect_movable))
 
 	forceMove(bottom_left)
 	vis_contents = projected_turfs
@@ -170,11 +171,15 @@
 		// rely on remove_ripples to delete us otherwise
 		addtimer(CALLBACK(src, PROC_REF(on_initialization_end)), total_animate_time, TIMER_CLIENT_TIME)
 
-/obj/effect/abstract/shuttle_projector/proc/affect_movable(atom/movable/movable)
-	if(affected_movables[movable] || (movable.vis_flags & VIS_INHERIT_PLANE)) // don't re-affect or touch stuff that already has the flag
+/obj/effect/abstract/shuttle_projector/proc/affect_movable(datum/source, atom/movable/movable)
+	if(movable.vis_flags & VIS_INHERIT_PLANE) // don't re-affect or touch stuff that already has the flag
 		return
 
 	movable.vis_flags |= VIS_INHERIT_PLANE
+
+	if(affected_movables[movable])
+		return
+
 	RegisterSignal(movable, COMSIG_PARENT_QDELETING, PROC_REF(movable_deleted))
 	affected_movables[movable] = TRUE
 
