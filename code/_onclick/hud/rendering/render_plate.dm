@@ -78,7 +78,7 @@
 
 /atom/movable/screen/plane_master/rendering_plate/game_plate/Initialize(mapload)
 	. = ..()
-	add_filter("displacer", 1, displacement_map_filter(render_source = OFFSET_RENDER_TARGET(GRAVITY_PULSE_RENDER_TARGET, offset), size = 10))
+	//add_filter("displacer", 1, displacement_map_filter(render_source = OFFSET_RENDER_TARGET(GRAVITY_PULSE_RENDER_TARGET, offset), size = 10))
 
 // Blackness renders weird when you view down openspace, because of transforms and borders and such
 // This is a consequence of not using lummy's grouped transparency, but I couldn't get that to work without totally fucking up
@@ -95,7 +95,7 @@
 	. = ..()
 	// Don't display us if we're below everything else yeah?
 	AddComponent(/datum/component/plane_hide_highest_offset)
-	color = list(0.9,0,0,0, 0,0.9,0,0, 0,0,0.9,0, 0,0,0,1, 0,0,0,0)
+	//color = list(0.9,0,0,0, 0,0.9,0,0, 0,0,0.9,0, 0,0,0,1, 0,0,0,0)
 
 ///Contains most things in the game world
 /atom/movable/screen/plane_master/rendering_plate/game_world
@@ -109,9 +109,9 @@
 	. = ..()
 	if(!.)
 		return
-	remove_filter("AO")
-	if(istype(mymob) && mymob.client?.prefs?.read_preference(/datum/preference/toggle/ambient_occlusion))
-		add_filter("AO", 1, drop_shadow_filter(x = 0, y = -2, size = 4, color = "#04080FAA"))
+	//remove_filter("AO")
+	//if(istype(mymob) && mymob.client?.prefs?.read_preference(/datum/preference/toggle/ambient_occlusion))
+	//	add_filter("AO", 1, drop_shadow_filter(x = 0, y = -2, size = 4, color = "#04080FAA"))
 
 ///Contains all lighting objects
 /atom/movable/screen/plane_master/rendering_plate/lighting
@@ -142,8 +142,8 @@
  */
 /atom/movable/screen/plane_master/rendering_plate/lighting/Initialize(mapload)
 	. = ..()
-	add_filter("emissives", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(EMISSIVE_RENDER_TARGET, offset), flags = MASK_INVERSE))
-	add_filter("object_lighting", 2, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(O_LIGHTING_VISUAL_RENDER_TARGET, offset), flags = MASK_INVERSE))
+	//add_filter("emissives", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(EMISSIVE_RENDER_TARGET, offset), flags = MASK_INVERSE))
+	//add_filter("object_lighting", 2, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(O_LIGHTING_VISUAL_RENDER_TARGET, offset), flags = MASK_INVERSE))
 	set_light_cutoff(10)
 
 /atom/movable/screen/plane_master/rendering_plate/lighting/show_to(mob/mymob)
@@ -206,8 +206,8 @@
 	var/red = color_cutoffs[1] / 100
 	var/green = color_cutoffs[2] / 100
 	var/blue = color_cutoffs[3] / 100
-	add_filter("light_cutdown", 3, color_matrix_filter(list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, -(ratio + red),-(ratio+green),-(ratio+blue),0)))
-	add_filter("light_cutup", 4, color_matrix_filter(list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, ratio+red,ratio+green,ratio+blue,0)))
+	//add_filter("light_cutdown", 3, color_matrix_filter(list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, -(ratio + red),-(ratio+green),-(ratio+blue),0)))
+	//add_filter("light_cutup", 4, color_matrix_filter(list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, ratio+red,ratio+green,ratio+blue,0)))
 
 /atom/movable/screen/plane_master/rendering_plate/emissive_slate
 	name = "Emissive Plate"
@@ -227,7 +227,7 @@
 
 /atom/movable/screen/plane_master/rendering_plate/emissive_slate/Initialize(mapload, datum/plane_master_group/home, offset)
 	. = ..()
-	add_filter("em_block_masking", 2, color_matrix_filter(GLOB.em_mask_matrix))
+	//add_filter("em_block_masking", 2, color_matrix_filter(GLOB.em_mask_matrix))
 	if(offset != 0)
 		add_relay_to(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset - 1), relay_layer = EMISSIVE_Z_BELOW_LAYER)
 
@@ -241,7 +241,7 @@
 	plane = LIGHT_MASK_PLANE
 	appearance_flags = PLANE_MASTER|NO_CLIENT_COLOR
 	// Fullwhite where there's anything, no color otherwise
-	color = list(255,255,255,255, 255,255,255,255, 255,255,255,255, 255,255,255,255, 0,0,0,0)
+	//color = list(255,255,255,255, 255,255,255,255, 255,255,255,255, 255,255,255,255, 0,0,0,0)
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	render_target = LIGHT_MASK_RENDER_TARGET
 	// We blend against the game plane, so she's gotta multiply!
@@ -272,15 +272,15 @@
 	var/atom/movable/screen/plane_master/emissive = home.get_plane(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset))
 	if(new_sight & SEE_AVOID_TURF_BLACKNESS && !(new_sight & SEE_TURFS))
 		remove_relay_from(GET_NEW_PLANE(RENDER_PLANE_GAME, offset))
-		overlay_lights.add_filter("lighting_mask", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(LIGHT_MASK_RENDER_TARGET, offset)))
-		emissive.add_filter("lighting_mask", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(LIGHT_MASK_RENDER_TARGET, offset)))
+		//overlay_lights.add_filter("lighting_mask", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(LIGHT_MASK_RENDER_TARGET, offset)))
+		//emissive.add_filter("lighting_mask", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(LIGHT_MASK_RENDER_TARGET, offset)))
 	// If we CAN'T see through the black, then draw er down brother!
 	else
 		overlay_lights.remove_filter("lighting_mask")
 		emissive.remove_filter("lighting_mask")
 		// We max alpha here, so our darkness is actually.. dark
 		// Can't do it before cause it fucks with the filter
-		add_relay_to(GET_NEW_PLANE(RENDER_PLANE_GAME, offset), relay_color = list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, 0,0,0,1))
+		//add_relay_to(GET_NEW_PLANE(RENDER_PLANE_GAME, offset), relay_color = list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, 0,0,0,1))
 
 ///render plate for OOC stuff like ghosts, hud-screen effects, etc
 /atom/movable/screen/plane_master/rendering_plate/non_game
@@ -325,7 +325,7 @@
 	render_relay_planes += target_plane
 	var/client/display_lad = home?.our_hud?.mymob?.client
 	var/atom/movable/render_plane_relay/relay = generate_relay_to(target_plane, show_to = display_lad, blend_override = blend_override, relay_layer = relay_layer)
-	relay.color = relay_color
+	//relay.color = relay_color
 
 /proc/get_plane_master_render_base(name)
 	return "*[name]: AUTOGENERATED RENDER TGT"
