@@ -60,6 +60,8 @@ GLOBAL_VAR(restart_counter)
 	RETURN_TYPE(/datum/controller/master)
 
 	log_world("Genesis...");
+	
+	init_byond_tracy()
 
 	Profile(PROFILE_RESTART)
 	Profile(PROFILE_RESTART, type = "sendmaps")
