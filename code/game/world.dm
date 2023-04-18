@@ -61,11 +61,6 @@ GLOBAL_VAR(restart_counter)
 
 	log_world("Genesis...");
 
-#ifdef USE_BYOND_TRACY
-#warn USE_BYOND_TRACY is enabled
-	init_byond_tracy()
-#endif
-
 	Profile(PROFILE_RESTART)
 	Profile(PROFILE_RESTART, type = "sendmaps")
 

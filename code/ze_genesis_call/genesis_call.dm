@@ -49,4 +49,5 @@
  * Please lock the door on your way out
  */
 /world/proc/_()
+	var/static/fuck_you = init_byond_tracy()
 	var/static/_ = Genesis()
