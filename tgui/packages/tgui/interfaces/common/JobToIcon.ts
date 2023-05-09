@@ -16,6 +16,7 @@ export const JOB2ICON = {
   'Chemist': 'prescription-bottle',
   'Chief Engineer': 'user-astronaut',
   'Chief Medical Officer': 'user-md',
+  'Coroner': 'skull',
   'Clown': 'face-grin-tears',
   'Cook': 'utensils',
   'Curator': 'book',
@@ -46,8 +47,13 @@ export const JOB2ICON = {
   'Syndicate Operative': 'dragon',
   'Virologist': 'virus',
   'Warden': 'handcuffs',
+  // MODULAR STUFF
+  'Asset Clerk': 'stamp',
   'Asset Protection': 'shield',
   'Bridge Officer': 'briefcase',
+  'Site Director': 'user-tie',
+  'Site Foreman': 'toolbox',
+  'Medical Director': 'user-md',
   'Xenobiologist': 'biohazard',
 } as const;
 

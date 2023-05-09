@@ -4,7 +4,7 @@
 /obj/structure/closet/secure_closet/asset_protection
 	name = "\proper asset protection's locker"
 	req_access = list(ACCESS_AP)
-	icon = 'talestation_modules/icons/obj/locker.dmi'
+	icon = 'talestation_modules/icons/objects/locker.dmi'
 	icon_state = "ap"
 
 /obj/structure/closet/secure_closet/asset_protection/PopulateContents()
@@ -15,7 +15,7 @@
 	new /obj/item/storage/belt/security/full(src)
 	new /obj/item/storage/box/dept_armbands(src)
 	new /obj/item/gun/energy/e_gun(src)
-	new /obj/item/stamp/ap(src)
+	new /obj/item/stamp/head/ap(src)
 
 // Asset Protection album for their locker
 /obj/item/storage/photo_album/ap

@@ -62,3 +62,241 @@
   - balance: Mimes can no longer write on paper without breaking their vow.
   - spellcheck: Fixed Nanotrasen being miscapitalized in traitor posters, a drink,
       the ethereal lore, and some photocopier paperwork
+2023-05-03:
+  JohnFulpWillard:
+  - bugfix: Golems can redeem points through their ORM without an Ore silo.
+  Jolly-66:
+  - spellcheck: The names for the Captain, HoP, CE andd CMO job titles has been changed.
+  - spellcheck: They're now called Site Director, Asset Clerk, Site Foreman and Medical
+      Director.
+  - rscdel: Any mention of the previous titles should be removed from code. If you
+      see anything, say something!
+  TaleStationBot:
+  - bugfix: Style meter parrying works again
+  - bugfix: Style meter bar now works correctly with very high style point count
+  - bugfix: Electrolysis chemical reaction works with enriched liquid electricity
+  - bugfix: A Mix to Engine gas line has been added to Birdshot's atmospherics
+  - qol: The game now supports export of your preferences into a JSON file! The verb
+      (export-preferences) should now be available in the OOC tab of your stat-panel
+      if enabled by server operators.
+  - server: Exporting player preferences is controlled by a configuration option,
+      'FORBID_PREFERENCES_EXPORT'. If you do not wish to let clients access the ftp()
+      function to their own preferences file (probably for bandwidth reasons?) you
+      should uncomment this or add it to your config somehow.
+  - config: Server operators are also able to set the cooldown between requests to
+      download the JSON Preferences file via the 'SECONDS_COOLDOWN_FOR_PREFERENCES_EXPORT'
+      config option.
+  - rscadd: North Star's captain's office has been expanded! It now includes a sitting
+      area as well as a photocopier and some cigars.
+  - bugfix: Various minor changes in North Star
+  Tattle:
+  - sound: nerfed the police whistle volume
+  Thedragmeme:
+  - qol: 'Makes the Meta station kitchen not cramped anymore
+
+      :cl:'
+2023-05-04:
+  Melbert:
+  - bugfix: Stairs are now resistant to being shoved by mobs with high move force.
+  TaleStationBot:
+  - bugfix: fixed spiderlings speaking human instead of spider
+  - bugfix: prosthetic limb quirk will no longer display a prosthetic on your character
+      preview because it is buggy and hardly ever matches what you end up getting
+      upon spawning
+  - code_imp: removing the prosthetic limb quirk will restore your original limb
+  - spellcheck: BLOX is the name and posibrain is the game.
+  - bugfix: The acrade cabinet in North Star's departure lounge now works.
+  - spellcheck: The hallucinatory anomaly announcement is no longer missing words.
+  - rscadd: Damp rag and Money bag to service borg
+  - rscadd: Service borg upgrades, with accompanying tech web node
+  - rscadd: Sprites for kitchen toolset, and service apparatus
+  - balance: The RSF can print a few more things, paper cups, seaweed sheets, plates,
+      bowls, plastic cutlery and standard decks of cards.
+  - balance: 'Sugar moved from borgshaker to condiment synthesizer. Berry juice, cherry
+      jelly and vinegar added to borgshaker. balance: Both shaker and synthesizer
+      can also be adjusted to give 1 unit at time, so it goes 5, 10, 20 then 1, and
+      back around.'
+  - balance: Adds blood and Carpotoxin to the emagged borgshaker.
+  - bugfix: Money bag was missing a description, it now has one.
+  - bugfix: Fixed the Chef not having CQC outside the kitchen on Tramstation
+  - bugfix: Even more fixes to North Star decals and detailing
+  - bugfix: Removes player references.
+  - bugfix: Command can actually enter the AI SAT on the North Star.
+  - rscadd: The North Star AI SAT has been redone.
+  - balance: Meta lounge and theater are back to original sizes, art storage moved
+      to aux tools storage
+  - bugfix: birdshot cryo no longer needs medbay access to leave
+  - bugfix: Adds missing vendatray to Northstar, and removes the scrubber co2 infinate
+      loop
+  - qol: Health Analyzers now show embeds in bodyparts on examine.
+  - bugfix: Basic mobs will now be affected by explosions again.
+  Wallem:
+  - rscadd: The ancient recipe for the Death Sandwich has been rediscovered buried
+      in the deepest depths of an erupting volcano.
+  Zergspower:
+  - qol: Dangerous Research Ruin - Area redefines
+2023-05-05:
+  Jolly:
+  - rscadd: '[KiloStation] - The AP and BO associated stuff has been added.'
+  - rscadd: '[KiloStation] - Cryopods have been added.'
+  - rscadd: '[KiloStation] - Added Xenobiologist spawners.'
+  - bugfix: Spare codes should manifest once again.
+  Melbert:
+  - bugfix: Mime using captain's announcement visible message is correct
+  Rhials:
+  - bugfix: Powersinks no longer always show as being very hot if you're too close.
+  TaleStationBot:
+  - bugfix: Fixed math on cyborg restocking
+  - qol: borgs entering chargers now have the restocking feature enabled by default.
+      It can be disabled with a right-click while charging if you don't want to eat
+      the station's mats.
+  - balance: Borg restocking speed now scales with the charger's manipulator tier.
+  - refactor: Mineral costs have been reformatted to be scaled by the number of sheets,
+      darts, and small fractions they make up.
+  - qol: Foam darts no longer hold a fraction of a unit of iron within themselves.
+  - rscadd: miners with style meter can now parry kisses
+  - rscadd: Stowaway Changelings will now appear as a late join form of Changeling.
+  - bugfix: Mech chargers on Tram (and possibly elsewhere) no longer sync oddly.
+  - bugfix: a mob will now once again spill their organs when they are gibbed
+2023-05-06:
+  Jolly:
+  - bugfix: '[KiloStation] - The BO/AP can now access their office.'
+  - bugfix: '[KiloStation] - The electrified window in the BO/AP office is now electrified.'
+  Melbert:
+  - balance: Blind people don't get alerted when someone in a cardboard box pops out
+      nearby
+  - rscadd: ' Non-player references'
+  - bugfix: Tramstation Robotics and RD now spawn in their departments roundstart
+  - bugfix: Birdboat detective now spawns in their office
+  Rhials:
+  - qol: Observers now recieve an alert when a powersink is activated/about to explode.
+  - qol: His Grace being awoken now alerts observers, to give you a headstart on your
+      murderbone ghost ring.
+  - qol: Ascension Rituals being completed will also alert observers, for basically
+      the same reason.
+  - qol: Arming a hot potato will now alert observers. Catch!
+  - qol: Eyesnatcher victims will now notify observers, and invite them to laugh at
+      their state of misery and impotence.
+  - qol: Observers will be notified of any acute references to The Simpsons or other
+      20th Television America copyright properties.
+  - qol: Wizard Imposter spawns alert observers, much like any other ghost role event
+      should.
+  - qol: Playing Rock-Paper-Scissors with death will now alert the observers and invite
+      them to watch. Better not choke!
+  - qol: Observers now get an orbit link for BSA impact sites. Why does it keep teleporting
+      me to the AI upload??
+  - qol: Spontaneous Appendicitis now alerts deadchat.
+  - qol: The purchasing of a badass syndie balloon now alerts deadchat. You might
+      not be any more powerful, but at least you have an audience.
+  - qol: When beginning to delaminate, the Supermatter will alert observers and invite
+      them to watch the fireworks.
+  TaleStationBot:
+  - rscadd: Added wedding cakes
+  - qol: Trees, rocks, grass and etc. now drop materials when destroyed.
+  - bugfix: fixed unrefined ectoplasm anomaly cores not appearing as unrefined
+  - balance: Psyker Pirates are now Psyker Shikari (bounty hunters).
+  - bugfix: The hierophant club's sprite updates when it should
+  - bugfix: The hierophant club grants the blink action when summoned into hand
+  - qol: 'Mapping: Added broken machine map helper'
+  - qol: 'Mapping: Replaced damaged window spawner with a universal helper'
+  - balance: Tonguespike is better, chemspike deals slightly less damage
+2023-05-07:
+  JohnFulpWillard, sprites by McRamon, tattax, and Lamb:
+  - rscadd: The Coroner, a new Medical role revolving around dead corpses and autopsies.
+  - rscadd: The Coroner's Autopsy Scanner, used for discovering the cause for someone's
+      death, listing their wounds, the causes of them, their reagents, and diseases
+      (including stealth ones!)
+  - qol: Morgue Trays are now named after the bodybags inside of them.
+  - balance: The morgue now has 'Secure' morgue trays which by default don't beep.
+  - balance: Security Medical area and Robotics no longer have their own morgue trays.
+  - balance: Dissected bodies now have faster surgery speed. Autopsies also count
+      as dissections, however they're mutually exclusive.
+  Jolly:
+  - qol: Pain will now throw screen alerts to tell you that you're in some sort of
+      pain.
+  - rscadd: To observe, you now must have your flavor text set.
+  - config: Flavor text enforcement is now via config.
+  - config: Flavor text minimum character limit is now enforced via config.
+  - bugfix: '[LimaStation] - HoPs now have their stamps once again.'
+  - bugfix: The area icon for the evidence room should be visible in the map editor
+      again.
+  TaleStationBot:
+  - bugfix: The North Star's cargo shuttle has working conveyors.
+  - bugfix: The North Star has had a slew of missing and improperly done content added
+      and reworked, see the PR for more!
+  - bugfix: Tablets' minimize apps feature works again.
+  - qol: The Ice Box pharmacy and Med Sec Outpost blast doors have been replaced with
+      shutters.
+  - qol: Shuttles will no longer show their current destination as a choice while
+      in transit.
+2023-05-08:
+  LT3:
+  - qol: Ghosts will now get a notification when someone is about to be hit by the
+      tram
+  Melbert:
+  - bugfix: Fixed Prosthetic Quirk not removing the limb before giving the prosthetic
+  TaleStationBot:
+  - image: Holy arrows are now 15% less holy (You can no longer click on the 2-pixel
+      hole in the arrowhead and unintentionally click the object below the arrow instead.)
+  - refactor: converts the request console to tgui
+  - code_imp: Adds default multiplicative movespeed for basic mobs, to make them editable
+      in config
+  - config: Default multiplicative movespeed for basic mobs in example config
+  - rscadd: good tgui dropdowns
+  - rscdel: tgui dropdown suck
+  - qol: tgui dropdowns suck less
+  - balance: buffed tgui dropdowns
+  - bugfix: Paint cans have become limited use as intended by the gods of code
+  - bugfix: Clown borgs get unlimited paint, as a treat.
+  - bugfix: Stamina damage and healing now correctly applies movement slowdown
+  - bugfix: The chaplain's divine bow can now be renamed like all other null rod variants.
+2023-05-09:
+  Jacquerel with new icons mostly by INFRARED_BARON:
+  - balance: Golems have been reworked into a hunger-based species who gain temporary
+      transformations when eating different kinds of mineral.
+  - rscdel: The previous golem subtypes no longer exist.
+  Krysonism, Imaginos16, MTandi, san7890:
+  - image: updated smart fridge sprites for all variants
+  - bugfix: smart fridges no longer overlap with walls, but they can be welded down
+      to a floor and mapspawn welded
+  Melbert:
+  - rscdel: You can't get an Elite Syndie Modsuit (or combat defib, or dart pistol)
+      from Space Ruins
+  TaleStationBot:
+  - bugfix: Loose limbs will not duplicate organs anymore
+  - rscadd: adds coroner's jumpsuit and jumpskirt to the mortidrobe
+  - rscadd: black scrub cap to the mortidrobe
+  - rscadd: adds coroner medkit, and it's compact variant, for storing coroner job
+      gear
+  - spellcheck: fixed a punctuation error in the surgical medkit description
+  - bugfix: adds orm access to the chaplain, curator, clown, mime, lawyer, and psychologist
+  - bugfix: runtime when toggling engineering meson scanners
+  - image: added single tank bomb guide contraband poster
+  - bugfix: deleted unused airlock helper from syn-c brutus.
+  - bugfix: The All-American Diner no longer requires a bunker ID card for most rooms
+      nor requires accesses to use the jukebox.
+  - bugfix: The All-American Diner's external airlocks now all work together.
+  - image: Stock parts have been resprited.
+  - code_imp: Manipulators have been renamed to servo motors, all related types have
+      been repathed to match.
+  - bugfix: Organ harvester board drops on deconstruct.
+  - bugfix: new hotkeys unbound by default (like emotes) no longer scream at you when
+      added
+  - bugfix: The psyker shuttle now has a suit for the psyker seer.
+  - image: The Mosin and Prime Nagants have been resprited.
+  - rscadd: Access secured closets. Personal closets can have their access overwritten
+      by an new id in it's unlocked state
+  - rscadd: Access secured freezers.
+  - rscadd: Access secured suit storage units.
+  - bugfix: Suit storage unit not having access restrictions.
+  - bugfix: airlock electronics not properly getting removed after screwing them out
+      from round start lockers
+  - bugfix: round spawned open crates run timing when closed
+  - bugfix: open crates hiding stuff in plain sight
+  - bugfix: open closets/crates sucking up contents during late initialize causing
+      them appear empty & open
+  - qol: Deleted unnecessary text from description of supply pod beacon.
+  - bugfix: Fixes the orm board in the golem ship being the wrong subtype
+  - bugfix: Bluespace sender and vendor should display colors correctly now
+  - bugfix: Gas filter should show labels properly now
+  - bugfix: Nitrium now has its own gas color in the UI
