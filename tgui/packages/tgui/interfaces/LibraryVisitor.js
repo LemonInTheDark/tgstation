@@ -55,6 +55,7 @@ const SearchAndDisplay = (props, context) => {
   const {
     can_db_request,
     categories = [],
+    book_id,
     title,
     category,
     author,
@@ -73,6 +74,19 @@ const SearchAndDisplay = (props, context) => {
       <Stack justify="space-between">
         <Stack.Item pb={0.6}>
           <Stack>
+            <Stack.Item>
+              <Input
+                value={book_id}
+                placeholder={book_id === null ? "ID" : book_id}
+                mt={0.5}
+                width="70px"
+                onChange={(e, value) =>
+                  act('set_search_id', {
+                    id: value,
+                  })
+                }
+              />
+            </Stack.Item>
             <Stack.Item>
               <Dropdown
                 options={categories}
