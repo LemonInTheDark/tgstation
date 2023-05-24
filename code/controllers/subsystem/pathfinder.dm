@@ -39,8 +39,16 @@ SUBSYSTEM_DEF(pathfinder)
 		currentrun.len--
 
 /// Initiates a pathfind. Returns true if we're good, FALSE if something's failed
-/datum/controller/subsystem/pathfinder/proc/pathfind(atom/movable/caller, atom/end, max_distance = 30, mintargetdist, id=null, simulated_only = TRUE, turf/exclude, skip_first=TRUE, diagonal_safety=TRUE, datum/callback/on_finish)
-	var/datum/pathfind/path = new(caller, end, id, max_distance, mintargetdist, simulated_only, exclude, skip_first, diagonal_safety, on_finish)
+/datum/controller/subsystem/pathfinder/proc/pathfind(atom/movable/caller, atom/end, max_distance = 30, mintargetdist, access=list(), simulated_only = TRUE, turf/exclude, skip_first=TRUE, diagonal_handling=DIAGONAL_REMOVE_CLUNKY, datum/callback/on_finish)
+	var/datum/pathfind/jps/path = new(caller, access, max_distance, simulated_only, exclude, on_finish, end, mintargetdist, skip_first, diagonal_handling)
+	if(path.start())
+		active_pathing += path
+		return TRUE
+	return FALSE
+
+/// Initiates a SSSP run. Returns true if we're good, FALSE if something's failed
+/datum/controller/subsystem/pathfinder/proc/build_map(atom/movable/caller, max_distance = 30, access=list(), simulated_only = TRUE, turf/exclude, datum/callback/on_finish)
+	var/datum/pathfind/sssp/path = new(caller, access, max_distance, simulated_only, exclude, on_finish)
 	if(path.start())
 		active_pathing += path
 		return TRUE

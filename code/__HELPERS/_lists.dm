@@ -746,7 +746,6 @@
 
 	return inserted_list
 
-
 ///return first thing in L which has var/varname == value
 ///this is typecaste as list/L, but you could actually feed it an atom instead.
 ///completely safe to use
