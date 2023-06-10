@@ -1,6 +1,12 @@
 //config files
-#define CONFIG_GET(X) global.config.Get(/datum/config_entry/##X)
-#define CONFIG_SET(X, Y) global.config.Set(/datum/config_entry/##X, ##Y)
+// we use compile time work here to ensure we check everything at load, rather then now at read
+// doesn't work :(
+#define CONFIG_GET(X) (global.config.entries_by_type[/datum/config_entry/##X]:config_entry_value; {/datum/config_entry/##X{read_by_code = TRUE}})
+#define CONFIG_SET(X, Y) \
+	global.config.entries_by_type[/datum/config_entry/##X]:ValidateAndSet(##Y); \
+	/datum/config_entry/##X{modified_by_code = TRUE};
+
+#define CONFIG_GET(X) (...; {/datum/config_entry/##X{read_by_code = TRUE}})
 
 #define CONFIG_MAPS_FILE "maps.txt"
 

@@ -143,6 +143,10 @@
 	for(var/I in typesof(/datum/config_entry)) //typesof is faster in this case
 		var/datum/config_entry/E = I
 		if(initial(E.abstract_type) == I)
+			if(initial(E.read_by_code))
+				stack_trace("Config [E] is abstract, but is read by CONFIG_GET somewhere")
+			if(initial(E.modified_by_code))
+				stack_trace("Config [E] is abstract, but is modified by CONFIG_SET somewhere")
 			continue
 		E = new I
 		var/esname = E.name

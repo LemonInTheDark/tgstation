@@ -22,6 +22,12 @@
 	/// Stores the original protection configuration, used for set_default()
 	var/default_protection
 
+	// Metadata about how this datum is used at compile time
+	/// If we are read by CONFIG_GET somewhere
+	var/read_by_code = FALSE
+	/// If we are modified by CONFIG_SET somewhere
+	var/modified_by_code = FALSE
+
 /datum/config_entry/New()
 	if(type == abstract_type)
 		CRASH("Abstract config entry [type] instatiated!")
