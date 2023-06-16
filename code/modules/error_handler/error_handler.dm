@@ -1,5 +1,75 @@
 GLOBAL_VAR_INIT(total_runtimes, GLOB.total_runtimes || 0)
 GLOBAL_VAR_INIT(total_runtimes_skipped, 0)
+// We get 30 lines of name text before byond cuts us off
+// This needs to be short, but unique (with space for 8 chars to hold up to SHORT_REAL_LIMIT)
+// So 22 chars. this is 21 for safety
+#define EXCEPTION_SPECIAL_TEXT "___shr_cmx_ext_hdr___"
+/// Max length of a name before byond cuts it off
+#define BYOND_ERROR_HANDLING_NAME_LIMIT 30
+
+/// For when you want to embed extra text about a /datum (won't work for atoms because we care about their name) in a stack trace
+/// Keyed with a bit of text to replace (typically stored in the name), maps to a weakref to the datum to call render_for_errors() on
+GLOBAL_LIST_EMPTY(exception_extensions)
+
+/// Takes a datum to add runtime rendering for
+/// Datum subtype MUST implement var/name as an untouched var, or this will not work at all
+/proc/mark_complex_exception(datum/wants_more)
+	var/static/uid = 1
+	var/static/looped = FALSE
+
+	if(looped)
+		var/found_something = FALSE
+		for(var/i in 1 to 1000) // You get 1k tries at finding an unused uid, assuming we've looped around after a few hours
+			uid = WRAP(uid+1, 1, SHORT_REAL_LIMIT - 1)
+			var/text = "[EXCEPTION_SPECIAL_TEXT][uid]"
+			var/datum/weakref/existing = GLOB.exception_extensions[text]
+			if(!existing?.hard_resolve()) // We've found an unused slot, take it
+				found_something = TRUE
+				break
+		if(!found_something)
+			return
+	else
+		if(uid >= SHORT_REAL_LIMIT - 1)
+			uid = 1
+			looped = TRUE
+		else
+			uid += 1
+	var/text = "[EXCEPTION_SPECIAL_TEXT][uid]"
+#ifdef UNIT_TESTS
+	if(length(text) > BYOND_ERROR_HANDLING_NAME_LIMIT)
+		stack_trace("[text], the uid for [wants_more.type]'s error rendering, was larger then byond's name limit ([BYOND_ERROR_HANDLING_NAME_LIMIT])")
+		return
+	if(length(EXCEPTION_SPECIAL_TEXT + SHORT_REAL_LIMIT))
+		stack_trace("Our largest assumed uid is too large for ")
+#endif
+	wants_more:name = text
+	GLOB.exception_extensions[text] = WEAKREF(wants_more)
+
+/// Clears awaya complex exception, takes either a datum or the string key we were using
+/// Again the datum must implement var/name or this WILL error
+/proc/clear_complex_exception(remove)
+	var/text = remove
+	if(isdatum(remove))
+		var/datum/datum_remove = remove
+		text = datum_remove:name
+
+	GLOB.exception_extensions -= text
+
+/proc/process_complex_exceptions(text_to_render)
+	var/static/regex/exception_lookup_regex = new("[EXCEPTION_SPECIAL_TEXT]\[0-9\]*", "g")
+	// Passing a proc into a regex replace call will call it with each match, and replace with its return value
+	return exception_lookup_regex.Replace(text_to_render, GLOBAL_PROC_REF(replace_text))
+
+/// Takes text to replace, returns the replacement text
+/proc/replace_text(key)
+	var/datum/weakref/resolve_ref = GLOB.exception_extensions[key]
+	if(!resolve_ref)
+		return "{FULLY_DELETED_OBJECT}"
+	// Hard resolve because I need this to work during destroys and such. DO NOT COPY THIS IS VERY SPOOKY
+	var/datum/pull_from = resolve_ref.hard_resolve() // I mean it you fuck
+	if(!pull_from)
+		return "{FULLY_DELETED_OBJECT}"
+	return pull_from.render_for_errors()
 
 #ifdef USE_CUSTOM_ERROR_HANDLER
 #define ERROR_USEFUL_LEN 2
@@ -29,6 +99,9 @@ GLOBAL_VAR_INIT(total_runtimes_skipped, 0)
 	var/static/list/error_last_seen = list()
 	var/static/list/error_cooldown = list() /* Error_cooldown items will either be positive(cooldown time) or negative(silenced error)
 												If negative, starts at -1, and goes down by 1 each time that error gets skipped*/
+	// At the first safe oppertunity, we're gonna process the name/desc of the exception and replace out any complex exceptions
+	E.name = process_complex_exceptions(E.name)
+	E.desc = process_complex_exceptions(E.desc)
 
 	if(!error_last_seen) // A runtime is occurring too early in start-up initialization
 		return ..()
@@ -130,5 +203,9 @@ GLOBAL_VAR_INIT(total_runtimes_skipped, 0)
 	// This writes the regular format (unwrapping newlines and inserting timestamps as needed).
 	log_runtime("runtime error: [E.name]\n[E.desc]")
 #endif
+
+/// Describes how this datum should render when embedded in an error, assuming it has an id stored in GLOB.exception_extensions
+/datum/proc/render_for_errors()
+	return ""
 
 #undef ERROR_USEFUL_LEN
