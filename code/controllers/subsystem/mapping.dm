@@ -104,7 +104,7 @@ SUBSYSTEM_DEF(mapping)
 		var/old_config = config
 		config = global.config.defaultmap
 		if(!config || config.defaulted)
-			to_chat(world, span_boldannounce("Unable to load next or default map config, defaulting to Meta Station."))
+			to_chat(world, span_boldannounce("Unable to load next or default map config, defaulting to MetaStation."))
 			config = old_config
 	plane_offset_to_true = list()
 	true_to_offset_planes = list()
@@ -206,13 +206,11 @@ SUBSYSTEM_DEF(mapping)
 	if(multiz_levels.len < z_level)
 		multiz_levels.len = z_level
 
-	var/linked_down = level_trait(z_level, ZTRAIT_DOWN)
-	var/linked_up = level_trait(z_level, ZTRAIT_UP)
-	multiz_levels[z_level] = list()
-	if(linked_down)
-		multiz_levels[z_level]["[DOWN]"] = TRUE
-	if(linked_up)
-		multiz_levels[z_level]["[UP]"] = TRUE
+	if(level_trait(z_level, ZTRAIT_UP) != TRUE || level_trait(z_level, ZTRAIT_DOWN) != TRUE)
+		stack_trace("Warning, numeric mapping offsets are deprecated. Instead, mark z level connections by setting UP/DOWN to true if the connection is allowed")
+	multiz_levels[z_level] = new /list(LARGEST_Z_LEVEL_INDEX)
+	multiz_levels[z_level][Z_LEVEL_UP] = !!level_trait(z_level, ZTRAIT_UP)
+	multiz_levels[z_level][Z_LEVEL_DOWN] = !!level_trait(z_level, ZTRAIT_DOWN)
 
 /datum/controller/subsystem/mapping/proc/calculate_z_level_gravity(z_level_number)
 	if(!isnum(z_level_number) || z_level_number < 1)
@@ -814,7 +812,7 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 	var/list/datum/space_level/levels_checked = list()
 	do
 		current_level += 1
-		current_z += below_offset
+		current_z -= 1
 		z_level_to_plane_offset[current_z] = current_level
 		var/datum/space_level/next_level = z_list[current_z]
 		below_offset = next_level.traits[ZTRAIT_DOWN]
