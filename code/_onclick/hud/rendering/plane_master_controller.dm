@@ -16,19 +16,14 @@ INITIALIZE_IMMEDIATE(/atom/movable/plane_master_controller)
 		return
 	owner_hud = hud
 
+#warn todo: handle planes leaving/joining the mob's view
 /atom/movable/plane_master_controller/proc/get_planes()
-	var/returned_planes = list()
-	for(var/true_plane in controlled_planes)
-		returned_planes += get_true_plane(true_plane)
-	return returned_planes
-
-/atom/movable/plane_master_controller/proc/get_true_plane(true_plane)
-	var/list/returned_planes = owner_hud.get_true_plane_masters(true_plane)
-	if(!length(returned_planes)) //If we looked for a hud that isn't instanced, just keep going
-		stack_trace("[plane] isn't a valid plane master layer for [owner_hud.type], are you sure it exists in the first place?")
-		return
-
-	return returned_planes
+	// This loop exists JUST as a sanity check. If it ever gets too expensive, yeet it
+	for(var/controlled in controlled_planes)
+		if(!length(owner_hud.get_true_plane_masters(controlled))) //If we looked for a hud that isn't instanced, just keep going
+			stack_trace("[controlled] isn't a valid plane master value for [owner_hud.type], are you sure it exists in the first place?")
+			return
+	return owner_hud.get_highest_true_planes(controlled_planes)
 
 ///Full override so we can just use filterrific
 /atom/movable/plane_master_controller/add_filter(name, priority, list/params)
@@ -54,10 +49,17 @@ INITIALIZE_IMMEDIATE(/atom/movable/plane_master_controller)
 		. += pm_iterator.get_filter(name)
 
 ///Transitions all filters owned by this plane master controller
-/atom/movable/plane_master_controller/transition_filter(name, time, list/new_params, easing, loop)
+/atom/movable/plane_master_controller/transition_filter(name, list/new_params, time, easing, loop)
 	. = ..()
 	for(var/atom/movable/screen/plane_master/pm_iterator as anything in get_planes())
 		pm_iterator.transition_filter(name, new_params, time, easing, loop)
+
+///Adds a filter if one does not already exist
+/atom/movable/plane_master_controller/proc/add_if_no_filter(name, priority, list/params)
+	for(var/atom/movable/screen/plane_master/pm_iterator as anything in get_planes())
+		if(pm_iterator.get_filter(name))
+			continue
+		pm_iterator.add_filter(name, priority, params)
 
 ///Full override so we can just use filterrific
 /atom/movable/plane_master_controller/add_atom_colour(coloration, colour_priority)

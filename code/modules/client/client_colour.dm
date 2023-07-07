@@ -131,20 +131,35 @@
 /mob/proc/update_client_colour()
 	if(!client)
 		return
-	client.color = ""
+	deltimer(client_color_clear_timer)
+	client_color_clear_timer = null
+	var/atom/movable/plane_master_controller/game_plane_master_controller = hud_used.plane_master_controllers[PLANE_MASTERS_GAME]
 	if(!client_colours.len)
+		game_plane_master_controller.remove_filter("client_color")
 		return
-	MIX_CLIENT_COLOUR(client.color)
+	MIX_CLIENT_COLOUR(var/output_color)
+	game_plane_master_controller.add_filter("client_color", 1, color_matrix_filter(output_color))
 
 ///Works similarly to 'update_client_colour', but animated.
-/mob/proc/animate_client_colour(anim_time = 20, anim_easing = 0)
+/mob/proc/animate_client_colour(anim_time = 20, anim_easing = NONE)
 	if(!client)
 		return
+	var/atom/movable/plane_master_controller/game_plane_master_controller = hud_used.plane_master_controllers[PLANE_MASTERS_GAME]
 	if(!client_colours.len)
-		animate(client, color = "", time = anim_time, easing = anim_easing)
+		game_plane_master_controller.transition_filter("client_color", color_matrix_filter(""), time = anim_time, easing = anim_easing)
+		client_color_clear_timer = addtimer(CALLBACK(src, PROC_REF(clear_world_color)), anim_time, TIMER_UNIQUE|TIMER_STOPPABLE|TIMER_OVERRIDE)
 		return
+	deltimer(client_color_clear_timer)
+	client_color_clear_timer = null
+
 	MIX_CLIENT_COLOUR(var/anim_colour)
-	animate(client, color = anim_colour, time = anim_time, easing = anim_easing)
+	game_plane_master_controller.add_if_no_filter("client_color", 1, color_matrix_filter(""))
+	game_plane_master_controller.transition_filter("client_color", color_matrix_filter(anim_colour), time = anim_time, easing = anim_easing)
+
+/mob/proc/clear_world_color()
+	var/atom/movable/plane_master_controller/game_plane_master_controller = hud_used.plane_master_controllers[PLANE_MASTERS_GAME]
+	client_color_clear_timer = null
+	game_plane_master_controller.remove_filter("client_color")
 
 #undef MIX_CLIENT_COLOUR
 

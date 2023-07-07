@@ -12,7 +12,7 @@
 	screen_loc = "CENTER"
 	layer = -1
 	plane = 0
-	appearance_flags = PASS_MOUSE | NO_CLIENT_COLOR | KEEP_TOGETHER
+	appearance_flags = PASS_MOUSE | KEEP_TOGETHER
 	/// If we render into a critical plane master, or not
 	var/critical_target = FALSE
 
@@ -102,7 +102,7 @@
 	name = "Game world plate"
 	documentation = "Contains most of the objects in the world. Mobs, machines, etc. Note the drop shadow, it gives a very nice depth effect."
 	plane = RENDER_PLANE_GAME_WORLD
-	appearance_flags = PLANE_MASTER //should use client color
+	appearance_flags = PLANE_MASTER
 	blend_mode = BLEND_OVERLAY
 
 /atom/movable/screen/plane_master/rendering_plate/game_world/show_to(mob/mymob)
@@ -219,7 +219,7 @@
 		<br>A color matrix filter is applied to the emissive plane to mask out anything that isn't whatever the emissive color is.\
 		<br>This is then used to alpha mask the lighting plane."
 	plane = EMISSIVE_RENDER_PLATE
-	appearance_flags = PLANE_MASTER|NO_CLIENT_COLOR
+	appearance_flags = PLANE_MASTER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	render_target = EMISSIVE_RENDER_TARGET
 	render_relay_planes = list()
@@ -239,7 +239,7 @@
 		<br>If we ever switch to a sight setup that shows say, mobs but not floors, we instead mask just overlay lighting and emissives.\
 		<br>This avoids dumb seethrough without breaking stuff like thermals."
 	plane = LIGHT_MASK_PLANE
-	appearance_flags = PLANE_MASTER|NO_CLIENT_COLOR
+	appearance_flags = PLANE_MASTER
 	// Fullwhite where there's anything, no color otherwise
 	color = list(255,255,255,255, 255,255,255,255, 255,255,255,255, 255,255,255,255, 0,0,0,0)
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT

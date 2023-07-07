@@ -205,6 +205,8 @@
 	var/list/alerts = list()
 	var/list/screens = list()
 	var/list/client_colours = list()
+	// ID of a timer that clears away our world color matrix
+	var/client_color_clear_timer = null
 	var/hud_type = /datum/hud
 
 	var/datum/focus //What receives our keyboard inputs. src by default

@@ -164,6 +164,43 @@
 
 		animate(plane, transform = offsets[visual_offset + offset_offset], 0.05 SECONDS, easing = LINEAR_EASING)
 
+#warn todo: make this event based, potentially? use it for the plane debugger tree? maybe?
+/// Takes our plane masters, builds out a graph (list of plane -> list(parent, ...)) that represents all its connections
+/datum/plane_master_group/proc/build_plane_graph()
+	// List of plane -> list(parents), what we'll end up returning
+	var/list/plane_to_parents = list()
+	// List of filters to resolve (filters go from target to parent, so we can't handle them until we've walked all planes and fully populated render_target_to_plane)
+	var/list/filter_queue = list()
+	// Assoc of render targets -> planes
+	// Gotta be able to look these up so filter stuff can work
+	var/list/render_target_to_plane = list()
+	for(var/plane_string as anything in plane_masters)
+		var/atom/movable/screen/plane_master/plane = plane_masters[plane_string]
+		var/string_plane = "[plane.plane]"
+
+		// You can think of relays as connections between plane master "nodes
+		// They do have some info of their own tho, best to pass that along
+		for(var/atom/movable/render_plane_relay/relay in plane.relays)
+			plane_to_parents[string_plane] += list("[relay.plane]")
+
+		// We're gonna collect a list of filters because they can be used as connections, and we need to count that
+		for(var/filter_id in plane.filter_data)
+			var/list/filter = plane.filter_data[filter_id]
+			if(!filter["render_source"])
+				continue
+			var/list/filter_info = list()
+			filter_info["render_source"] = filter["render_source"]
+			filter_info["target_ref"] = string_plane
+			filter_queue += list(filter_info)
+
+		render_target_to_plane[plane.render_target] = string_plane
+
+	for(var/list/filter in filter_queue)
+		var/source_plane = render_target_to_plane[filter["render_source"]]
+		plane_to_parents[source_plane] += list(filter["target_ref"])
+
+	return plane_to_parents
+
 /// Holds plane masters for popups, like camera windows
 /// Note: We do not scale this plane, even though we could
 /// This is because it's annoying to get turfs to position inside it correctly

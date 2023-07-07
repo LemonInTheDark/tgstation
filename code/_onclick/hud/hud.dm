@@ -262,6 +262,39 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 		masters += get_plane_master(plane, group_key)
 	return masters
 
+#warn todo: add filtering for acceptable blendmodes/filters
+/// Returns a list of all plane masters that match the input true planes list AND are the highest of their type in their plane stack
+/datum/hud/proc/get_highest_true_planes(list/true_planes, group_key = PLANE_GROUP_MAIN)
+	// Ok so we're gonna need a tree of plane masters for this
+	var/datum/plane_master_group/group = get_plane_group(group_key)
+	var/list/plane_graph = group.build_plane_graph()
+	var/list/plane_masters = get_planes_from(group_key)
+
+	var/list/start_points = list()
+	for(var/base_plane in true_planes)
+		for(var/plane in TRUE_PLANE_TO_OFFSETS(base_plane))
+			start_points["[plane]"] = TRUE // Assoc lookup do be faster then O(n)
+	// Gonna take our start points and walk up their parents until we hit another start point
+	// If none is found, we mark ourselves as a highest, and continue on
+	var/list/highest_points = list()
+	for(var/point in start_points)
+		var/queue = list()
+		queue += plane_graph[point]
+		var/highest_found = TRUE
+		for(var/i = 1; i <= length(queue); i++)
+			var/next_plane = queue[i]
+			if(!next_plane)
+				break
+			if(start_points[next_plane]) // If there's a start point above us, go home
+				highest_found = FALSE
+				break
+			queue += plane_graph[next_plane]
+		if(!highest_found)
+			break
+		highest_points += plane_masters[point]
+
+	return highest_points
+
 /// Returns all the planes belonging to the passed in group key
 /datum/hud/proc/get_planes_from(group_key)
 	var/datum/plane_master_group/group = master_groups[group_key]

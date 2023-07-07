@@ -181,11 +181,7 @@
 			if(existing_target)
 				existing_target["incoming_relays"] += relay_ref
 			else
-				var/list/pending_plane = pending_relays[string_target]
-				if(!pending_plane)
-					pending_plane = list()
-					pending_relays[string_target] = pending_plane
-				pending_plane += relay_ref
+				pending_relays[string_target] += list(relay_ref)
 
 		this_plane["incoming_filters"] = list()
 		this_plane["outgoing_filters"] = list()
