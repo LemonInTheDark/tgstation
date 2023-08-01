@@ -5,24 +5,32 @@
 	lighting_corner_SW?.vis_update()
 	lighting_corner_NW?.vis_update()
 
-/turf/proc/lighting_clear_overlay()
-	if (lighting_object)
-		qdel(lighting_object, force=TRUE)
-
-// Builds a lighting object for us, but only if our area is dynamic.
-/turf/proc/lighting_build_overlay()
-	if (lighting_object)
-		qdel(lighting_object, force=TRUE) //Shitty fix for lighting objects persisting after death
-
-	new /atom/movable/lighting_object(src)
+/// called to refresh our luminosity (based off area/lighting corners)
+/turf/proc/calc_lumin()
+	var/largest_lumin = max(
+		lighting_corner_NE?.largest_color_luminosity,
+		lighting_corner_SE?.largest_color_luminosity,
+		lighting_corner_SW?.largest_color_luminosity,
+		lighting_corner_NW?.largest_color_luminosity
+		)
+	#if LIGHTING_SOFT_THRESHOLD != 0
+	var/set_luminosity = largest_lumin > LIGHTING_SOFT_THRESHOLD
+	#else
+	// Because of floating points™?, it won't even be a flat 0.
+	// This number is mostly arbitrary.
+	var/set_luminosity = largest_lumin > 1e-6
+	#endif
+	if(set_luminosity)
+		luminosity = 1
+	else
+		luminosity = 0
 
 // Used to get a scaled lumcount.
 /turf/proc/get_lumcount(minlum = 0, maxlum = 1)
-	if (!lighting_object)
-		return 1
+	#warn handle being arealit
 
 	var/totallums = 0
-	var/datum/lighting_corner/L
+	var/atom/movable/lighting_corner/L
 	L = lighting_corner_NE
 	if (L)
 		totallums += L.lum_r + L.lum_b + L.lum_g
@@ -50,8 +58,7 @@
 // itself as too dark to allow sight and see_in_dark becomes useful.
 // So basically if this returns true the tile is unlit black.
 /turf/proc/is_softly_lit()
-	if (!lighting_object)
-		return FALSE
+	#warn handle being arealit
 
 	return !(luminosity || dynamic_lumcount)
 
@@ -93,13 +100,6 @@
 
 ///Transfer the lighting of one area to another
 /turf/proc/transfer_area_lighting(area/old_area, area/new_area)
-	if(SSlighting.initialized && !space_lit)
-		if (new_area.static_lighting != old_area.static_lighting)
-			if (new_area.static_lighting)
-				lighting_build_overlay()
-			else
-				lighting_clear_overlay()
-
 	// We will only run this logic on turfs off the prime z layer
 	// Since on the prime z layer, we use an overlay on the area instead, to save time
 	if(SSmapping.z_level_to_plane_offset[z])

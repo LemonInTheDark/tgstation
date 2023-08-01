@@ -6,7 +6,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 
 /turf/proc/empty(turf_type=/turf/open/space, baseturf_type, list/ignore_typecache, flags)
 	// Remove all atoms except observers, landmarks, docking ports
-	var/static/list/ignored_atoms = typecacheof(list(/mob/dead, /obj/effect/landmark, /obj/docking_port, /atom/movable/lighting_object))
+	var/static/list/ignored_atoms = typecacheof(list(/mob/dead, /obj/effect/landmark, /obj/docking_port, /atom/movable/lighting_corner))
 	var/list/allowed_contents = typecache_filter_list_reverse(get_all_contents_ignoring(ignore_typecache), ignored_atoms)
 	allowed_contents -= src
 	for(var/i in 1 to allowed_contents.len)
@@ -69,7 +69,6 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 	if(flags & CHANGETURF_SKIP)
 		return new path(src)
 
-	var/old_lighting_object = lighting_object
 	var/old_lighting_corner_NE = lighting_corner_NE
 	var/old_lighting_corner_SE = lighting_corner_SE
 	var/old_lighting_corner_SW = lighting_corner_SW
@@ -137,15 +136,7 @@ GLOBAL_LIST_INIT(blacklisted_automated_baseturfs, typecacheof(list(
 
 	if(SSlighting.initialized)
 		// Space tiles should never have lighting objects
-		if(!space_lit)
-			if(old_lighting_object)
-				lighting_object = old_lighting_object
-			// Should have a lighting object if we never had one
-			else
-				new /atom/movable/lighting_object(src)
-		else if (old_lighting_object)
-			qdel(old_lighting_object, force = TRUE)
-
+#warn how to handle
 		directional_opacity = old_directional_opacity
 		recalculate_directional_opacity()
 

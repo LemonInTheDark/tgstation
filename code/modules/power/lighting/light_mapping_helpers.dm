@@ -10,6 +10,21 @@
 /obj/machinery/light/no_nightlight
 	nightshift_enabled = FALSE
 
+/obj/machinery/light/flashing
+
+GLOBAL_VAR_INIT(light_flash_delay, 0.5 SECONDS)
+/obj/machinery/light/flashing/Initialize(mapload)
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(flash_off)), GLOB.light_flash_delay)
+
+/obj/machinery/light/flashing/proc/flash_off()
+	set_light(l_range = brightness * 0.3)
+	addtimer(CALLBACK(src, PROC_REF(flash_on)), GLOB.light_flash_delay)
+
+/obj/machinery/light/flashing/proc/flash_on()
+	set_light(l_range = brightness)
+	addtimer(CALLBACK(src, PROC_REF(flash_off)), GLOB.light_flash_delay)
+
 /obj/machinery/light/warm
 	bulb_colour = "#fae5c1"
 

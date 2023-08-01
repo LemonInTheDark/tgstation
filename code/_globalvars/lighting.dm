@@ -76,6 +76,11 @@ GLOBAL_LIST_INIT_TYPED(light_types, /datum/light_template, generate_light_types(
 	category = "Bar"
 	path_to_read = /obj/machinery/light
 
+/datum/light_template/read_light/flashing_light
+	name = "Flashing Light"
+	category = "Bar"
+	path_to_read = /obj/machinery/light/flashing
+
 /datum/light_template/read_light/warm_bar
 	name = "Warm Bar"
 	category = "Bar"

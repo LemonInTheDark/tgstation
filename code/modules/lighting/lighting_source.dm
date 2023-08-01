@@ -40,7 +40,7 @@
 	var/tmp/applied_lum_b
 
 	/// List used to store how much we're affecting corners.
-	var/list/datum/lighting_corner/effect_str
+	var/list/atom/movable/lighting_corner/effect_str
 
 	/// Whether we have applied our light yet or not.
 	var/applied = FALSE
@@ -177,8 +177,8 @@
 	var/_applied_lum_b = lighting_source.applied_lum_b;
 
 // Read out of our sources light sheet, a map of offsets -> the luminosity to use
-#define LUM_FALLOFF(C) _sheet[C.x - _turf_x + _range_offset][C.y  - _turf_y + _range_offset]
-#define LUM_FALLOFF_MULTIZ(C) _multiz_sheet[C.z - _turf_z + _multiz_offset][C.x - _turf_x + _range_offset][C.y - _turf_y + _range_offset]
+#define LUM_FALLOFF(C) _sheet[C.real_x - _turf_x + _range_offset][C.real_y  - _turf_y + _range_offset]
+#define LUM_FALLOFF_MULTIZ(C) _multiz_sheet[C.real_z - _turf_z + _multiz_offset][C.real_x - _turf_x + _range_offset][C.real_y - _turf_y + _range_offset]
 
 // Macro that applies light to a new corner.
 // It is a macro in the interest of speed, yet not having to copy paste it.
@@ -324,13 +324,13 @@
 /datum/light_source/proc/remove_lum()
 	SETUP_CORNERS_REMOVAL_CACHE(src)
 	applied = FALSE
-	for (var/datum/lighting_corner/corner as anything in effect_str)
+	for (var/atom/movable/lighting_corner/corner as anything in effect_str)
 		REMOVE_CORNER(corner)
 		LAZYREMOVE(corner.affecting, src)
 
 	effect_str = null
 
-/datum/light_source/proc/recalc_corner(datum/lighting_corner/corner)
+/datum/light_source/proc/recalc_corner(atom/movable/lighting_corner/corner)
 	SETUP_CORNERS_CACHE(src)
 	LAZYINITLIST(effect_str)
 	if (effect_str[corner]) // Already have one.
@@ -344,16 +344,16 @@
 // Keep in mind. Lighting corners accept the bottom left (northwest) set of cords to them as input
 #define GENERATE_MISSING_CORNERS(gen_for)                                                                 \
 	if (!gen_for.lighting_corner_NE) {                                                                    \
-		gen_for.lighting_corner_NE = new /datum/lighting_corner(gen_for.x, gen_for.y, gen_for.z);         \
+		gen_for.lighting_corner_NE = new /atom/movable/lighting_corner(gen_for, gen_for.x, gen_for.y, gen_for.z);         \
 	}                                                                                                     \
 	if (!gen_for.lighting_corner_SE) {                                                                    \
-		gen_for.lighting_corner_SE = new /datum/lighting_corner(gen_for.x, gen_for.y - 1, gen_for.z);     \
+		gen_for.lighting_corner_SE = new /atom/movable/lighting_corner(gen_for, gen_for.x, gen_for.y - 1, gen_for.z);     \
 	}                                                                                                     \
 	if (!gen_for.lighting_corner_SW) {                                                                    \
-		gen_for.lighting_corner_SW = new /datum/lighting_corner(gen_for.x - 1, gen_for.y - 1, gen_for.z); \
+		gen_for.lighting_corner_SW = new /atom/movable/lighting_corner(gen_for, gen_for.x - 1, gen_for.y - 1, gen_for.z); \
 	}                                                                                                     \
 	if (!gen_for.lighting_corner_NW) {                                                                    \
-		gen_for.lighting_corner_NW = new /datum/lighting_corner(gen_for.x - 1, gen_for.y, gen_for.z);     \
+		gen_for.lighting_corner_NW = new /atom/movable/lighting_corner(gen_for, gen_for.x - 1, gen_for.y, gen_for.z);     \
 	}                                                                                                     \
 	gen_for.lighting_corners_initialised = TRUE;
 
@@ -449,7 +449,7 @@
 
 /// Returns a list of lighting corners this source impacts
 /datum/light_source/proc/impacted_corners()
-	var/list/datum/lighting_corner/corners = list()
+	var/list/atom/movable/lighting_corner/corners = list()
 	if (!source_turf)
 		return list()
 
@@ -503,19 +503,19 @@
 	if(!refresh_values())
 		return
 
-	var/list/datum/lighting_corner/corners = impacted_corners()
+	var/list/atom/movable/lighting_corner/corners = impacted_corners()
 	SETUP_CORNERS_CACHE(src)
 
-	var/list/datum/lighting_corner/new_corners = (corners - src.effect_str)
+	var/list/atom/movable/lighting_corner/new_corners = (corners - src.effect_str)
 	LAZYINITLIST(src.effect_str)
-	for (var/datum/lighting_corner/corner as anything in new_corners)
+	for (var/atom/movable/lighting_corner/corner as anything in new_corners)
 		APPLY_CORNER(corner)
 		if (. != 0)
 			LAZYADD(corner.affecting, src)
 			effect_str[corner] = .
 	// New corners are a subset of corners. so if they're both the same length, there are NO old corners!
 	if(needs_update != LIGHTING_VIS_UPDATE && length(corners) != length(new_corners))
-		for (var/datum/lighting_corner/corner as anything in corners - new_corners) // Existing corners
+		for (var/atom/movable/lighting_corner/corner as anything in corners - new_corners) // Existing corners
 			APPLY_CORNER(corner)
 			if (. != 0)
 				effect_str[corner] = .
@@ -523,8 +523,8 @@
 				LAZYREMOVE(corner.affecting, src)
 				effect_str -= corner
 
-	var/list/datum/lighting_corner/gone_corners = effect_str - corners
-	for (var/datum/lighting_corner/corner as anything in gone_corners)
+	var/list/atom/movable/lighting_corner/gone_corners = effect_str - corners
+	for (var/atom/movable/lighting_corner/corner as anything in gone_corners)
 		REMOVE_CORNER(corner)
 		LAZYREMOVE(corner.affecting, src)
 	effect_str -= gone_corners

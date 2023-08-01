@@ -18,16 +18,11 @@ SUBSYSTEM_DEF(lighting)
 
 
 /datum/controller/subsystem/lighting/Initialize()
-	if(!initialized)
-		create_all_lighting_objects()
-		initialized = TRUE
-
 	fire(FALSE, TRUE)
-
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/lighting/fire(resumed, init_tick_checks)
-	MC_SPLIT_TICK_INIT(3)
+	MC_SPLIT_TICK_INIT(2)
 	if(!init_tick_checks)
 		MC_SPLIT_TICK
 	if(!resumed)
@@ -69,7 +64,7 @@ SUBSYSTEM_DEF(lighting)
 	while(i < length(queue)) //we don't use for loop here because i cannot be changed during an iteration
 		i += 1
 
-		var/datum/lighting_corner/C = queue[i]
+		var/atom/movable/lighting_corner/C = queue[i]
 		C.needs_update = FALSE //update_objects() can call qdel if the corner is storing no data
 		C.update_objects()
 
@@ -85,33 +80,6 @@ SUBSYSTEM_DEF(lighting)
 	if(i)
 		queue.Cut(1, i+1)
 		i = 0
-
-	if(!init_tick_checks)
-		MC_SPLIT_TICK
-
-	// UPDATE OBJECTS QUEUE
-	queue = objects_queue
-	while(i < length(queue)) //we don't use for loop here because i cannot be changed during an iteration
-		i += 1
-
-		var/atom/movable/lighting_object/O = queue[i]
-		if(QDELETED(O))
-			continue
-		O.update()
-		O.needs_update = FALSE
-
-		// We unroll TICK_CHECK here so we can clear out the queue to ensure any removals/additions when sleeping don't fuck us
-		if(init_tick_checks)
-			if(!TICK_CHECK)
-				continue
-			queue.Cut(1, i + 1)
-			i = 0
-			stoplag()
-		else if(MC_TICK_CHECK)
-			break
-	if(i)
-		queue.Cut(1, i + 1)
-
 
 /datum/controller/subsystem/lighting/Recover()
 	initialized = SSlighting.initialized

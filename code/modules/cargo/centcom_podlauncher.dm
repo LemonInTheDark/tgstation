@@ -31,7 +31,7 @@
 		/mob/dead,
 		/obj/effect/landmark,
 		/obj/docking_port,
-		/atom/movable/lighting_object,
+		/atom/movable/lighting_corner,
 		/obj/effect/particle_effect/sparks,
 		/obj/effect/pod_landingzone,
 		/obj/effect/client_image_holder,

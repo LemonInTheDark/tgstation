@@ -12,7 +12,7 @@
 		/obj/energy_ball,
 		/obj/narsie,
 		/obj/docking_port,
-		/atom/movable/lighting_object,
+		/atom/movable/lighting_corner,
 		/obj/structure/lattice,
 		/obj/structure/stone_tile,
 		/obj/projectile,

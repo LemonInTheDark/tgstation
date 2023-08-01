@@ -287,10 +287,10 @@ GLOBAL_LIST_EMPTY(light_debugged_atoms)
 /// Hides all the lights around a source temporarially, for the sake of figuring out how bad a light bleeds
 /// (Except for turf lights, because they're a part of the "scene" and rarely modified)
 /proc/isolate_light(atom/source, delay = 7 SECONDS)
-	var/list/datum/lighting_corner/interesting_corners = source.light?.effect_str
+	var/list/atom/movable/lighting_corner/interesting_corners = source.light?.effect_str
 
 	var/list/atom/sources = list()
-	for(var/datum/lighting_corner/corner as anything in interesting_corners)
+	for(var/atom/movable/lighting_corner/corner as anything in interesting_corners)
 		for(var/datum/light_source/target_spotted as anything in corner.affecting)
 			if(isturf(target_spotted.source_atom))
 				continue

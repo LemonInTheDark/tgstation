@@ -2,17 +2,30 @@
 // And corners get shared between multiple turfs (unless you're on the corners of the map, then 1 corner doesn't).
 // For the record: these should never ever ever be deleted, even if the turf doesn't have dynamic lighting.
 
-/datum/lighting_corner
+/atom/movable/lighting_corner
+	name = ""
+	anchored = TRUE
+	icon = 'icons/effects/light_object_big.dmi'
+	icon_state = "light_corner"
+	plane = LIGHTING_PLANE
+	blend_mode = BLEND_ADD
+	color = "#000000" //we manually set color in init instead
+	appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	invisibility = INVISIBILITY_LIGHTING
+	vis_flags = VIS_HIDE
+
 	var/list/datum/light_source/affecting // Light sources affecting us.
 
-	var/x = 0
-	var/y = 0
-	var/z = 0
+	var/real_x = 0
+	var/real_y = 0
+	var/real_z = 0
 
 	var/turf/master_NE
 	var/turf/master_SE
 	var/turf/master_SW
 	var/turf/master_NW
+	var/turf/home_turf
 
 	//"raw" color values, changed by update_lumcount()
 	var/lum_r = 0
@@ -31,12 +44,16 @@
 	var/needs_update = FALSE
 
 // Takes as an argument the coords to use as the bottom left (south west) of our corner
-/datum/lighting_corner/New(x, y, z)
+/atom/movable/lighting_corner/New(loc, x, y, z)
 	. = ..()
 
-	src.x = x + 0.5
-	src.y = y + 0.5
-	src.z = z
+	src.real_x = x + 0.5
+	src.real_y = y + 0.5
+	src.real_z = z
+	home_turf = loc
+	pixel_w = (x - home_turf.x) * 32
+	pixel_z = (y - home_turf.y) * 32
+	//add_filter("Color Shift", 1, color_matrix_filter(list(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1, 0,0,0,1)))
 
 	// Alright. We're gonna take a set of coords, and from them do a loop clockwise
 	// To build out the turfs adjacent to us. This is pretty fast
@@ -74,20 +91,21 @@
 		master_SE = process_next
 		process_next.lighting_corner_NW = src
 
-/datum/lighting_corner/proc/self_destruct_if_idle()
+
+/atom/movable/lighting_corner/proc/self_destruct_if_idle()
 	if (!LAZYLEN(affecting))
 		qdel(src, force = TRUE)
 
-/datum/lighting_corner/proc/vis_update()
+/atom/movable/lighting_corner/proc/vis_update()
 	for (var/datum/light_source/light_source as anything in affecting)
 		light_source.vis_update()
 
-/datum/lighting_corner/proc/full_update()
+/atom/movable/lighting_corner/proc/full_update()
 	for (var/datum/light_source/light_source as anything in affecting)
 		light_source.recalc_corner(src)
 
 // God that was a mess, now to do the rest of the corner code! Hooray!
-/datum/lighting_corner/proc/update_lumcount(delta_r, delta_g, delta_b)
+/atom/movable/lighting_corner/proc/update_lumcount(delta_r, delta_g, delta_b)
 
 #ifdef VISUALIZE_LIGHT_UPDATES
 	if (!SSlighting.allow_duped_values && !(delta_r || delta_g || delta_b)) // 0 is falsey ok
@@ -105,7 +123,23 @@
 		needs_update = TRUE
 		SSlighting.corners_queue += src
 
-/datum/lighting_corner/proc/update_objects()
+/atom/movable/lighting_corner/proc/update_objects()
+	if (loc != home_turf)
+		if (loc)
+			var/turf/oldturf = get_turf(home_turf)
+			var/turf/newturf = get_turf(loc)
+			warning("A lighting corner realised it's loc had changed in update() ([home_turf]\[[home_turf ? home_turf.type : "null"]]([COORD(oldturf)]) -> [loc]\[[ loc ? loc.type : "null"]]([COORD(newturf)]))!")
+
+		qdel(src, TRUE)
+		return
+
+#ifdef VISUALIZE_LIGHT_UPDATES
+	for(var/turf/adjacent in list(master_NE, master_NW, master_SE, master_SW))
+		adjacent.add_atom_colour(COLOR_BLUE_LIGHT, ADMIN_COLOUR_PRIORITY)
+		animate(adjacent, 10, color = null)
+		addtimer(CALLBACK(adjacent, TYPE_PROC_REF(/atom, remove_atom_colour), ADMIN_COLOUR_PRIORITY, COLOR_BLUE_LIGHT), 10, TIMER_UNIQUE|TIMER_OVERRIDE)
+#endif
+
 	// Cache these values ahead of time so 4 individual lighting objects don't all calculate them individually.
 	var/lum_r = src.lum_r
 	var/lum_g = src.lum_g
@@ -120,7 +154,7 @@
 	var/old_b = cache_b
 
 	#if LIGHTING_SOFT_THRESHOLD != 0
-	else if (largest_color_luminosity < LIGHTING_SOFT_THRESHOLD)
+	if (largest_color_luminosity < LIGHTING_SOFT_THRESHOLD)
 		. = 0 // 0 means soft lighting.
 
 	cache_r = round(lum_r * ., LIGHTING_ROUND_VALUE) || LIGHTING_SOFT_THRESHOLD
@@ -140,30 +174,29 @@
 	if(old_r == cache_r && old_g == cache_g && old_b == cache_b)
 		return
 #endif
+	color = rgb(cache_r * 255, cache_g * 255, cache_b * 255)
 
-	var/atom/movable/lighting_object/lighting_object = master_NE?.lighting_object
-	if (lighting_object && !lighting_object.needs_update)
-		lighting_object.needs_update = TRUE
-		SSlighting.objects_queue += lighting_object
-
-	lighting_object = master_SE?.lighting_object
-	if (lighting_object && !lighting_object.needs_update)
-		lighting_object.needs_update = TRUE
-		SSlighting.objects_queue += lighting_object
-
-	lighting_object = master_SW?.lighting_object
-	if (lighting_object && !lighting_object.needs_update)
-		lighting_object.needs_update = TRUE
-		SSlighting.objects_queue += lighting_object
-
-	lighting_object = master_NW?.lighting_object
-	if (lighting_object && !lighting_object.needs_update)
-		lighting_object.needs_update = TRUE
-		SSlighting.objects_queue += lighting_object
+	#if LIGHTING_SOFT_THRESHOLD != 0
+	var/set_luminosity = largest_color_luminosity > LIGHTING_SOFT_THRESHOLD
+	#else
+	// Because of floating points™?, it won't even be a flat 0.
+	// This number is mostly arbitrary.
+	var/set_luminosity = largest_color_luminosity > 1e-6
+	#endif
+	if(set_luminosity)
+		master_NE?.luminosity = 1
+		master_SE?.luminosity = 1
+		master_SW?.luminosity = 1
+		master_NW?.luminosity = 1
+	else
+		master_NE?.calc_lumin()
+		master_SE?.calc_lumin()
+		master_SW?.calc_lumin()
+		master_NW?.calc_lumin()
 
 	self_destruct_if_idle()
 
-/datum/lighting_corner/Destroy(force)
+/atom/movable/lighting_corner/Destroy(force)
 	if (!force)
 		return QDEL_HINT_LETMELIVE
 
@@ -187,10 +220,44 @@
 	if (needs_update)
 		SSlighting.corners_queue -= src
 
+	if (loc != home_turf)
+		var/turf/oldturf = get_turf(home_turf)
+		var/turf/newturf = get_turf(loc)
+		stack_trace("A lighting corner was qdeleted with a different loc then it is suppose to have ([COORD(oldturf)] -> [COORD(newturf)])")
+	if (isturf(home_turf))
+		home_turf.luminosity = 1
+	home_turf = null
 	return ..()
 
+// Variety of overrides so the overlays don't get affected by weird things.
+
+/atom/movable/lighting_corner/ex_act(severity)
+	return FALSE
+
+/atom/movable/lighting_corner/singularity_act()
+	return
+
+/atom/movable/lighting_corner/singularity_pull()
+	return
+
+/atom/movable/lighting_corner/blob_act()
+	return
+
+/atom/movable/lighting_corner/on_changed_z_level(turf/old_turf, turf/new_turf, same_z_layer, notify_contents = TRUE)
+	SHOULD_CALL_PARENT(FALSE)
+	return
+
+/atom/movable/lighting_corner/wash(clean_types)
+	SHOULD_CALL_PARENT(FALSE) // lighting objects are dirty, confirmed
+	return
+
+// Override here to prevent things accidentally moving around overlays.
+/atom/movable/lighting_corner/forceMove(atom/destination, no_tp = FALSE, harderforce = FALSE)
+	if(harderforce)
+		return ..()
+
 /// Debug proc to aid in understanding how corners work
-/datum/lighting_corner/proc/display(max_lum)
+/atom/movable/lighting_corner/proc/display(max_lum)
 	if(QDELETED(src))
 		return
 
@@ -209,17 +276,14 @@
 
 	draw_to.add_overlay(display)
 
-/datum/lighting_corner/dummy/display()
-	return
-
 /// Makes all lighting corners visible, debug to aid in understanding
 /proc/display_corners()
 	var/list/corners = list()
 	var/max_lum = 0
-	for(var/datum/lighting_corner/corner) // I am so sorry
+	for(var/atom/movable/lighting_corner/corner in world) // I am so sorry
 		corners += corner
 		max_lum = max(max_lum, corner.largest_color_luminosity)
 
 
-	for(var/datum/lighting_corner/corner as anything in corners)
+	for(var/atom/movable/lighting_corner/corner as anything in corners)
 		corner.display(max_lum)
