@@ -24,9 +24,7 @@
 /turf/template_noop,
 /area/ruin/space/has_grav/powered/authorship)
 "f" = (
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /obj/machinery/power/shuttle_engine/heater{
 	dir = 8
 	},
@@ -35,6 +33,7 @@
 "g" = (
 /obj/structure/table/wood,
 /obj/item/clothing/under/shorts/black,
+/obj/machinery/light/small/directional/north,
 /turf/open/floor/mineral/titanium/purple,
 /area/ruin/space/has_grav/powered/authorship)
 "h" = (
@@ -43,7 +42,6 @@
 "i" = (
 /obj/structure/table,
 /obj/item/flashlight/lamp,
-/obj/machinery/light/directional/north,
 /turf/open/floor/mineral/titanium/purple,
 /area/ruin/space/has_grav/powered/authorship)
 "j" = (
@@ -57,10 +55,6 @@
 "l" = (
 /obj/structure/table/wood,
 /obj/item/clothing/shoes/sandal,
-/turf/open/floor/mineral/titanium/purple,
-/area/ruin/space/has_grav/powered/authorship)
-"m" = (
-/obj/machinery/light/directional/west,
 /turf/open/floor/mineral/titanium/purple,
 /area/ruin/space/has_grav/powered/authorship)
 "n" = (
@@ -106,10 +100,7 @@
 /obj/structure/table/wood,
 /obj/item/paper,
 /obj/item/pen,
-/turf/open/floor/mineral/titanium/purple,
-/area/ruin/space/has_grav/powered/authorship)
-"x" = (
-/obj/machinery/light/directional/south,
+/obj/machinery/light/directional/east,
 /turf/open/floor/mineral/titanium/purple,
 /area/ruin/space/has_grav/powered/authorship)
 "y" = (
@@ -132,12 +123,29 @@
 	},
 /area/ruin/space/has_grav/powered/authorship)
 "C" = (
-/obj/machinery/light/directional/south,
 /obj/structure/bed,
 /turf/open/floor/mineral/titanium/purple,
 /area/ruin/space/has_grav/powered/authorship)
 "D" = (
 /obj/machinery/door/airlock/external/ruin,
+/turf/open/floor/mineral/titanium/purple,
+/area/ruin/space/has_grav/powered/authorship)
+"O" = (
+/obj/machinery/light/floor,
+/turf/open/floor/mineral/titanium/purple,
+/area/ruin/space/has_grav/powered/authorship)
+"Q" = (
+/obj/machinery/light_switch/directional/north,
+/turf/open/floor/mineral/titanium/purple,
+/area/ruin/space/has_grav/powered/authorship)
+"T" = (
+/obj/structure/table/wood,
+/obj/item/flashlight/lamp/green,
+/turf/open/floor/mineral/titanium/purple,
+/area/ruin/space/has_grav/powered/authorship)
+"Z" = (
+/obj/structure/table/wood,
+/obj/machinery/light/small/directional/south,
 /turf/open/floor/mineral/titanium/purple,
 /area/ruin/space/has_grav/powered/authorship)
 
@@ -173,8 +181,8 @@ f
 f
 c
 q
+O
 h
-x
 c
 f
 f
@@ -190,7 +198,7 @@ D
 p
 c
 A
-n
+Z
 c
 "}
 (5,1,1) = {"
@@ -202,19 +210,19 @@ h
 h
 y
 c
-h
-n
+Q
+T
 c
 "}
 (6,1,1) = {"
 c
 i
 h
-m
 h
 h
 h
-m
+h
+h
 h
 C
 c
@@ -225,7 +233,7 @@ j
 h
 h
 h
-h
+O
 h
 h
 h
@@ -262,11 +270,11 @@ B
 a
 a
 c
-m
 h
 h
 h
-m
+h
+h
 c
 a
 a

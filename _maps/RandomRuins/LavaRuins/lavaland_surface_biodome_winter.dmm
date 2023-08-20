@@ -28,10 +28,10 @@
 /area/ruin/powered/snow_biodome)
 "ag" = (
 /obj/structure/displaycase/freezeray,
+/obj/machinery/light/cold/directional/north,
 /turf/open/floor/iron/dark/textured,
 /area/ruin/powered/snow_biodome)
 "ah" = (
-/obj/machinery/light/cold/directional/west,
 /turf/open/floor/circuit,
 /area/ruin/powered/snow_biodome)
 "ai" = (
@@ -179,7 +179,7 @@
 /turf/open/floor/wood,
 /area/ruin/powered/snow_biodome)
 "aO" = (
-/obj/machinery/door/airlock/glass_large,
+/obj/machinery/door/airlock/multi_tile/glass,
 /obj/structure/fans/tiny,
 /turf/open/floor/pod/dark,
 /area/ruin/powered/snow_biodome)
@@ -326,10 +326,6 @@
 "vN" = (
 /turf/open/floor/plating/snowed/smoothed,
 /area/ruin/powered/snow_biodome)
-"wN" = (
-/obj/machinery/light/cold/directional/east,
-/turf/open/floor/circuit,
-/area/ruin/powered/snow_biodome)
 "xU" = (
 /obj/item/storage/toolbox/mechanical,
 /turf/open/floor/pod/dark,
@@ -364,7 +360,7 @@
 /area/ruin/powered/snow_biodome)
 "Ez" = (
 /obj/structure/fans/tiny,
-/obj/machinery/door/airlock/glass_large,
+/obj/machinery/door/airlock/multi_tile/glass,
 /turf/open/floor/pod/dark,
 /area/ruin/powered/snow_biodome)
 "EA" = (
@@ -984,7 +980,7 @@ Qa
 "}
 (17,1,1) = {"
 Wg
-wN
+ah
 Wg
 Wg
 ax

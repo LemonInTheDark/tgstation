@@ -62,7 +62,7 @@
 /area/ruin/powered/seedvault)
 "ak" = (
 /obj/effect/mob_spawn/ghost_role/human/seed_vault,
-/obj/machinery/light/directional/north,
+/obj/machinery/light/directional/west,
 /turf/open/floor/iron/freezer,
 /area/ruin/powered/seedvault)
 "al" = (
@@ -81,14 +81,13 @@
 /turf/open/floor/iron/dark,
 /area/ruin/powered/seedvault)
 "ap" = (
-/obj/machinery/light/directional/north,
 /obj/effect/mob_spawn/ghost_role/human/seed_vault,
 /turf/open/floor/iron/freezer,
 /area/ruin/powered/seedvault)
 "aq" = (
-/obj/machinery/light/directional/north,
 /obj/effect/mob_spawn/ghost_role/human/seed_vault,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
+/obj/machinery/light/directional/east,
 /turf/open/floor/iron/freezer,
 /area/ruin/powered/seedvault)
 "ar" = (
@@ -104,7 +103,7 @@
 /turf/open/floor/iron/dark,
 /area/ruin/powered/seedvault)
 "as" = (
-/obj/machinery/door/airlock/glass_large,
+/obj/machinery/door/airlock/multi_tile/glass,
 /turf/open/floor/iron/freezer,
 /area/ruin/powered/seedvault)
 "at" = (
@@ -185,12 +184,6 @@
 /area/ruin/powered/seedvault)
 "aC" = (
 /obj/structure/sink/directional/east,
-/obj/machinery/light/directional/south,
-/turf/open/floor/iron/dark,
-/area/ruin/powered/seedvault)
-"aD" = (
-/obj/structure/sink/directional/west,
-/obj/machinery/light/directional/south,
 /turf/open/floor/iron/dark,
 /area/ruin/powered/seedvault)
 "aE" = (
@@ -240,7 +233,6 @@
 /area/ruin/powered/seedvault)
 "aK" = (
 /obj/structure/sink/directional/west,
-/obj/machinery/light/directional/north,
 /turf/open/floor/iron/dark,
 /area/ruin/powered/seedvault)
 "aL" = (
@@ -355,7 +347,6 @@
 /area/ruin/powered/seedvault)
 "aZ" = (
 /obj/structure/sink/directional/east,
-/obj/machinery/light/directional/north,
 /obj/effect/decal/cleanable/cobweb,
 /turf/open/floor/iron/dark,
 /area/ruin/powered/seedvault)
@@ -412,7 +403,6 @@
 /turf/open/floor/mineral/plastitanium,
 /area/ruin/powered/seedvault)
 "bg" = (
-/obj/machinery/light/directional/east,
 /obj/machinery/hydroponics/constructable,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
@@ -484,7 +474,7 @@
 /turf/open/misc/grass/lavaland,
 /area/ruin/powered/seedvault)
 "bn" = (
-/obj/structure/window/spawner/east,
+/obj/structure/window/spawner/directional/east,
 /obj/structure/flora/bush/pale/style_random,
 /obj/structure/flora/bush/flowers_pp/style_random,
 /turf/open/misc/grass/lavaland,
@@ -509,37 +499,25 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/ruin/powered/seedvault)
-"bq" = (
-/obj/machinery/light/directional/east,
-/obj/machinery/hydroponics/constructable,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/turf_decal/trimline/green/line{
-	dir = 8
-	},
-/obj/effect/turf_decal/trimline/green/line{
-	dir = 4
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/ruin/powered/seedvault)
 "br" = (
 /obj/structure/flora/bush/sunny/style_random,
 /obj/structure/flora/grass/jungle/b/style_random,
 /turf/open/misc/grass/lavaland,
 /area/ruin/powered/seedvault)
 "bs" = (
-/obj/structure/window/spawner/east,
+/obj/structure/window/spawner/directional/east,
 /obj/structure/flora/bush/sparsegrass/style_random,
 /turf/open/misc/grass/lavaland,
 /area/ruin/powered/seedvault)
 "bt" = (
-/obj/structure/window/spawner,
+/obj/structure/window/spawner/directional/south,
 /obj/structure/flora/bush/flowers_pp/style_random,
 /obj/structure/flora/bush/generic/style_random,
 /obj/structure/flora/bush/flowers_br/style_random,
 /turf/open/misc/grass/lavaland,
 /area/ruin/powered/seedvault)
 "bu" = (
-/obj/structure/window/spawner/east,
+/obj/structure/window/spawner/directional/east,
 /obj/structure/flora/bush/ferny/style_random,
 /obj/structure/flora/bush/flowers_yw/style_random,
 /obj/structure/flora/bush/sparsegrass/style_random,
@@ -547,7 +525,6 @@
 /turf/open/misc/grass/lavaland,
 /area/ruin/powered/seedvault)
 "bv" = (
-/obj/machinery/light/directional/south,
 /obj/machinery/hydroponics/constructable,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/trimline/green/line{
@@ -616,6 +593,17 @@
 /obj/effect/baseturf_helper/lava_land/surface,
 /turf/closed/mineral/volcanic/lava_land_surface,
 /area/lavaland/surface/outdoors)
+"lF" = (
+/obj/machinery/hydroponics/constructable,
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/trimline/green/line{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/green/line{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/ruin/powered/seedvault)
 "oR" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden{
 	dir = 10
@@ -626,6 +614,11 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden,
 /turf/open/floor/vault,
 /area/ruin/powered/seedvault)
+"yY" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden,
+/obj/machinery/light/floor,
+/turf/open/floor/iron/freezer,
+/area/ruin/powered/seedvault)
 "Bb" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden,
 /turf/open/floor/iron/freezer,
@@ -633,14 +626,8 @@
 "DA" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden,
+/obj/machinery/light/floor,
 /turf/open/floor/mineral/titanium/blue,
-/area/ruin/powered/seedvault)
-"Eu" = (
-/obj/machinery/light/directional/south,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden{
-	dir = 4
-	},
-/turf/open/floor/iron/freezer,
 /area/ruin/powered/seedvault)
 "GN" = (
 /obj/structure/table/wood,
@@ -824,9 +811,9 @@ ac
 ac
 ac
 ac
+lF
 bc
-bc
-bc
+lF
 ac
 ac
 bD
@@ -906,7 +893,7 @@ Vn
 Bb
 Bb
 Bb
-Bb
+yY
 Bb
 aH
 Bb
@@ -929,7 +916,7 @@ al
 PH
 ah
 al
-aD
+aK
 ac
 aK
 bb
@@ -1002,7 +989,7 @@ ac
 ac
 bg
 bl
-bq
+lF
 ac
 ac
 ac
@@ -1014,7 +1001,7 @@ aj
 al
 al
 al
-Eu
+PH
 ac
 ac
 ac

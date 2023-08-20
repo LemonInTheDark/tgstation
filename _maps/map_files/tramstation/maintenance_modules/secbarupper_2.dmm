@@ -10,8 +10,6 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/navbeacon{
 	codes_txt = "delivery;dir=1";
-	dir = 1;
-	freq = 1400;
 	location = "Law Office";
 	name = "navigation beacon (Law Office Delivery)"
 	},
@@ -144,9 +142,7 @@
 /obj/machinery/light/small/directional/north,
 /obj/structure/table,
 /obj/item/reagent_containers/cup/bucket,
-/obj/structure/sign/poster/official/nanotrasen_logo{
-	pixel_y = 32
-	},
+/obj/structure/sign/poster/official/nanotrasen_logo/directional/north,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/department/security)
 "rN" = (
@@ -266,7 +262,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/closet/crate/cardboard,
 /obj/effect/spawner/random/engineering/material_cheap,
-/obj/effect/landmark/xeno_spawn,
+/obj/effect/landmark/generic_maintenance_landmark,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/department/security)
 "GQ" = (

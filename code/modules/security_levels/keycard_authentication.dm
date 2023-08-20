@@ -9,8 +9,8 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 /obj/machinery/keycard_auth
 	name = "Keycard Authentication Device"
 	desc = "This device is used to trigger station functions, which require more than one ID card to authenticate, or to give the Janitor access to a department."
-	icon = 'icons/obj/monitors.dmi'
-	icon_state = "auth_off"
+	icon = 'icons/obj/machines/keycard.dmi'
+	icon_state = "auth_on"
 	power_channel = AREA_USAGE_ENVIRON
 	req_access = list(ACCESS_KEYCARD_AUTH)
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
@@ -143,12 +143,12 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 	else
 		set_light(0)
 
-/obj/machinery/keycard_auth/update_overlays()
+/obj/machinery/keycard_auth/update_icon_state()
 	. = ..()
-
 	if(event_source && !(machine_stat & (NOPOWER|BROKEN)))
-		. += mutable_appearance(icon, "auth_on")
-		. += emissive_appearance(icon, "auth_on", src, alpha = src.alpha)
+		icon_state = "auth_on"
+	else
+		icon_state = "auth_off"
 
 /obj/machinery/keycard_auth/proc/sendEvent(event_type)
 	triggerer = usr

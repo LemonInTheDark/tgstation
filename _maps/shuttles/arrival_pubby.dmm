@@ -28,9 +28,7 @@
 /area/shuttle/arrival)
 "g" = (
 /obj/machinery/light/directional/north,
-/obj/structure/sign/poster/official/enlist{
-	pixel_y = 32
-	},
+/obj/structure/sign/poster/official/enlist/directional/north,
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/arrival)
 "h" = (
@@ -42,7 +40,6 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/arrival)
 "j" = (
-/obj/machinery/light/directional/north,
 /obj/machinery/requests_console/directional/north{
 	department = "Arrivals shuttle"
 	},
@@ -52,9 +49,7 @@
 /obj/machinery/power/shuttle_engine/heater{
 	dir = 4
 	},
-/obj/structure/window/reinforced{
-	dir = 8
-	},
+/obj/structure/window/reinforced/spawner/directional/west,
 /turf/open/floor/plating/airless,
 /area/shuttle/arrival)
 "l" = (
@@ -111,7 +106,6 @@
 /area/shuttle/arrival)
 "t" = (
 /obj/structure/extinguisher_cabinet/directional/south,
-/obj/machinery/light/directional/south,
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/arrival)
 "u" = (

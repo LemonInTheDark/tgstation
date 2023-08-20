@@ -27,7 +27,6 @@
 	dir = 4
 	},
 /obj/machinery/status_display/evac/directional/west,
-/obj/machinery/light/directional/west,
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/escape/brig)
 "al" = (
@@ -75,8 +74,7 @@
 /turf/open/floor/iron,
 /area/shuttle/escape)
 "aC" = (
-/obj/item/kirbyplants{
-	icon_state = "plant-21";
+/obj/item/kirbyplants/organic/plant21{
 	pixel_x = -3;
 	pixel_y = 3
 	},
@@ -207,7 +205,6 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/bot,
-/obj/machinery/light/small/directional/east,
 /obj/structure/extinguisher_cabinet/directional/east,
 /turf/open/floor/iron,
 /area/shuttle/escape)
@@ -216,7 +213,6 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/bot,
-/obj/machinery/light/small/directional/west,
 /obj/machinery/vending/wallmed/directional/west{
 	use_power = 0
 	},
@@ -247,14 +243,12 @@
 /turf/open/floor/iron,
 /area/shuttle/escape)
 "aR" = (
-/obj/machinery/light/directional/south,
 /obj/machinery/status_display/evac/directional/south,
 /obj/effect/turf_decal/tile/neutral/half/contrasted,
 /turf/open/floor/iron,
 /area/shuttle/escape)
 "aS" = (
-/obj/item/kirbyplants{
-	icon_state = "plant-21";
+/obj/item/kirbyplants/organic/plant21{
 	pixel_x = -3;
 	pixel_y = 3
 	},
@@ -328,7 +322,6 @@
 /obj/machinery/status_display/evac/directional/west,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/delivery,
-/obj/machinery/light/directional/west,
 /turf/open/floor/iron,
 /area/shuttle/escape)
 "be" = (
@@ -384,6 +377,7 @@
 /obj/item/radio/intercom/directional/south,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/bot,
+/obj/machinery/light/directional/west,
 /turf/open/floor/iron,
 /area/shuttle/escape)
 "bk" = (
@@ -459,17 +453,13 @@
 /turf/closed/wall/mineral/plastitanium,
 /area/shuttle/escape)
 "bs" = (
-/obj/structure/window/reinforced{
-	dir = 1
-	},
+/obj/structure/window/reinforced/spawner/directional/north,
 /obj/machinery/power/shuttle_engine/heater,
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/plating/airless,
 /area/shuttle/escape)
 "bt" = (
-/obj/structure/window/reinforced{
-	dir = 1
-	},
+/obj/structure/window/reinforced/spawner/directional/north,
 /obj/machinery/power/shuttle_engine/heater,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/stripes/line,
@@ -491,7 +481,6 @@
 	},
 /obj/structure/table/reinforced,
 /obj/machinery/status_display/evac/directional/east,
-/obj/machinery/light/directional/east,
 /obj/effect/turf_decal/tile/blue/anticorner/contrasted{
 	dir = 4
 	},
@@ -511,6 +500,7 @@
 	},
 /obj/effect/turf_decal/bot,
 /obj/structure/extinguisher_cabinet/directional/west,
+/obj/machinery/light/small/directional/west,
 /turf/open/floor/iron,
 /area/shuttle/escape)
 "fC" = (
@@ -522,8 +512,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "ih" = (
-/obj/item/kirbyplants{
-	icon_state = "plant-21";
+/obj/item/kirbyplants/organic/plant21{
 	pixel_x = -3;
 	pixel_y = 3
 	},
@@ -546,7 +535,6 @@
 "oY" = (
 /obj/structure/table/reinforced,
 /obj/item/storage/fancy/donut_box,
-/obj/machinery/light/directional/east,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /turf/open/floor/iron/dark,
 /area/shuttle/escape)
@@ -558,6 +546,7 @@
 /obj/machinery/vending/wallmed/directional/east{
 	use_power = 0
 	},
+/obj/machinery/light/small/directional/east,
 /turf/open/floor/iron,
 /area/shuttle/escape)
 "qX" = (
@@ -613,6 +602,10 @@
 	},
 /turf/open/floor/iron,
 /area/shuttle/escape)
+"yJ" = (
+/obj/machinery/light/directional/south,
+/turf/open/floor/mineral/plastitanium/red,
+/area/shuttle/escape/brig)
 "Dh" = (
 /obj/machinery/computer/communications,
 /obj/effect/turf_decal/tile/neutral/fourcorners,
@@ -631,6 +624,7 @@
 	pixel_x = 32
 	},
 /obj/effect/turf_decal/tile/neutral/fourcorners,
+/obj/machinery/light/directional/south,
 /turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "IX" = (
@@ -675,6 +669,7 @@
 /obj/effect/turf_decal/tile/blue/half/contrasted{
 	dir = 4
 	},
+/obj/machinery/light/directional/east,
 /turf/open/floor/iron/white,
 /area/shuttle/escape)
 "UZ" = (
@@ -707,8 +702,8 @@ bu
 aa
 dW
 ak
-al
-sY
+yJ
+aZ
 az
 aD
 aJ
@@ -729,7 +724,7 @@ sY
 ae
 al
 al
-TB
+sY
 aA
 UZ
 UZ
@@ -750,7 +745,7 @@ sY
 ae
 al
 al
-sY
+TB
 aA
 aF
 aK
@@ -855,7 +850,7 @@ sY
 Dh
 Kj
 fC
-ab
+sY
 aA
 UZ
 UZ

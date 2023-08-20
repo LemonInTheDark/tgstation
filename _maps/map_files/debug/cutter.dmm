@@ -130,14 +130,9 @@
 /obj/machinery/door/poddoor/shutters/window,
 /turf/open/floor/iron,
 /area/misc/testroom)
-"dP" = (
-/obj/structure/window/reinforced/tram/right/directional/north,
-/obj/structure/window/reinforced/tram/right/directional/south,
-/turf/open/floor/iron,
-/area/misc/testroom)
 "dQ" = (
-/obj/structure/window/reinforced/tram/left/directional/north,
-/obj/structure/window/reinforced/tram/left/directional/south,
+/obj/structure/window/reinforced/tram/directional/north,
+/obj/structure/window/reinforced/tram/directional/south,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "dU" = (
@@ -160,10 +155,6 @@
 /area/misc/testroom)
 "ek" = (
 /obj/machinery/door/puzzle/keycard/icebox/office,
-/turf/open/floor/iron,
-/area/misc/testroom)
-"em" = (
-/obj/structure/window/reinforced/tram/mid/directional/east,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "eo" = (
@@ -240,7 +231,7 @@
 /turf/open/floor/iron,
 /area/misc/testroom)
 "fE" = (
-/obj/structure/window/reinforced/tram/left/directional/east,
+/obj/structure/window/reinforced/tram/directional/east,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "fQ" = (
@@ -358,8 +349,8 @@
 /turf/closed/mineral/snowmountain/coldroom,
 /area/misc/testroom)
 "ic" = (
-/obj/structure/window/reinforced/tram/left/directional/east,
-/obj/structure/window/reinforced/tram/left/directional/west,
+/obj/structure/window/reinforced/tram/directional/east,
+/obj/structure/window/reinforced/tram/directional/west,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "id" = (
@@ -581,6 +572,12 @@
 "ml" = (
 /turf/closed/mineral/random/labormineral,
 /area/misc/testroom)
+"mm" = (
+/obj/structure/hoop{
+	dir = 8
+	},
+/turf/open/floor/iron,
+/area/misc/testroom)
 "mn" = (
 /turf/closed/indestructible/riveted/plastinum,
 /area/misc/testroom)
@@ -612,7 +609,7 @@
 /turf/open/floor/iron,
 /area/misc/testroom)
 "mJ" = (
-/obj/structure/window/reinforced/tram/left/directional/west,
+/obj/structure/window/reinforced/tram/directional/west,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "mT" = (
@@ -787,6 +784,12 @@
 "qd" = (
 /turf/closed/indestructible/grille,
 /area/misc/testroom)
+"qf" = (
+/obj/structure/hoop{
+	dir = 4
+	},
+/turf/open/floor/iron,
+/area/misc/testroom)
 "qh" = (
 /obj/machinery/status_display/door_timer/directional/north,
 /turf/open/floor/iron,
@@ -855,9 +858,6 @@
 "ro" = (
 /turf/closed/indestructible/sandstone,
 /area/misc/testroom)
-"rq" = (
-/turf/closed/wall/vault,
-/area/misc/testroom)
 "rx" = (
 /obj/structure/window_frame/plastitanium,
 /turf/open/floor/iron,
@@ -875,11 +875,6 @@
 /area/misc/testroom)
 "rJ" = (
 /obj/structure/sign/directions/arrival/directional/east,
-/turf/open/floor/iron,
-/area/misc/testroom)
-"rO" = (
-/obj/structure/window/reinforced/tram/right/directional/east,
-/obj/structure/window/reinforced/tram/right/directional/west,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "rR" = (
@@ -901,7 +896,7 @@
 /turf/open/floor/iron,
 /area/misc/testroom)
 "sc" = (
-/obj/structure/window/reinforced/tram/left/directional/north,
+/obj/structure/window/reinforced/tram/directional/north,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "se" = (
@@ -1021,10 +1016,6 @@
 /obj/machinery/door/airlock/research/glass/incinerator/ordmix_interior,
 /turf/open/floor/iron,
 /area/misc/testroom)
-"uF" = (
-/obj/structure/window/reinforced/tram/right/directional/east,
-/turf/open/floor/iron,
-/area/misc/testroom)
 "uK" = (
 /obj/machinery/door/airlock/maintenance,
 /turf/open/floor/iron,
@@ -1045,16 +1036,15 @@
 /obj/machinery/door/window/elevator/left/directional/east,
 /turf/open/floor/iron,
 /area/misc/testroom)
+"va" = (
+/obj/structure/hoop,
+/turf/open/floor/iron,
+/area/misc/testroom)
 "vf" = (
 /turf/closed/mineral/volcanic/lava_land_surface,
 /area/misc/testroom)
 "vg" = (
 /obj/structure/urinal/directional/south,
-/turf/open/floor/iron,
-/area/misc/testroom)
-"vk" = (
-/obj/structure/window/reinforced/tram/right/directional/north,
-/obj/structure/window/reinforced/tram/right/directional/east,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "vm" = (
@@ -1099,10 +1089,6 @@
 /area/misc/testroom)
 "vU" = (
 /obj/machinery/light/small/directional/north,
-/turf/open/floor/iron,
-/area/misc/testroom)
-"wa" = (
-/obj/structure/window/reinforced/tram/mid/directional/south,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "wm" = (
@@ -1152,10 +1138,6 @@
 "xp" = (
 /obj/structure/window/reinforced/survival_pod/spawner/directional/north,
 /obj/structure/window/reinforced/survival_pod/spawner/directional/south,
-/turf/open/floor/iron,
-/area/misc/testroom)
-"xr" = (
-/obj/structure/window/reinforced/tram/right/directional/north,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "xt" = (
@@ -1310,7 +1292,7 @@
 /turf/open/floor/iron,
 /area/misc/testroom)
 "Bb" = (
-/obj/structure/window/reinforced/tram/left/directional/south,
+/obj/structure/window/reinforced/tram/directional/south,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "Bd" = (
@@ -1367,9 +1349,6 @@
 /area/misc/testroom)
 "Cl" = (
 /turf/closed/indestructible/rock/snow/ice/ore,
-/area/misc/testroom)
-"Co" = (
-/turf/closed/wall/vault/sandstone,
 /area/misc/testroom)
 "Cs" = (
 /turf/closed/wall/mineral/titanium/survival/pod,
@@ -1526,10 +1505,6 @@
 "FF" = (
 /turf/closed/mineral/gibtonite/ice,
 /area/misc/testroom)
-"FG" = (
-/obj/structure/window/reinforced/tram/mid/directional/west,
-/turf/open/floor/iron,
-/area/misc/testroom)
 "FO" = (
 /obj/item/storage/secure/safe/directional/south,
 /turf/open/floor/iron,
@@ -1554,10 +1529,6 @@
 /area/misc/testroom)
 "GB" = (
 /obj/machinery/flasher/directional/north,
-/turf/open/floor/iron,
-/area/misc/testroom)
-"GI" = (
-/obj/structure/window/reinforced/tram/right/directional/west,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "GJ" = (
@@ -1627,11 +1598,6 @@
 /obj/structure/window/spawner/directional/south,
 /turf/open/floor/iron,
 /area/misc/testroom)
-"HE" = (
-/obj/structure/window/reinforced/tram/mid/directional/north,
-/obj/structure/window/reinforced/tram/mid/directional/south,
-/turf/open/floor/iron,
-/area/misc/testroom)
 "HJ" = (
 /obj/structure/noticeboard/directional/north,
 /turf/open/floor/iron,
@@ -1683,8 +1649,8 @@
 /turf/closed/wall/mineral/plasma,
 /area/misc/testroom)
 "Is" = (
-/obj/structure/window/reinforced/tram/mid/directional/west,
-/obj/structure/window/reinforced/tram/mid/directional/east,
+/obj/structure/window/reinforced/tram/directional/west,
+/obj/structure/window/reinforced/tram/directional/east,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "Ix" = (
@@ -1746,17 +1712,18 @@
 /obj/machinery/bluespace_vendor/directional/east,
 /turf/open/floor/iron,
 /area/misc/testroom)
+"JV" = (
+/obj/structure/hoop{
+	dir = 1
+	},
+/turf/open/floor/iron,
+/area/misc/testroom)
 "Ka" = (
 /obj/machinery/door/airlock/research,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "Kb" = (
 /obj/machinery/firealarm/directional/west,
-/turf/open/floor/iron,
-/area/misc/testroom)
-"Kk" = (
-/obj/structure/window/reinforced/tram/mid/directional/north,
-/obj/structure/window/reinforced/tram/mid/directional/east,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "Kn" = (
@@ -1807,9 +1774,6 @@
 /area/misc/testroom)
 "Lw" = (
 /turf/closed/indestructible/start_area,
-/area/misc/testroom)
-"Ly" = (
-/turf/closed/wall/vault/rock,
 /area/misc/testroom)
 "LC" = (
 /obj/item/wallframe/telescreen/bar{
@@ -1865,9 +1829,6 @@
 "My" = (
 /obj/machinery/button/door/directional/east,
 /turf/open/floor/iron,
-/area/misc/testroom)
-"Mz" = (
-/turf/closed/wall/vault/alien,
 /area/misc/testroom)
 "MD" = (
 /obj/machinery/requests_console/auto_name/directional/south,
@@ -2026,10 +1987,6 @@
 "PM" = (
 /turf/closed/mineral/diamond/ice,
 /area/misc/testroom)
-"PN" = (
-/obj/structure/window/reinforced/tram/mid/directional/north,
-/turf/open/floor/iron,
-/area/misc/testroom)
 "PO" = (
 /obj/machinery/door/airlock/research/glass,
 /turf/open/floor/iron,
@@ -2121,8 +2078,8 @@
 /turf/closed/wall/mineral/snow,
 /area/misc/testroom)
 "Sl" = (
-/obj/structure/window/reinforced/tram/left/directional/north,
-/obj/structure/window/reinforced/tram/left/directional/east,
+/obj/structure/window/reinforced/tram/directional/north,
+/obj/structure/window/reinforced/tram/directional/east,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "Sy" = (
@@ -2199,7 +2156,7 @@
 /turf/closed/wall/mineral/titanium/overspace,
 /area/misc/testroom)
 "TU" = (
-/obj/machinery/door/airlock/glass_large,
+/obj/machinery/door/airlock/multi_tile/glass,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "TY" = (
@@ -2349,10 +2306,6 @@
 /area/misc/testroom)
 "XG" = (
 /turf/closed/indestructible,
-/area/misc/testroom)
-"XI" = (
-/obj/structure/window/reinforced/tram/right/directional/south,
-/turf/open/floor/iron,
 /area/misc/testroom)
 "XJ" = (
 /obj/item/storage/secure/safe/directional/north,
@@ -7296,7 +7249,7 @@ ZX
 ZX
 ZX
 ZX
-ZX
+mm
 ZX
 ZX
 oL
@@ -7552,9 +7505,9 @@ ZX
 ZX
 ZX
 ZX
+JV
 ZX
-ZX
-ZX
+va
 ZX
 oL
 at
@@ -7810,7 +7763,7 @@ ZX
 ZX
 ZX
 ZX
-ZX
+qf
 ZX
 ZX
 oL
@@ -21028,7 +20981,7 @@ ZX
 ZX
 ZX
 ZX
-rq
+ZX
 ZX
 ZX
 ZX
@@ -21284,12 +21237,12 @@ oj
 oj
 oj
 ZX
-rq
-rq
 ZX
-rq
-rq
-rq
+ZX
+ZX
+ZX
+ZX
+ZX
 ZX
 OL
 OL
@@ -21542,7 +21495,7 @@ ZX
 ZX
 ZX
 ZX
-rq
+ZX
 ZX
 ZX
 ZX
@@ -21798,10 +21751,10 @@ oj
 ZX
 ZX
 ZX
-rq
 ZX
 ZX
-rq
+ZX
+ZX
 ZX
 ZX
 ZX
@@ -22055,12 +22008,12 @@ oj
 ZX
 oj
 ZX
-rq
-rq
 ZX
-rq
 ZX
-rq
+ZX
+ZX
+ZX
+ZX
 ZX
 OL
 OL
@@ -22312,10 +22265,10 @@ oj
 ZX
 ZX
 ZX
-rq
 ZX
 ZX
-rq
+ZX
+ZX
 ZX
 ZX
 ZX
@@ -22827,7 +22780,7 @@ ZX
 ZX
 ZX
 ZX
-Mz
+ZX
 ZX
 ZX
 ZX
@@ -23083,12 +23036,12 @@ vm
 vm
 vm
 ZX
-Mz
-Mz
 ZX
-Mz
-Mz
-Mz
+ZX
+ZX
+ZX
+ZX
+ZX
 ZX
 Ie
 Ie
@@ -23341,7 +23294,7 @@ ZX
 ZX
 ZX
 ZX
-Mz
+ZX
 ZX
 ZX
 ZX
@@ -23432,9 +23385,9 @@ ZX
 oL
 ZX
 Ws
-wa
-HE
-PN
+Bb
+dQ
+sc
 ZX
 ZX
 ZX
@@ -23597,10 +23550,10 @@ vm
 ZX
 ZX
 ZX
-Mz
 ZX
 ZX
-Mz
+ZX
+ZX
 ZX
 ZX
 ZX
@@ -23689,11 +23642,11 @@ oL
 oL
 oL
 Ws
-wa
-HE
-Kk
-em
-em
+Bb
+dQ
+Sl
+fE
+fE
 ZX
 ZX
 ZX
@@ -23854,12 +23807,12 @@ vm
 ZX
 vm
 ZX
-Mz
-Mz
 ZX
-Mz
 ZX
-Mz
+ZX
+ZX
+ZX
+ZX
 ZX
 Ie
 Ie
@@ -23946,8 +23899,8 @@ ZX
 oL
 ZX
 Ws
-wa
-Kk
+Bb
+Sl
 Is
 Is
 Is
@@ -24111,10 +24064,10 @@ vm
 ZX
 ZX
 ZX
-Mz
 ZX
 ZX
-Mz
+ZX
+ZX
 ZX
 ZX
 ZX
@@ -24204,10 +24157,10 @@ Ws
 Ws
 oL
 ZX
-FG
-FG
-FG
-FG
+mJ
+mJ
+mJ
+mJ
 ZX
 ZX
 ZX
@@ -24460,9 +24413,9 @@ ZX
 ZX
 ZX
 ZX
-XI
-dP
-xr
+Bb
+dQ
+sc
 ZX
 ZX
 ZX
@@ -24626,7 +24579,7 @@ ZX
 ZX
 ZX
 ZX
-Ly
+ZX
 ZX
 ZX
 ZX
@@ -24717,11 +24670,11 @@ Ws
 Ws
 Ws
 Ws
-XI
-dP
-vk
-uF
-uF
+Bb
+dQ
+Sl
+fE
+fE
 ZX
 ZX
 ZX
@@ -24882,12 +24835,12 @@ rm
 rm
 rm
 ZX
-Ly
-Ly
 ZX
-Ly
-Ly
-Ly
+ZX
+ZX
+ZX
+ZX
+ZX
 ZX
 vF
 vF
@@ -24974,11 +24927,11 @@ Ws
 Ws
 Ws
 Ws
-XI
-vk
-rO
-rO
-rO
+Bb
+Sl
+ic
+ic
+ic
 ZX
 ZX
 ZX
@@ -25140,7 +25093,7 @@ ZX
 ZX
 ZX
 ZX
-Ly
+ZX
 ZX
 ZX
 ZX
@@ -25232,10 +25185,10 @@ oL
 Ws
 Ws
 ZX
-GI
-GI
-GI
-GI
+mJ
+mJ
+mJ
+mJ
 ZX
 ZX
 ZX
@@ -25396,10 +25349,10 @@ rm
 ZX
 ZX
 ZX
-Ly
 ZX
 ZX
-Ly
+ZX
+ZX
 ZX
 ZX
 ZX
@@ -25653,12 +25606,12 @@ rm
 ZX
 rm
 ZX
-Ly
-Ly
 ZX
-Ly
 ZX
-Ly
+ZX
+ZX
+ZX
+ZX
 ZX
 vF
 vF
@@ -25910,10 +25863,10 @@ rm
 ZX
 ZX
 ZX
-Ly
 ZX
 ZX
-Ly
+ZX
+ZX
 ZX
 ZX
 ZX
@@ -26425,7 +26378,7 @@ ZX
 ZX
 ZX
 ZX
-Co
+ZX
 ZX
 ZX
 ZX
@@ -26681,12 +26634,12 @@ Xu
 Xu
 Xu
 ZX
-Co
-Co
 ZX
-Co
-Co
-Co
+ZX
+ZX
+ZX
+ZX
+ZX
 ZX
 Wq
 Wq
@@ -26939,7 +26892,7 @@ ZX
 ZX
 ZX
 ZX
-Co
+ZX
 ZX
 ZX
 ZX
@@ -27195,10 +27148,10 @@ Xu
 ZX
 ZX
 ZX
-Co
 ZX
 ZX
-Co
+ZX
+ZX
 ZX
 ZX
 ZX
@@ -27452,12 +27405,12 @@ Xu
 ZX
 Xu
 ZX
-Co
-Co
 ZX
-Co
 ZX
-Co
+ZX
+ZX
+ZX
+ZX
 ZX
 Wq
 Wq
@@ -27709,10 +27662,10 @@ Xu
 ZX
 ZX
 ZX
-Co
 ZX
 ZX
-Co
+ZX
+ZX
 ZX
 ZX
 ZX

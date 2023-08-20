@@ -23,9 +23,10 @@
 /turf/open/floor/iron,
 /area/ruin/space/djstation)
 "n" = (
-/obj/structure/closet/secure_closet/freezer/fridge,
+/obj/structure/closet/secure_closet/freezer/fridge/all_access,
 /obj/machinery/light/directional/south,
 /obj/effect/turf_decal/tile/bar/opposingcorners,
+/obj/machinery/light/small/directional/south,
 /turf/open/floor/iron,
 /area/ruin/space/djstation)
 "o" = (

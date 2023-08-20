@@ -154,10 +154,6 @@
 /obj/structure/flora/bush/grassy,
 /turf/open/floor/grass,
 /area/station/asteroid)
-"oi" = (
-/obj/effect/decal/cleanable/dirt,
-/turf/closed/wall,
-/area/station/maintenance/department/cargo)
 "pU" = (
 /obj/effect/turf_decal/trimline/yellow/arrow_cw,
 /obj/effect/decal/cleanable/dirt,
@@ -319,7 +315,7 @@
 	dir = 8
 	},
 /obj/structure/closet/firecloset,
-/obj/effect/landmark/xeno_spawn,
+/obj/effect/landmark/generic_maintenance_landmark,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/department/cargo)
 "AS" = (
@@ -550,9 +546,7 @@
 	dir = 8
 	},
 /obj/machinery/navbeacon{
-	codes_txt = "delivery;dir=4";
-	dir = 1;
-	freq = 1400;
+	codes_txt = "delivery;dir=8";
 	location = "Hydroponics";
 	name = "navigation beacon (Hydroponics Delivery)"
 	},
@@ -1982,7 +1976,7 @@ se
 Fz
 nK
 AS
-oi
+Fz
 CC
 CW
 CW

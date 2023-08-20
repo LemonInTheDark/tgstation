@@ -47,6 +47,7 @@
 "aj" = (
 /obj/structure/table/reinforced,
 /obj/machinery/recharger,
+/obj/machinery/light/small/directional/west,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "an" = (
@@ -56,6 +57,7 @@
 /obj/item/tank/internals/emergency_oxygen/engi,
 /obj/item/tank/internals/emergency_oxygen/engi,
 /obj/item/assembly/flash/handheld,
+/obj/machinery/light/small/directional/east,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "ao" = (
@@ -261,14 +263,12 @@
 /area/shuttle/escape)
 "bv" = (
 /obj/structure/sign/departments/security/directional/north,
-/obj/machinery/light/directional/north,
 /obj/effect/turf_decal/bot,
 /obj/structure/chair/comfy/shuttle,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "by" = (
 /obj/structure/sign/departments/engineering/directional/north,
-/obj/machinery/light/directional/north,
 /obj/effect/turf_decal/bot,
 /obj/structure/chair/comfy/shuttle,
 /turf/open/floor/mineral/plastitanium,
@@ -345,6 +345,7 @@
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "cc" = (
+/obj/machinery/light/small/directional/east,
 /obj/effect/turf_decal/stripes/line{
 	dir = 6
 	},
@@ -479,43 +480,6 @@
 	pixel_y = -5
 	},
 /obj/effect/turf_decal/bot,
-/obj/machinery/light/directional/east,
-/turf/open/floor/mineral/plastitanium,
-/area/shuttle/escape)
-"cJ" = (
-/obj/item/clothing/suit/hazardvest{
-	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
-	name = "emergency lifejacket"
-	},
-/obj/item/clothing/suit/hazardvest{
-	desc = "A high-visibility lifejacket complete with whistle and slot for oxygen tanks.";
-	name = "emergency lifejacket"
-	},
-/obj/item/tank/internals/emergency_oxygen{
-	pixel_x = 3
-	},
-/obj/item/tank/internals/emergency_oxygen{
-	pixel_x = 3
-	},
-/obj/item/clothing/mask/breath{
-	pixel_x = -3;
-	pixel_y = -3
-	},
-/obj/item/clothing/mask/breath{
-	pixel_x = -3;
-	pixel_y = -3
-	},
-/obj/item/clothing/head/utility/hardhat/orange{
-	name = "protective hat";
-	pixel_y = 9
-	},
-/obj/item/clothing/head/utility/hardhat/orange{
-	name = "protective hat";
-	pixel_y = 9
-	},
-/obj/structure/closet/crate/internals,
-/obj/effect/turf_decal/delivery,
-/obj/machinery/light/directional/west,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "cK" = (
@@ -530,7 +494,6 @@
 "cM" = (
 /obj/machinery/vending/medical,
 /obj/effect/turf_decal/bot,
-/obj/machinery/light/directional/west,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "cR" = (
@@ -540,7 +503,6 @@
 	pixel_y = 16
 	},
 /obj/item/hemostat,
-/obj/machinery/light/directional/east,
 /turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "cS" = (
@@ -570,6 +532,7 @@
 	pixel_y = 2
 	},
 /obj/item/storage/medkit/regular,
+/obj/machinery/light/directional/south,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "cX" = (
@@ -599,6 +562,7 @@
 "da" = (
 /obj/structure/table/optable,
 /obj/effect/turf_decal/bot,
+/obj/machinery/light/directional/south,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "db" = (
@@ -610,9 +574,7 @@
 /area/shuttle/escape)
 "dc" = (
 /obj/machinery/power/shuttle_engine/heater,
-/obj/structure/window/reinforced{
-	dir = 1
-	},
+/obj/structure/window/reinforced/spawner/directional/north,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
@@ -632,9 +594,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/obj/item/kirbyplants{
-	icon_state = "plant-05"
-	},
+/obj/item/kirbyplants/organic/plant5,
 /obj/effect/turf_decal/tile/brown/opposingcorners,
 /turf/open/floor/mineral/titanium/tiled/yellow,
 /area/shuttle/escape)
@@ -664,9 +624,7 @@
 /area/shuttle/escape/brig)
 "iA" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/item/kirbyplants{
-	icon_state = "plant-21"
-	},
+/obj/item/kirbyplants/organic/plant21,
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
 	},
@@ -734,6 +692,7 @@
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
 	},
+/obj/machinery/light/floor,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "lV" = (
@@ -771,6 +730,7 @@
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/escape/brig)
 "nv" = (
+/obj/machinery/light/small/directional/west,
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/turf_decal/tile/brown/opposingcorners,
 /obj/machinery/camera/autoname{
@@ -835,9 +795,7 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/shuttle/escape)
 "pp" = (
-/obj/item/kirbyplants{
-	icon_state = "plant-21"
-	},
+/obj/item/kirbyplants/organic/plant21,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
@@ -880,18 +838,14 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
 	},
-/obj/item/kirbyplants{
-	icon_state = "applebush"
-	},
+/obj/item/kirbyplants/organic/applebush,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "si" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 6
 	},
-/obj/item/kirbyplants{
-	icon_state = "plant-22"
-	},
+/obj/item/kirbyplants/organic/plant22,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
 "sx" = (
@@ -901,7 +855,6 @@
 /obj/structure/chair/comfy/shuttle{
 	dir = 4
 	},
-/obj/machinery/light/directional/west,
 /obj/machinery/keycard_auth/directional/west,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
@@ -1016,7 +969,6 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/shuttle/escape)
 "EE" = (
-/obj/machinery/light/directional/east,
 /obj/machinery/vending/wallmed/directional/east{
 	use_power = 0
 	},
@@ -1053,7 +1005,6 @@
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
 	},
-/obj/machinery/light/directional/north,
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/escape/brig)
 "GV" = (
@@ -1205,7 +1156,6 @@
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
 	},
-/obj/machinery/light/directional/east,
 /obj/machinery/keycard_auth/directional/east,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/escape)
@@ -1272,17 +1222,19 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/shuttle/escape)
 "RT" = (
-/obj/item/kirbyplants{
-	icon_state = "plant-10"
-	},
+/obj/item/kirbyplants/organic/plant10,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
 /obj/effect/turf_decal/tile/blue/opposingcorners,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/shuttle/escape)
+"Sd" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/light/floor,
+/turf/open/floor/mineral/plastitanium,
+/area/shuttle/escape)
 "SE" = (
-/obj/machinery/light/directional/west,
 /obj/structure/extinguisher_cabinet/directional/west,
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
@@ -1308,9 +1260,7 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/shuttle/escape)
 "TT" = (
-/obj/item/kirbyplants{
-	icon_state = "applebush"
-	},
+/obj/item/kirbyplants/organic/applebush,
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/turf_decal/tile/blue/opposingcorners,
 /turf/open/floor/mineral/titanium/tiled/white,
@@ -1570,7 +1520,7 @@ pE
 KN
 lH
 aN
-aO
+Sd
 Kl
 Cc
 jH
@@ -1716,7 +1666,7 @@ NN
 cf
 Oz
 Iu
-cJ
+aR
 cL
 cU
 cS

@@ -83,7 +83,8 @@
 /obj/structure/disposalpipe/junction{
 	dir = 8
 	},
-/turf/open/floor/catwalk_floor,
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating,
 /area/station/maintenance/starboard/lesser)
 "lw" = (
 /obj/item/shovel,
@@ -96,6 +97,10 @@
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/lesser)
 "nt" = (
+/turf/open/misc/asteroid,
+/area/station/maintenance/starboard/lesser)
+"nO" = (
+/obj/item/storage/bag/ore,
 /turf/open/misc/asteroid,
 /area/station/maintenance/starboard/lesser)
 "oU" = (
@@ -113,6 +118,17 @@
 	dir = 8
 	},
 /turf/open/floor/catwalk_floor,
+/area/station/maintenance/starboard/lesser)
+"qF" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
+/obj/structure/cable,
+/obj/effect/turf_decal/sand/plating,
+/turf/open/floor/plating,
 /area/station/maintenance/starboard/lesser)
 "qG" = (
 /obj/effect/decal/cleanable/dirt,
@@ -187,6 +203,13 @@
 	},
 /turf/open/misc/asteroid,
 /area/station/maintenance/starboard/lesser)
+"xH" = (
+/obj/item/pickaxe{
+	pixel_x = 5
+	},
+/obj/item/stack/ore/iron,
+/turf/open/misc/asteroid,
+/area/station/maintenance/starboard/lesser)
 "yl" = (
 /turf/open/floor/catwalk_floor,
 /area/station/maintenance/starboard/lesser)
@@ -203,20 +226,36 @@
 	},
 /turf/open/misc/asteroid,
 /area/station/maintenance/starboard/lesser)
+"zW" = (
+/obj/structure/rack,
+/obj/item/stack/sheet/iron/twenty,
+/obj/item/stack/sheet/glass{
+	amount = 20;
+	pixel_y = 3;
+	pixel_x = 3
+	},
+/obj/item/stack/rods/twentyfive,
+/turf/open/misc/asteroid,
+/area/station/maintenance/starboard/lesser)
 "Ar" = (
 /obj/structure/ore_box,
 /turf/open/misc/asteroid,
 /area/station/asteroid)
-"AA" = (
-/obj/modular_map_root/tramstation{
-	key = "atmoscilower_attachment_a";
-	name = "atmoscilower_attachment_a"
-	},
-/turf/open/floor/plating,
-/area/station/maintenance/starboard/lesser)
 "AY" = (
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
+/area/station/maintenance/starboard/lesser)
+"BS" = (
+/obj/structure/chair/stool/directional/east,
+/mob/living/basic/lizard{
+	dir = 4;
+	name = "Takes-Their-Mandated-Breaks"
+	},
+/obj/item/reagent_containers/cup/soda_cans/lemon_lime{
+	pixel_x = 11;
+	pixel_y = 8
+	},
+/turf/open/misc/asteroid,
 /area/station/maintenance/starboard/lesser)
 "Cj" = (
 /obj/structure/disposalpipe/segment{
@@ -256,6 +295,17 @@
 /obj/modular_map_connector,
 /obj/structure/holosign/barrier/engineering,
 /turf/open/floor/catwalk_floor,
+/area/station/maintenance/starboard/lesser)
+"Eg" = (
+/obj/item/plate{
+	pixel_x = -7;
+	pixel_y = -10
+	},
+/obj/item/food/sandwich/cheese/grilled{
+	pixel_x = -5;
+	pixel_y = -9
+	},
+/turf/open/misc/asteroid,
 /area/station/maintenance/starboard/lesser)
 "EA" = (
 /obj/effect/decal/cleanable/dirt,
@@ -405,6 +455,10 @@
 /obj/effect/mapping_helpers/airlock/access/all/engineering/maintenance,
 /turf/open/floor/catwalk_floor,
 /area/station/maintenance/starboard/lesser)
+"So" = (
+/obj/item/flashlight/flare,
+/turf/open/misc/asteroid,
+/area/station/maintenance/starboard/lesser)
 "SB" = (
 /obj/structure/railing/corner,
 /turf/open/misc/asteroid,
@@ -413,6 +467,11 @@
 /obj/structure/railing/corner{
 	dir = 1
 	},
+/turf/open/misc/asteroid,
+/area/station/maintenance/starboard/lesser)
+"Vz" = (
+/obj/item/clothing/suit/hazardvest,
+/obj/item/clothing/head/utility/hardhat,
 /turf/open/misc/asteroid,
 /area/station/maintenance/starboard/lesser)
 "VC" = (
@@ -452,6 +511,10 @@
 	dir = 10
 	},
 /turf/open/floor/catwalk_floor,
+/area/station/maintenance/starboard/lesser)
+"ZC" = (
+/obj/item/stack/ore/iron,
+/turf/open/misc/asteroid,
 /area/station/maintenance/starboard/lesser)
 
 (1,1,1) = {"
@@ -903,12 +966,12 @@ MO
 MO
 Rw
 MO
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
+HJ
+HJ
+HJ
+HJ
+HJ
+HJ
 Dw
 Dw
 Dw
@@ -923,13 +986,13 @@ CX
 MO
 Qz
 MO
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
+HJ
+zW
+HJ
+HJ
+ZC
+HJ
+HJ
 Dw
 Dw
 Dw
@@ -942,14 +1005,14 @@ CX
 CX
 MO
 dY
-AA
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
+MO
+nt
+nt
+BS
+HJ
+nt
+xH
+HJ
 Dw
 Dw
 Dw
@@ -962,14 +1025,14 @@ CX
 CX
 MO
 Qz
-MO
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
+Gr
+nt
+So
+Eg
+nt
+ZC
+nO
+HJ
 Dw
 Dw
 Dw
@@ -981,15 +1044,15 @@ CX
 CX
 CX
 MO
-Qz
-MO
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
+qF
+GQ
+cq
+OK
+nt
+nt
+nt
+HJ
+HJ
 Dw
 Dw
 Dw
@@ -1002,13 +1065,13 @@ CX
 CX
 yl
 kI
-MO
-Dw
-Dw
-Dw
-Dw
-Dw
-Dw
+GQ
+OK
+nt
+Vz
+HJ
+HJ
+HJ
 Dw
 Dw
 Dw
@@ -1023,10 +1086,10 @@ CX
 MO
 oV
 MO
-Dw
-Dw
-Dw
-Dw
+HJ
+HJ
+HJ
+HJ
 Dw
 Dw
 Dw

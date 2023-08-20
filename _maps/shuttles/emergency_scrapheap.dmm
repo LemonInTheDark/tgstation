@@ -14,6 +14,7 @@
 /area/shuttle/escape)
 "ae" = (
 /obj/structure/table/wood,
+/obj/item/flashlight/lamp/green,
 /turf/open/floor/carpet,
 /area/shuttle/escape)
 "af" = (
@@ -28,9 +29,7 @@
 /area/shuttle/escape)
 "ah" = (
 /obj/structure/table/wood,
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /turf/open/floor/carpet,
 /area/shuttle/escape)
 "ai" = (
@@ -52,10 +51,8 @@
 /obj/structure/chair/comfy/brown{
 	dir = 4
 	},
-/obj/structure/window/reinforced{
-	dir = 4
-	},
-/obj/structure/window/reinforced,
+/obj/structure/window/reinforced/spawner/directional/east,
+/obj/structure/window/reinforced/spawner/directional/south,
 /turf/open/floor/carpet,
 /area/shuttle/escape)
 "am" = (
@@ -74,13 +71,10 @@
 	pixel_y = -24
 	},
 /obj/structure/table/wood/poker,
-/obj/machinery/light/directional/south,
 /turf/open/floor/carpet,
 /area/shuttle/escape)
 "ap" = (
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /turf/open/floor/carpet,
 /area/shuttle/escape)
 "aq" = (
@@ -130,7 +124,6 @@
 	pixel_x = -24;
 	pixel_y = -6
 	},
-/obj/machinery/light/small/directional/west,
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/escape/brig)
 "ay" = (
@@ -185,16 +178,12 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/escape)
 "aI" = (
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /obj/item/radio/intercom/directional/north,
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/escape)
 "aJ" = (
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /turf/open/floor/mineral/titanium,
 /area/shuttle/escape)
 "aK" = (
@@ -213,9 +202,7 @@
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/escape)
 "aM" = (
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /obj/structure/chair/comfy/shuttle{
 	dir = 4
 	},
@@ -263,12 +250,11 @@
 "aV" = (
 /obj/structure/table,
 /obj/machinery/recharger,
+/obj/machinery/light/small/directional/south,
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/escape)
 "aW" = (
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/escape)
 "aX" = (
@@ -292,9 +278,7 @@
 /turf/open/floor/iron,
 /area/shuttle/escape)
 "bb" = (
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /obj/structure/barricade/wooden,
 /obj/machinery/light/directional/south,
 /obj/effect/turf_decal/tile/bar/opposingcorners,
@@ -345,30 +329,19 @@
 /turf/open/floor/iron/freezer,
 /area/shuttle/escape)
 "bl" = (
-/obj/structure/window/reinforced{
-	dir = 1
-	},
+/obj/structure/window/reinforced/spawner/directional/north,
 /obj/machinery/power/shuttle_engine/heater,
 /turf/open/floor/plating/airless,
 /area/shuttle/escape)
 "bm" = (
-/obj/structure/window/reinforced{
-	dir = 1
-	},
+/obj/structure/window/reinforced/spawner/directional/north,
 /obj/machinery/power/shuttle_engine/heater,
-/obj/structure/window/reinforced{
-	dir = 4
-	},
+/obj/structure/window/reinforced/spawner/directional/east,
 /turf/open/floor/plating/airless,
 /area/shuttle/escape)
 "bn" = (
 /obj/machinery/power/shuttle_engine/propulsion,
 /turf/open/floor/plating/airless,
-/area/shuttle/escape)
-"bo" = (
-/obj/structure/chair/comfy/shuttle,
-/obj/machinery/light/directional/north,
-/turf/open/floor/mineral/titanium/blue,
 /area/shuttle/escape)
 "bp" = (
 /obj/structure/chair/comfy/shuttle{
@@ -377,6 +350,17 @@
 /obj/machinery/light/directional/north,
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/escape)
+"fb" = (
+/obj/machinery/light/directional/west,
+/turf/open/floor/mineral/titanium,
+/area/shuttle/escape)
+"BL" = (
+/obj/structure/chair/comfy/shuttle{
+	dir = 1
+	},
+/obj/machinery/light/small/directional/south,
+/turf/open/floor/mineral/plastitanium/red,
+/area/shuttle/escape/brig)
 "Fs" = (
 /obj/machinery/status_display/evac/directional/south,
 /obj/effect/turf_decal/tile/bar/opposingcorners,
@@ -439,7 +423,7 @@ am
 aq
 at
 ay
-aE
+BL
 ab
 aL
 ac
@@ -512,7 +496,7 @@ ab
 au
 aA
 aF
-aw
+fb
 aw
 aw
 aw
@@ -559,7 +543,7 @@ aa
 ac
 ac
 aB
-bo
+aG
 aw
 aL
 ac
