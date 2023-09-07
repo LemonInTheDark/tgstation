@@ -1,0 +1,3 @@
+mode = "BitmaskSliceReconstruct"
+# standard format for dmis
+extract = ["0", "3", "12", "15", "255"]

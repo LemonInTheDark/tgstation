@@ -1,0 +1,2 @@
+template = "mask_restore"
+extract = ["0", "3", "12", "15", "255", "tatami_purple", "tatami_green", "tatami_black"]
