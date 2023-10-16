@@ -4,6 +4,7 @@
 
 /datum/lighting_corner
 	var/list/datum/light_source/affecting // Light sources affecting us.
+	var/list/datum/light_source/potentially_affecting // Light sources POTENTIALLY affecting us. Waiting to be updated if something happens to us
 
 	var/x = 0
 	var/y = 0
@@ -29,6 +30,9 @@
 
 	///whether we are to be added to SSlighting's corners_queue list for an update
 	var/needs_update = FALSE
+
+	///lazy list of base lighting keys -> list of all rgb values, sorted by intensity and paired with the amount of each
+	var/list/base_light_keys
 
 // Takes as an argument the coords to use as the bottom left (south west) of our corner
 /datum/lighting_corner/New(x, y, z)
@@ -75,15 +79,19 @@
 		process_next.lighting_corner_NW = src
 
 /datum/lighting_corner/proc/self_destruct_if_idle()
-	if (!LAZYLEN(affecting))
+	if (!LAZYLEN(affecting) && !LAZYLEN(potentially_affecting))
 		qdel(src, force = TRUE)
 
 /datum/lighting_corner/proc/vis_update()
 	for (var/datum/light_source/light_source as anything in affecting)
 		light_source.vis_update()
 
+/datum/lighting_corner/proc/queued_update()
+	for (var/datum/light_source/light_source as anything in potentially_affecting)
+		light_source.recalc_corner(src)
+
 /datum/lighting_corner/proc/full_update()
-	for (var/datum/light_source/light_source as anything in affecting)
+	for (var/datum/light_source/light_source as anything in affecting + potentially_affecting)
 		light_source.recalc_corner(src)
 
 // God that was a mess, now to do the rest of the corner code! Hooray!
@@ -104,6 +112,117 @@
 	if (!needs_update)
 		needs_update = TRUE
 		SSlighting.corners_queue += src
+
+#define SORT_COMPARE_BASELIGHT(a) (a[1] + a[2] + a[3])
+GLOBAL_LIST_EMPTY(base_light_strings)
+/proc/get_base_light_list(r, g, b)
+	var/list/hand_back = GLOB.base_light_strings["[r]-[g]-[b]"]
+	if(hand_back)
+		return hand_back
+	hand_back = new /list(3)
+	hand_back[1] = r
+	hand_back[2] = g
+	hand_back[3] = b
+	GLOB.base_light_strings["[r]-[g]-[b]"] = hand_back
+	return hand_back
+
+/// Update a corner based off old and new BASE rgb values
+/// The idea here is we only ever use one value per key per corner
+/// So we sort our input lights based off brightness, and pull the strongest one
+/// And just store the others
+/datum/lighting_corner/proc/update_base_lumcount(key, r, g, b, old_r, old_g, old_b)
+// I want a way to instead of passing in a set of red/green/blue, pass in an index to an array (this will be cheap because we assume base lights are low range)
+// 1. If a light source has a base, generate a unique key that matches all its visual properties. This combined with the base will be the passed in key here
+// 2. Use this key to generate a sorted list of all the light lists we can generate
+// 3. Replace all light lists in the map with their index in the sorted list
+// 4. Store both the map and the sorted list, pass the old and new index into these procs, alongside the cached sorted list
+// This would give me sorting for free, and all I'd need to do to is this
+// 0. Store the length of the index list
+// 1. Decrement the old index, if its entry is 0 remove the index
+// 2. Increment the new index. If its entry is NEW expand the list to fit it
+// 3. Go to the end of the list. Check to see if it has a value. If not, step back one
+// 4. Go until you find a value, then collapse the list to fit. that index is your new color
+// 5. If the old and new indexes are the same, discard
+// 6. Index the global color list with the new and old index, removing one and adding the other
+	if(!(r || g || b))
+		remove_base_lumcount(key, old_r, old_g, old_b)
+		return
+	LAZYINITLIST(base_light_keys)
+	// first, we find the old entries
+	var/list/counted_entry
+	var/list/our_entries = base_light_keys[key]
+	var/list_modified = FALSE
+	if(our_entries)
+		counted_entry = our_entries[length(our_entries)]
+		var/list/old_entry = get_base_light_list(old_r, old_g, old_b)
+		var/reduced_count = our_entries[old_entry] - 1
+		if(reduced_count > 0)
+			our_entries[old_entry] = reduced_count
+		else
+			our_entries -= list(old_entry)
+			list_modified = TRUE
+			if(!length(our_entries))
+				base_light_keys -= key
+				UNSETEMPTY(base_light_keys)
+	else
+		base_light_keys[key] = our_entries = list()
+
+	// Alright, now we're gonna do a binary insert
+	var/list/new_entry = get_base_light_list(r, g, b)
+	var/increased_count = our_entries[new_entry] + 1
+	if(increased_count == 1)
+		BINARY_INSERT_DEFINE(list(new_entry), our_entries, SORT_VAR_NO_TYPE, new_entry, SORT_COMPARE_BASELIGHT, COMPARE_KEY)
+		list_modified = TRUE
+	our_entries[new_entry] = increased_count
+
+	if(list_modified && new_entry == our_entries[length(our_entries)])
+		lum_r += new_entry[1]
+		lum_g += new_entry[2]
+		lum_b += new_entry[3]
+		if(counted_entry)
+			lum_r -= counted_entry[1]
+			lum_g -= counted_entry[2]
+			lum_b -= counted_entry[3]
+		if (!needs_update)
+			needs_update = TRUE
+			SSlighting.corners_queue += src
+
+/datum/lighting_corner/proc/remove_base_lumcount(key, r, g, b)
+	if(!(r || g || b))
+		return
+	LAZYINITLIST(base_light_keys)
+	// first, we find the old entries
+	var/list/our_entries = base_light_keys[key]
+	if(!our_entries)
+		return
+	var/list/counted_entry = our_entries[length(our_entries)]
+
+	var/list/old_entry = get_base_light_list(r, g, b)
+	var/reduced_count = our_entries[old_entry] - 1
+	if(reduced_count > 0)
+		our_entries[old_entry] = reduced_count
+		return
+	our_entries -= list(old_entry)
+
+	var/list/new_entry
+	if(length(our_entries))
+		new_entry = our_entries[length(our_entries)]
+	else
+		base_light_keys -= key
+		UNSETEMPTY(base_light_keys)
+
+	if(counted_entry != new_entry)
+		lum_r -= counted_entry[1]
+		lum_g -= counted_entry[2]
+		lum_b -= counted_entry[3]
+		if(new_entry)
+			lum_r += new_entry[1]
+			lum_g += new_entry[2]
+			lum_b += new_entry[3]
+
+		if (!needs_update)
+			needs_update = TRUE
+			SSlighting.corners_queue += src
 
 /datum/lighting_corner/proc/update_objects()
 	// Cache these values ahead of time so 4 individual lighting objects don't all calculate them individually.
@@ -175,6 +294,9 @@
 	for (var/datum/light_source/light_source as anything in affecting)
 		LAZYREMOVE(light_source.effect_str, src)
 	affecting = null
+	for (var/datum/light_source/light_source as anything in potentially_affecting)
+		LAZYREMOVE(light_source.potential_effect, src)
+	potentially_affecting = null
 
 	if (master_NE)
 		master_NE.lighting_corner_SW = null

@@ -110,6 +110,11 @@
 	var/light_dir = NORTH
 	///Boolean variable for toggleable lights. Has no effect without the proper light_system, light_range and light_power values.
 	var/light_on = TRUE
+	/// How many tiles "up" this light is. 1 is typical, should only change this if it's a floor light
+	var/light_height = LIGHTING_HEIGHT
+	///If this has a value, it'll be used as a key for base lighting
+	///We'll only show one light value per key on a corner, using the one with the highest intensity
+	var/light_base = null
 	///Bitflags to determine lighting-related atom properties.
 	var/light_flags = NONE
 	///Our light source. Don't fuck with this directly unless you have a good reason!
@@ -1222,8 +1227,14 @@
 			if(light_system == STATIC_LIGHT)
 				set_light(l_dir = var_value)
 				. = TRUE
+		if(NAMEOF(src, light_height))
+			set_light_height(var_value)
+			. = TRUE
 		if(NAMEOF(src, light_on))
 			set_light_on(var_value)
+			. = TRUE
+		if(NAMEOF(src, light_base))
+			set_light_base(var_value)
 			. = TRUE
 		if(NAMEOF(src, light_flags))
 			set_light_flags(var_value)

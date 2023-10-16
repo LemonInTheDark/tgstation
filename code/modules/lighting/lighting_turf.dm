@@ -5,6 +5,14 @@
 	lighting_corner_SW?.vis_update()
 	lighting_corner_NW?.vis_update()
 
+// Pushes all our queued updates to run. We do this when they might be needed, yaknow?
+#warn This system throws hard deletes. You need to fix that before we do anything here
+/turf/proc/flush_light_queue()
+	lighting_corner_NE?.queued_update()
+	lighting_corner_SE?.queued_update()
+	lighting_corner_SW?.queued_update()
+	lighting_corner_NW?.queued_update()
+
 /turf/proc/lighting_clear_overlay()
 	if (lighting_object)
 		qdel(lighting_object, force=TRUE)

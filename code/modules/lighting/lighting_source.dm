@@ -23,6 +23,13 @@
 	var/light_range
 	/// The colour of the light, string, decomposed by parse_light_color()
 	var/light_color
+	/// The height of the light. The larger this is, the dimmer we'll start
+	var/light_height
+
+	/// If you're using base lighting, then a corner will take your type ONCE, at the highest intensity it's seen
+	/// Rather then summing them all together. good for lights that are mass placed, looks uniform
+	/// key'd by a string
+	var/base_lighting
 
 	// Variables for keeping track of the colour.
 	var/lum_r
@@ -39,8 +46,14 @@
 	var/tmp/applied_lum_g
 	var/tmp/applied_lum_b
 
+	/// The base lighting value used to apply the light
+	var/applied_base_lighting
+
 	/// List used to store how much we're affecting corners.
 	var/list/datum/lighting_corner/effect_str
+
+	/// List of corners we are planning on updating, if they request it
+	var/list/datum/lighting_corner/potential_effect
 
 	/// Whether we have applied our light yet or not.
 	var/applied = FALSE
@@ -78,7 +91,7 @@
 	if (needs_update)
 		SSlighting.sources_queue -= src
 		SSlighting.current_sources -= src
-		
+
 	top_atom = null
 	source_atom = null
 	source_turf = null
@@ -169,12 +182,15 @@
 	var/_applied_lum_b = lighting_source.applied_lum_b;                                                    \
 	var/_lum_r = lighting_source.lum_r;                                                                    \
 	var/_lum_g = lighting_source.lum_g;                                                                    \
-	var/_lum_b = lighting_source.lum_b;
+	var/_lum_b = lighting_source.lum_b;                                                                    \
+	var/_base_lighting = lighting_source.base_lighting;                                                    \
+	var/_applied_base_lighting = lighting_source.applied_base_lighting;
 
 #define SETUP_CORNERS_REMOVAL_CACHE(lighting_source)    \
 	var/_applied_lum_r = lighting_source.applied_lum_r; \
 	var/_applied_lum_g = lighting_source.applied_lum_g; \
-	var/_applied_lum_b = lighting_source.applied_lum_b;
+	var/_applied_lum_b = lighting_source.applied_lum_b; \
+	var/_applied_base_lighting = lighting_source.applied_base_lighting;
 
 // Read out of our sources light sheet, a map of offsets -> the luminosity to use
 #define LUM_FALLOFF(C) _sheet[C.x - _turf_x + _range_offset][C.y  - _turf_y + _range_offset]
@@ -185,31 +201,45 @@
 // If you're wondering what's with the backslashes, the backslashes cause BYOND to not automatically end the line.
 // As such this all gets counted as a single line.
 // The braces and semicolons are there to be able to do this on a single line.
-#define APPLY_CORNER(C)                          \
-	if(C.z == _turf_z) {                         \
-		. = LUM_FALLOFF(C);                      \
-	}                                            \
-	else {                                       \
-		. = LUM_FALLOFF_MULTIZ(C)                \
-	}                                            \
-	. *= _light_power;                           \
-	var/OLD = effect_str[C];                     \
-	                                             \
-	C.update_lumcount                            \
-	(                                            \
-		(. * _lum_r) - (OLD * _applied_lum_r),   \
-		(. * _lum_g) - (OLD * _applied_lum_g),   \
-		(. * _lum_b) - (OLD * _applied_lum_b)    \
-	);
+#define APPLY_CORNER(C)                                  \
+	if(C.z == _turf_z) {                                 \
+		. = LUM_FALLOFF(C);                              \
+	}                                                    \
+	else {                                               \
+		. = LUM_FALLOFF_MULTIZ(C)                        \
+	}                                                    \
+	. *= _light_power;                                   \
+	var/OLD = effect_str[C];                             \
+	if(!_base_lighting) {                                \
+		if(_applied_base_lighting) {                     \
+			C.remove_base_lumcount(_applied_base_lighting, OLD * _applied_lum_r, OLD * _applied_lum_g, OLD * _applied_lum_b); \
+		} else {                                         \
+			C.update_lumcount                            \
+			(                                            \
+				(. * _lum_r) - (OLD * _applied_lum_r),   \
+				(. * _lum_g) - (OLD * _applied_lum_g),   \
+				(. * _lum_b) - (OLD * _applied_lum_b)    \
+			);                                           \
+		}                                                \
+	} else if (_base_lighting == _applied_base_lighting) { \
+		C.update_base_lumcount(_base_lighting, (. * _lum_r), (. * _lum_g), (. * _lum_b), (OLD * _applied_lum_r), (OLD * _applied_lum_g), (OLD * _applied_lum_b)); \
+	} else {                                             \
+		C.update_base_lumcount(_base_lighting, (. * _lum_r), (. * _lum_g), (. * _lum_b), 0, 0, 0); \
+		C.remove_base_lumcount(_applied_base_lighting, OLD * _applied_lum_r, OLD * _applied_lum_g, OLD * _applied_lum_b); \
+	}
 
 #define REMOVE_CORNER(C)                         \
 	. = -effect_str[C];                          \
-	C.update_lumcount                            \
-	(                                            \
-		. * _applied_lum_r,                      \
-		. * _applied_lum_g,                      \
-		. * _applied_lum_b                       \
-	);
+	if(_applied_base_lighting) { \
+		C.remove_base_lumcount(_applied_base_lighting, -. * _applied_lum_r, -. * _applied_lum_g, -. * _applied_lum_b); \
+	} else { \
+		C.update_lumcount                            \
+		(                                            \
+			. * _applied_lum_r,                      \
+			. * _applied_lum_g,                      \
+			. * _applied_lum_b                       \
+		); \
+	}
 
 /// Returns a list of lists, indexed with ints, that can be read to get the lighting multiplier at any one point
 /// If the requested sheet is multiz, this will be 3 lists deep, first handling z level then x and y
@@ -217,20 +247,20 @@
 /datum/light_source/proc/get_sheet(multiz = FALSE)
 	var/list/static/key_to_sheet = list()
 	var/range = max(1, light_range);
-	var/key = "[range]-[visual_offset]-[offset_x]-[offset_y]-[light_dir]-[light_angle]-[multiz]"
+	var/key = "[range]-[visual_offset]-[offset_x]-[offset_y]-[light_dir]-[light_angle]-[light_height]-[multiz]"
 	var/list/hand_back = key_to_sheet[key]
 	if(!hand_back)
 		if(multiz)
-			hand_back = generate_sheet_multiz(range, visual_offset, offset_x, offset_y, light_dir, light_angle)
+			hand_back = generate_sheet_multiz(range, visual_offset, offset_x, offset_y, light_dir, light_angle, light_height)
 		else
-			hand_back = generate_sheet(range, visual_offset, offset_x, offset_y, light_dir, light_angle)
+			hand_back = generate_sheet(range, visual_offset, offset_x, offset_y, light_dir, light_angle, light_height)
 		key_to_sheet[key] = hand_back
 	return hand_back
 
 /// Returns a list of lists that encodes the light falloff of our source
 /// Takes anything that impacts our generation as input
 /// This function should be "pure", no side effects or reads from the source object
-/datum/light_source/proc/generate_sheet(range, visual_offset, x_offset, y_offset, center_dir, angle, z_level = 0)
+/datum/light_source/proc/generate_sheet(range, visual_offset, x_offset, y_offset, center_dir, angle, height, z_level = 0)
 	var/list/encode = list()
 	// How far away the turfs we get are, and how many there are are often not the same calculation
 	// So we need to include the visual offset, so we can ensure our sheet is large enough to accept all the distance differences
@@ -241,30 +271,30 @@
 	for(var/x in (-(bound_range) + x_offset - 0.5) to (bound_range + x_offset + 0.5))
 		var/list/row = list()
 		for(var/y in (-(bound_range) + y_offset - 0.5) to (bound_range + y_offset + 0.5))
-			row += falloff_at_coord(x, y, z_level, range, center_dir, light_angle)
+			row += falloff_at_coord(x, y, z_level, range, center_dir, angle, height)
 		encode += list(row)
 	return encode
 
 /// Returns a THREE dimensional list of lists that encodes the lighting falloff of our source
 /// Takes anything that impacts our generation as input
 /// This function should be "pure", no side effects or reads from the passed object
-/datum/light_source/proc/generate_sheet_multiz(range, visual_offset, x_offset, y_offset, center_dir, angle)
+/datum/light_source/proc/generate_sheet_multiz(range, visual_offset, x_offset, y_offset, center_dir, angle, height)
 	var/list/encode = list()
 	var/z_range = SSmapping.max_plane_offset // Let's just be safe yeah?
 	for(var/z in -z_range to z_range)
-		var/list/sheet = generate_sheet(range, visual_offset, x_offset, y_offset, center_dir, angle, z)
+		var/list/sheet = generate_sheet(range, visual_offset, x_offset, y_offset, center_dir, angle, height, z)
 		encode += list(sheet)
 	return encode
 
 /// Takes x y and z offsets from the source as input, alongside our source's range
 /// Returns a value between 0 and 1, 0 being dark on that tile, 1 being fully lit
-/datum/light_source/proc/falloff_at_coord(x, y, z, range, center_dir, angle)
+/datum/light_source/proc/falloff_at_coord(x, y, z, range, center_dir, angle, height)
 	var/range_divisor = max(1, range)
 
 	// You may notice we use squares here even though there are three components
 	// Because z diffs are so functionally small, cubes and cube roots are too aggressive
 	// The larger the distance is, the less bright our light will be
-	var/multiplier = 1 - CLAMP01(sqrt(x ** 2 + y ** 2 + z ** 2 + LIGHTING_HEIGHT) / range_divisor)
+	var/multiplier = 1 - CLAMP01(sqrt(x ** 2 + y ** 2 + z ** 2 + height) / range_divisor)
 	if(angle >= 360 || angle <= 0)
 		return multiplier
 
@@ -328,14 +358,23 @@
 		REMOVE_CORNER(corner)
 		LAZYREMOVE(corner.affecting, src)
 
+	for (var/datum/lighting_corner/corner as anything in potential_effect)
+		LAZYREMOVE(corner.potentially_affecting, src)
+
 	effect_str = null
+	potential_effect = null
 
 /datum/light_source/proc/recalc_corner(datum/lighting_corner/corner)
 	SETUP_CORNERS_CACHE(src)
 	LAZYINITLIST(effect_str)
+	LAZYINITLIST(potential_effect)
 	if (effect_str[corner]) // Already have one.
 		REMOVE_CORNER(corner)
 		effect_str[corner] = 0
+
+	if(potential_effect.Remove(corner))
+		corner.potentially_affecting -= src
+		UNSETEMPTY(potential_effect)
 
 	APPLY_CORNER(corner)
 	effect_str[corner] = .
@@ -357,14 +396,25 @@
 	}                                                                                                     \
 	gen_for.lighting_corners_initialised = TRUE;
 
-#define INSERT_CORNERS(insert_into, draw_from)             \
-	if (!draw_from.lighting_corners_initialised) {         \
-		GENERATE_MISSING_CORNERS(draw_from);               \
-	}                                                      \
-	insert_into[draw_from.lighting_corner_NE] = 0;         \
-	insert_into[draw_from.lighting_corner_SE] = 0;         \
-	insert_into[draw_from.lighting_corner_SW] = 0;         \
-	insert_into[draw_from.lighting_corner_NW] = 0;
+/// Takes two lists as imput
+/// Insert lighting corners into the first to process them
+/// Insert them into the second to allow us to queue processing, run it later by calling flush_light_queue() on your turf
+/turf/proc/insert_corners(list/insert_into, list/handle_later)
+	if(!lighting_corners_initialised)
+		if (!lighting_corner_NE)
+			lighting_corner_NE = new /datum/lighting_corner(x, y, z)
+		if (!lighting_corner_SE)
+			lighting_corner_SE = new /datum/lighting_corner(x, y - 1, z)
+		if (!lighting_corner_SW)
+			lighting_corner_SW = new /datum/lighting_corner(x - 1, y - 1, z)
+		if (!lighting_corner_NW)
+			lighting_corner_NW = new /datum/lighting_corner(x - 1, y, z)
+		lighting_corners_initialised = TRUE
+
+	insert_into[lighting_corner_NE] = 0
+	insert_into[lighting_corner_SE] = 0
+	insert_into[lighting_corner_SW] = 0
+	insert_into[lighting_corner_NW] = 0
 
 /// Refreshes our lighting source to match its parent atom
 /// Returns TRUE if an update is needed, FALSE otherwise
@@ -421,12 +471,20 @@
 	else if (applied_lum_r != lum_r || applied_lum_g != lum_g || applied_lum_b != lum_b)
 		update = TRUE
 
+	if(applied_base_lighting != source_atom.light_base)
+		base_lighting = source_atom.light_base
+		update = TRUE
+
 	if(source_atom.light_dir != light_dir)
 		light_dir = source_atom.light_dir
 		update = TRUE
 
 	if (source_atom.light_angle != light_angle)
 		light_angle = source_atom.light_angle
+		update = TRUE
+
+	if(source_atom.light_height != light_height)
+		light_height = source_atom.light_height
 		update = TRUE
 
 	var/list/visual_offsets = calculate_light_offset(visual_source)
@@ -458,19 +516,28 @@
 	source_turf.luminosity = working_range
 
 	var/uses_multiz = !!GET_LOWEST_STACK_OFFSET(source_turf.z)
+	var/list/handle_later = list()
 
 	if(!uses_multiz) // Yes I know this could be acomplished with an if in the for loop, but it's fukin lighting code man
 		for(var/turf/T in view(working_range, source_turf))
 			if(IS_OPAQUE_TURF(T))
 				continue
-			INSERT_CORNERS(corners, T)
+			T.insert_corners(corners, handle_later)
 		source_turf.luminosity = oldlum
+		// Alright now we gotta push handle_later into our queued work
+		LAZYINITLIST(potential_effect)
+		for(var/datum/lighting_corner/later as anything in handle_later)
+			if(!potential_effect[later])
+				LAZYADD(later.potentially_affecting, src)
+				potential_effect[later] = TRUE
+
+		UNSETEMPTY(potential_effect)
 		return corners
 
 	for(var/turf/T in view(working_range, source_turf))
 		if(IS_OPAQUE_TURF(T))
 			continue
-		INSERT_CORNERS(corners, T)
+		T.insert_corners(corners, handle_later)
 
 		var/turf/below = GET_TURF_BELOW(T)
 		var/turf/previous = T
@@ -483,7 +550,7 @@
 				// Of this corner
 				break
 			// Now we do lighting things to it
-			INSERT_CORNERS(corners, below)
+			below.insert_corners(corners, handle_later)
 			// ANNND then we add the one below it
 			previous = below
 			below = GET_TURF_BELOW(below)
@@ -493,7 +560,7 @@
 			// If we find a non transparent turf, end
 			if(!istransparentturf(above) || IS_OPAQUE_TURF(above))
 				break
-			INSERT_CORNERS(corners, above)
+			above.insert_corners(corners, handle_later)
 			above = GET_TURF_ABOVE(above)
 
 	source_turf.luminosity = oldlum
@@ -532,13 +599,14 @@
 	applied_lum_r = lum_r
 	applied_lum_g = lum_g
 	applied_lum_b = lum_b
+	applied_base_lighting = base_lighting
 
 	UNSETEMPTY(src.effect_str)
+	UNSETEMPTY(potential_effect)
 
 #undef APPLY_CORNER
 #undef EFFECT_UPDATE
 #undef GENERATE_MISSING_CORNERS
-#undef INSERT_CORNERS
 #undef LUM_FALLOFF
 #undef LUM_FALLOFF_MULTIZ
 #undef REMOVE_CORNER

@@ -60,10 +60,11 @@ GLOBAL_LIST_EMPTY(starlight)
 	run_later = TRUE
 	plane = PLANE_SPACE
 	layer = SPACE_LAYER
-	light_power = 0.75
+	light_power = 1
 	light_range = 2
 	light_color = COLOR_STARLIGHT
 	light_on = FALSE
+	light_base = "SPACE"
 	space_lit = TRUE
 	bullet_bounce_sound = null
 	vis_flags = VIS_INHERIT_ID //when this be added to vis_contents of something it be associated with something on clicking, important for visualisation of turf in openspace and interraction with openspace that show you turf.
@@ -78,6 +79,7 @@ GLOBAL_LIST_EMPTY(starlight)
 /turf/open/space/Destroy()
 	. = ..()
 	GLOB.starlight -= src
+	flush_light_queue()
 
 //ATTACK GHOST IGNORING PARENT RETURN VALUE
 /turf/open/space/attack_ghost(mob/dead/observer/user)
@@ -101,6 +103,31 @@ GLOBAL_LIST_EMPTY(starlight)
 /turf/open/space/remove_air(amount)
 	return null
 
+// Space doesn't hand back corners that aren't touching a non space tile
+/turf/open/space/insert_corners(list/insert_into, list/handle_later)
+	if(!lighting_corners_initialised)
+		if (!lighting_corner_NE)
+			lighting_corner_NE = new /datum/lighting_corner(x, y, z)
+		if (!lighting_corner_SE)
+			lighting_corner_SE = new /datum/lighting_corner(x, y - 1, z)
+		if (!lighting_corner_SW)
+			lighting_corner_SW = new /datum/lighting_corner(x - 1, y - 1, z)
+		if (!lighting_corner_NW)
+			lighting_corner_NW = new /datum/lighting_corner(x - 1, y, z)
+		lighting_corners_initialised = TRUE
+
+	// I promise this makes sense
+	// If our space turf isn't making any light, then it ISN'T adjacent to anything that lighting it would light
+	// SOOOO we shouldn't process our corners now, instead we can deal with it later
+	if(!light_on)
+		handle_later += list(lighting_corner_NE, lighting_corner_SE, lighting_corner_SW, lighting_corner_NW)
+		return
+
+	insert_into[lighting_corner_NE] = 0
+	insert_into[lighting_corner_SE] = 0
+	insert_into[lighting_corner_SW] = 0
+	insert_into[lighting_corner_NW] = 0
+
 /// Updates starlight. Called when we're unsure of a turf's starlight state
 /// Returns TRUE if we succeed, FALSE otherwise
 /turf/open/space/proc/update_starlight()
@@ -120,6 +147,7 @@ GLOBAL_LIST_EMPTY(starlight)
 	if(!light_on)
 		set_light(l_on = TRUE, l_range = GLOB.starlight_range, l_power = GLOB.starlight_power, l_color = GLOB.starlight_color)
 		GLOB.starlight += src
+		flush_light_queue()
 
 /turf/open/space/attack_paw(mob/user, list/modifiers)
 	return attack_hand(user, modifiers)
@@ -313,6 +341,7 @@ GLOBAL_LIST_EMPTY(starlight)
 		return
 	set_light(l_on = TRUE, l_range = GLOB.starlight_range, l_power = GLOB.starlight_power, l_color = GLOB.starlight_color)
 	GLOB.starlight += src
+	flush_light_queue()
 
 /turf/open/space/openspace/update_starlight()
 	. = ..()
@@ -327,6 +356,7 @@ GLOBAL_LIST_EMPTY(starlight)
 	if(isspaceturf(source) && !ispath(path, /turf/open/space))
 		GLOB.starlight += src
 		set_light(l_on = TRUE, l_range = GLOB.starlight_range, l_power = GLOB.starlight_power, l_color = GLOB.starlight_color)
+		flush_light_queue()
 	else if(!isspaceturf(source) && ispath(path, /turf/open/space))
 		GLOB.starlight -= src
 		set_light(l_on = FALSE)
