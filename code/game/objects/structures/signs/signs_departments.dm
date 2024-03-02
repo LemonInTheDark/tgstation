@@ -279,6 +279,7 @@ WALL_MOUNT_DIRECTIONAL_HELPERS(/obj/structure/sign/departments/maint/alt)
 /obj/structure/sign/departments/evac/port
 	arrow_direction_state = "evac_overlay_p"
 
+WALL_MOUNT_DIRECTIONAL_HELPERS(/obj/structure/sign/departments/evac)
 WALL_MOUNT_DIRECTIONAL_HELPERS(/obj/structure/sign/departments/evac/fore)
 WALL_MOUNT_DIRECTIONAL_HELPERS(/obj/structure/sign/departments/evac/aft)
 WALL_MOUNT_DIRECTIONAL_HELPERS(/obj/structure/sign/departments/evac/starboard)
