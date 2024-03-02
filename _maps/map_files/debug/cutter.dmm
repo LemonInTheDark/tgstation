@@ -1070,7 +1070,6 @@
 /area/misc/testroom)
 "lV" = (
 /obj/structure/grille/tram,
-/obj/structure/grille/tram,
 /turf/open/floor/iron,
 /area/misc/testroom)
 "ma" = (
@@ -1503,7 +1502,6 @@
 /turf/open/lava/plasma/ice_moon,
 /area/icemoon/underground/explored)
 "qB" = (
-/obj/structure/grille,
 /obj/structure/grille,
 /turf/open/floor/iron,
 /area/misc/testroom)

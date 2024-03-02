@@ -12189,9 +12189,7 @@
 /turf/open/floor/iron/showroomfloor,
 /area/station/service/kitchen/coldroom)
 "aUZ" = (
-/mob/living/simple_animal/hostile/retaliate/goat{
-	name = "Pete"
-	},
+/mob/living/basic/goat/pete,
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
 /turf/open/floor/iron/showroomfloor,
 /area/station/service/kitchen/coldroom)
@@ -12693,7 +12691,6 @@
 /obj/machinery/camera/directional/north{
 	c_tag = "Custodial Quarters"
 	},
-/obj/machinery/light/small/directional/north,
 /obj/machinery/light/small/directional/north,
 /obj/machinery/requests_console/directional/north{
 	department = "Janitorial";
@@ -13507,7 +13504,11 @@
 /area/station/service/hydroponics)
 "aZZ" = (
 /obj/machinery/smartfridge,
-/turf/closed/wall,
+/obj/machinery/door/window/right/directional/west{
+	name = "Hydroponics Desk";
+	req_access = list("hydroponics")
+	},
+/turf/open/floor/iron/cafeteria,
 /area/station/service/kitchen)
 "baa" = (
 /obj/structure/disposalpipe/segment,
@@ -15714,7 +15715,7 @@
 /turf/open/floor/iron,
 /area/station/medical/treatment_center)
 "bjY" = (
-/obj/structure/bed/roller,
+/obj/structure/bed/medical/emergency,
 /obj/machinery/airalarm/directional/north,
 /obj/effect/turf_decal/tile/blue/anticorner/contrasted{
 	dir = 1
@@ -15826,7 +15827,6 @@
 /turf/open/floor/iron/dark,
 /area/station/hallway/primary/aft)
 "bkr" = (
-/obj/machinery/lapvend,
 /turf/open/floor/iron/dark,
 /area/station/hallway/primary/aft)
 "bks" = (
@@ -16022,7 +16022,7 @@
 /turf/open/floor/iron,
 /area/station/medical/treatment_center)
 "bli" = (
-/obj/structure/bed/roller,
+/obj/structure/bed/medical/emergency,
 /obj/machinery/newscaster/directional/west,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4{
 	dir = 4
@@ -16518,9 +16518,7 @@
 /turf/open/floor/iron/white,
 /area/station/medical/paramedic)
 "bnC" = (
-/obj/structure/sign/poster/official/cleanliness{
-	pixel_y = -30
-	},
+/obj/structure/sign/poster/official/cleanliness,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/turf_decal/tile/blue/half/contrasted,
 /turf/open/floor/iron/white,
@@ -24276,10 +24274,6 @@
 /area/station/command/heads_quarters/ce)
 "bUI" = (
 /obj/structure/table/reinforced,
-/obj/item/computer_disk/atmos{
-	pixel_x = 5;
-	pixel_y = 5
-	},
 /obj/item/computer_disk/engineering,
 /obj/effect/turf_decal/tile/yellow/anticorner/contrasted{
 	dir = 1
@@ -24550,7 +24544,7 @@
 /obj/item/folder/yellow,
 /obj/item/paper/monitorkey,
 /obj/item/pen,
-/mob/living/simple_animal/parrot/poly,
+/mob/living/basic/parrot/poly,
 /obj/machinery/button/door/directional/west{
 	id = "Secure Storage";
 	name = "Engineering Secure Storage";
@@ -29759,7 +29753,17 @@
 /area/station/maintenance/department/crew_quarters/dorms)
 "cBD" = (
 /obj/machinery/smartfridge/chemistry/preloaded,
-/turf/closed/wall,
+/obj/machinery/door/window/left/directional/north{
+	dir = 2;
+	name = "Public Pills";
+	req_access = list("pharmacy")
+	},
+/obj/effect/turf_decal/tile/yellow/fourcorners,
+/obj/machinery/door/poddoor/shutters/preopen{
+	id = "chemistry_shutters";
+	name = "Chemistry Shutters"
+	},
+/turf/open/floor/iron/white,
 /area/station/medical/pharmacy)
 "cBL" = (
 /obj/machinery/door/airlock/maintenance{
@@ -30148,7 +30152,7 @@
 	dir = 8
 	},
 /obj/structure/bed/dogbed/runtime,
-/mob/living/simple_animal/pet/cat/runtime,
+/mob/living/basic/pet/cat/runtime,
 /turf/open/floor/iron/white,
 /area/station/command/heads_quarters/cmo)
 "cSK" = (
@@ -32176,7 +32180,7 @@
 	},
 /obj/machinery/door/window/right/directional/south{
 	dir = 4;
-	name = "Morgue Waste Chute";
+	name = "Morgue Supply";
 	req_access = list("medical")
 	},
 /obj/structure/disposalpipe/trunk{
@@ -32389,9 +32393,7 @@
 /turf/open/floor/iron/white,
 /area/station/medical/medbay)
 "fby" = (
-/obj/structure/sign/poster/official/no_erp{
-	pixel_x = 29
-	},
+/obj/structure/sign/poster/official/no_erp,
 /obj/structure/chair/office{
 	dir = 1
 	},
@@ -33837,7 +33839,7 @@
 /area/station/commons/fitness/recreation)
 "gvi" = (
 /obj/effect/turf_decal/bot,
-/mob/living/simple_animal/sloth/paperwork{
+/mob/living/basic/sloth/paperwork{
 	name = "Taxes"
 	},
 /turf/open/floor/iron,
@@ -39321,7 +39323,6 @@
 	name = "Armory Desk";
 	req_access = list("armory")
 	},
-/obj/machinery/door/firedoor,
 /obj/item/storage/fancy/donut_box,
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/security/armory)
@@ -39570,7 +39571,7 @@
 /area/station/engineering/supermatter/room)
 "mgW" = (
 /obj/effect/turf_decal/delivery,
-/obj/machinery/atmospherics/components/unary/cryo_cell,
+/obj/machinery/cryo_cell,
 /obj/effect/turf_decal/tile/blue/fourcorners,
 /turf/open/floor/iron,
 /area/station/medical/cryo)
@@ -41402,7 +41403,7 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/central/aft)
 "nVI" = (
-/mob/living/simple_animal/pet/cat{
+/mob/living/basic/pet/cat{
 	desc = "Yoss, queen, slay.";
 	name = "Katie"
 	},
@@ -43535,7 +43536,6 @@
 /turf/open/floor/engine,
 /area/station/engineering/supermatter/room)
 "pMg" = (
-/obj/machinery/rnd/bepis,
 /obj/effect/turf_decal/trimline/brown/filled/line{
 	dir = 10
 	},
@@ -47392,7 +47392,7 @@
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/security/armory)
 "tcm" = (
-/obj/structure/bed/roller,
+/obj/structure/bed/medical/emergency,
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/central)
 "tct" = (
@@ -49186,7 +49186,7 @@
 /turf/closed/wall/r_wall,
 /area/station/engineering/atmos)
 "uwS" = (
-/obj/structure/bed/roller,
+/obj/structure/bed/medical/emergency,
 /obj/machinery/iv_drip,
 /obj/machinery/power/apc/auto_name/directional/west,
 /obj/structure/cable,
@@ -50546,7 +50546,13 @@
 /area/station/ai_monitored/turret_protected/ai_sat_ext_ap)
 "vIa" = (
 /obj/machinery/smartfridge/organ,
-/turf/closed/wall,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/door/window/right/directional/south{
+	dir = 4;
+	name = "Morgue Waste Chute";
+	req_access = list("medical")
+	},
+/turf/open/floor/iron/dark,
 /area/station/medical/morgue)
 "vIc" = (
 /obj/structure/disposalpipe/segment{
@@ -51196,7 +51202,7 @@
 /turf/open/floor/iron/dark,
 /area/station/service/chapel/office)
 "wfO" = (
-/mob/living/simple_animal/hostile/retaliate/snake,
+/mob/living/basic/snake,
 /turf/open/floor/plating,
 /area/station/maintenance/department/engine)
 "wha" = (
@@ -53050,7 +53056,7 @@
 /turf/closed/wall/mineral/iron,
 /area/station/service/chapel/storage)
 "xBk" = (
-/obj/structure/bed/roller,
+/obj/structure/bed/medical/emergency,
 /obj/machinery/iv_drip,
 /obj/machinery/light_switch/directional/west,
 /obj/effect/turf_decal/tile/blue/half/contrasted{
