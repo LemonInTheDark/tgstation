@@ -406,7 +406,8 @@
 	return null
 
 /obj/structure/grille/broken // Pre-broken grilles for map placement
-	icon_state = "grille-broken"
+	icon = 'icons/obj/smooth_structures/tall_structure_variations.dmi'
+	icon_state = "grille_broken"
 	density = FALSE
 	broken = TRUE
 	rods_amount = 1

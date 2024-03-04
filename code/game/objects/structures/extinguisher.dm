@@ -172,6 +172,6 @@ WALL_MOUNT_DIRECTIONAL_HELPERS(/obj/structure/extinguisher_cabinet)
 	name = "extinguisher cabinet frame"
 	desc = "Used for building wall-mounted extinguisher cabinets."
 	icon = 'icons/obj/extinguisher.dmi'
-	icon_state = "extinguisher_assembly"
+	icon_state = "cabinet"
 	result_path = /obj/structure/extinguisher_cabinet
 	pixel_shift = 29 // wallening todo: is this like... ok?
