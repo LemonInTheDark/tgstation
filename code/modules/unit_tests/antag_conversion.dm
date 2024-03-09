@@ -45,7 +45,7 @@
 /datum/unit_test/cult_conversion
 
 /datum/unit_test/cult_conversion/Run()
-	var/mob/living/carbon/human/cult_a = allocate(/mob/living/carbon/human/consistent, run_loc_floor_bottom_left)
+	var/mob/living/carbon/human/cult_a = allocate(run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/cult_b = allocate(/mob/living/carbon/human/consistent, run_loc_floor_bottom_left)
 	var/mob/living/carbon/human/new_cultist = allocate(/mob/living/carbon/human/consistent, run_loc_floor_bottom_left)
 

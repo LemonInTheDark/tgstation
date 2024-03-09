@@ -427,6 +427,9 @@
 /obj/structure/girder/tram
 	name = "tram frame"
 	desc = "Titanium framework to construct tram walls. Can be plated with <b>titanium glass</b> or other wall materials."
+	// Why the hell are these subtypes of girders if they look and are created like lattices
+	// What the fuck
+	icon = 'icons/obj/structures.dmi'
 	icon_state = "tram"
 	state = GIRDER_TRAM
 	density = FALSE
