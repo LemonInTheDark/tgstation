@@ -166,8 +166,7 @@
 		render_target = "*[render_target]"
 		bare_render_target = old_render_target
 
-	// We assert that all initial render targets will have no *
-	#warn unit test for this
+	// We assert that all initial render targets will have no *, which we test for
 	// Swapping em around
 	home.canon_source_to_reality -= render_target
 	home.canon_source_to_reality[old_render_target] = render_target
