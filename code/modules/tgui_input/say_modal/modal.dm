@@ -40,6 +40,11 @@
 	window.subscribe(src, PROC_REF(on_message))
 	window.is_browser = TRUE
 
+/datum/tgui_say/Destroy(force)
+	client = null
+	QDEL_NULL(window)
+	return ..()
+
 /**
  * After a brief period, injects the scripts into
  * the window to listen for open commands.

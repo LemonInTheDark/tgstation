@@ -54,6 +54,13 @@
 	if(pooled)
 		src.pool_index = TGUI_WINDOW_INDEX(id)
 
+/datum/tgui_window/Destroy(force)
+	unsubscribe()
+	close()
+	client.tgui_windows -= id
+	client = null
+	return ..()
+
 /**
  * public
  *
@@ -218,7 +225,7 @@
  *
  * Unsubscribes the datum. Do not forget to call this when cleaning up.
  */
-/datum/tgui_window/proc/unsubscribe(datum/object)
+/datum/tgui_window/proc/unsubscribe()
 	subscriber_object = null
 	subscriber_delegate = null
 
