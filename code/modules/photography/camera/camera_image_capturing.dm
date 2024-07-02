@@ -12,6 +12,7 @@
 
 /obj/item/camera/proc/camera_get_icon(list/turfs, turf/center, psize_x = 96, psize_y = 96, datum/turf_reservation/clone_area, size_x, size_y, total_x, total_y)
 	var/list/atoms = list()
+	var/list/lights = list()
 	var/skip_normal = FALSE
 	var/wipe_atoms = FALSE
 
@@ -29,6 +30,11 @@
 			atoms += new /obj/effect/appearance_clone(newT, T)
 			if(T.loc.icon_state)
 				atoms += new /obj/effect/appearance_clone(newT, T.loc)
+			if(newT.lighting_object)
+				var/obj/effect/appearance_clone/lighting = new(newT)
+				lighting.appearance = newT.lighting_object.current_underlay
+				lighting.blend_mode = BLEND_MULTIPLY
+				lights += lighting
 			for(var/i in T.contents)
 				var/atom/A = i
 				if(!A.invisibility || (see_ghosts && isobserver(A)))
@@ -41,6 +47,11 @@
 		for(var/i in turfs)
 			var/turf/T = i
 			atoms += T
+			if(T.lighting_object)
+				var/obj/effect/appearance_clone/lighting = new(T)
+				lighting.appearance = T.lighting_object.current_underlay
+				lighting.blend_mode = BLEND_MULTIPLY
+				lights += lighting
 			for(var/atom/movable/A in T)
 				if(A.invisibility)
 					if(!(see_ghosts && isobserver(A)))
@@ -51,6 +62,7 @@
 	var/icon/res = icon('icons/blanks/96x96.dmi', "nothing")
 	res.Scale(psize_x, psize_y)
 
+	atoms += lights
 	var/list/sorted = list()
 	var/j
 	for(var/i in 1 to atoms.len)
@@ -116,5 +128,7 @@
 
 	if(wipe_atoms)
 		QDEL_LIST(atoms)
+	else
+		QDEL_LIST(lights)
 
 	return res
