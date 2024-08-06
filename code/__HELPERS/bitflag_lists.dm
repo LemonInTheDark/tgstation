@@ -26,3 +26,18 @@ GLOBAL_LIST_EMPTY(bitflag_lists)
 			target = GLOB.bitflag_lists[txt_signature] = new_bitflag_list; \
 		}; \
 	} while (FALSE)
+
+/// Takes a list of smoothing groups, turns them into a corresponding string for debugging
+/proc/encode_smoothing_groups(list/groups)
+	var/list/expanded = list()
+	for(var/field_num in groups)
+		var/value_field = groups[field_num]
+		var/base = text2num(field_num) * 24
+		for(var/offset in 0 to 23)
+			if(!(value_field & (1 << offset)))
+				continue
+			var/value = offset + base
+			if(value > MAX_S_TURF)
+				value = -(value - (MAX_S_TURF + 1))
+			expanded += value
+	return json_encode(expanded)
