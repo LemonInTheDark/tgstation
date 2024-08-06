@@ -54,11 +54,17 @@
 #define SHOWER_DIRECTIONAL_HELPERS(path) _WALL_MOUNT_DIRECTIONAL_HELPERS(path, 32, -4, 16, -16, 12)
 
 // Sinks need to be shifted down so they layer correctly when north due to their unique status
+#warn why is the map editor part of this not working
+#ifdef MAP_EDITOR
+#define SINK_DIRECTIONAL_HELPERS(path) _WALL_MOUNT_DIRECTIONAL_HELPERS(path, 16, 24, 16, -16, 12)
+#else
 #define SINK_DIRECTIONAL_HELPERS(path) \
 _WALL_MOUNT_DIRECTIONAL_HELPERS(path, 16, 24, 16, -16, 12) \
 ##path/directional/north {\
+	name = "stinky dodo pants"; \
 	pixel_y = -32; \
 }
+#endif
 
 #define _WALL_MOUNT_DIRECTIONAL_HELPERS(path, north_offset, south_offset, east_offset, west_offset, horizontal_up_offset) \
 ##path/directional/north {\
