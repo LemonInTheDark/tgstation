@@ -403,12 +403,20 @@
 	critical = PLANE_CRITICAL_DISPLAY
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
-/atom/movable/screen/plane_master/darkness_mask/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
+/atom/movable/screen/plane_master/darkness_mask/show_to(mob/mymob)
 	. = ..()
-	// Ensures any speck of white means darkness at the end
-	add_filter("bump_color", 2, color_matrix_filter(list(255,0,0,0, 0,255,0,0, 0,0,255,0, 0,0,0,255, 0,0,0,0)))
-	// Converts white to darkness, and black to transparency
-	add_filter("color_to_opacity", 3, color_matrix_filter(list(0,0,0,1/3, 0,0,0,1/3, 0,0,0,1/3, 0,0,0,0, 0,0,0,0)))
+	if(!.)
+		return
+
+	remove_filter(list("bump_color", "color_to_opacity"))
+	if(istype(mymob) && mymob.canon_client?.prefs?.read_preference(/datum/preference/toggle/directional_opacity))
+		alpha = 255
+		// Ensures any speck of white means darkness at the end
+		add_filter("bump_color", 2, color_matrix_filter(list(255,0,0,0, 0,255,0,0, 0,0,255,0, 0,0,0,255, 0,0,0,0)))
+		// Converts white to darkness, and black to transparency
+		add_filter("color_to_opacity", 3, color_matrix_filter(list(0,0,0,1/3, 0,0,0,1/3, 0,0,0,1/3, 0,0,0,0, 0,0,0,0)))
+	else
+		alpha = 0
 
 /atom/movable/screen/plane_master/above_lighting
 	name = "Above lighting"

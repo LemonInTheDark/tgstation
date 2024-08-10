@@ -3749,6 +3749,7 @@
 #include "code\modules\client\preferences\broadcast_login_logout.dm"
 #include "code\modules\client\preferences\clothing.dm"
 #include "code\modules\client\preferences\darkened_flash.dm"
+#include "code\modules\client\preferences\directional_opacity.dm"
 #include "code\modules\client\preferences\food_allergy.dm"
 #include "code\modules\client\preferences\fps.dm"
 #include "code\modules\client\preferences\frill_transparency.dm"
