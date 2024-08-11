@@ -22,7 +22,7 @@ GLOBAL_LIST_INIT(diagonal_junctions, generate_splitvis_lookup())
 
 // Thinking on it, we really only need to generate a copy for each direction accounting for frill, and then just set the overlay based off that
 // Except that doesn't work with frills, but frills don't vary by direction, and frills could inherit icon/state from the parent with appearance flags
-/proc/get_splitvis_object(z_offset, icon_path, junction, dir, color, pixel_x = 0, pixel_y = 0, plane = GAME_PLANE, layer = WALL_LAYER, cache = TRUE)
+/proc/get_splitvis_object(z_offset, icon_path, junction, dir, color, pixel_x = 0, pixel_y = 0, plane = WALL_PLANE, layer = WALL_LAYER, cache = TRUE)
 	var/key = "[icon_path]-[junction]-[dir]-[color]-[pixel_x]-[pixel_y]-[plane]-[layer]-[z_offset]"
 	// FUCKING GLOBAL CONTEXT
 	var/static/list/split_visibility_objects = list()
@@ -93,11 +93,9 @@ GLOBAL_LIST_INIT(diagonal_junctions, generate_splitvis_lookup())
 	if(!(target_atom.smoothing_flags & (SMOOTH_BITMASK|SMOOTH_BITMASK_CARDINALS)))
 		CRASH("We tried to splitvis [target.type] without bitmask smoothing. What?")
 
-	target_atom.add_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_background", UNDER_WALL_LAYER, target_atom, GAME_PLANE))
-	// We draw a copy to the wall plane so we can use it to mask byond darkness, that's all
-	target_atom.add_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_background", UNDER_WALL_LAYER, target_atom, WALL_PLANE))
+	target_atom.add_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_background", WALL_DARKNESS_LAYER, target_atom, WALL_CORE_PLANE))
 	// Ensures when you try to click on a turf, you actually click on the turf, and not the adjacent things holding it
-	target_atom.add_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_clickcatcher", WALL_CLICKCATCH_LAYER, target_atom, GAME_PLANE))
+	target_atom.add_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_clickcatcher", WALL_CLICKCATCH_LAYER, target_atom, WALL_PLANE))
 
 	src.icon_path = icon_path
 	src.color = color
@@ -125,12 +123,14 @@ GLOBAL_LIST_INIT(diagonal_junctions, generate_splitvis_lookup())
 	target_turf.set_lighting_state("lighting")
 
 /datum/element/split_visibility/proc/apply_splitvis_objs(turf/target_turf, junction, add_to_turfs = TRUE)
+	// Nothin to do here, go home
+	if((junction & ALL_CARDINALS) == ALL_CARDINALS)
+		return
+
 	// cache for sonic speed
 	var/icon_path = src.icon_path
 	var/color = src.color
-
 	var/offset = GET_Z_PLANE_OFFSET(target_turf.z)
-
 	// This lets us do O(1) logic down later, and ensure logic works as we'd like
 	var/list/diagonal_to_junction = GLOB.diagonal_junctions
 
@@ -139,7 +139,7 @@ GLOBAL_LIST_INIT(diagonal_junctions, generate_splitvis_lookup())
 		if((junction & direction) == direction)
 			continue
 
-		var/active_plane = GAME_PLANE
+		var/active_plane = WALL_PLANE
 		if(direction & NORTH)
 			active_plane = FRILL_PLANE
 
@@ -184,7 +184,7 @@ GLOBAL_LIST_INIT(diagonal_junctions, generate_splitvis_lookup())
 			var/mutable_appearance/split_vis/vis
 			vis = get_splitvis_object(offset, icon_path, "innercorner", direction, color, 0, 0, HIDDEN_WALL_PLANE, ABOVE_WALL_LAYER)
 			target_turf.overlays -= vis
-			vis = get_splitvis_object(offset, icon_path, "innercorner", direction, color, -DIR_TO_PIXEL_X(direction), -DIR_TO_PIXEL_Y(direction), layer = ABOVE_WALL_LAYER)
+			vis = get_splitvis_object(offset, icon_path, "innercorner", direction, color, -DIR_TO_PIXEL_X(direction), -DIR_TO_PIXEL_Y(direction), WALL_PLANE, ABOVE_WALL_LAYER)
 			operating_turf.overlays -= vis
 			continue
 		var/mutable_appearance/split_vis/vis
@@ -194,16 +194,13 @@ GLOBAL_LIST_INIT(diagonal_junctions, generate_splitvis_lookup())
 			vis = get_splitvis_object(offset, icon_path, "innercorner", direction, color, 0, 0, HIDDEN_WALL_PLANE, ABOVE_WALL_LAYER)
 			target_turf.overlays += vis
 		else
-			vis = get_splitvis_object(offset, icon_path, "innercorner", direction, color, -DIR_TO_PIXEL_X(direction), -DIR_TO_PIXEL_Y(direction), layer = ABOVE_WALL_LAYER)
+			vis = get_splitvis_object(offset, icon_path, "innercorner", direction, color, -DIR_TO_PIXEL_X(direction), -DIR_TO_PIXEL_Y(direction), WALL_PLANE, ABOVE_WALL_LAYER)
 			operating_turf.overlays += vis
 
-
 /datum/element/split_visibility/Detach(atom/target)
-	target.cut_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_background", UNDER_WALL_LAYER, target, GAME_PLANE))
-	// We draw a copy to the wall plane so we can use it to mask byond darkness, that's all
-	target.cut_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_background", UNDER_WALL_LAYER, target, WALL_PLANE))
+	target.cut_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_background", WALL_DARKNESS_LAYER, target, WALL_CORE_PLANE))
 	// Ensures when you try to click on a turf, you actually click on the turf, and not the adjacent things holding it
-	target.cut_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_clickcatcher", WALL_CLICKCATCH_LAYER, target, GAME_PLANE))
+	target.cut_overlay(mutable_appearance('icons/turf/walls/wall_blackness.dmi', "wall_clickcatcher", WALL_CLICKCATCH_LAYER, target, WALL_PLANE))
 	UnregisterSignal(target, COMSIG_ATOM_SET_SMOOTHED_ICON_STATE)
 	if(ismovable(target))
 		UnregisterSignal(target, list(COMSIG_MOVABLE_MOVED, COMSIG_TURF_CHANGE))

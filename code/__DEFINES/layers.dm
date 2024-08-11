@@ -18,12 +18,13 @@
 #define GRAVITY_PULSE_RENDER_TARGET "*GRAVPULSE_RENDER_TARGET"
 
 #define RENDER_PLANE_TRANSPARENT -18 //Transparent plane that shows openspace underneath the floor
-#define TRANSPARENT_FLOOR_PLANE -14
+#define TRANSPARENT_FLOOR_PLANE -15
 
-#define FLOOR_PLANE -13
+#define FLOOR_PLANE -14
 #define FLOOR_PLANE_RENDER_TARGET "*FLOOR_PLANE"
-#define WALL_PLANE -12
-#define OVER_TILE_PLANE -11
+#define WALL_CORE_PLANE -13
+#define OVER_TILE_PLANE -12
+#define WALL_PLANE -11
 #define GAME_PLANE -10
 #define ABOVE_GAME_PLANE -9
 #define HIDDEN_WALL_PLANE -8
@@ -172,6 +173,13 @@
 #define CATWALK_LAYER (12 + TOPDOWN_LAYER)
 #define ABOVE_OPEN_TURF_LAYER (13 + TOPDOWN_LAYER)
 
+// WALL_CORE_PLANE layers
+#define WALL_DARKNESS_LAYER (1 + TOPDOWN_LAYER)
+// WALL_PLANE layers
+#define WALL_LAYER (1 + TOPDOWN_LAYER)
+#define ABOVE_WALL_LAYER (2 + TOPDOWN_LAYER)
+#define WALL_CLICKCATCH_LAYER (3 + TOPDOWN_LAYER)
+
 //GAME_PLANE layers
 #define BELOW_CLOSED_TURF_LAYER 2.053
 #define CLOSED_TURF_LAYER 2.058
@@ -197,15 +205,7 @@
 #define TRAM_FLOOR_LAYER 2.58
 #define TRAM_WALL_LAYER 2.59
 
-//Walls draw below
-//We draw them to the game plane so we can take advantage of SIDE_MAP for em
-//Need to cover for the whole "things below us" with position offsetting with pixel_y/z rather just one or the other
-#define UNDER_WALL_LAYER 2.66
-#define WALL_LAYER 2.67
-#define ABOVE_WALL_LAYER 2.68
-#define WALL_CLICKCATCH_LAYER 2.69
 #define ON_WALL_LAYER 2.7
-
 #define BELOW_OPEN_DOOR_LAYER 2.74
 ///Anything below this layer is to be considered completely (visually) under water by the immerse layer.
 #define WATER_LEVEL_LAYER 2.76

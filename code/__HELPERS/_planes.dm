@@ -90,6 +90,8 @@
 /// Whitelist of planes allowed to use TOPDOWN_LAYER
 GLOBAL_LIST_INIT(topdown_planes, list(
 		"[FLOOR_PLANE]" = TRUE,
+		"[WALL_CORE_PLANE]" = TRUE,
+		"[WALL_PLANE]" = TRUE,
 	))
 
 /// Checks if a passed in MA or atom is allowed to have its current plane/layer matchup

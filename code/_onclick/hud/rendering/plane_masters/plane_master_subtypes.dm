@@ -193,21 +193,27 @@
 	. = ..()
 	add_relay_to(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset), relay_layer = EMISSIVE_FLOOR_LAYER, relay_color = GLOB.em_block_color)
 
-/atom/movable/screen/plane_master/wall
-	name = "Wall"
-	documentation = "Holds a mirror of all walls. Separate so we can use this + space and floor planes as a guide for where byond blackness is NOT."
-	plane = WALL_PLANE
-	render_relay_planes = list(LIGHT_MASK_PLANE, RENDER_PLANE_WALL_WEATHER_MASK)
-
-/atom/movable/screen/plane_master/wall/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
-	. = ..()
-	add_relay_to(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset), relay_layer = EMISSIVE_WALL_LAYER, relay_color = GLOB.em_block_color)
+/atom/movable/screen/plane_master/wall_core
+	name = "Wall Core"
+	documentation = "Holds the blackness inside walls. Separate so we can use this + space and floor planes as a guide for where byond blackness is NOT."
+	render_relay_planes = list(RENDER_PLANE_GAME_WORLD, RENDER_PLANE_WALL_WEATHER_MASK, LIGHT_MASK_PLANE)
+	plane = WALL_CORE_PLANE
 
 /atom/movable/screen/plane_master/over_tile
 	name = "Over Tile"
 	documentation = "Holds anything on tiles, but not large enough to be on the game plane. I don't want to z fight with a disposals tube "
 	plane = OVER_TILE_PLANE
 	render_relay_planes = list(RENDER_PLANE_GAME_WORLD)
+
+/atom/movable/screen/plane_master/wall
+	name = "Wall"
+	documentation = "Holds walls, the blackness inside them and their hitboxes. Separate so we can use this + space and floor planes as a guide for where byond blackness is NOT."
+	plane = WALL_PLANE
+	render_relay_planes = list(RENDER_PLANE_GAME_WORLD)
+
+/atom/movable/screen/plane_master/wall/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
+	. = ..()
+	add_relay_to(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset), relay_layer = EMISSIVE_WALL_LAYER, relay_color = GLOB.em_block_color)
 
 /atom/movable/screen/plane_master/game_misc
 	name = "Game Misc"
