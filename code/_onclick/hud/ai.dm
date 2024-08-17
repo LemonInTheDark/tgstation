@@ -336,3 +336,4 @@
 	using = new /atom/movable/screen/ai/add_multicam(null, src)
 	using.screen_loc = ui_ai_add_multicam
 	static_inventory += using
+	register_click_class("firedoor")

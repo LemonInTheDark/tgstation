@@ -14,6 +14,8 @@
 	max_integrity = 100
 	recipe_type = /datum/crafting_recipe/shutters
 	animation_sound = 'sound/machines/shutter.ogg'
+	click_class = "shutter"
+	click_layer = SHUTTER_LAYER + 0.01
 
 /obj/machinery/door/poddoor/shutters/proc/get_working_state()
 	if(animation)

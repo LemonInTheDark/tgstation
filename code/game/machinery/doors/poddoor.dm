@@ -22,6 +22,10 @@
 	var/id = 1
 	/// The sound that plays when the door opens/closes
 	var/animation_sound = 'sound/machines/blastdoor.ogg'
+	/// The click class to use for our conditional transparency
+	var/click_class = "blast_door"
+	/// The click layer to use for our detransparentifying object
+	var/click_layer = CLOSED_BLASTDOOR_LAYER + 0.01
 
 /datum/armor/door_poddoor
 	melee = 50
@@ -43,6 +47,8 @@
 		transparent_alpha = 64, \
 		opacity_delay = 0 SECONDS, \
 		out_midpoint_alpha = 104, \
+		click_class = click_class, \
+		click_layer = click_layer, \
 	)
 	if(mapload)
 		return INITIALIZE_HINT_LATELOAD

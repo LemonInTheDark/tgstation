@@ -888,6 +888,7 @@
 		held_location = hud_used.hand_slots["[held_index]"]
 		if(!isnull(held_location))
 			held_location.update_appearance()
+	SEND_SIGNAL(src, COMSIG_MOB_ACTIVE_HAND_CHANGE, previous_index, active_hand_index)
 	return TRUE
 
 /mob/proc/activate_hand(selected_hand)

@@ -117,6 +117,9 @@
 	///list of paths of action datums to give to the item on New().
 	var/list/actions_types
 
+	///list of click classes to make interactable while holding this item
+	var/list/click_classes
+
 	//Since any item can now be a piece of clothing, this has to be put here so all items share it.
 	///This flag is used to determine when items in someone's inventory cover others. IE helmets making it so you can't see glasses, etc.
 	var/flags_inv

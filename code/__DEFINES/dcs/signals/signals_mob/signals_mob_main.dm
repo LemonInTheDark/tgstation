@@ -151,6 +151,8 @@
 /// from base of mob/swap_hand(): ()
 /// Performed after the hands are swapped.
 #define COMSIG_MOB_SWAP_HANDS "mob_swap_hands"
+/// from base of mob/perform_hand_swap(): (old_index, new_index)
+#define COMSIG_MOB_ACTIVE_HAND_CHANGE "mob_active_hand_changed"
 ///from base of /mob/verb/pointed: (atom/A)
 #define COMSIG_MOB_POINTED "mob_pointed"
 ///Mob is trying to open the wires of a target [/atom], from /datum/wires/interactable(): (atom/target)

@@ -64,6 +64,7 @@
 			item_module.screen_loc = inv3.screen_loc
 
 	held_items[module_num] = item_module
+	update_held_items()
 	item_module.mouse_opacity = initial(item_module.mouse_opacity)
 	SET_PLANE_EXPLICIT(item_module, ABOVE_HUD_PLANE, src)
 	item_module.forceMove(src)
@@ -124,6 +125,7 @@
 		item_module.item_flags &= ~DROPDEL //we shouldn't HAVE things with DROPDEL_1 in our modules, but better safe than runtiming horribly
 
 	held_items[module_num] = null
+	update_held_items()
 	item_module.cyborg_unequip(src)
 	item_module.forceMove(model) //Return item to configuration so it appears in its contents, so it can be taken out again.
 

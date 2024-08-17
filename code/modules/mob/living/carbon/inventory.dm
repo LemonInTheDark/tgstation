@@ -122,6 +122,7 @@
 	var/index = get_held_index_of_item(equipping)
 	if(index)
 		held_items[index] = null
+	update_held_items()
 
 	if(equipping.pulledby)
 		equipping.pulledby.stop_pulling()

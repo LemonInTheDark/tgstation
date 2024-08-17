@@ -18,6 +18,7 @@
 	drop_sound = 'sound/items/handling/crowbar_drop.ogg'
 	pickup_sound = 'sound/items/handling/crowbar_pickup.ogg'
 
+	click_classes = list("firedoor")
 	attack_verb_continuous = list("attacks", "bashes", "batters", "bludgeons", "whacks")
 	attack_verb_simple = list("attack", "bash", "batter", "bludgeon", "whack")
 	tool_behaviour = TOOL_CROWBAR

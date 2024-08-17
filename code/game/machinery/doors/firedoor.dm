@@ -103,6 +103,8 @@
 		transparent_alpha = 64, \
 		opacity_delay = 0 SECONDS, \
 		out_midpoint_alpha = 104, \
+		click_class = "firedoor", \
+		click_layer = ABOVE_MOB_LAYER + 0.01, \
 	)
 	return INITIALIZE_HINT_LATELOAD
 

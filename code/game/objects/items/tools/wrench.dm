@@ -19,6 +19,7 @@
 	drop_sound = 'sound/items/handling/wrench_drop.ogg'
 	pickup_sound = 'sound/items/handling/wrench_pickup.ogg'
 
+	click_classes = list("firedoor")
 	attack_verb_continuous = list("bashes", "batters", "bludgeons", "whacks")
 	attack_verb_simple = list("bash", "batter", "bludgeon", "whack")
 	tool_behaviour = TOOL_WRENCH

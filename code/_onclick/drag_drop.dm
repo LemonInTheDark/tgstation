@@ -24,7 +24,6 @@
  */
 /atom/proc/base_mouse_drop_handler(atom/over, src_location, over_location, params)
 	PROTECTED_PROC(TRUE)
-	SHOULD_NOT_OVERRIDE(TRUE)
 
 	var/mob/user = usr
 

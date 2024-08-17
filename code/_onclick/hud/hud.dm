@@ -99,10 +99,16 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	// subtypes can override this to force a specific UI style
 	var/ui_style
 
-	// List of weakrefs to objects that we add to our screen that we don't expect to DO anything
-	// They typically use * in their render target. They exist solely so we can reuse them,
-	// and avoid needing to make changes to all idk 300 consumers if we want to change the appearance
+	/// List of weakrefs to objects that we add to our screen that we don't expect to DO anything
+	/// They typically use * in their render target. They exist solely so we can reuse them,
+	/// and avoid needing to make changes to all idk 300 consumers if we want to change the appearance
 	var/list/asset_refs_for_reuse = list()
+
+	/// Lazy list of active click class -> the amount of sources that want them there
+	var/list/click_class_sources
+
+	/// The items our owner currently has active
+	var/list/obj/item/active_items = list()
 
 /datum/hud/New(mob/owner)
 	mymob = owner
@@ -146,6 +152,8 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	RegisterSignal(mymob, COMSIG_MOB_LOGOUT, PROC_REF(clear_client))
 	RegisterSignal(mymob, COMSIG_MOB_SIGHT_CHANGE, PROC_REF(update_sightflags))
 	RegisterSignal(mymob, COMSIG_VIEWDATA_UPDATE, PROC_REF(on_viewdata_update))
+	RegisterSignal(mymob, COMSIG_MOB_ACTIVE_HAND_CHANGE, PROC_REF(active_hand_changed))
+	RegisterSignal(mymob, COMSIG_MOB_UPDATE_HELD_ITEMS, PROC_REF(held_items_changed))
 	update_sightflags(mymob, mymob.sight, NONE)
 
 /datum/hud/proc/client_refresh(datum/source)
@@ -426,6 +434,50 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 /datum/hud/proc/persistent_inventory_update(mob/viewer)
 	if(!mymob)
 		return
+
+/datum/hud/proc/active_hand_changed(datum/source, old_index, new_index)
+	SIGNAL_HANDLER
+	var/obj/item/old_active = mymob.held_items[old_index]
+	if(old_active)
+		remove_click_classes(old_active.click_classes)
+		active_items -= old_active
+	var/obj/item/active = mymob.held_items[new_index]
+	if(active)
+		register_click_classes(active.click_classes)
+		active_items += active
+
+/datum/hud/proc/held_items_changed(datum/source)
+	SIGNAL_HANDLER
+	for(var/obj/item/lost as anything in active_items)
+		remove_click_classes(lost.click_classes)
+	active_items = list()
+	var/obj/item/in_hand = mymob.get_active_held_item()
+	if(in_hand)
+		register_click_classes(in_hand.click_classes)
+
+/datum/hud/proc/register_click_classes(list/classes)
+	for(var/class in classes)
+		register_click_class(class)
+
+/datum/hud/proc/remove_click_classes(list/classes)
+	for(var/class in classes)
+		remove_click_class(class)
+
+/datum/hud/proc/register_click_class(class)
+	LAZYINITLIST(click_class_sources)
+	if(!click_class_sources[class])
+		for(var/obj/source as anything in GLOB.objects_by_click_class[class])
+			register_reuse(source)
+
+	click_class_sources[class] += 1
+
+/datum/hud/proc/remove_click_class(class)
+	LAZYINITLIST(click_class_sources)
+	click_class_sources[class] -= 1
+	if(click_class_sources[class] <= 0)
+		LAZYREMOVE(click_class_sources, class)
+		for(var/obj/source as anything in GLOB.objects_by_click_class[class])
+			unregister_reuse(source)
 
 /datum/hud/proc/update_ui_style(new_ui_style)
 	// do nothing if overridden by a subtype or already on that style
