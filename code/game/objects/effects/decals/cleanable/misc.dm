@@ -64,7 +64,7 @@
 /obj/effect/decal/cleanable/dirt
 	name = "dirt"
 	desc = "Someone should clean that up."
-	icon = 'icons/effects/dirt.dmi'
+	icon = 'icons/effects/dirt_misc.dmi'
 	icon_state = "dirt-flat-0"
 	base_icon_state = "dirt"
 	smoothing_flags = NONE
@@ -72,30 +72,66 @@
 	canSmoothWith = SMOOTH_GROUP_CLEANABLE_DIRT + SMOOTH_GROUP_WALLS
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	beauty = -75
+	var/is_tileable = TRUE
 
 /obj/effect/decal/cleanable/dirt/Initialize(mapload)
 	. = ..()
-	icon_state = pick("dirt-flat-0","dirt-flat-1","dirt-flat-2","dirt-flat-3")
-	var/obj/structure/broken_flooring/broken_flooring = locate(/obj/structure/broken_flooring) in loc
-	if(!isnull(broken_flooring))
-		return
-	var/turf/T = get_turf(src)
-	if(T.tiled_dirt)
-		smoothing_flags = SMOOTH_BITMASK
-		QUEUE_SMOOTH(src)
-	if(smoothing_flags & USES_SMOOTHING)
-		QUEUE_SMOOTH_NEIGHBORS(src)
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_EXITED = PROC_REF(on_exited),
+	)
+	AddElement(/datum/element/connect_loc, loc_connections)
+	refresh_smoothing()
 
-/obj/effect/decal/cleanable/dirt/Destroy()
-	if(smoothing_flags & USES_SMOOTHING)
+/obj/effect/decal/cleanable/dirt/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change)
+	. = ..()
+	var/turf/current_home = get_turf(src)
+	if(!current_home)
+		QUEUE_SMOOTH_NEIGHBORS(old_loc)
+		return
+	refresh_smoothing()
+
+/obj/effect/decal/cleanable/dirt/on_decal_move(datum/source, path, list/new_baseturfs, flags, list/post_change_callbacks)
+	. = ..()
+	post_change_callbacks += CALLBACK(src, PROC_REF(refresh_smoothing))
+
+/obj/effect/decal/cleanable/dirt/on_entered(datum/source, atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+	. = ..()
+	if(istype(arrived, /obj/structure/broken_flooring))
+		refresh_smoothing()
+
+/obj/effect/decal/cleanable/dirt/proc/on_exited(datum/source, atom/movable/gone, direction)
+	SIGNAL_HANDLER
+	if(istype(gone, /obj/structure/broken_flooring))
+		refresh_smoothing()
+
+/obj/effect/decal/cleanable/dirt/proc/refresh_smoothing()
+	var/turf/home = get_turf(src)
+	var/obj/structure/broken_flooring/broken_flooring = locate(/obj/structure/broken_flooring) in home
+	if(broken_flooring || !home.tiled_dirt || !is_tileable)
+		icon = 'icons/effects/dirt_misc.dmi'
+		if(base_icon_state == "dirt")
+			icon_state = pick("dirt-flat-0","dirt-flat-1","dirt-flat-2","dirt-flat-3")
+		else
+			icon_state = initial(icon_state)
+		smoothing_flags = initial(smoothing_flags)
+		set_smoothing_groups(null)
+		set_can_smooth_with(null)
 		QUEUE_SMOOTH_NEIGHBORS(src)
-	return ..()
+		return
+
+	icon = 'icons/effects/dirt.dmi'
+	smoothing_flags = SMOOTH_BITMASK
+	set_smoothing_groups(initial(smoothing_groups))
+	set_can_smooth_with(initial(smoothing_groups))
+	QUEUE_SMOOTH(src)
+	QUEUE_SMOOTH_NEIGHBORS(src)
 
 /obj/effect/decal/cleanable/dirt/dust
 	name = "dust"
 	desc = "A thin layer of dust coating the floor."
 	icon_state = "dust"
 	base_icon_state = "dust"
+	is_tileable = FALSE
 
 /obj/effect/decal/cleanable/dirt/dust/Initialize(mapload)
 	. = ..()
