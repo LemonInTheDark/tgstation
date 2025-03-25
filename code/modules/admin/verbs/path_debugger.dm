@@ -130,7 +130,7 @@ GLOBAL_DATUM_INIT(pathfind_dude, /obj/pathfind_guy, new())
 	var/turf/target_turf
 	var/max_distance
 	var/min_distance
-	var/allowed_on_space
+	var/not_allowed_on_space
 	var/turf/blacklisted_turf
 	var/diagonal_handling
 	/// List of turfs we are showing to our owner currently
@@ -140,7 +140,7 @@ GLOBAL_DATUM_INIT(pathfind_dude, /obj/pathfind_guy, new())
 	. = ..()
 	max_distance = tgui_input_number(owner, "How far should we be allowed to try and path", "Max Distance", min_value = 1, default = 30)
 	min_distance = tgui_input_number(owner, "How close should we try and get to the target before stopping", "Min Distance", min_value = 0, default = 0)
-	allowed_on_space = tgui_alert(owner, "Are we allowed to path over space?", "Space Pathing", buttons = list("Yes", "No")) == "Yes"
+	not_allowed_on_space = tgui_alert(owner, "Are we allowed to path over space?", "Space Pathing", buttons = list("Yes", "No")) == "No"
 	var/text_blacklist = tgui_input_text(owner, "Enter any turf path you want to blacklist (You get one)", "Turf Blacklist")
 	if(text_blacklist)
 		blacklisted_turf = pick_closest_path(text_blacklist)
@@ -187,7 +187,7 @@ GLOBAL_DATUM_INIT(pathfind_dude, /obj/pathfind_guy, new())
 
 /datum/action/innate/path_debug/jps/run_the_path(atom/movable/middle_man)
 	middle_man.forceMove(source_turf)
-	display_turfs = get_path_to(middle_man, target_turf, max_distance, min_distance, list(), allowed_on_space, blacklisted_turf, skip_first = FALSE, diagonal_handling = diagonal_handling)
+	display_turfs = get_path_to(middle_man, target_turf, max_distance, min_distance, list(), not_allowed_on_space, blacklisted_turf, skip_first = FALSE, diagonal_handling = diagonal_handling)
 	update_visuals()
 
 /datum/action/innate/path_debug/sssp
@@ -198,7 +198,7 @@ GLOBAL_DATUM_INIT(pathfind_dude, /obj/pathfind_guy, new())
 	// Mirror vars for sssp calls
 	var/turf/source_turf
 	var/max_distance
-	var/allowed_on_space
+	var/not_allowed_on_space
 	var/turf/blacklisted_turf
 	// Turf to display the path to (optional)
 	var/turf/target_turf
@@ -208,7 +208,7 @@ GLOBAL_DATUM_INIT(pathfind_dude, /obj/pathfind_guy, new())
 /datum/action/innate/path_debug/sssp/Activate()
 	. = ..()
 	max_distance = tgui_input_number(owner, "How far should we be allowed to try and path", "Max Distance", min_value = 1, default = 30)
-	allowed_on_space = tgui_alert(owner, "Are we allowed to path over space?", "Space Pathing", buttons = list("Yes", "No")) == "Yes"
+	not_allowed_on_space = tgui_alert(owner, "Are we allowed to path over space?", "Space Pathing", buttons = list("Yes", "No")) == "No"
 	var/text_blacklist = tgui_input_text(owner, "Enter any turf path you want to blacklist (You get one)", "Turf Blacklist")
 	if(text_blacklist)
 		blacklisted_turf = pick_closest_path(text_blacklist)
@@ -259,5 +259,5 @@ GLOBAL_DATUM_INIT(pathfind_dude, /obj/pathfind_guy, new())
 
 /datum/action/innate/path_debug/sssp/run_the_path(atom/movable/middle_man)
 	middle_man.forceMove(source_turf)
-	shown_map = get_sssp(middle_man, max_distance, list(), allowed_on_space, blacklisted_turf)
+	shown_map = get_sssp(middle_man, max_distance, list(), not_allowed_on_space, blacklisted_turf)
 	update_visuals()
