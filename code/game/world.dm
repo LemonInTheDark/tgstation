@@ -22,7 +22,8 @@ GLOBAL_PROTECT(tracy_init_reason)
  *
  * BYOND =>
  * - (secret init native) =>
- *   - world.Genesis() =>
+ *   - world.Genesis() =>\
+ *     - world.unroll_cpu_value()
  *     - world.init_byond_tracy()
  *     - (Start native profiling)
  *     - world.init_debugger()
@@ -73,6 +74,7 @@ GLOBAL_PROTECT(tracy_init_reason)
 /world/proc/Genesis(tracy_initialized = FALSE)
 	RETURN_TYPE(/datum/controller/master)
 
+	unroll_cpu_value()
 	if(!tracy_initialized)
 		GLOB.tracy_initialized = FALSE
 #ifndef OPENDREAM
@@ -97,7 +99,6 @@ GLOBAL_PROTECT(tracy_init_reason)
 			Genesis(tracy_initialized = TRUE)
 			return
 #endif
-
 	Profile(PROFILE_RESTART)
 	Profile(PROFILE_RESTART, type = "sendmaps")
 
@@ -112,6 +113,7 @@ GLOBAL_PROTECT(tracy_init_reason)
 
 	// THAT'S IT, WE'RE DONE, THE. FUCKING. END.
 	Master = new
+	____tick_info.pain += "NEW [TICK_USAGE]"
 
 /**
  * World creation
@@ -146,9 +148,10 @@ GLOBAL_PROTECT(tracy_init_reason)
 	// I wanted to move it but I think this needs to be after /world/New is called but before any sleeps?
 	// - Dominion/Cyberboss
 	GLOB.timezoneOffset = world.timezone * 36000
-
+	____tick_info.pain += "NEW [TICK_USAGE]"
 	// First possible sleep()
 	InitTgs()
+	____tick_info.pain += "TGS [TICK_USAGE]"
 
 	config.Load(params[OVERRIDE_CONFIG_DIRECTORY_PARAMETER])
 
@@ -156,10 +159,14 @@ GLOBAL_PROTECT(tracy_init_reason)
 
 	if(NO_INIT_PARAMETER in params)
 		return
+	____tick_info.pain += "CONFIG [TICK_USAGE]"
 
 	Master.Initialize(10, FALSE, TRUE)
+	____tick_info.pain += "MASTER [TICK_USAGE]"
 
 	RunUnattendedFunctions()
+	____tick_info.pain += "RUN_UNATTENDED [TICK_USAGE]"
+	____tick_info.logged_tick_late = TICK_USAGE
 
 #define CPU_SIZE 16
 #define WINDOW_SIZE 16
@@ -195,16 +202,9 @@ GLOBAL_VAR_INIT(spike_cpu, 0)
 		CONSUME_UNTIL(TICK_EXPECTED_SAFE_MAX)
 	GLOB.cpu_tracker.update_display()
 	// this is for next tick so don't display it yet yeah?
-	GLOB.tick_cpu_usage[WRAP(GLOB.cpu_index, 1, CPU_SIZE + 1)] = TICK_USAGE
+	var/datum/tick_holder/tick_info = ____tick_info
+	tick_info.tick_cpu_usage[WRAP(tick_info.cpu_index, 1, CPU_SIZE + 1)] = TICK_USAGE
 
-GLOBAL_LIST_INIT(cpu_values, new /list(CPU_SIZE))
-GLOBAL_LIST_INIT(avg_cpu_values, new /list(CPU_SIZE))
-GLOBAL_LIST_INIT(tick_cpu_usage, new /list(CPU_SIZE))
-GLOBAL_LIST_INIT(map_cpu_usage, new /list(CPU_SIZE))
-GLOBAL_LIST_INIT(verb_cost, new /list(CPU_SIZE))
-GLOBAL_LIST_INIT(cpu_error, new /list(CPU_SIZE))
-GLOBAL_VAR_INIT(cpu_index, 1)
-GLOBAL_VAR_INIT(last_cpu_update, -1)
 GLOBAL_DATUM_INIT(cpu_tracker, /atom/movable/screen/usage_display, new())
 
 /atom/movable/screen/usage_display
@@ -220,9 +220,10 @@ GLOBAL_DATUM_INIT(cpu_tracker, /atom/movable/screen/usage_display, new())
 /atom/movable/screen/usage_display/proc/update_display()
 	if(viewer_count <= 0)
 		return
-	var/list/cpu_values = GLOB.cpu_values
-	var/list/verb_cost = GLOB.verb_cost
-	var/last_index = WRAP(GLOB.cpu_index - 1, 1, CPU_SIZE + 1)
+	var/datum/tick_holder/tick_info = GLOB.tick_info
+	var/list/cpu_values = tick_info.cpu_values
+	var/list/verb_cost = tick_info.verb_cost
+	var/last_index = WRAP(tick_info.cpu_index - 1, 1, CPU_SIZE + 1)
 	var/full_time = TICKS2DS(CPU_SIZE) / 10 // convert from ticks to seconds
 	maptext = "<div style=\"background-color:#FFFFFF; color:#000000;\">\
 		Toggles: <a href='byond://?src=[REF(src)];act=toggle_movement'>New Glide [GLOB.use_new_glide]</a> <a href='byond://?src=[REF(src)];act=toggle_compensation'>CPU Compensation [GLOB.attempt_corrective_cpu]</a> <a href='byond://?src=[REF(src)];act=catch_negatives'>Catch Negatives [GLOB.negative_printed]</a>\n\
@@ -233,23 +234,23 @@ GLOBAL_DATUM_INIT(cpu_tracker, /atom/movable/screen/usage_display, new())
 		Spike: <a href='byond://?src=[REF(src)];act=set_spike'>[GLOB.spike_cpu]</a>\n\
 		Tick: [FORMAT_CPU(world.time / world.tick_lag)]\n\
 		Frame Behind ~CPU: [FORMAT_CPU(cpu_values[last_index])]\n\
-		Frame Behind Tick: [FORMAT_CPU(GLOB.tick_cpu_usage[last_index])]\n\
+		Frame Behind Tick: [FORMAT_CPU(tick_info.tick_cpu_usage[last_index])]\n\
 		Frame Behind Map Cpu: [FORMAT_CPU(world.map_cpu)]\n\
 		Frame Behind ~Verb: [FORMAT_CPU(verb_cost[last_index])]\n\
 		<div style=\"color:#FF0000;\">\
 			Max ~CPU [full_time]s: [FORMAT_CPU(max(cpu_values))]\n\
-			Max Tick [full_time]s: [FORMAT_CPU(max(GLOB.tick_cpu_usage))]\n\
-			Max Map [full_time]s: [FORMAT_CPU(max(GLOB.map_cpu_usage))]\n\
+			Max Tick [full_time]s: [FORMAT_CPU(max(tick_info.tick_cpu_usage))]\n\
+			Max Map [full_time]s: [FORMAT_CPU(max(tick_info.map_cpu_usage))]\n\
 			Max ~Verb [full_time]s: [FORMAT_CPU(max(verb_cost))]\n\
 		</div>\
 		<div style=\"color:#0096FF;\">\
 			Min ~CPU [full_time]s: [FORMAT_CPU(min(cpu_values))]\n\
-			Min Tick [full_time]s: [FORMAT_CPU(min(GLOB.tick_cpu_usage))]\n\
-			Min Map [full_time]s: [FORMAT_CPU(min(GLOB.map_cpu_usage))]\n\
+			Min Tick [full_time]s: [FORMAT_CPU(min(tick_info.tick_cpu_usage))]\n\
+			Min Map [full_time]s: [FORMAT_CPU(min(tick_info.map_cpu_usage))]\n\
 			Min ~Verb [full_time]s: [FORMAT_CPU(min(verb_cost))]\
 		</div>\n\
-		CPU Drift Max: [FORMAT_CPU(max(GLOB.cpu_error))]\n\
-		CPU Drift Min: [FORMAT_CPU(min(GLOB.cpu_error))]\
+		CPU Drift Max: [FORMAT_CPU(max(tick_info.cpu_error))]\n\
+		CPU Drift Min: [FORMAT_CPU(min(tick_info.cpu_error))]\
 	</div>"
 
 
@@ -279,14 +280,15 @@ GLOBAL_DATUM_INIT(cpu_tracker, /atom/movable/screen/usage_display, new())
 		return
 	if(!check_rights(R_DEBUG) || !check_rights(R_SERVER))
 		return FALSE
+	var/datum/tick_holder/tick_info = GLOB.tick_info
 	switch(href_list["act"])
 		if("flush_queue") // last resort for testing, sets queue to the average cpu of the last tick
 			for(var/i in 1 to CPU_SIZE)
-				GLOB.cpu_values[i] = world.cpu
+				tick_info.cpu_values[i] = world.cpu
 			return TRUE
 		if("clamp_queue") // last resort for testing, sets queue to the average cpu of the last tick
 			for(var/i in 1 to CPU_SIZE)
-				GLOB.cpu_values[i] = clamp(GLOB.cpu_values[i], 0, 500)
+				tick_info.cpu_values[i] = clamp(tick_info.cpu_values[i], 0, 500)
 			return TRUE
 		if("toggle_movement")
 			GLOB.use_new_glide = !GLOB.use_new_glide
@@ -314,22 +316,175 @@ GLOBAL_DATUM_INIT(cpu_tracker, /atom/movable/screen/usage_display, new())
 			GLOB.spike_cpu = spike_cpu
 			return TRUE
 
-GLOBAL_VAR_INIT(negative_printed, FALSE)
-/// Inserts our current world.cpu value into our rolling lists
-/// Its job is to pull the actual usage last tick instead of the moving average
-/world/proc/unroll_cpu_value()
-	if(GLOB.last_cpu_update == world.time)
+/world/proc/stash_cpu_values()
+	unroll_cpu_value()
+	if(fexists(PATH_TO_CPU_STORE))
+		fdel(PATH_TO_CPU_STORE)
+	var/list/data = list()
+	var/datum/tick_holder/tick_info = ____tick_info
+	data["average"] = tick_info.avg_cpu_values
+	data["raw"] = tick_info.cpu_values
+	data["index"] = tick_info.cpu_index
+	data["read"] = FALSE
+	text2file(json_encode(data), PATH_TO_CPU_STORE)
+
+GLOBAL_REAL_VAR(hell_called)
+/world/proc/pull_cpu_values()
+	if(isnull(hell_called))
+		hell_called = world.time
+	var/datum/tick_holder/tick_info = ____tick_info
+	if(tick_info.load_var_read == -1000)
+		tick_info.load_var_read = world.time
+	if(tick_info.last_cpu_update != -1)
 		return
-	GLOB.last_cpu_update = world.time
-	// cache for sonic speed
+	if(tick_info.load_last_cpu == -1000)
+		tick_info.load_last_cpu = world.time
+	if(!fexists(PATH_TO_CPU_STORE))
+		return
+	if(tick_info.load_fexists == -1000)
+		tick_info.load_fexists = world.time
+	var/cpu_file = file(PATH_TO_CPU_STORE)
+	if(tick_info.load_file == -1000)
+		tick_info.load_file = world.time
+	if(!cpu_file)
+		return
+	var/text_data = file2text(cpu_file)
+	if(tick_info.load_2text == -1000)
+		tick_info.load_2text = world.time
+	if(!text_data)
+		return
+	tick_info.loaded_json = text_data
+	var/list/data = json_decode(text_data)
+	if(tick_info.load_decode == -1000)
+		tick_info.load_decode = world.time
+	if(data["read"])
+		return
+	if(tick_info.load_data == -1000)
+		tick_info.load_data = world.time
+	if(!isnull(data["average"]))
+		tick_info.avg_cpu_values = data["average"]
+	if(!isnull(data["raw"]))
+		tick_info.cpu_values = data["raw"]
+	if(!isnull(data["index"]))
+		tick_info.cpu_index = data["index"]
+	data["read"] = TRUE
+	if(tick_info.load_end == -1000)
+		tick_info.load_end = world.time
+	fdel(PATH_TO_CPU_STORE)
+	text2file(json_encode(data), PATH_TO_CPU_STORE)
+
+
+	// Alright we have almost all the cpu values we're missing, except ONE.
+	// So we're gonna work out what's missing, and correct for it.
+	/*
 	var/list/cpu_values = GLOB.cpu_values
 	var/list/avg_cpu_values = GLOB.avg_cpu_values
 	var/cpu_index = GLOB.cpu_index
 	var/avg_cpu = world.cpu
+
+	var/lost_value = cpu_values[WRAP(cpu_index - WINDOW_SIZE, 1, CPU_SIZE + 1)]
+	var/last_avg_cpu = avg_cpu_values[WRAP(cpu_index - 1, 1, CPU_SIZE + 1)]
+	var/real_cpu = avg_cpu * WINDOW_SIZE - last_avg_cpu * WINDOW_SIZE + lost_value
+
+	var/calculated_avg = real_cpu
+	for(var/i in 1 to WINDOW_SIZE - 1)
+		calculated_avg += cpu_values[WRAP(cpu_index - i, 1, CPU_SIZE + 1)]
+	var/missing_value = world.cpu * WINDOW_SIZE - calculated_avg
+
+	// Alright now we gotta slide it in
+	// We
+	cpu_values[cpu_index] = real_cpu
+	avg_cpu_values[cpu_index] = avg_cpu
+	GLOB.cpu_index = WRAP(cpu_index + 1, 1, CPU_SIZE + 1)
+*/
+
+/// Holds and tracks information about our current tick
+/// Global datum, for real, I am so sorry
+/datum/tick_holder
+	var/list/cpu_values = new /list(CPU_SIZE)
+	var/list/avg_cpu_values = new /list(CPU_SIZE)
+	var/list/tick_cpu_usage = new /list(CPU_SIZE)
+	var/list/map_cpu_usage = new /list(CPU_SIZE)
+	var/list/verb_cost = new /list(CPU_SIZE)
+	var/list/cpu_error = new /list(CPU_SIZE)
+	var/cpu_index = 1
+	var/last_cpu_update = -1
+	var/start = -1000
+	var/end = -1000
+	var/loaded_negative
+	var/hell_called = -1000
+	var/load_var_read = -1000
+	var/load_last_cpu = -1000
+	var/load_fexists = -1000
+	var/load_file = -1000
+	var/load_2text = -1000
+	var/load_decode = -1000
+	var/load_data = -1000
+	var/load_end = -1000
+	var/in_step = -1000
+	var/calling_cpu = -1000
+	var/start_calc = -1000
+	var/past_calc = -1000
+	var/past_log = -1000
+	var/past_log2 = -1000
+	var/past_time = -1000
+	var/past_cpu = -1000
+	var/past_map_cpu = -1000
+	var/past_text = -1000
+	var/past_map = -1000
+	var/loaded_json
+	var/log_counter = 0
+	var/list/logged = new /list(20)
+	var/list/logged_tick = new /list(20)
+	var/list/logged_map = new /list(20)
+	var/list/pain = list()
+	var/logged_tick_late = -1
+
+// Not initialized, because we have to do that manually
+// That's how fucked we are
+GLOBAL_REAL(____tick_info, /datum/tick_holder)
+GLOBAL_DATUM_INIT(tick_info, /datum/tick_holder, ____tick_info)
+
+GLOBAL_VAR_INIT(negative_printed, FALSE)
+GLOBAL_VAR_INIT(start_time, 0)
+/// Inserts our current world.cpu value into our rolling lists
+/// Its job is to pull the actual usage last tick instead of the moving average
+/world/proc/unroll_cpu_value()
+	var/static/start = -1000
+	if(start == -1000)
+		start = world.time
+	if(GLOB)
+		GLOB.start_time = start
+	var/static/loaded
+	if(!____tick_info)
+		____tick_info = new()
+		loaded = TRUE
+	____tick_info.in_step = loaded
+
+	var/datum/tick_holder/tick_info = ____tick_info
+	tick_info.hell_called = hell_called
+	if(tick_info.start == -1000)
+		tick_info.start = world.time
+	if(tick_info.last_cpu_update == world.time)
+		return
+	// If dreamdeamon did not cleanly reset cpu values carry over, so we need to carry them too
+	// If the "last" tick at the start is not 0 then something is hanging over
+	var/static/calling_cpu = -1000
+	if(calling_cpu == -1000)
+		pull_cpu_values()
+		calling_cpu = world.time
+	tick_info.calling_cpu = calling_cpu
+	tick_info.last_cpu_update = world.time
+	// cache for sonic speed
+	var/list/cpu_values = tick_info.cpu_values
+	var/list/avg_cpu_values = tick_info.avg_cpu_values
+	var/cpu_index = tick_info.cpu_index
+	var/avg_cpu = world.cpu
 	// We need to hook into the INSTANT we start our moving average so we can reconstruct gained/lost cpu values
 	// Defaults to null or 0 so the wrap here is safe for the first 16 entries
 	var/lost_value = cpu_values[WRAP(cpu_index - WINDOW_SIZE, 1, CPU_SIZE + 1)]
-
+	if(tick_info.start_calc == -1000)
+		tick_info.start_calc = world.time
 	// ok so world.cpu is a 16 entry wide moving average of the actual cpu value
 	// because fuck you
 	// I want the ACTUAL unrolle value, so I need to deaverage it. this is possible because we have access to ALL values and also math
@@ -356,33 +511,69 @@ GLOBAL_VAR_INIT(negative_printed, FALSE)
 	for(var/i in 1 to WINDOW_SIZE - 1)
 		calculated_avg += cpu_values[WRAP(cpu_index - i, 1, CPU_SIZE + 1)]
 	var/inbuilt_error = world.cpu * WINDOW_SIZE - calculated_avg
-
+	// (95.7994 * 16) - 1536.35 == -3.3
+	// (a+b+c+d...) / 16 * 16 - (a+b+c+d...) == -g
 	var/accounted_cpu = real_cpu + inbuilt_error
-	var/tick_and_map = GLOB.tick_cpu_usage[cpu_index] + world.map_cpu
+	var/tick_and_map = tick_info.tick_cpu_usage[cpu_index] + world.map_cpu
+	if(tick_info.past_calc == -1000)
+		tick_info.past_calc = world.time
 
 	// due to I think? compounded floating point error either on our side or internal to byond we somtimes get way too large/small cpu values
 	// I can't correct in place because I need the full history of averages to add back lost values
 	// our cpu value for last tick cannot be lower then the cost of sleeping procs + map cpu, so we'll clamp to that
 	// my hope is this will keep error within a reasonable bound as storing a lower then expected number would cause a higher then expected number as a side effect
 
-	if((real_cpu < 0 || accounted_cpu < 0) && !GLOB.negative_printed)
+	if((real_cpu < 0 || accounted_cpu < 0) && GLOB && !GLOB.negative_printed)
 		GLOB.negative_printed = TRUE
 		log_runtime("Negative real cpu value extracted\n\
 			AVG [avg_cpu]; LAST AVG [last_avg_cpu]; LOST VAL [lost_value]; NEW VAL [real_cpu] CALC AVG [calculated_avg]; ERROR [inbuilt_error]; ACCOUNTED [accounted_cpu];\n\
 			INDEX [cpu_index]; OLD CPU LIST [json_encode(cpu_values)]")
 
-	cpu_values[cpu_index] = accounted_cpu
+	if(tick_info.past_log == -1000)
+		tick_info.past_log = world.time
+
+	tick_info.log_counter += 1
+	var/log_counter = tick_info.log_counter
+	if(log_counter < 20)
+		var/test = "[world.time]"
+		if(tick_info.past_time == -1000)
+			tick_info.past_time = world.time
+		test = "[world.cpu]"
+		if(tick_info.past_cpu == -1000)
+			tick_info.past_cpu = world.time
+		test = "[world.map_cpu]"
+		if(tick_info.past_map_cpu == -1000)
+			tick_info.past_map_cpu = world.time
+		tick_info.logged[log_counter] = "world.time [world.time]; world.cpu [world.cpu]; world.map_cpu [world.map_cpu]; \n \
+			AVG [avg_cpu]; LAST AVG [last_avg_cpu]; LOST VAL [lost_value]; NEW VAL [real_cpu] CALC AVG [calculated_avg]; ERROR [inbuilt_error]; ACCOUNTED [accounted_cpu];\n\
+			INDEX [cpu_index]; OLD CPU LIST [json_encode(cpu_values)]"
+		if(tick_info.past_text == -1000)
+			tick_info.past_text = world.time
+		tick_info.logged_map[log_counter] = world.map_cpu
+		if(tick_info.past_map == -1000)
+			tick_info.past_map = world.time
+
+	if(tick_info.past_log2 == -1000)
+		tick_info.past_log2 = world.time
+
+	cpu_values[cpu_index] = real_cpu
 	avg_cpu_values[cpu_index] = avg_cpu
-	GLOB.map_cpu_usage[cpu_index] = world.map_cpu
-	GLOB.verb_cost[cpu_index] = max(accounted_cpu - tick_and_map, 0)
-	GLOB.cpu_error[cpu_index] = inbuilt_error
-	GLOB.cpu_index = WRAP(cpu_index + 1, 1, CPU_SIZE + 1)
-	GLOB.cpu_tracker.update_display()
+	tick_info.map_cpu_usage[cpu_index] = world.map_cpu
+	tick_info.verb_cost[cpu_index] = max(accounted_cpu - tick_and_map, 0)
+	tick_info.cpu_error[cpu_index] = inbuilt_error
+	tick_info.cpu_index = WRAP(cpu_index + 1, 1, CPU_SIZE + 1)
+	if(GLOB)
+		GLOB.cpu_tracker.update_display()
+	if(tick_info.end == -1000)
+		tick_info.end = world.time
 	// make an animated display of cpu usage to get a better idea of how much we leave on the table
+	if(log_counter < 20)
+		tick_info.logged_tick[log_counter] = TICK_USAGE
 
 /proc/update_glide_size()
 	world.unroll_cpu_value()
-	var/list/cpu_values = GLOB.cpu_values
+	var/datum/tick_holder/tick_info = ____tick_info
+	var/list/cpu_values = tick_info.cpu_values
 	var/sum = 0
 	var/non_zero = 0
 	for(var/value in cpu_values)
@@ -599,6 +790,7 @@ GLOBAL_VAR_INIT(negative_printed, FALSE)
 
 		if(do_hard_reboot)
 			log_world("World hard rebooted at [time_stamp()]")
+			world.stash_cpu_values()
 			shutdown_logging() // See comment below.
 			shutdown_byond_tracy()
 			auxcleanup()
@@ -607,6 +799,7 @@ GLOBAL_VAR_INIT(negative_printed, FALSE)
 
 	log_world("World rebooted at [time_stamp()]")
 
+	world.stash_cpu_values()
 	shutdown_logging() // Past this point, no logging procs can be used, at risk of data loss.
 	shutdown_byond_tracy()
 	auxcleanup()
