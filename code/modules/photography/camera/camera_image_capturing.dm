@@ -120,7 +120,7 @@
 			// Center of the image in Y
 			var/yo = (clone.y - center.y) * ICON_SIZE_Y + clone.pixel_y + ycomp + clone.step_y
 
-			if(clone.transform) // getFlatIcon doesn't give a snot about transforms.
+			if(clone.transform && FALSE) // getFlatIcon doesn't give a snot about transforms.
 				var/datum/decompose_matrix/decompose = clone.transform.decompose()
 				// Scale in X, Y
 				if(decompose.scale_x != 1 || decompose.scale_y != 1)

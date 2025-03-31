@@ -50,6 +50,12 @@
 /matrix/proc/Shear(x, y)
 	return Multiply(matrix(1, x, 0, y, 1, 0))
 
+/matrix/proc/is_modified()
+	return a != 1 || b != 0 || c != 0 || d != 0 || e != 1 || f != 0
+
+/matrix/proc/is_identity()
+	return !is_modified()
+	
 //Dumps the matrix data in format a-f
 /matrix/proc/tolist()
 	. = list()

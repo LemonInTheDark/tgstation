@@ -271,6 +271,45 @@ world
 	// apply mask
 	Blend(mask_icon, ICON_ADD)
 
+/icon/proc/ApplyTransform(matrix/transform)
+	if(transform.is_identity()) // No-op
+		return
+
+	var/datum/decompose_matrix/rough_values = transform.decompose()
+	var/width = Width()
+	var/height = Height()
+
+	// Doesn't work on non square icons so this is our safest bet, before transforms
+	if(rough_values.rotation && width == height)
+		Turn(rough_values.rotation)
+		width = Width()
+		height = Height()
+
+	var/shift_x = rough_values.shift_x
+	var/shift_y = rough_values.shift_y
+	if (shift_x || shift_y)
+		// Gotta create space for the shift
+		Crop(
+			min(1, shift_x + 1),
+			min(1, shift_y + 1),
+			max(width, shift_x + width),
+			max(height, shift_x + height)
+		)
+
+		// Idea here is that negatives will roll back over
+		Shift(WEST, rough_values.shift_x)
+		Shift(NORTH, rough_values.shift_y)
+		width = Width()
+		height = Height()
+
+	if(rough_values.scale_x != 1 || rough_values.scale_y != 1)
+		Scale(width * abs(rough_values.scale_x), height * abs(rough_values.scale_y))
+		// - values are valid for transforms but not Scale
+		if(rough_values.scale_x < 0)
+			Flip(EAST)
+		if(rough_values.scale_y < 0)
+			Flip(SOUTH)
+
 /// Converts an rgb color into a list storing hsva
 /// Exists because it's useful to have a guaranteed alpha value
 /proc/rgb2hsv(rgb)
@@ -500,18 +539,6 @@ world
 		PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.underlays, 0)
 		PROCESS_OVERLAYS_OR_UNDERLAYS(flat, appearance.overlays, 1)
 
-		var/icon/add // Icon of overlay being added
-
-		var/flatX1 = 1
-		var/flatX2 = flat.Width()
-		var/flatY1 = 1
-		var/flatY2 = flat.Height()
-
-		var/addX1 = 0
-		var/addX2 = 0
-		var/addY1 = 0
-		var/addY2 = 0
-
 		if(appearance.color)
 			if(islist(appearance.color))
 				flat.MapColors(arglist(appearance.color))
@@ -524,12 +551,21 @@ world
 			else
 				flat.Blend(parentcolor, ICON_MULTIPLY)
 
+		if (appearance.transform)
+			flat.ApplyTransform(appearance.transform)
+
 		var/next_parentcolor = appearance.color || parentcolor
+
+		var/flatX1 = 1
+		var/flatX2 = flat.Width()
+		var/flatY1 = 1
+		var/flatY2 = flat.Height()
 
 		for(var/image/layer_image as anything in layers)
 			if(layer_image.alpha == 0)
 				continue
 
+			var/icon/add // Icon version of the overlay being added
 			if(layer_image == copy) // 'layer_image' is an /image based on the object being flattened.
 				curblend = BLEND_OVERLAY
 				add = icon(layer_image.icon, layer_image.icon_state, base_icon_dir)
@@ -545,10 +581,10 @@ world
 				continue
 
 			// Find the new dimensions of the flat icon to fit the added overlay
-			addX1 = min(flatX1, layer_image.pixel_x + 1)
-			addX2 = max(flatX2, layer_image.pixel_x + add.Width())
-			addY1 = min(flatY1, layer_image.pixel_y + 1)
-			addY2 = max(flatY2, layer_image.pixel_y + add.Height())
+			var/addX1 = min(flatX1, layer_image.pixel_x + 1)
+			var/addX2 = max(flatX2, layer_image.pixel_x + add.Width())
+			var/addY1 = min(flatY1, layer_image.pixel_y + 1)
+			var/addY2 = max(flatY2, layer_image.pixel_y + add.Height())
 
 			if (
 				addX1 != flatX1 \
@@ -569,9 +605,12 @@ world
 				flatY1 = addX2
 				flatY2 = addY2
 
+			// If our child needs transforming, do that here
+			if(!(layer_image.appearance_flags & RESET_TRANSFORM) && appearance.transform)
+				add.ApplyTransform(appearance.transform)
+
 			// Blend the overlay into the flattened icon
 			flat.Blend(add, blendMode2iconMode(curblend), layer_image.pixel_x + 2 - flatX1, layer_image.pixel_y + 2 - flatY1)
-
 
 		if(appearance.alpha < 255)
 			flat.Blend(rgb(255, 255, 255, appearance.alpha), ICON_MULTIPLY)
@@ -594,6 +633,9 @@ world
 				final_icon.MapColors(arglist(appearance.color))
 			else
 				final_icon.Blend(appearance.color, ICON_MULTIPLY)
+
+		if (appearance.transform)
+			final_icon.ApplyTransform(appearance.transform)
 
 		return final_icon
 
