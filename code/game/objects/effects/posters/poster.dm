@@ -229,6 +229,7 @@
 	if (smoothing_flags & SMOOTH_DIAGONAL_CORNERS)
 		for (var/overlay in overlays)
 			var/image/new_image = overlay
+			#warn this code is broken, -d is suffixed not prefixed 
 			if(copytext(new_image.icon_state, 1, 3) == "d-") //3 == length("d-") + 1
 				return
 

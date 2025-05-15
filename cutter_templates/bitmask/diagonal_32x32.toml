@@ -1,5 +1,6 @@
 template = "bitmask/cardinal_32x32"
 
+produce_rotated_dirs = false
 # We're diagonal
 smooth_diagonally = true
 
