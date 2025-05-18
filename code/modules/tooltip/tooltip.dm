@@ -135,7 +135,7 @@ Notes:
 /proc/get_tooltip_weight_span(w_class, client/theme_from)
 	var/theme = get_tooltip_theme(theme_from)
 	var/datum/asset/spritesheet_batched/pip_asset = get_asset_datum(/datum/asset/spritesheet/storage_pips)
-	return pip_asset.icon_tag("[theme][w_class]")
+	return pip_asset.icon_tag(sanitize_css_class_name("[theme][w_class]"))
 
 //Arbitrarily close a user's tooltip
 //Includes sanity checks.
