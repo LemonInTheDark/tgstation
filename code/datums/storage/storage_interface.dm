@@ -128,7 +128,7 @@
 		pips_active = FALSE
 
 	var/list/pips = src.pips
-	cached_pip_target = min(pip_target, length(pips))
+	pip_target = min(pip_target, length(pips))
 	cached_pip_target = min(cached_pip_target, length(pips))
 	for(var/i in min(pip_target, cached_pip_target) + 1 to max(pip_target, cached_pip_target))
 		var/atom/movable/screen/storage_pip/update = pips[i]
