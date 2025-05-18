@@ -558,6 +558,12 @@
 		return
 	icon_state = "pip_full"
 
+/atom/movable/screen/storage_maptext
+	icon = null
+	icon_state = null
+	plane = ABOVE_HUD_PLANE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
 /atom/movable/screen/storage/corner
 	icon_state = "storage_corner_topleft"
 

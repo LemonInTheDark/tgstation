@@ -11,6 +11,7 @@
 	var/atom/movable/screen/storage/corner/bottom_right/corner_bottom_right
 	var/atom/movable/screen/storage/rowjoin/rowjoin_left
 	var/atom/movable/screen/storage/rowjoin/right/rowjoin_right
+	var/atom/movable/screen/storage_maptext/weight_maptext
 	var/list/atom/movable/screen/storage_pip/pips = list()
 
 	// Cache of pip inputs, avoids doing a bunch of appearance loc work for no reason
@@ -18,6 +19,7 @@
 	var/cached_pip_start_pixel_x = -1
 	var/cached_pip_start_pixel_y = -1
 	var/cached_pip_count = -1
+	var/cached_pips_hidden = FALSE
 	var/cached_pip_target = 0
 	var/cached_min_highlighted_pip = 0
 	var/cached_max_highlighted_pip = 0
@@ -44,6 +46,7 @@
 	corner_bottom_right = new(null, null, parent_storage)
 	rowjoin_left = new(null, null, parent_storage)
 	rowjoin_right = new(null, null, parent_storage)
+	weight_maptext = new(null, null)
 	build_pips()
 	update_style(ui_style)
 
@@ -57,6 +60,7 @@
 	QDEL_NULL(corner_bottom_right)
 	QDEL_NULL(rowjoin_left)
 	QDEL_NULL(rowjoin_right)
+	QDEL_NULL(weight_maptext)
 	QDEL_LIST(pips)
 	parent_storage = null
 	viewer = null
@@ -69,7 +73,10 @@
 /// Returns all UI elements under this theme
 /datum/storage_interface/proc/list_ui_elements()
 	build_pips()
-	var/list/atom/movable/screen/elements = list(cells_untouchable, cells_full, cells_remainder, corner_top_left, corner_top_right, corner_bottom_left, corner_bottom_right, rowjoin_left, rowjoin_right, closer)
+	var/list/atom/movable/screen/elements = list(
+		cells_untouchable, cells_full, cells_remainder, corner_top_left,
+		corner_top_right, corner_bottom_left, corner_bottom_right, rowjoin_left,
+		rowjoin_right, closer, weight_maptext)
 	elements += pips
 	return elements
 
@@ -96,6 +103,7 @@
 			display_to?.screen -= yeeted
 		pips.Cut(pip_target + 1)
 		return
+	cached_pips_hidden = FALSE
 	for(var/i in 1 to (pip_target - pip_count))
 		var/atom/movable/screen/storage_pip/my_beloved = new(null, null)
 		pips += my_beloved
@@ -104,6 +112,7 @@
 /datum/storage_interface/proc/position_pips(pips_per_row, pip_start_pixel_x, pip_start_pixel_y, pip_count)
 	if(cached_pips_per_row == pips_per_row && cached_pip_start_pixel_x == pip_start_pixel_x && cached_pip_start_pixel_y == pip_start_pixel_y && cached_pip_count == pip_count)
 		return
+	cached_pips_hidden = FALSE
 	cached_pips_per_row = pips_per_row
 	cached_pip_start_pixel_x = pip_start_pixel_x
 	cached_pip_start_pixel_y = pip_start_pixel_y
@@ -167,11 +176,39 @@
 	var/start_position = parent_storage.get_weight_before(focused_item) + 1
 	highlight_pips(start_position, start_position + focused_item.w_class - 1)
 
+/datum/storage_interface/proc/hide_pips()
+	if(cached_pips_hidden == TRUE)
+		return
+	cached_pips_hidden = TRUE
+	// Invalidate cache
+	cached_pips_per_row = 0
+	cached_pip_start_pixel_x = -1
+	cached_pip_start_pixel_y = -1
+	cached_pip_count = 0
+	var/list/pips = src.pips
+	for(var/atom/movable/screen/storage_pip/pip as anything in pips)
+		pip.screen_loc = ""
+
+// I don't want to do 2 measuretext calls
+GLOBAL_VAR_INIT(weight_average_char_size, 6)
+/datum/storage_interface/proc/draw_weight_text(text_stored_weight, text_max_weight, text_start_pixel_x, text_end_pixel_y)
+	// No reason to cache here, it'd be constantly invalidated and the work is cheap
+	var/stored_text = "[text_stored_weight]"
+	var/max_text = "[text_max_weight]"
+	// Goal is to center on the /
+	var/stored_length = length_char(stored_text) * GLOB.weight_average_char_size
+	weight_maptext.maptext = "[stored_text]/[max_text]"
+	weight_maptext.maptext_width = length_char(weight_maptext.maptext) * GLOB.weight_average_char_size
+	weight_maptext.screen_loc = offset_to_screen_loc(text_start_pixel_x - stored_length, text_end_pixel_y)
+
 GLOBAL_VAR_INIT(pip_height_offset, 30)
 // Important to align our center properly
 GLOBAL_VAR_INIT(pip_width_offset, -2)
+GLOBAL_VAR_INIT(weight_text_height_offset, 28)
+// Important to align our center properly
+GLOBAL_VAR_INIT(weight_text_width_offset, 0)
 /// Updates position of all UI elements
-/datum/storage_interface/proc/update_position(screen_start_x, screen_pixel_x, screen_start_y, screen_pixel_y, columns, rows, screen_max_columns)
+/datum/storage_interface/proc/update_position(screen_start_x, screen_pixel_x, screen_start_y, screen_pixel_y, columns, rows, hidden_cells, screen_max_columns)
 	var/start_pixel_x = screen_start_x * 32 + screen_pixel_x
 	var/start_pixel_y = screen_start_y * 32 + screen_pixel_y
 	var/end_pixel_x = start_pixel_x + (columns - 1) * 32
@@ -182,22 +219,25 @@ GLOBAL_VAR_INIT(pip_width_offset, -2)
 	cells_untouchable.alpha = 255
 
 	var/total_cells = columns * rows
-	var/max_touchable_cells = parent_storage.max_slots
+	var/max_touchable_cells = parent_storage.max_slots - hidden_cells
 	if(total_cells > max_touchable_cells)
 		// draw cells_full for the full rectangle of valid cells
 		var/end_pixel_y_square = max(end_pixel_y - 32, start_pixel_y)
+		var/start_pixel_y_remainder
 		if(rows > 1)
 			cells_full.screen_loc = spanning_screen_loc(start_pixel_x, start_pixel_y, end_pixel_x, end_pixel_y_square)
+			start_pixel_y_remainder = end_pixel_y_square + 32
 		else
 			cells_full.alpha = 0
+			start_pixel_y_remainder = start_pixel_y
 
 		// draw cells_remainder for the last row of partially valid cells
 		var/remainder_cells_to_draw = columns - (total_cells - max_touchable_cells)
 		var/end_pixel_x_touchable_cells = start_pixel_x + 32 * (remainder_cells_to_draw - 1)
-		cells_remainder.screen_loc = spanning_screen_loc(start_pixel_x, end_pixel_y_square + 32, end_pixel_x_touchable_cells, end_pixel_y)
+		cells_remainder.screen_loc = spanning_screen_loc(start_pixel_x, start_pixel_y_remainder, end_pixel_x_touchable_cells, end_pixel_y)
 
 		// draw cells_untouchable for the last little bit of that, yeah?
-		cells_untouchable.screen_loc = spanning_screen_loc(end_pixel_x_touchable_cells + 32, end_pixel_y_square + 32, end_pixel_x, end_pixel_y)
+		cells_untouchable.screen_loc = spanning_screen_loc(end_pixel_x_touchable_cells + 32, start_pixel_y_remainder, end_pixel_x, end_pixel_y)
 	else
 		cells_full.screen_loc = spanning_screen_loc(start_pixel_x, start_pixel_y, end_pixel_x, end_pixel_y)
 		cells_remainder.alpha = 0
@@ -221,13 +261,25 @@ GLOBAL_VAR_INIT(pip_width_offset, -2)
 	closer.screen_loc = "[screen_start_x + columns]:[screen_pixel_x - 5],[screen_start_y]:[screen_pixel_y]"
 
 	build_pips()
-	var/pips_per_row = FLOOR(screen_max_columns * 32 / (PIP_WIDTH + PIP_X_SPACING), 1)
-	// We want to center the pips in the middle of the field, so like, do that
+	// We want to center things in the middle of the field, so like, find that
 	var/storage_width = (end_pixel_x + 32) - start_pixel_x
 	var/storage_mid_offset = storage_width / 2
-	var/pips_width = (min(length(pips), pips_per_row) - 1) * (PIP_WIDTH + PIP_X_SPACING)
-	position_pips(pips_per_row, start_pixel_x + (storage_mid_offset - pips_width / 2) + GLOB.pip_width_offset, end_pixel_y + GLOB.pip_height_offset, length(pips))
-	fill_pips(parent_storage.get_total_weight())
+
+	var/stored_weight = parent_storage.get_total_weight()
+	var/pip_count = length(pips)
+	if(stored_weight > pip_count)
+		hide_pips()
+		draw_weight_text(stored_weight,
+			parent_storage.max_total_storage,
+			start_pixel_x + storage_mid_offset + GLOB.weight_text_width_offset,
+			end_pixel_y + GLOB.weight_text_height_offset)
+		return
+	weight_maptext.screen_loc = ""
+
+	var/pips_per_row = FLOOR(screen_max_columns * 32 / (PIP_WIDTH + PIP_X_SPACING), 1)
+	var/pips_width = (min(pip_count, pips_per_row) - 1) * (PIP_WIDTH + PIP_X_SPACING)
+	position_pips(pips_per_row, start_pixel_x + (storage_mid_offset - pips_width / 2) + GLOB.pip_width_offset, end_pixel_y + GLOB.pip_height_offset, pip_count)
+	fill_pips(stored_weight)
 	update_weight_display()
 
 #undef MAX_DISPLAYABLE_PIPS
