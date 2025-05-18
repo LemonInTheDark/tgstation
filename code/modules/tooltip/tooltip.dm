@@ -121,16 +121,10 @@ Notes:
 	user.client.tooltips.show(tip_src, params, title, content, theme)
 
 /proc/get_tooltip_theme(client/theme_from)
-	var/icon = get_tooltip_theme_icon(theme_from)
-	if(icon)
-		return LOWER_TEXT(icon)
-	return "default"
-
-/proc/get_tooltip_theme_icon(client/theme_from)
 	var/ui_style = theme_from?.prefs?.read_preference(/datum/preference/choiced/ui_style)
 	if(ui_style)
 		return LOWER_TEXT(ui_style)
-	return null
+	return "default"
 
 /proc/get_tooltip_weight_span(w_class, client/theme_from)
 	var/theme = get_tooltip_theme(theme_from)
