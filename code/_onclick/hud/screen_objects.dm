@@ -518,7 +518,7 @@
 	storage.refresh_views()
 
 /atom/movable/screen/unusable_storage
-	name = "storage"
+	name = "unusable storage"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "storage_dummy"
 	plane = HUD_PLANE
@@ -526,11 +526,9 @@
 /atom/movable/screen/storage_pip
 	name = "storage"
 	icon = 'icons/hud/screen_midnight.dmi'
-	icon_state = "storage_dummy"
-	plane = HUD_PLANE
-	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "pip_empty"
-	plane = HUD_PLANE
+	plane = ABOVE_HUD_PLANE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	/// Does our storage display consider us "filled"
 	var/active = FALSE
 	/// Are we currently being highlighted by our storage display?
