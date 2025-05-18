@@ -454,6 +454,15 @@ GLOBAL_LIST_EMPTY(cached_storage_typecaches)
 		total_weight += thing.w_class
 	return total_weight
 
+/// Returns all the weight stored inside us BEFORE we reach the passed in atom
+/datum/storage/proc/get_weight_before(obj/item/hunt_for)
+	var/total_weight = 0
+	for(var/obj/item/thing in real_location)
+		if(thing == hunt_for)
+			return total_weight
+		total_weight += thing.w_class
+	return total_weight
+
 /**
  * Attempts to insert an item into the storage
  *
@@ -989,8 +998,12 @@ GLOBAL_LIST_EMPTY(cached_storage_typecaches)
 
 /// Refresh the views of everyone currently viewing the storage.
 /datum/storage/proc/refresh_views()
-	for (var/mob/user in can_see_contents())
-		show_contents(user)
+	for(var/mob/user as anything in is_using)
+		if(!user.client)
+			continue
+		user.client.screen -= real_location.contents
+		user.client.screen |= real_location.contents
+	orient_storage()
 
 /// Checks who is currently capable of viewing our storage (and is.)
 /datum/storage/proc/can_see_contents()
@@ -1001,6 +1014,10 @@ GLOBAL_LIST_EMPTY(cached_storage_typecaches)
 		else
 			hide_contents(user)
 	return seeing
+
+/datum/storage/proc/get_storage_interface(mob/interface_for)
+	RETURN_TYPE(/datum/storage_interface)
+	return storage_interfaces?[interface_for]
 
 /**
  * Show our storage to a mob.
@@ -1039,7 +1056,7 @@ GLOBAL_LIST_EMPTY(cached_storage_typecaches)
 	var/ui_style = ui_style2icon(to_show.client?.prefs?.read_preference(/datum/preference/choiced/ui_style))
 
 	if (isnull(storage_interfaces[to_show]))
-		storage_interfaces[to_show] = new /datum/storage_interface(ui_style, src)
+		storage_interfaces[to_show] = new /datum/storage_interface(ui_style, src, to_show)
 
 	orient_storage()
 
@@ -1107,7 +1124,7 @@ GLOBAL_LIST_EMPTY(cached_storage_typecaches)
 	for (var/mob/ui_user as anything in storage_interfaces)
 		if (isnull(storage_interfaces[ui_user]))
 			continue
-		storage_interfaces[ui_user].update_position(screen_start_x, screen_pixel_x, screen_start_y, screen_pixel_y, columns, rows)
+		storage_interfaces[ui_user].update_position(screen_start_x, screen_pixel_x, screen_start_y, screen_pixel_y, columns, rows, screen_max_columns)
 
 	var/current_x = screen_start_x
 	var/current_y = screen_start_y

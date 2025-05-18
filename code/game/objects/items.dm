@@ -449,9 +449,10 @@
 
 /obj/item/examine_tags(mob/user)
 	var/list/parent_tags = ..()
-	parent_tags.Insert(1, weight_class_to_text(w_class)) // To make size display first, otherwise it looks goofy
+	var/weight_text = weight_class_to_text_pips(w_class)
+	parent_tags.Insert(1, weight_text) // To make size display first, otherwise it looks goofy
 	. = parent_tags
-	.[weight_class_to_text(w_class)] = weight_class_to_tooltip(w_class)
+	.[weight_text] = weight_class_to_tooltip(w_class)
 
 	if(item_flags & CRUEL_IMPLEMENT)
 		.[span_red("morbid")] = "It seems quite practical for particularly morbid procedures and experiments."
@@ -1130,7 +1131,7 @@
 	if(last_force_string_check != force && !(item_flags & FORCE_STRING_OVERRIDE))
 		set_force_string()
 
-	var/weight_string = "<b>Size:</b> [get_tooltip_weight_span(user.client, w_class)]"
+	var/weight_string = "<b>Size:</b> [get_tooltip_weight_span(w_class, user.client)]"
 	if(!(item_flags & FORCE_STRING_OVERRIDE))
 		openToolTip(user, src, params, title = name, content = "[desc]<br>[force ? "<b>Force:</b> [force_string]" : ""]<br>[weight_string]")
 	else
@@ -1139,15 +1140,18 @@
 /obj/item/MouseEntered(location, control, params)
 	. = ..()
 	if(((get(src, /mob) == usr) || loc?.atom_storage || (item_flags & IN_STORAGE)) && !QDELETED(src)) //nullspace exists.
-		var/mob/living/L = usr
 		if(usr.client.prefs.read_preference(/datum/preference/toggle/enable_tooltips))
 			var/timedelay = usr.client.prefs.read_preference(/datum/preference/numeric/tooltip_delay) / 100
 			tip_timer = addtimer(CALLBACK(src, PROC_REF(openTip), location, control, params, usr), timedelay, TIMER_STOPPABLE)//timer takes delay in deciseconds, but the pref is in milliseconds. dividing by 100 converts it.
 		if(usr.client.prefs.read_preference(/datum/preference/toggle/item_outlines))
-			if(istype(L) && L.incapacitated)
+			var/mob/living/viewer = usr
+			if(isliving(viewer) && viewer.incapacitated)
 				apply_outline(COLOR_RED_GRAY) //if they're dead or handcuffed, let's show the outline as red to indicate that they can't interact with that right now
 			else
 				apply_outline() //if the player's alive and well we send the command with no color set, so it uses the theme's color
+		if(loc?.atom_storage)
+			var/datum/storage_interface/active_interface = loc.atom_storage.get_storage_interface(usr)
+			active_interface?.set_displaying_weight(src)
 
 /obj/item/base_mouse_drop_handler(atom/over, src_location, over_location, params)
 	SHOULD_NOT_OVERRIDE(TRUE)
@@ -1160,6 +1164,9 @@
 	deltimer(tip_timer) //delete any in-progress timer if the mouse is moved off the item before it finishes
 	closeToolTip(usr)
 	remove_filter(HOVER_OUTLINE_FILTER)
+	if(loc?.atom_storage)
+		var/datum/storage_interface/active_interface = loc.atom_storage.get_storage_interface(usr)
+		active_interface?.set_displaying_weight(null)
 
 /obj/item/proc/apply_outline(outline_color = null)
 	if(((get(src, /mob) != usr) && !loc?.atom_storage && !(item_flags & IN_STORAGE)) || QDELETED(src) || isobserver(usr)) //cancel if the item isn't in an inventory, is being deleted, or if the person hovering is a ghost (so that people spectating you don't randomly make your items glow)

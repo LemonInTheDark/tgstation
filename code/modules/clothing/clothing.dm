@@ -342,7 +342,7 @@
 		if (atom_storage.can_hold?.len) // If pocket type can hold anything, vs only specific items
 			how_cool_are_your_threads += "[src] can store [atom_storage.max_slots] <a href='byond://?src=[REF(src)];show_valid_pocket_items=1'>item\s</a>.\n"
 		else
-			how_cool_are_your_threads += "[src] can store [atom_storage.max_slots] item\s that are [weight_class_to_text(atom_storage.max_specific_storage)] or smaller.\n"
+			how_cool_are_your_threads += "[src] can store [atom_storage.max_slots] item\s that are [weight_class_to_text_pips(atom_storage.max_specific_storage)] or smaller.\n"
 		if(atom_storage.quickdraw)
 			how_cool_are_your_threads += "You can quickly remove an item from [src] using Right-Click.\n"
 		if(atom_storage.silent)

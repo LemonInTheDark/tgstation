@@ -2,9 +2,6 @@
 	name = "storage_pips"
 	legacy = TRUE
 
-#define PIP_WIDTH 4
-#define PIP_HEIGHT 4
-
 /datum/asset/spritesheet/storage_pips/create_spritesheets()
 	for (var/style_name in GLOB.available_ui_styles)
 		var/icon/style_icon = GLOB.available_ui_styles[style_name]

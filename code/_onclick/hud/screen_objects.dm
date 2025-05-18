@@ -517,6 +517,49 @@
 	storage.real_location.contents += target
 	storage.refresh_views()
 
+/atom/movable/screen/unusable_storage
+	name = "storage"
+	icon = 'icons/hud/screen_midnight.dmi'
+	icon_state = "storage_dummy"
+	plane = HUD_PLANE
+
+/atom/movable/screen/storage_pip
+	name = "storage"
+	icon = 'icons/hud/screen_midnight.dmi'
+	icon_state = "storage_dummy"
+	plane = HUD_PLANE
+	icon = 'icons/hud/screen_midnight.dmi'
+	icon_state = "pip_empty"
+	plane = HUD_PLANE
+	/// Does our storage display consider us "filled"
+	var/active = FALSE
+	/// Are we currently being highlighted by our storage display?
+	var/highlighted = FALSE
+
+/atom/movable/screen/storage_pip/proc/set_active(active)
+	if(src.active == active) // somehow?
+		return
+	src.active = active
+	if(!active)
+		set_highlighted(FALSE)
+	update_appearance()
+
+/atom/movable/screen/storage_pip/proc/set_highlighted(highlighted)
+	if(src.highlighted == highlighted) // somehow?
+		return
+	src.highlighted = highlighted
+	update_appearance()
+
+/atom/movable/screen/storage_pip/update_icon_state()
+	. = ..()
+	if(!active)
+		icon_state = "pip_empty"
+		return
+	if(highlighted)
+		icon_state = "pip_highlight"
+		return
+	icon_state = "pip_full"
+
 /atom/movable/screen/storage/corner
 	icon_state = "storage_corner_topleft"
 

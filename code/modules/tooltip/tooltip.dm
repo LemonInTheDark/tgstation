@@ -132,7 +132,7 @@ Notes:
 		return LOWER_TEXT(ui_style)
 	return null
 
-/proc/get_tooltip_weight_span(client/theme_from, w_class)
+/proc/get_tooltip_weight_span(w_class, client/theme_from)
 	var/theme = get_tooltip_theme(theme_from)
 	var/datum/asset/spritesheet_batched/pip_asset = get_asset_datum(/datum/asset/spritesheet/storage_pips)
 	return pip_asset.icon_tag("[theme][w_class]")

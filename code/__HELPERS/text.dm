@@ -1192,6 +1192,10 @@ GLOBAL_LIST_INIT(binary, list("0","1"))
 		else
 			. = ""
 
+/proc/weight_class_to_text_pips(w_class)
+	// middle dod unicode my beloved
+	return "[weight_class_to_text(w_class)] ([repeat_string(w_class, "○")])"
+
 /proc/weight_class_to_tooltip(w_class)
 	switch(w_class)
 		if(WEIGHT_CLASS_TINY to WEIGHT_CLASS_SMALL)

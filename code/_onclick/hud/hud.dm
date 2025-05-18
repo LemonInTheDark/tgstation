@@ -383,6 +383,15 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 
 	hud_version = display_hud_version
 	persistent_inventory_update(screenmob)
+	/// Updates storage display and such
+	var/datum/storage/active_storage = mymob.active_storage
+	if(active_storage)
+		var/datum/storage_interface/interface = active_storage.get_storage_interface(mymob)
+		var/list/storage_ui = interface?.list_ui_elements()
+		if(storage_ui)
+			screenmob.client.screen |= storage_ui
+		if(interface && length(active_storage.real_location.contents))
+			screenmob.client.screen |= active_storage.real_location.contents
 	// Gives all of the actions the screenmob owes to their hud
 	screenmob.update_action_buttons(TRUE)
 	// Handles alerts - the things on the right side of the screen
@@ -448,6 +457,9 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 		if (item.icon == ui_style)
 			item.icon = new_ui_style
 
+	var/datum/storage_interface/active_interface = mymob?.active_storage?.get_storage_interface(mymob)
+	if(active_interface)
+		active_interface.update_style(new_ui_style)
 	ui_style = new_ui_style
 	build_hand_slots()
 
