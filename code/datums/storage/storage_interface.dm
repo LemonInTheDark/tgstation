@@ -73,7 +73,7 @@
 	elements += pips
 	return elements
 
-#define MAX_DISPLAYABLE_PIPS 70
+#define MAX_DISPLAYABLE_PIPS 74 // 2 layers
 #define PIP_X_SPACING 2
 #define PIP_Y_SPACING 1
 #define PIP_WIDTH 4
