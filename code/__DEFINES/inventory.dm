@@ -14,6 +14,8 @@
 /// Essentially means it cannot be picked up or placed in an inventory, (e.g. mech parts, safe)
 #define WEIGHT_CLASS_GIGANTIC 6
 
+/// Largest weight class in the game, update if you add new ones
+#define WEIGHT_CLASS_MAX WEIGHT_CLASS_GIGANTIC
 /// Weight class that can fit in pockets
 #define POCKET_WEIGHT_CLASS WEIGHT_CLASS_SMALL
 

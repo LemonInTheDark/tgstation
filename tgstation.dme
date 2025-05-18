@@ -3520,6 +3520,7 @@
 #include "code\modules\asset_cache\assets\safe.dm"
 #include "code\modules\asset_cache\assets\seeds.dm"
 #include "code\modules\asset_cache\assets\sheetmaterials.dm"
+#include "code\modules\asset_cache\assets\storage_pips.dm"
 #include "code\modules\asset_cache\assets\supplypods.dm"
 #include "code\modules\asset_cache\assets\tcomms.dm"
 #include "code\modules\asset_cache\assets\tgfont.dm"

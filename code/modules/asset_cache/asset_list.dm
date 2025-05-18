@@ -87,7 +87,7 @@ GLOBAL_LIST_EMPTY(asset_datums)
 	/// converted into a asset_cache datum.
 	var/assets = list()
 	/// Set to true to have this asset also be sent via the legacy browse_rsc
-	/// system when cdn transports are enabled?
+	/// system when cdn transports are enabled
 	var/legacy = FALSE
 	/// TRUE for keeping local asset names when browse_rsc backend is used
 	var/keep_local_name = FALSE

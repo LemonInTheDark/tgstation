@@ -26,6 +26,9 @@
 	var/load_immediately = FALSE
 	// Kept in state so that the result is the same, even when the files are created, for this run
 	VAR_PRIVATE/should_refresh = null
+	/// Set to true to have this asset also be sent via the legacy browse_rsc
+	/// system when cdn transports are enabled
+	var/legacy = FALSE
 
 /datum/asset/spritesheet/proc/should_load_immediately()
 #ifdef DO_NOT_DEFER_ASSETS
@@ -109,14 +112,16 @@
 		var/size = sizes[size_id]
 		var/file_path = size[SPRSZ_STRIPPED]
 		var/file_hash = rustg_hash_file(RUSTG_HASH_MD5, file_path)
-		SSassets.transport.register_asset("[name]_[size_id].png", file_path, file_hash=file_hash)
+		var/datum/asset_cache_item/registered_png = SSassets.transport.register_asset("[name]_[size_id].png", file_path, file_hash=file_hash)
+		registered_png.legacy = legacy
 	var/css_name = "spritesheet_[name].css"
 	var/file_directory = "data/spritesheets/[css_name]"
 	fdel(file_directory)
 	var/css = generate_css()
 	rustg_file_write(css, file_directory)
 	var/css_hash = rustg_hash_string(RUSTG_HASH_MD5, css)
-	SSassets.transport.register_asset(css_name, fcopy_rsc(file_directory), file_hash=css_hash)
+	var/datum/asset_cache_item/registered_css = SSassets.transport.register_asset(css_name, fcopy_rsc(file_directory), file_hash=css_hash)
+	registered_css.legacy = legacy
 
 	if(CONFIG_GET(flag/save_spritesheets))
 		save_to_logs(file_name = css_name, file_location = file_directory)
@@ -224,8 +229,9 @@
 		var/file_path = "[ASSET_CROSS_ROUND_CACHE_DIRECTORY]/spritesheet.[asset_id]"
 		// Hashing it here is a *lot* faster.
 		var/hash = rustg_hash_file(RUSTG_HASH_MD5, file_path)
-		var/asset_cache_item = SSassets.transport.register_asset(asset_id, file_path, file_hash=hash)
-		var/asset_url = SSassets.transport.get_asset_url(asset_cache_item = asset_cache_item)
+		var/datum/asset_cache_item/registered_png = SSassets.transport.register_asset(asset_id, file_path, file_hash=hash)
+		registered_png.legacy = legacy
+		var/asset_url = SSassets.transport.get_asset_url(asset_cache_item = registered_png)
 		replaced_css = replacetext(replaced_css, find_background_urls.match, "background-image:url('[asset_url]')")
 		LAZYADD(cached_spritesheets_needed, asset_id)
 
@@ -233,7 +239,8 @@
 	var/replaced_css_filename = "data/spritesheets/[finalized_name]"
 	var/css_hash = rustg_hash_string(RUSTG_HASH_MD5, replaced_css)
 	rustg_file_write(replaced_css, replaced_css_filename)
-	SSassets.transport.register_asset(finalized_name, replaced_css_filename, file_hash=css_hash)
+	var/datum/asset_cache_item/registered_css = SSassets.transport.register_asset(finalized_name, replaced_css_filename, file_hash=css_hash)
+	registered_css.legacy = legacy
 
 	if(CONFIG_GET(flag/save_spritesheets))
 		save_to_logs(file_name = finalized_name, file_location = replaced_css_filename)

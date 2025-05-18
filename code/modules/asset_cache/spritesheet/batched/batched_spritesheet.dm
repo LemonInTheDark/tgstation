@@ -46,6 +46,9 @@
 	var/cache_dmi_hashes_json = null
 	/// Used to prevent async cache refresh jobs from looping on failure.
 	var/cache_result = null
+	/// Set to true to have this asset also be sent via the legacy browse_rsc
+	/// system when cdn transports are enabled
+	var/legacy = FALSE
 
 /datum/asset/spritesheet_batched/proc/should_load_immediately()
 #ifdef DO_NOT_DEFER_ASSETS
@@ -208,7 +211,8 @@
 		var/png_name = "[name]_[size_id].png"
 		var/file_directory = "data/spritesheets/[png_name]"
 		var/file_hash = rustg_hash_file(RUSTG_HASH_MD5, file_directory)
-		SSassets.transport.register_asset(png_name, fcopy_rsc(file_directory), file_hash)
+		var/datum/asset_cache_item/registered_png = SSassets.transport.register_asset(png_name, fcopy_rsc(file_directory), file_hash)
+		registered_png.legacy = legacy
 		if(CONFIG_GET(flag/save_spritesheets))
 			save_to_logs(file_name = png_name, file_location = file_directory)
 	var/css_name = "spritesheet_[name].css"
@@ -218,7 +222,8 @@
 	var/css = generate_css()
 	rustg_file_write(css, file_directory)
 	var/css_hash = rustg_hash_string(RUSTG_HASH_MD5, css)
-	SSassets.transport.register_asset(css_name, fcopy_rsc(file_directory), file_hash=css_hash)
+	var/datum/asset_cache_item/registered_css = SSassets.transport.register_asset(css_name, fcopy_rsc(file_directory), file_hash=css_hash)
+	registered_css.legacy = legacy
 
 	if(CONFIG_GET(flag/save_spritesheets))
 		save_to_logs(file_name = css_name, file_location = file_directory)
@@ -288,19 +293,24 @@
 
 	// sizes gets filled during should_refresh()
 	for(var/size_id in sizes)
-		var/fname = "data/spritesheets/[name]_[size_id].png"
-		if(!fexists(fname))
+		var/file_directory = "data/spritesheets/[name]_[size_id].png"
+		if(!fexists(file_directory))
 			return FALSE
 
 	var/css_hash = rustg_hash_file(RUSTG_HASH_MD5, css_file_directory)
-	SSassets.transport.register_asset(css_name, fcopy_rsc(css_file_directory), file_hash=css_hash)
-	for(var/size_id in sizes)
-		var/fname = "data/spritesheets/[name]_[size_id].png"
-		var/hash = rustg_hash_file(RUSTG_HASH_MD5, fname)
-		SSassets.transport.register_asset("[name]_[size_id].png", fcopy_rsc(fname), file_hash=hash)
-
+	var/datum/asset_cache_item/registered_css = SSassets.transport.register_asset(css_name, fcopy_rsc(css_file_directory), file_hash=css_hash)
+	registered_css.legacy = legacy
 	if(CONFIG_GET(flag/save_spritesheets))
 		save_to_logs(file_name = css_name, file_location = css_file_directory)
+
+	for(var/size_id in sizes)
+		var/png_name = "[name]_[size_id].png"
+		var/file_directory = "data/spritesheets/[png_name]"
+		var/hash = rustg_hash_file(RUSTG_HASH_MD5, file_directory)
+		var/datum/asset_cache_item/registered_png = SSassets.transport.register_asset(png_name, fcopy_rsc(file_directory), file_hash=hash)
+		registered_png.legacy = legacy
+		if(CONFIG_GET(flag/save_spritesheets))
+			save_to_logs(file_name = png_name, file_location = file_directory)
 
 	return TRUE
 

@@ -1126,13 +1126,15 @@
 			force_string = "exceptionally robust"
 	last_force_string_check = force
 
-/obj/item/proc/openTip(location, control, params, user)
+/obj/item/proc/openTip(location, control, params, mob/user)
 	if(last_force_string_check != force && !(item_flags & FORCE_STRING_OVERRIDE))
 		set_force_string()
+
+	var/weight_string = "<b>Size:</b> [get_tooltip_weight_span(user.client, w_class)]"
 	if(!(item_flags & FORCE_STRING_OVERRIDE))
-		openToolTip(user,src,params,title = name,content = "[desc]<br>[force ? "<b>Force:</b> [force_string]" : ""]",theme = "")
+		openToolTip(user, src, params, title = name, content = "[desc]<br>[force ? "<b>Force:</b> [force_string]" : ""]<br>[weight_string]")
 	else
-		openToolTip(user,src,params,title = name,content = "[desc]<br><b>Force:</b> [force_string]",theme = "")
+		openToolTip(user, src, params, title = name, content = "[desc]<br><b>Force:</b> [force_string]<br>[weight_string]")
 
 /obj/item/MouseEntered(location, control, params)
 	. = ..()

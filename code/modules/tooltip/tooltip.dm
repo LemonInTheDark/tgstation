@@ -31,8 +31,9 @@ Notes:
 		owner = C
 		var/datum/asset/stuff = get_asset_datum(/datum/asset/simple/jquery)
 		stuff.send(owner)
+		var/datum/asset/spritesheet_batched/pip_asset = get_asset_datum(/datum/asset/spritesheet/storage_pips)
+		pip_asset.send(owner)
 		owner << browse(file2text('code/modules/tooltip/tooltip.html'), "window=[control]")
-
 	..()
 
 
@@ -54,24 +55,29 @@ Notes:
 
 	showing = 1
 
-	if (title && content)
+	var/draw_title = !!title
+	var/draw_content = !!content
+	if (draw_content)
 		title = "<h1>[title]</h1>"
-		content = "<p>[content]</p>"
-	else if (title && !content)
+	else
 		title = "<p>[title]</p>"
-	else if (!title && content)
-		content = "<p>[content]</p>"
+	content = "<p>[content]</p>"
 
 	// Strip macros from item names
 	title = replacetext(title, "\proper", "")
 	title = replacetext(title, "\improper", "")
+	var/drawn_text = ""
+	if(draw_title)
+		drawn_text += title
+	if(draw_content)
+		drawn_text += content
 
 	//Make our dumb param object
 	params = {"{ "cursor": "[params]", "screenLoc": "[thing.screen_loc]" }"}
 
 	//Send stuff to the tooltip
 	var/view_size = getviewsize(owner.view)
-	owner << output(list2params(list(params, view_size[1] , view_size[2], "[title][content]", theme, special)), "[control]:tooltip.update")
+	owner << output(list2params(list(params, view_size[1] , view_size[2], drawn_text, theme, special)), "[control]:tooltip.update")
 
 	//If a hide() was hit while we were showing, run hide() again to avoid stuck tooltips
 	showing = 0
@@ -110,13 +116,26 @@ Notes:
 /proc/openToolTip(mob/user = null, atom/movable/tip_src = null, params = null, title = "", content = "", theme = "")
 	if(!istype(user) || !user.client?.tooltips)
 		return
-	var/ui_style = user.client?.prefs?.read_preference(/datum/preference/choiced/ui_style)
-	if(!theme && ui_style)
-		theme = LOWER_TEXT(ui_style)
 	if(!theme)
-		theme = "default"
+		theme = get_tooltip_theme(user.client)
 	user.client.tooltips.show(tip_src, params, title, content, theme)
 
+/proc/get_tooltip_theme(client/theme_from)
+	var/icon = get_tooltip_theme_icon(theme_from)
+	if(icon)
+		return LOWER_TEXT(icon)
+	return "default"
+
+/proc/get_tooltip_theme_icon(client/theme_from)
+	var/ui_style = theme_from?.prefs?.read_preference(/datum/preference/choiced/ui_style)
+	if(ui_style)
+		return LOWER_TEXT(ui_style)
+	return null
+
+/proc/get_tooltip_weight_span(client/theme_from, w_class)
+	var/theme = get_tooltip_theme(theme_from)
+	var/datum/asset/spritesheet_batched/pip_asset = get_asset_datum(/datum/asset/spritesheet/storage_pips)
+	return pip_asset.icon_tag("[theme][w_class]")
 
 //Arbitrarily close a user's tooltip
 //Includes sanity checks.
