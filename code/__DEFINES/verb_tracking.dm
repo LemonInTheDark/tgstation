@@ -104,7 +104,12 @@ GLOBAL_LIST_EMPTY(average_verb_cost)
 
 GLOBAL_LIST_EMPTY(verb_trackers_this_tick)
 
+/// Verb cost tracker which is currently active
+GLOBAL_DATUM(active_tracker, /datum/verb_cost_tracker)
+
 /datum/verb_cost_tracker
+	// How to categorize ourselves when logging
+	var/name_to_use
 	var/proc_name
 	var/useage_at_start = 0
 	var/usage_at_end = 0
@@ -113,11 +118,17 @@ GLOBAL_LIST_EMPTY(verb_trackers_this_tick)
 
 /datum/verb_cost_tracker/New(useage_at_start, callee/proc_info)
 	proc_name = proc_info.proc
+	name_to_use = proc_name
 	src.useage_at_start = useage_at_start
 	invoked_on = world.time
 	GLOB.verb_trackers_this_tick += src
+	GLOB.active_tracker = src
 
 /datum/verb_cost_tracker/proc/enter_average(category)
 	if(!category)
-		category = proc_name
-	GLOB.average_verb_cost[proc_name] = MC_AVERAGE(GLOB.average_verb_cost[category], usage_at_end - useage_at_start)
+		category = name_to_use
+	GLOB.average_verb_cost[category] = MC_AVG_SLOW_UP_FAST_DOWN(GLOB.average_verb_cost[category], usage_at_end - useage_at_start)
+	GLOB.active_tracker = null
+
+/datum/verb_cost_tracker/proc/get_average_cost()
+	return GLOB.average_verb_cost[name_to_use] || 0

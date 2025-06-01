@@ -917,7 +917,7 @@ DEFINE_VERB(/mob, DisDblClick, ".dblclick", "", TRUE, null, argu = null as anyth
 	if(selected_hand != active_hand_index)
 		swap_hand(selected_hand)
 
-	// _queue_verb requires a client, so when we don't have it (AI controlled mob) we don't use it
+	// _queue_verb_callback requires a client, so when we don't have it (AI controlled mob) we don't use it
 	client ? mode() : execute_mode()
 
 /mob/proc/assess_threat(judgement_criteria, lasercolor = "", datum/callback/weaponcheck=null) //For sec bot threat assessment

@@ -115,9 +115,21 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 			to_chat(src, span_danger("Your previous action was ignored because you've done too many in a second"))
 			return FALSE
 
+	var/topic_name = "topic"
+	if (isdatum(hsrc))
+		var/datum/real_src = hsrc
+		topic_name = "[topic_name]-[real_src.type]"
+	if(GLOB.active_tracker)
+		var/list/keys = list()
+		for(var/key in href_list)
+			keys += key
+		GLOB.active_tracker.name_to_use = "[topic_name]-[keys.Join("-")]"
+
 	// Tgui Topic middleware
 	if(tgui_Topic(href_list))
 		return FALSE
+	//fun fact: Topic() acts like a verb and is executed at the end of the tick like other verbs. So we have to queue it if the server is
+	//overloaded
 	if(href_list["reload_tguipanel"])
 		nuke_chat()
 	if(href_list["reload_statbrowser"])
@@ -189,7 +201,9 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 	//fun fact: Topic() acts like a verb and is executed at the end of the tick like other verbs. So we have to queue it if the server is
 	//overloaded
-	if(hsrc && hsrc != holder && DEFAULT_TRY_QUEUE_VERB(VERB_CALLBACK(src, PROC_REF(_WrapSrcTopic), hsrc, href, href_list)))
+	if(hsrc && hsrc != holder && INTELIGENT_DEFAULT_TRY_QUEUE_VERB(VERB_CALLBACK(src, PROC_REF(_WrapSrcTopic), hsrc, href, href_list)))
+		if(GLOB.active_tracker)
+			GLOB.active_tracker.name_to_use = "[GLOB.active_tracker.name_to_use]-queued"
 		return FALSE
 	return TRUE //redirect to hsrc.Topic()
 
@@ -953,9 +967,13 @@ OVERRIDE_INTERNAL_VERB(/client, AllowUpload, filename, filelength)
 			to_chat(src, span_danger("Your previous click was ignored because you've done too many in a second"))
 			return FALSE
 
+	if(GLOB.active_tracker)
+		GLOB.active_tracker.name_to_use = "click-[object.type]"
 	//check if the server is overloaded and if it is then queue up the click for next tick
 	//yes having it call a wrapping proc on the subsystem is fucking stupid glad we agree unfortunately byond insists its reasonable
-	if(!QDELETED(object) && TRY_QUEUE_VERB(VERB_CALLBACK(object, TYPE_PROC_REF(/atom, _Click), location, control, params), VERB_HIGH_PRIORITY_QUEUE_THRESHOLD, SSinput, control))
+	if(!QDELETED(object) && INTELIGENT_TRY_QUEUE_VERB(VERB_CALLBACK(object, TYPE_PROC_REF(/atom, _Click), location, control, params), VERB_HIGH_PRIORITY_QUEUE_THRESHOLD, SSinput, control))
+		if(GLOB.active_tracker)
+			GLOB.active_tracker.name_to_use = "[GLOB.active_tracker.name_to_use]-queued"
 		return FALSE
 
 	if (hotkeys)

@@ -503,7 +503,7 @@ GLOBAL_DATUM(tick_info, /datum/tick_holder)
 	var/list/cost_breakdown = list()
 	for(var/datum/verb_cost_tracker/verb_info as anything in GLOB.verb_trackers_this_tick)
 		if(verb_info.invoked_on != verb_info.finished_on)
-			stack_trace("We somehow slept between logpoints for [verb_info.proc_name], ahhhhh ([json_encode(verb_info.vars)])")
+			stack_trace("We somehow slept between logpoints for [verb_info.name_to_use], ahhhhh ([json_encode(verb_info.vars)])")
 			continue
 		if(verb_info.finished_on != world.time - world.tick_lag)
 			stack_trace("there's a verb we think is from last tick that happen this tick, what? ([json_encode(verb_info.vars)])")
@@ -511,7 +511,7 @@ GLOBAL_DATUM(tick_info, /datum/tick_holder)
 		total_verb_cost += verb_info.usage_at_end - verb_info.useage_at_start
 		verb_spans += list(list(verb_info.useage_at_start, verb_info.usage_at_end))
 		last_verb_finished = max(last_verb_finished, verb_info.usage_at_end)
-		cost_breakdown[verb_info.proc_name] += verb_info.usage_at_end - verb_info.useage_at_start
+		cost_breakdown[verb_info.name_to_use] += verb_info.usage_at_end - verb_info.useage_at_start
 
 	cpu_values[cpu_index] = real_cpu
 	tick_info.mc_usage[cpu_index] = tick_info.mc_finished_usage[cpu_index] - tick_info.mc_start_usage[cpu_index]
