@@ -680,14 +680,16 @@
 	screen_loc = "EAST-3,CENTER:140"
 	icon = 'icons/hud/lobby/newplayer.dmi'
 	icon_state = null //we only show up when we get update appearance called, cause we need our overlay to not look bad.
-	base_icon_state = "newplayer"
+	base_icon_state = null
 	maptext_height = 75
 	maptext_width = 80
 	maptext_x = OVERLAY_X_DIFF
 	maptext_y = OVERLAY_Y_DIFF
+	appearance_flags = parent_type::appearance_flags | KEEP_TOGETHER
 
 	///Boolean on whether or not we should have our static overlay, so we 'turn' the TV off when collapsing.
 	var/show_static = TRUE
+	var/show_JUST_static = TRUE
 
 /atom/movable/screen/lobby/new_player_info/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()
@@ -699,22 +701,27 @@
 	STOP_PROCESSING(SSnewplayer_info, src)
 	return ..()
 
-/atom/movable/screen/lobby/new_player_info/update_icon_state()
-	. = ..()
-	icon_state = base_icon_state
-
+GLOBAL_VAR_INIT(scanline_alpha, 60)
 /atom/movable/screen/lobby/new_player_info/update_overlays()
 	. = ..()
-	. += mutable_appearance(icon, "[base_icon_state]_overlay", layer = src.layer+0.03)
+	remove_filter("scanline_mask")
+	. += mutable_appearance(icon, "newplayer", layer = src.layer - 0.01, appearance_flags = KEEP_APART)
+	. += mutable_appearance(icon, "newplayer_frame", layer = src.layer+0.03, appearance_flags = KEEP_APART)
 	if(!show_static)
 		return .
-	. += mutable_appearance(icon, "static_base", alpha = 20, layer = src.layer+0.01)
+	if(show_JUST_static)
+		. += mutable_appearance(icon, "static_base", alpha = 20, layer = src.layer+0.01)
 	//we have this in a separate file because `generate_icon_alpha_mask` puts lighting even on non-existent pixels,
 	//giving the icon a weird background color.
-	var/mutable_appearance/scanline = mutable_appearance(generate_icon_alpha_mask('icons/hud/lobby/newplayer_scanline.dmi', "scanline"), alpha = 20, layer = src.layer+0.02)
+	var/mutable_appearance/scanline = mutable_appearance(generate_icon_alpha_mask('icons/hud/lobby/newplayer_scanline.dmi', "scanline"), alpha = 20, layer = src.layer+0.02, appearance_flags = KEEP_APART)
 	scanline.pixel_y = OVERLAY_X_DIFF
 	scanline.pixel_x = OVERLAY_Y_DIFF
 	. += scanline
+	var/mutable_appearance/scanline_mask = new(scanline)
+	scanline_mask.render_target = "*newplayer_scanline"
+	scanline_mask.alpha = GLOB.scanline_alpha
+	. += scanline_mask
+	add_filter("scanline_mask", 1, alpha_mask_filter(x = 36, y = 24, render_source = scanline_mask.render_target, flags = MASK_INVERSE))
 
 /atom/movable/screen/lobby/new_player_info/process(seconds_per_tick)
 	update_text()
@@ -733,22 +740,23 @@
 	update_appearance(UPDATE_ICON)
 	update_text()
 
+GLOBAL_VAR_INIT(player_css, "font-family: \"Grand9K Pixel\"; font-size: 6pt; -dm-text-outline: 1px #435e34 square; color: #a3cb60; line-height: 1.0; text-align: center; vertical-align: middle")
 /atom/movable/screen/lobby/new_player_info/proc/update_text()
 	if(!hud || !show_static)
 		maptext = null
 		return
 	if(!MC_RUNNING())
-		maptext = MAPTEXT("<span style='text-align: center; vertical-align: middle'>Loading...</span>")
+		maptext = "<span style='[GLOB.player_css]'>Loading...</span>"
 		return
 	if(SSticker.IsPostgame())
-		maptext = MAPTEXT("<span style='text-align: center; vertical-align: middle'>Game ended, <br /> \
-			restart soon</span>")
+		maptext = "<span style='[GLOB.player_css]'>Game ended, <br /> \
+			restart soon</span>"
 		return
 
 	var/new_maptext
 	var/round_started = SSticker.HasRoundStarted()
 	if(round_started)
-		new_maptext = "<span style='text-align: center; vertical-align: middle'>[SSmapping.current_map.map_name]<br /> \
+		new_maptext = "<span style='[GLOB.player_css]'>[SSmapping.current_map.map_name]<br /> \
 			[LAZYLEN(GLOB.clients)] player\s online<br /> \
 			[ROUND_TIME()] in<br />"
 		var/datum/station_trait/overflow_job_bureaucracy/overflow = locate() in SSstation.station_traits
@@ -765,15 +773,15 @@
 			time_remaining = "SOON"
 
 		if(hud.mymob.client?.holder)
-			new_maptext = "<span style='text-align: center; vertical-align: middle'>Starting in [time_remaining]<br /> \
+			new_maptext = "<span style='[GLOB.player_css]'>Starting in [time_remaining]<br /> \
 				[LAZYLEN(GLOB.clients)] player\s<br /> \
 				[SSticker.totalPlayersReady] players ready<br /> \
 				[SSticker.total_admins_ready] / [length(GLOB.admins)] admins ready</span>"
 		else
-			new_maptext = "<span style='text-align: center; vertical-align: middle; font-size: 18px'>[time_remaining]</span><br /> \
-				<span style='text-align: center; vertical-align: middle'>[LAZYLEN(GLOB.clients)] player\s</span>"
+			new_maptext = "<span style='[GLOB.player_css]; font-size: 18px'>[time_remaining]</span><br /> \
+				<span style='[GLOB.player_css]'>[LAZYLEN(GLOB.clients)] player\s</span>"
 
-	maptext = MAPTEXT(new_maptext)
+	maptext = new_maptext
 
 #undef OVERLAY_X_DIFF
 #undef OVERLAY_Y_DIFF
