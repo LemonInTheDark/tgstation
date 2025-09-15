@@ -3,15 +3,17 @@
 /datum/status_effect
 	/// The ID of the effect. ID is used in adding and removing effects to check for duplicates, among other things.
 	var/id = "effect"
-	/// When set initially / in on_creation, this is how long the status effect lasts in deciseconds.
-	/// While processing, this becomes the world.time when the status effect will expire.
-	/// -1 = infinite duration.
+	/// Hhow long the status effect lasts in deciseconds.
+	/// STATUS_EFFECT_PERMANENT = infinite duration.
 	var/duration = STATUS_EFFECT_PERMANENT
+	/// the world.time this status effect started running, assuming this effect has a meaningful duration
+	var/start_time = -1
 	/// When set initially / in on_creation, this is how long between [proc/tick] calls in deciseconds.
 	/// Note that this cannot be faster than the processing subsystem you choose to fire the effect on. (See: [var/processing_speed])
-	/// While processing, this becomes the world.time when the next tick will occur.
-	/// -1 = will prevent ticks, and if duration is also unlimited (-1), stop processing wholesale.
+	/// STATUS_EFFECT_NO_TICK = will prevent ticks, and if duration is also unlimited (STATUS_EFFECT_PERMANENT), stop processing wholesale.
 	var/tick_interval = 1 SECONDS
+	/// The world.time when the next tick will occur.
+	var/next_tick = -1
 	///If our tick intervals are set to be a dynamic value within a range, the lowerbound of said range
 	var/tick_interval_lowerbound
 	///If our tick intervals are set to be a dynamic value within a range, the upperbound of said range
@@ -59,9 +61,9 @@
 		// but we'll still set it to -1 / STATUS_EFFECT_PERMANENT for proper unified handling
 		duration = STATUS_EFFECT_PERMANENT
 	if(duration != STATUS_EFFECT_PERMANENT)
-		duration = world.time + duration
+		start_time = world.time
 	if(tick_interval != STATUS_EFFECT_NO_TICK)
-		tick_interval = world.time + tick_interval
+		next_tick = world.time + tick_interval
 
 	if(alert_type)
 		var/atom/movable/screen/alert/status_effect/new_alert = owner.throw_alert(id, alert_type)
@@ -69,7 +71,7 @@
 		linked_alert = new_alert //so we can reference the alert, if we need to
 		update_shown_duration()
 
-	if(duration > world.time || tick_interval > world.time) //don't process if we don't care
+	if(duration != STATUS_EFFECT_PERMANENT  || tick_interval != STATUS_EFFECT_NO_TICK) //don't process if we don't care
 		switch(processing_speed)
 			if(STATUS_EFFECT_FAST_PROCESS)
 				START_PROCESSING(SSfastprocess, src)
@@ -108,7 +110,7 @@
 	if(!linked_alert || !show_duration)
 		return
 
-	linked_alert.maptext = MAPTEXT_TINY_UNICODE("<span style='text-align:center'>[round((duration - world.time)/10, 1)]s</span>")
+	linked_alert.maptext = MAPTEXT_TINY_UNICODE("<span style='text-align:center'>[round(time_remaining()/10, 1)]s</span>")
 
 // Status effect process. Handles adjusting its duration and ticks.
 // If you're adding processed effects, put them in [proc/tick]
@@ -122,17 +124,17 @@
 
 	if(tick_interval == STATUS_EFFECT_AUTO_TICK)
 		tick(seconds_per_tick)
-	else if(tick_interval != STATUS_EFFECT_NO_TICK && tick_interval < world.time)
-		var/tick_length = (tick_interval_upperbound && tick_interval_lowerbound) ? rand(tick_interval_lowerbound, tick_interval_upperbound) : initial(tick_interval)
+	else if(tick_interval != STATUS_EFFECT_NO_TICK && next_tick < world.time)
+		var/tick_length = (tick_interval_upperbound && tick_interval_lowerbound) ? rand(tick_interval_lowerbound, tick_interval_upperbound) : tick_interval
 		tick(tick_length / (1 SECONDS))
-		tick_interval = world.time + tick_length
+		next_tick = world.time + tick_length
 
 	if(QDELING(src))
 		// tick deleted us, no need to continue
 		return
 
 	if(duration != STATUS_EFFECT_PERMANENT)
-		if(duration < world.time)
+		if(time_remaining() <= 0)
 			qdel(src)
 			return
 		update_shown_duration()
@@ -188,7 +190,7 @@
 	var/original_duration = initial(duration)
 	if(original_duration == STATUS_EFFECT_PERMANENT)
 		return
-	duration = world.time + original_duration
+	start_time = world.time
 
 /// Adds nextmove modifier multiplicatively to the owner while applied
 /datum/status_effect/proc/nextmove_modifier()
@@ -208,18 +210,47 @@
 	if(!heal_flag_necessary || (heal_flags & heal_flag_necessary))
 		qdel(src)
 
-/// Remove [seconds] of duration from the status effect, qdeling / ending if we eclipse the current world time.
-/datum/status_effect/proc/remove_duration(seconds)
-	if(duration == STATUS_EFFECT_PERMANENT) // Infinite duration
-		return FALSE
+/// Returns the time in deciseconds left before this effect expires
+/datum/status_effect/proc/time_remaining()
+	if(duration == STATUS_EFFECT_PERMANENT)
+		return INFINITY
+	return start_time + duration - world.time
 
-	duration -= seconds
-	if(duration <= world.time)
+/// Sets the delay between ticks
+/datum/status_effect/proc/set_tick_interval(new_interval)
+	if(new_interval == STATUS_EFFECT_NO_TICK || new_interval == STATUS_EFFECT_AUTO_TICK)
+		next_tick = -1
+	else if(tick_interval == STATUS_EFFECT_NO_TICK || tick_interval == STATUS_EFFECT_AUTO_TICK)
+		next_tick = world.time
+	tick_interval = new_interval
+
+/// Sets duration to [new_duration], qdeling / ending if we eclipse the current world time.
+/datum/status_effect/proc/set_duration(new_duration)
+	if(new_duration == STATUS_EFFECT_PERMANENT)
+		start_time = -1
+	else if(duration == STATUS_EFFECT_PERMANENT)
+		start_time = world.time
+
+	duration = new_duration
+
+	if(time_remaining() <= 0)
 		qdel(src)
 		return TRUE
 
 	update_shown_duration()
 	return FALSE
+
+/// Adds [seconds] of duration from the status effect
+/datum/status_effect/proc/add_duration(seconds, maximum)
+	if(duration == STATUS_EFFECT_PERMANENT) // Infinite duration
+		return FALSE
+	return set_duration(max(duration + seconds, maximum))
+
+/// Remove [seconds] of duration from the status effect, qdeling / ending if we eclipse the current world time.
+/datum/status_effect/proc/remove_duration(seconds)
+	if(duration == STATUS_EFFECT_PERMANENT) // Infinite duration
+		return FALSE
+	return set_duration(duration - seconds)
 
 /**
  * Updates the particles for the status effects
@@ -233,6 +264,9 @@
 	. = ..()
 	if(!.)
 		return
+	if(var_name == NAMEOF(src, start_time))
+		update_shown_duration()
+
 	if(var_name == NAMEOF(src, duration))
 		if(var_value == INFINITY)
 			duration = STATUS_EFFECT_PERMANENT

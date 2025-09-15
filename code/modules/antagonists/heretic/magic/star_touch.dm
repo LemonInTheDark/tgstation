@@ -182,7 +182,7 @@
 	SIGNAL_HANDLER
 	to_chat(owner, span_warning("You lose control of the beam!"))
 	lose_target()
-	duration = 0
+	set_duration(0)
 
 /// Used for starting the beam when a target has been acquired
 /datum/status_effect/cosmic_beam/proc/start_beam(atom/target, mob/living/user)

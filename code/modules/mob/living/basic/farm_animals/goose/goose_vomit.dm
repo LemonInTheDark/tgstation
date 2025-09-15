@@ -176,7 +176,7 @@
 
 /datum/status_effect/goose_choking/on_remove()
 	UnregisterSignal(owner, COMSIG_LIVING_DEATH)
-	if (duration >= world.time)
+	if (time_remaining() >= 0)
 		return // Saved by something, although probably by dying early
 	owner.death_message = "lets out one final oxygen-deprived honk before [owner.p_they()] go[owner.p_es()] limp and lifeless.."
 	owner.death()

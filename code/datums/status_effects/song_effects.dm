@@ -15,7 +15,7 @@
 	owner.visible_message(span_warning("[owner]'s [aura_desc] aura fades away..."))
 
 /datum/status_effect/song/refresh(effect)
-	duration += initial(duration) //slowly builds up, so the more times you get this status effect, the longer it lasts until it's gone.
+	add_duration(initial(duration)) //slowly builds up, so the more times you get this status effect, the longer it lasts until it's gone.
 
 /datum/status_effect/song/antimagic
 	id = "antimagic"

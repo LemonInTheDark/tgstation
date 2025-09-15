@@ -300,12 +300,13 @@
 	boozepwr = 15
 	taste_description = "desperation and lactate"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	metabolized_traits = list(TRAIT_STRONG_BONES)
 
-/datum/reagent/consumable/ethanol/bilk/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
-	. = ..()
-	if(drinker.getBruteLoss() && SPT_PROB(5, seconds_per_tick))
-		if(drinker.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, updating_health = FALSE))
-			return UPDATE_MOB_HEALTH
+// Should be half as good
+/datum/reagent/consumable/bilk/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
+	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
+		holder.remove_reagent(/datum/reagent/consumable/capsaicin, seconds_per_tick)
+	return ..()
 
 /datum/reagent/consumable/ethanol/threemileisland
 	name = "Three Mile Island Iced Tea"

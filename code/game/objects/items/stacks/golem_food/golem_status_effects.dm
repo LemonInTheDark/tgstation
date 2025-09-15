@@ -97,12 +97,11 @@
 /datum/status_effect/golem/on_creation(mob/living/new_owner)
 	if(!isgolem(new_owner))
 		duration *= 0.1
-	var/buff_duration = duration
 	. = ..()
 	if (!.)
 		return .
 	var/atom/movable/screen/alert/status_effect/golem_status/status_alert = linked_alert
-	status_alert?.update_details(buff_time = buff_duration)
+	status_alert?.update_details(buff_time = duration)
 
 /datum/status_effect/golem/on_remove()
 	to_chat(owner, span_warning("The effect of the [mineral_name] fades."))

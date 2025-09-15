@@ -12,7 +12,7 @@
 	. = ..()
 	src.strength = strength
 	if(isnum(timeout_mod))
-		duration *= timeout_mod
+		set_duration(duration * timeout_mod)
 	if(istype(linked_alert, /atom/movable/screen/alert/status_effect/food))
 		linked_alert.icon_state = "[linked_alert.base_icon_state]_[strength]"
 

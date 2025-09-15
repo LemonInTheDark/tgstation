@@ -94,7 +94,7 @@
 	var/lower_cd = lower_tick_interval
 	var/upper_cd = upper_tick_interval
 	if(variable_tier)
-		var/seconds_left = (duration - world.time) / 10
+		var/seconds_left = time_remaining() / 10
 		switch(seconds_left)
 			if(0 to 20)
 				max_hallucination_tier = HALLUCINATION_TIER_COMMON
@@ -167,7 +167,7 @@
 	variable_tier = FALSE
 
 /datum/status_effect/hallucination/perceptomatrix/refresh(mob/living/refresh_owner, new_duration)
-	src.duration += new_duration
+	add_duration(new_duration)
 
 /datum/status_effect/hallucination/perceptomatrix/on_creation(mob/living/new_owner, new_duration)
 	if(isnum(new_duration))

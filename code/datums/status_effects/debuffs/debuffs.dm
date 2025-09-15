@@ -140,7 +140,7 @@
 	if(!.)
 		return
 	if(HAS_TRAIT(owner, TRAIT_SLEEPIMMUNE))
-		tick_interval = STATUS_EFFECT_NO_TICK
+		set_tick_interval(STATUS_EFFECT_NO_TICK)
 	else
 		ADD_TRAIT(owner, TRAIT_KNOCKEDOUT, TRAIT_STATUS_EFFECT(id))
 	RegisterSignal(owner, SIGNAL_ADDTRAIT(TRAIT_SLEEPIMMUNE), PROC_REF(on_owner_insomniac))
@@ -150,20 +150,20 @@
 	UnregisterSignal(owner, list(SIGNAL_ADDTRAIT(TRAIT_SLEEPIMMUNE), SIGNAL_REMOVETRAIT(TRAIT_SLEEPIMMUNE)))
 	if(!HAS_TRAIT(owner, TRAIT_SLEEPIMMUNE))
 		REMOVE_TRAIT(owner, TRAIT_KNOCKEDOUT, TRAIT_STATUS_EFFECT(id))
-		tick_interval = initial(tick_interval)
+		set_tick_interval(initial(tick_interval))
 	return ..()
 
 ///If the mob is sleeping and gain the TRAIT_SLEEPIMMUNE we remove the TRAIT_KNOCKEDOUT and stop the tick() from happening
 /datum/status_effect/incapacitating/sleeping/proc/on_owner_insomniac(mob/living/source)
 	SIGNAL_HANDLER
 	REMOVE_TRAIT(owner, TRAIT_KNOCKEDOUT, TRAIT_STATUS_EFFECT(id))
-	tick_interval = STATUS_EFFECT_NO_TICK
+	set_tick_interval(STATUS_EFFECT_NO_TICK)
 
 ///If the mob has the TRAIT_SLEEPIMMUNE but somehow looses it we make him sleep and restart the tick()
 /datum/status_effect/incapacitating/sleeping/proc/on_owner_sleepy(mob/living/source)
 	SIGNAL_HANDLER
 	ADD_TRAIT(owner, TRAIT_KNOCKEDOUT, TRAIT_STATUS_EFFECT(id))
-	tick_interval = initial(tick_interval)
+	set_tick_interval(initial(tick_interval))
 
 /datum/status_effect/incapacitating/sleeping/tick(seconds_between_ticks)
 	if(owner.maxHealth)
@@ -467,7 +467,7 @@
 		apply_status_effect(/datum/status_effect/necropolis_curse, set_curse)
 	else
 		curse.apply_curse(set_curse)
-		curse.duration += 5 MINUTES //time added by additional curses
+		curse.add_duration(5 MINUTES) //time added by additional curses
 	return curse
 
 /// A curse that does up to three nasty things to you
