@@ -14,7 +14,7 @@
 
 /datum/wound/blunt/bone
 	name = "Blunt (Bone) Wound"
-	wound_flags = (ACCEPTS_GAUZE)
+	wound_flags = ACCEPTS_GAUZE
 
 	default_scar_file = BONE_SCAR_FILE
 	threshold_penalty = 5

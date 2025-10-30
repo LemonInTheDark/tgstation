@@ -219,12 +219,10 @@
 	myseed.adjust_potency(-round(volume * 0.5))
 
 /datum/reagent/consumable/milk/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
-	if(affected_mob.getBruteLoss() && SPT_PROB(10, seconds_per_tick))
-		if(affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE))
-			. = UPDATE_MOB_HEALTH
 	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
 		holder.remove_reagent(/datum/reagent/consumable/capsaicin, seconds_per_tick)
-	return ..() || .
+	affected_mob.apply_status_effect(/datum/status_effect/drank_milk, volume * 0.5 SECONDS * REM * seconds_per_tick)
+	return ..()
 
 /datum/reagent/milk/used_on_fish(obj/item/fish/fish)
 	if(HAS_TRAIT(fish, TRAIT_FISH_MADE_OF_BONE))
@@ -241,10 +239,10 @@
 	default_container = /obj/item/reagent_containers/condiment/soymilk
 
 /datum/reagent/consumable/soymilk/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
-	. = ..()
-	if(affected_mob.getBruteLoss() && SPT_PROB(10, seconds_per_tick))
-		if(affected_mob.heal_bodypart_damage(1, 0))
-			return UPDATE_MOB_HEALTH
+	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
+		holder.remove_reagent(/datum/reagent/consumable/capsaicin, seconds_per_tick)
+	affected_mob.apply_status_effect(/datum/status_effect/drank_milk, volume SECONDS * REM * seconds_per_tick)
+	return ..()
 
 /datum/reagent/consumable/cream
 	name = "Cream"
@@ -255,9 +253,10 @@
 	default_container = /obj/item/reagent_containers/cup/glass/bottle/juice/cream
 
 /datum/reagent/consumable/cream/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
-	. = ..()
-	if(SPT_PROB(10, seconds_per_tick) && affected_mob.heal_bodypart_damage(1, 0))
-		return UPDATE_MOB_HEALTH
+	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
+		holder.remove_reagent(/datum/reagent/consumable/capsaicin, seconds_per_tick)
+	affected_mob.apply_status_effect(/datum/status_effect/drank_milk, volume SECONDS * REM * seconds_per_tick)
+	return ..()
 
 /datum/reagent/consumable/coffee
 	name = "Coffee"
@@ -729,11 +728,11 @@
 	. = ..()
 	affected_mob.adjust_dizzy(-10 SECONDS * REM * seconds_per_tick)
 	affected_mob.adjust_drowsiness(-6 SECONDS * REM * seconds_per_tick)
-	var/need_mob_update
-	need_mob_update = affected_mob.SetSleeping(0)
 	affected_mob.adjust_bodytemperature(5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, affected_mob.get_body_temp_normal())
-	if(affected_mob.getBruteLoss() && SPT_PROB(10, seconds_per_tick))
-		need_mob_update += affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE)
+	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
+		holder.remove_reagent(/datum/reagent/consumable/capsaicin, seconds_per_tick)
+	affected_mob.apply_status_effect(/datum/status_effect/drank_milk, volume SECONDS * REM * seconds_per_tick)
+	var/need_mob_update = affected_mob.SetSleeping(0)
 	if(need_mob_update)
 		return UPDATE_MOB_HEALTH
 
@@ -756,11 +755,11 @@
 	. = ..()
 	affected_mob.adjust_dizzy(-10 SECONDS * REM * seconds_per_tick)
 	affected_mob.adjust_drowsiness(-12 SECONDS * REM * seconds_per_tick)
-	var/need_mob_update
-	need_mob_update = affected_mob.SetSleeping(0)
 	affected_mob.adjust_bodytemperature(5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, affected_mob.get_body_temp_normal())
-	if(affected_mob.getBruteLoss() && SPT_PROB(10, seconds_per_tick))
-		need_mob_update += affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE)
+	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
+		holder.remove_reagent(/datum/reagent/consumable/capsaicin, seconds_per_tick)
+	affected_mob.apply_status_effect(/datum/status_effect/drank_milk, volume SECONDS * REM * seconds_per_tick)
+	var/need_mob_update = affected_mob.SetSleeping(0)
 	if(need_mob_update)
 		return UPDATE_MOB_HEALTH
 
@@ -955,12 +954,10 @@
 
 /datum/reagent/consumable/hot_coco/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	affected_mob.adjust_bodytemperature(5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, affected_mob.get_body_temp_normal())
-	if(affected_mob.getBruteLoss() && SPT_PROB(10, seconds_per_tick))
-		if(affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE))
-			. = UPDATE_MOB_HEALTH
 	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
 		holder.remove_reagent(/datum/reagent/consumable/capsaicin, 2 * REM * seconds_per_tick)
-	return ..() || .
+	affected_mob.apply_status_effect(/datum/status_effect/drank_milk, volume SECONDS * REM * seconds_per_tick)
+	return ..()
 
 /datum/reagent/consumable/italian_coco
 	name = "Italian Hot Chocolate"

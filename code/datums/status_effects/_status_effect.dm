@@ -244,7 +244,7 @@
 /datum/status_effect/proc/add_duration(seconds, maximum)
 	if(duration == STATUS_EFFECT_PERMANENT) // Infinite duration
 		return FALSE
-	return set_duration(max(duration + seconds, maximum))
+	return set_duration(min(duration + seconds, maximum))
 
 /// Remove [seconds] of duration from the status effect, qdeling / ending if we eclipse the current world time.
 /datum/status_effect/proc/remove_duration(seconds)

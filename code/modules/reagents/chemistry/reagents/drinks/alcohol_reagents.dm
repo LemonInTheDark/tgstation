@@ -300,12 +300,12 @@
 	boozepwr = 15
 	taste_description = "desperation and lactate"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	metabolized_traits = list(TRAIT_STRONG_BONES)
 
 // Should be half as good
 /datum/reagent/consumable/bilk/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
 		holder.remove_reagent(/datum/reagent/consumable/capsaicin, seconds_per_tick)
+	affected_mob.apply_status_effect(/datum/status_effect/drank_milk, volume SECONDS * REM * seconds_per_tick)
 	return ..()
 
 /datum/reagent/consumable/ethanol/threemileisland

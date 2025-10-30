@@ -279,6 +279,9 @@
 	else
 		injury_mod *= ((100 - armor_ablation) /100)
 
+	if(owner && wounding_type == WOUND_BLUNT && HAS_TRAIT(owner, TRAIT_STRONG_BONES))
+		injury_mod *= 0.85
+
 	return injury_mod
 
 /// Should return an assoc list of (wound_series -> penalty). Will be used in determining series-specific penalties for wounding.

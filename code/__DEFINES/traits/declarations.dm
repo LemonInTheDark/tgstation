@@ -777,6 +777,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Cannot be targeted by watcher overwatch
 #define TRAIT_OVERWATCH_IMMUNE "overwatch_immune"
 
+/// It's harder to give us bone related wounds
+#define TRAIT_STRONG_BONES "strong_bones"
+
 //non-mob traits
 /// Used for limb-based paralysis, where replacing the limb will fix it.
 #define TRAIT_PARALYSIS "paralysis"

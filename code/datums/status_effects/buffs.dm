@@ -669,3 +669,29 @@
 	name = "Shadow Regeneration"
 	desc = "Bathed in soothing darkness, you will slowly heal yourself"
 	icon_state = "lightless"
+
+/datum/status_effect/drank_milk
+	id = "drank_milk"
+	duration = 10 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/drank_milk
+
+/datum/status_effect/drank_milk/on_creation(mob/living/new_owner, additional_time)
+	duration = additional_time
+	return ..()
+
+/datum/status_effect/drank_milk/refresh(effect, additional_time)
+	add_duration(additional_time, 15 MINUTES)
+	return ..()
+
+/datum/status_effect/drank_milk/on_apply()
+	ADD_TRAIT(owner, TRAIT_STRONG_BONES, ref(src))
+	return TRUE
+
+/datum/status_effect/drank_milk/on_remove()
+	REMOVE_TRAIT(owner, TRAIT_STRONG_BONES, ref(src))
+
+/atom/movable/screen/alert/status_effect/drank_milk
+	name = "Sturdy Bones"
+	desc = "You had some milk recently, your bones feel stronger"
+	icon_state = "drank_milk"
