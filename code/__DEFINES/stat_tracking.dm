@@ -15,7 +15,8 @@
 #define INIT_COST(costs, counting) \
 	var/list/_costs = costs; \
 	var/list/_counting = counting; \
-	var/_usage = TICK_USAGE;
+	var/_usage = TICK_USAGE; \
+	var/_cost = 0;
 
 // STATIC cost tracking macro. Uses static lists instead of the normal global ones
 // Good for debug stuff, and for running before globals init
@@ -36,7 +37,7 @@
 
 #define SET_COST(category) \
 	do { \
-		var/_cost = TICK_USAGE; \
+		_cost = TICK_USAGE; \
 		_costs[category] += TICK_DELTA_TO_MS(_cost - _usage);\
 		_counting[category] += 1; \
 	} while(FALSE); \
