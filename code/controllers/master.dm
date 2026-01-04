@@ -438,6 +438,8 @@ ADMIN_VERB(cmd_controller_view_ui, R_SERVER|R_DEBUG, "Controller Overview", "Vie
 
 		// Initialize subsystems.
 		for (var/datum/controller/subsystem/subsystem in stage_sorted_subsystems[current_init_stage])
+			while(!subsystem.ReadyToInit())
+				sleep(world.tick_lag)
 			subsystem.init_order = evaluated_order
 			evaluated_order++
 			init_subsystem(subsystem)

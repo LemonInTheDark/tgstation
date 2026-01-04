@@ -283,6 +283,12 @@
 /// Called after the config has been loaded or reloaded.
 /datum/controller/subsystem/proc/OnConfigLoad()
 
+/// Are we ready to initialize? Roundstart will just stall if you never return true here
+/// So make sure you have some sort of failsafe attached
+/// Returns TRUE to run Initialize, FALSE to stall.
+/datum/controller/subsystem/proc/ReadyToInit()
+	return TRUE
+
 /**
  * Used to initialize the subsystem. This is expected to be overridden by subtypes.
  */

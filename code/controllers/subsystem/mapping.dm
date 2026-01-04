@@ -2,6 +2,8 @@ SUBSYSTEM_DEF(mapping)
 	name = "Mapping"
 	dependencies = list(
 		/datum/controller/subsystem/job,
+		/datum/controller/subsystem/map_vote,
+		/datum/controller/subsystem/vote,
 		/datum/controller/subsystem/processing/station,
 		/datum/controller/subsystem/processing/reagents,
 	)
@@ -89,6 +91,8 @@ SUBSYSTEM_DEF(mapping)
 	/// list of lazy templates that have been loaded
 	var/list/loaded_lazy_templates
 
+	var/map_vote_called = FALSE
+
 /datum/controller/subsystem/mapping/PreInit()
 	..()
 #ifdef FORCE_MAP
@@ -96,6 +100,18 @@ SUBSYSTEM_DEF(mapping)
 #else
 	current_map = load_map_config(error_if_missing = FALSE)
 #endif
+
+/datum/controller/subsystem/mapping/ReadyToInit()
+	if(current_map.admin_forced)
+		return TRUE
+	if(!map_vote_called)
+		INVOKE_ASYNC(SSvote, TYPE_PROC_REF(/datum/controller/subsystem/vote, initiate_vote), /datum/vote/map_vote, vote_initiator_name = "Map Rotation", forced = TRUE)
+		map_vote_called = TRUE
+	if(istype(SSvote.current_vote, /datum/vote/map_vote))
+		return FALSE
+	// At this point, we will have finished the vote, so let's finalize our choice by reloading the config
+	current_map = load_map_config(error_if_missing = FALSE)
+	return TRUE
 
 /datum/controller/subsystem/mapping/Initialize()
 	if(initialized)

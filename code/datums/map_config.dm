@@ -7,6 +7,8 @@
 	// Metadata
 	var/config_filename = "_maps/metastation.json"
 	var/defaulted = TRUE  // set to FALSE by LoadConfig() succeeding
+	// was this map forced by admins/should we ignore attempts to change it
+	var/admin_forced = FALSE
 	// Config from maps.txt
 	var/config_max_users = 0
 	var/config_min_users = 0
@@ -159,6 +161,8 @@
 	else
 		log_world("map_file missing from json!")
 		return
+
+	admin_forced = json["admin_forced"] || FALSE
 
 	if (islist(json["shuttles"]))
 		var/list/L = json["shuttles"]

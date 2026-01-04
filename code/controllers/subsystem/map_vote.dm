@@ -3,6 +3,8 @@
 SUBSYSTEM_DEF(map_vote)
 	name = "Map Vote"
 	flags = SS_NO_FIRE
+	// MUST be before SSmapping
+	init_stage = INITSTAGE_EARLY
 
 	/// Has an admin specifically set a map.
 	var/admin_override = FALSE
@@ -122,6 +124,8 @@ SUBSYSTEM_DEF(map_vote)
 	var/list/maps = shuffle(global.config.maplist)
 	for(var/map in maps)
 		var/datum/map_config/possible_config = config.maplist[map]
+		valid_maps += possible_config.map_name
+		/*
 		if(!possible_config.votable || (possible_config.map_name in SSpersistence.blocked_maps))
 			continue
 		if(possible_config.config_min_users > 0 && filter_threshold < possible_config.config_min_users)
@@ -129,7 +133,7 @@ SUBSYSTEM_DEF(map_vote)
 		if(possible_config.config_max_users > 0 && filter_threshold > possible_config.config_max_users)
 			continue
 		valid_maps += possible_config.map_name
-
+		*/
 	return valid_maps
 
 /datum/controller/subsystem/map_vote/proc/filter_cache_to_valid_maps()
