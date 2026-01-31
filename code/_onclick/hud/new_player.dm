@@ -22,7 +22,7 @@
 	for (var/atom/movable/screen/lobby/lobbyscreen as anything in buttons)
 		if (!initial(lobbyscreen.always_available))
 			continue
-		lobbyscreen = new lobbyscreen(our_hud = src)
+		lobbyscreen = new lobbyscreen(null, /* our_hud = */ src)
 		lobbyscreen.SlowInit()
 		static_inventory += lobbyscreen
 		if (!lobbyscreen.always_shown)
@@ -32,7 +32,7 @@
 	if (!owner.client.is_localhost())
 		return
 
-	var/atom/movable/screen/lobby/button/start_now/start_button = new(our_hud = src)
+	var/atom/movable/screen/lobby/button/start_now/start_button = new(null, /* our_hud = */ src)
 	start_button.SlowInit()
 	static_inventory += start_button
 	start_button.RegisterSignal(src, COMSIG_HUD_LOBBY_COLLAPSED, TYPE_PROC_REF(/atom/movable/screen/lobby, collapse_button))
@@ -52,7 +52,7 @@
 			continue
 		if(LAZYACCESS(shown_station_trait_buttons, trait))
 			continue
-		var/atom/movable/screen/lobby/button/sign_up/sign_up_button = new(our_hud = src)
+		var/atom/movable/screen/lobby/button/sign_up/sign_up_button = new(null, /* our_hud = */ src)
 		trait.setup_lobby_button(sign_up_button)
 		static_inventory |= sign_up_button
 		LAZYSET(shown_station_trait_buttons, trait, sign_up_button)
@@ -205,6 +205,7 @@
 	return TRUE
 
 ///Prefs menu
+INITIALIZE_IMMEDIATE(/atom/movable/screen/lobby/button/character_setup)
 /atom/movable/screen/lobby/button/character_setup
 	name = "View Character Setup"
 	screen_loc = "TOP:-70,CENTER:-54"
@@ -216,13 +217,12 @@
 /atom/movable/screen/lobby/button/character_setup/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()
 	// We need IconForge and the assets to be ready before allowing the menu to open
-	if(SSearly_assets.initialized == INITIALIZATION_INNEW_REGULAR || SSatoms.initialized == INITIALIZATION_INNEW_REGULAR)
+	if(SSearly_assets.initialized == INITIALIZATION_INNEW_REGULAR)
 		flick("[base_icon_state]_enabled", src)
 		set_button_status(TRUE)
 	else
 		set_button_status(FALSE)
 		RegisterSignal(SSearly_assets, COMSIG_SUBSYSTEM_POST_INITIALIZE, PROC_REF(enable_character_setup))
-		RegisterSignal(SSatoms, COMSIG_SUBSYSTEM_POST_INITIALIZE, PROC_REF(enable_character_setup))
 
 /atom/movable/screen/lobby/button/character_setup/Click(location, control, params)
 	. = ..()

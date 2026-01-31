@@ -1,5 +1,5 @@
 output_name = "donk_carpet"
 template = "bitmask/diagonal_32x32.toml"
 
-[prefabs]
+[variations.donk]
 255 = 5

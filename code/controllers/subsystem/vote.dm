@@ -5,6 +5,9 @@ SUBSYSTEM_DEF(vote)
 	name = "Vote"
 	wait = 1 SECONDS
 	flags = SS_KEEP_TIMING
+	// Needs to be setup for SSmapping
+	init_stage = INITSTAGE_EARLY
+	dependencies = list(/datum/controller/subsystem/tgui)
 	runlevels = RUNLEVEL_LOBBY | RUNLEVELS_DEFAULT
 
 	/// A list of all generated action buttons
