@@ -246,3 +246,12 @@
 #define USER_HUD_STYLE_INHERIT 1
 /// Change the icon to user's chosen hud style from their prefs
 #define USER_HUD_STYLE_PREFS 2
+
+// Parallax grid stuff
+
+// 255 / 15 = 17x17 grid, just kinda spitballin tbh
+#define PARALLAX_RANGE 15
+#define PARALLAX_CELL(coord) (clamp(floor((coord - 1) / PARALLAX_RANGE) + 1, 1, PARALLAX_RANGE))
+
+/// Max diameter we expect any given parallax object to be in turfs
+#define PARALLAX_SPAN 5

@@ -22,11 +22,11 @@
 	var/atom/movable/screen/parallax_home/rock = displaying_client.parallax_rock
 
 	if(SSmapping.level_trait(screen_location?.z, ZTRAIT_NOPARALLAX))
-		rock.set_layer_settings(layers_to_draw = 0, draw_old_space = FALSE, animate_parallax = FALSE)
+		rock.set_layer_settings(layers_to_draw = 0, draw_old_space = FALSE, animate_parallax = FALSE, allow_objects = FALSE)
 		return
 
 	if (SSlag_switch.measures[DISABLE_PARALLAX] && !HAS_TRAIT(mymob, TRAIT_BYPASS_MEASURES))
-		rock.set_layer_settings(layers_to_draw = 0, draw_old_space = FALSE, animate_parallax = FALSE)
+		rock.set_layer_settings(layers_to_draw = 0, draw_old_space = FALSE, animate_parallax = FALSE, allow_objects = FALSE)
 		return
 
 	// Default to HIGH
@@ -34,27 +34,27 @@
 
 	switch(parallax_selection)
 		if (PARALLAX_INSANE)
-			rock.set_layer_settings(layers_to_draw = 5, draw_old_space = FALSE, animate_parallax = TRUE)
+			rock.set_layer_settings(layers_to_draw = 5, draw_old_space = FALSE, animate_parallax = TRUE, allow_objects = TRUE)
 			return
 
 		if(PARALLAX_HIGH)
-			rock.set_layer_settings(layers_to_draw = 4, draw_old_space = FALSE, animate_parallax = TRUE)
+			rock.set_layer_settings(layers_to_draw = 4, draw_old_space = FALSE, animate_parallax = TRUE, allow_objects = TRUE)
 			return
 
 		if (PARALLAX_MED)
-			rock.set_layer_settings(layers_to_draw = 3, draw_old_space = FALSE, animate_parallax = TRUE)
+			rock.set_layer_settings(layers_to_draw = 3, draw_old_space = FALSE, animate_parallax = TRUE, allow_objects = TRUE)
 			return
 
 		if (PARALLAX_LOW)
-			rock.set_layer_settings(layers_to_draw = 1, draw_old_space = FALSE, animate_parallax = FALSE)
+			rock.set_layer_settings(layers_to_draw = 1, draw_old_space = FALSE, animate_parallax = FALSE, allow_objects = FALSE)
 			return
 
 		if (PARALLAX_BOOMER)
-			rock.set_layer_settings(layers_to_draw = 0, draw_old_space = TRUE, animate_parallax = TRUE)
+			rock.set_layer_settings(layers_to_draw = 0, draw_old_space = TRUE, animate_parallax = TRUE, allow_objects = FALSE)
 			return
 
 		if (PARALLAX_DISABLE)
-			rock.set_layer_settings(layers_to_draw = 0, draw_old_space = FALSE, animate_parallax = FALSE)
+			rock.set_layer_settings(layers_to_draw = 0, draw_old_space = FALSE, animate_parallax = FALSE, allow_objects = FALSE)
 			return
 
 /datum/hud/proc/update_parallax_pref()
@@ -146,6 +146,7 @@
 	var/largest_change = max(abs(offset_x), abs(offset_y))
 	var/max_allowed_dist = (glide_rate / world.tick_lag) + 1
 	var/atom/movable/screen/parallax_home/rock = displaying_client.parallax_rock
+	rock.update_parallax_position(posobj.x, posobj.y, posobj.z)
 
 	// If we aren't already moving/don't allow parallax, have made some movement, and that movement was smaller then our "glide" size, animate
 	var/run_parralax = (rock.animate_parallax && glide_rate && !areaobj.parallax_movedir && displaying_client.dont_animate_parallax <= world.time && largest_change <= max_allowed_dist)
@@ -169,15 +170,19 @@
 			if(old_x - change_x > 240)
 				parallax_layer.offset_x -= 480
 				parallax_layer.pixel_w = parallax_layer.offset_x
+				parallax_layer.update_visuals()
 			else if(old_x - change_x < -240)
 				parallax_layer.offset_x += 480
 				parallax_layer.pixel_w = parallax_layer.offset_x
+				parallax_layer.update_visuals()
 			if(old_y - change_y > 240)
 				parallax_layer.offset_y -= 480
 				parallax_layer.pixel_z = parallax_layer.offset_y
+				parallax_layer.update_visuals()
 			else if(old_y - change_y < -240)
 				parallax_layer.offset_y += 480
 				parallax_layer.pixel_z = parallax_layer.offset_y
+				parallax_layer.update_visuals()
 
 		parallax_layer.offset_x -= change_x
 		parallax_layer.offset_y -= change_y
@@ -221,17 +226,53 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/parallax_home)
 	var/displaying_layers = FALSE
 	/// Are we animating parallax?
 	var/animate_parallax = FALSE
+	/// Do we currently allow parallax objects to render?
+	var/allow_objects = FALSE
+	/// List of parallax "[speeds]" that are requested for rendering mapped to a list of the visuals requesting them
+	var/list/list/obj/effect/abstract/parallax_display/requested_speeds = list()
+	/// List of parallax objects that are currently attempting to render near us mapped to our effect interceptor for their appearance
+	var/list/datum/parallax_object/floating_objects_to_display = list()
+	/// List of parallax cells we can currently see
+	var/list/datum/parallax_cell/cells_in_sight = list()
+	/// Last x position of the center of our eye
+	var/x_coord = 0
+	/// Last y position of the center of our eye
+	var/y_coord = 0
+	/// Last z position of the center of our eye
+	var/z_coord = 0
+	/// X coord of the lowest parallax cell we can see
+	var/parallax_lower_x = 0
+	/// Y coord of the lowest parallax cell we can see
+	var/parallax_lower_y = 0
+	/// X coord of the highest parallax cell we can see
+	var/parallax_upper_x = 0
+	/// Y coord of the highest parallax cell we can see
+	var/parallax_upper_y = 0
 	/// The client that owns us
 	var/client/owner
+	/// The current view of our client, if any (world.view by default otherwise)
+	var/working_view
 
 /atom/movable/screen/parallax_home/Initialize(mapload, datum/hud/hud_owner, client/owner)
 	. = ..()
 	src.owner = owner
+	working_view = owner?.view
+	if(isnull(working_view))
+		working_view = world.view
+	RegisterSignal(owner, COMSIG_VIEW_SET, PROC_REF(on_view_change))
 
 /atom/movable/screen/parallax_home/Destroy()
 	clear_layers()
 	owner = null
+	for(var/datum/parallax_object/object as anything in floating_objects_to_display)
+		kill_object(object)
 	return ..()
+
+/atom/movable/screen/parallax_home/proc/on_view_change(datum/source, new_size)
+	SIGNAL_HANDLER
+	working_view = new_size
+	for(var/atom/movable/screen/parallax_layer/displayed as anything in parallax_layers_cached)
+		displayed.update_appearance()
 
 /atom/movable/screen/parallax_home/proc/display_layers()
 	if(displaying_layers || length(parallax_layers_cached) == 0)
@@ -247,30 +288,247 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/parallax_home)
 	vis_contents = list()
 	displaying_layers = FALSE
 
-/atom/movable/screen/parallax_home/proc/set_layer_settings(layers_to_draw, draw_old_space, animate_parallax)
+/atom/movable/screen/parallax_home/proc/set_layer_settings(layers_to_draw, draw_old_space, animate_parallax, allow_objects)
 	src.animate_parallax = animate_parallax
-	if(src.layers_to_draw == layers_to_draw && src.draw_old_space == draw_old_space)
+	if(src.layers_to_draw == layers_to_draw && src.draw_old_space == draw_old_space && src.allow_objects == allow_objects)
 		return
+	if(src.allow_objects != allow_objects)
+		src.allow_objects = allow_objects
+		rebuild_objects()
 	src.layers_to_draw = layers_to_draw
 	src.draw_old_space = draw_old_space
 	regenerate_layers()
 
+/// Updates "things that move"
+/atom/movable/screen/parallax_home/proc/update_parallax_position(x_coord, y_coord, z_coord)
+	src.x_coord = x_coord
+	src.y_coord = y_coord
+	src.z_coord = z_coord
+	// Slower parallaxes care about things further out, because they can cover far more ground and still be in view
+	update_parallax_bounds(x_coord - PARALLAX_RANGE, y_coord - PARALLAX_RANGE, x_coord + PARALLAX_RANGE, y_coord + PARALLAX_RANGE, z_coord)
+
+/// Updates the cells we're in, allowing us to discard/find new objects to render
+/atom/movable/screen/parallax_home/proc/update_parallax_bounds(x_lower, y_lower, x_upper, y_upper, cell_z)
+	var/cell_x_lower = PARALLAX_CELL(x_lower)
+	var/cell_y_lower = PARALLAX_CELL(y_lower)
+	var/cell_x_upper = PARALLAX_CELL(x_upper)
+	var/cell_y_upper = PARALLAX_CELL(y_upper)
+	if(parallax_lower_x == cell_x_lower && parallax_lower_y == cell_y_lower && parallax_upper_x == cell_x_upper && parallax_upper_y == cell_y_upper && z_coord == cell_z)
+		return
+
+	var/list/new_cells = SSparallax.get_cells_by_bound(cell_x_lower, cell_y_lower, cell_x_upper, cell_y_upper, cell_z)
+	parallax_lower_x = cell_x_lower
+	parallax_lower_y = cell_y_lower
+	parallax_upper_x = cell_x_upper
+	parallax_upper_y = cell_y_upper
+	z_coord = cell_z
+
+	// I'll be here in sunshine or in shadow
+	for(var/datum/parallax_cell/new_cell in new_cells - cells_in_sight)
+		RegisterSignal(new_cell, COMSIG_PARALLAX_OBJECT_ENTERED, PROC_REF(object_entered))
+		RegisterSignal(new_cell, COMSIG_PARALLAX_OBJECT_LEFT, PROC_REF(object_left))
+		for(var/datum/parallax_object/new_guy in new_cell.members)
+			place_object(new_guy)
+
+	for(var/datum/parallax_cell/lost_cell in cells_in_sight - new_cells)
+		UnregisterSignal(lost_cell, list(COMSIG_PARALLAX_OBJECT_ENTERED, COMSIG_PARALLAX_OBJECT_LEFT))
+		for(var/datum/parallax_object/old_friend in lost_cell.members)
+			remove_object(old_friend)
+
+	cells_in_sight = new_cells
+
+/atom/movable/screen/parallax_home/proc/object_entered(datum/source, datum/parallax_object/entered)
+	SIGNAL_HANDLER
+	place_object(entered)
+
+/atom/movable/screen/parallax_home/proc/object_left(datum/source, datum/parallax_object/left)
+	SIGNAL_HANDLER
+	remove_object(left)
+
+/obj/effect/abstract/parallax_display
+	blend_mode = BLEND_ADD
+	plane = PLANE_SPACE_PARALLAX
+	appearance_flags = parent_type::appearance_flags | KEEP_APART
+
+	// For debug purposes
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	/// The parallax layer we are currently displayed on, if any
+	var/atom/movable/screen/parallax_layer/displaying_on
+	/// Our parent parallax object, what we're derriving our visuals from
+	var/datum/parallax_object/parent
+	/// How many cell's worth of objects this is covering for
+	var/object_count = 0
+
+/obj/effect/abstract/parallax_object_holder
+
+/obj/effect/abstract/parallax_display/New(loc, datum/parallax_object/parent)
+	. = ..()
+	src.parent = parent
+	render_source = parent.visuals.render_target
+	vis_contents += parent.visuals
+	RegisterSignal(parent, COMSIG_PARALLAX_PLACED, PROC_REF(placed))
+	RegisterSignal(parent, COMSIG_PARALLAX_MOVED, PROC_REF(moved))
+
+/obj/effect/abstract/parallax_display/Destroy(force)
+	var/atom/movable/screen/parallax_home/root = displaying_on.root
+	root.kill_object(parent)
+	hide()
+	parent = null
+	return ..()
+
+/obj/effect/abstract/parallax_display/proc/placed(datum/source)
+	SIGNAL_HANDLER
+	update_position()
+
+/// TODO: This should have some sort of like, animation attached, work it out later
+/obj/effect/abstract/parallax_display/proc/moved(datum/source, animation_rate)
+	SIGNAL_HANDLER
+	var/old_x = pixel_x
+	var/old_y = pixel_y
+	update_position()
+	// gonna do it old style
+	if(max(abs(pixel_x - old_x), abs(pixel_y - old_y)) > 1)
+		var/matrix/old_transform = transform
+		transform = transform.Translate(old_x - pixel_x, old_y - pixel_y)
+		animate(src, transform = old_transform, flags = ANIMATION_PARALLEL, time = animation_rate)
+
+
+/obj/effect/abstract/parallax_display/proc/update_position()
+	// We want to render at our world position + tiles_displayed * speed
+	// The transform sets this up fine for us. The only problem is pinning ourselves to the world position when we are first placed
+	// So as soon as we load, we need to set our pixel offset such that we draw ON the world position when tiles_displased = 0
+	// If we are drawn when say, there's 16 tiles between our world position and the center of the view, the
+
+	// 7 from the amount subtracted from the center
+	// We take the distance between our center and target in visual pixels, scale it down using speed, and then subtract out physical offsets
+	// (So the 7 turfs of physical offset from the centering of parallax, and the default offset involved when it was created)
+	var/atom/movable/screen/parallax_home/root = displaying_on.root
+	pixel_x = (parent.visual_x - root.x_coord * ICON_SIZE_X) * displaying_on.speed / ICON_SIZE_X + 7 * ICON_SIZE_X - displaying_on.offset_x
+	pixel_y = (parent.visual_y - root.y_coord * ICON_SIZE_Y) * displaying_on.speed / ICON_SIZE_Y + 7 * ICON_SIZE_Y - displaying_on.offset_y
+	message_admins("Testing [pixel_x] [pixel_y]")
+
+/obj/effect/abstract/parallax_display/proc/hide()
+	if(isnull(displaying_on))
+		return
+	displaying_on.hide_visual(src)
+
+/// Places a parallax object near us, meaning we have to care about it/think about if it needs to be drawn or not
+/atom/movable/screen/parallax_home/proc/place_object(datum/parallax_object/danny_boy)
+	var/obj/effect/abstract/parallax_display/display = floating_objects_to_display[danny_boy]
+	if(!allow_objects || display)
+		display.object_count += 1
+		return
+	// But come ye back when summer's in the meadow, when the valley's hushed and white with snow
+	var/obj/effect/abstract/parallax_display/display = new(src, danny_boy)
+	floating_objects_to_display[danny_boy] = display
+	display.object_count += 1
+
+	RegisterSignal(danny_boy, COMSIG_PARALLAX_SET_SPEED, PROC_REF(object_changed_speed))
+	requested_speeds["[danny_boy.speed]"] += list(display)
+	if(length(requested_speeds["[danny_boy.speed]"]) == 1)
+		update_speed_layers()
+		return
+
+	var/atom/movable/screen/parallax_layer/display_layer = get_layer_by_speed(danny_boy.speed)
+	display_layer.display_visual(display)
+
+/// Removes a parallax object we were once aware of from our awareness
+/atom/movable/screen/parallax_home/proc/remove_object(datum/parallax_object/danny_boy)
+	// Tis you who must go, and I must die...
+	var/obj/effect/abstract/parallax_display/display = floating_objects_to_display[danny_boy]
+	display.object_count -= 1
+	if(display.object_count > 0)
+		return
+	kill_object(danny_boy)
+
+/atom/movable/screen/parallax_home/proc/kill_object(datum/parallax_object/danny_boy)
+	var/obj/effect/abstract/parallax_display/display = floating_objects_to_display[danny_boy]
+	floating_objects_to_display -= danny_boy
+	UnregisterSignal(danny_boy, list(COMSIG_PARALLAX_SET_SPEED))
+	requested_speeds["[danny_boy.speed]"] -= display
+	if(!QDELETED(display))
+		qdel(display)
+	if(!length(requested_speeds["[danny_boy.speed]"]))
+		requested_speeds -= "[danny_boy.speed]"
+		update_speed_layers()
+
+/atom/movable/screen/parallax_home/proc/object_changed_speed(datum/parallax_object/source, old_speed, new_speed)
+	SIGNAL_HANDLER
+	var/update_required = FALSE
+	var/obj/effect/abstract/parallax_display/display = floating_objects_to_display[source]
+	display.hide()
+	requested_speeds["[new_speed]"] += list(display)
+	if(length(requested_speeds["[new_speed]"]) == 1)
+		update_required = TRUE
+	if(length(requested_speeds["[old_speed]"]))
+		requested_speeds["[old_speed]"] -= display
+	if(!length(requested_speeds["[old_speed]"]))
+		requested_speeds -= "[old_speed]"
+		update_required = TRUE
+	if(update_required)
+		update_speed_layers()
+		return // Will display us all on its own
+
+	var/atom/movable/screen/parallax_layer/display_layer = get_layer_by_speed(source.speed)
+	display_layer.display_visual(display)
+
+/// Clear all our parallax objects, then fetch all the ones we care about from the cells in range
+/atom/movable/screen/parallax_home/proc/rebuild_objects()
+	if(allow_objects)
+		for(var/datum/parallax_cell/known_factor in cells_in_sight)
+			for(var/datum/parallax_object/aquantience in known_factor.members)
+				place_object(aquantience)
+	else
+		for(var/datum/parallax_cell/known_factor in cells_in_sight)
+			for(var/datum/parallax_object/hated_enemy in known_factor.members)
+				remove_object(hated_enemy)
+
+/atom/movable/screen/parallax_home/proc/get_layer_by_speed(speed)
+	for(var/atom/movable/screen/parallax_layer/layer as anything in parallax_layers_cached)
+		if(layer.speed == speed)
+			return layer
+	return null
+
 /atom/movable/screen/parallax_home/proc/generate_space_layer(index)
 	switch(index)
 		if(1)
-			return new /atom/movable/screen/parallax_layer/layer_1(null, null, owner)
+			return new /atom/movable/screen/parallax_layer/layer_1(null, null, src)
 		if(2)
-			return new /atom/movable/screen/parallax_layer/layer_2(null, null, owner)
+			return new /atom/movable/screen/parallax_layer/layer_2(null, null, src)
 		if(3)
-			return new /atom/movable/screen/parallax_layer/planet(null, null, owner)
+			return new /atom/movable/screen/parallax_layer/planet(null, null, src)
 		if(4)
 			if(SSparallax.random_layer)
-				return new SSparallax.random_layer.type(null, null, owner, FALSE, SSparallax.random_layer)
+				return new SSparallax.random_layer.type(null, null, src, FALSE, SSparallax.random_layer)
 			else
-				return new /atom/movable/screen/parallax_layer/layer_3(null, null, owner)
+				return new /atom/movable/screen/parallax_layer/layer_3(null, null, src)
 		if(5)
 			if(SSparallax.random_layer)
-				return new /atom/movable/screen/parallax_layer/layer_3(null, null, owner)
+				return new /atom/movable/screen/parallax_layer/layer_3(null, null, src)
+
+/atom/movable/screen/parallax_home/proc/update_speed_layers()
+	hide_layers()
+	build_speed_layers()
+	display_layers()
+
+/atom/movable/screen/parallax_home/proc/build_speed_layers()
+	for(var/requested_speed in requested_speeds)
+		var/speed = text2num(requested_speed)
+		var/atom/movable/screen/parallax_layer/holder = get_layer_by_speed(speed)
+		if(!holder)
+			var/atom/movable/screen/parallax_layer/empty/empty_holder = new(null, null, src)
+			empty_holder.set_speed(speed)
+			parallax_layers_cached += empty_holder
+			holder = empty_holder
+		for(var/obj/effect/abstract/parallax_display/visual as anything in requested_speeds[requested_speed])
+			if(visual.displaying_on == holder)
+				continue
+			holder.display_visual(visual)
+
+	// Very intentional typecast here
+	for(var/atom/movable/screen/parallax_layer/empty/empty_display in parallax_layers_cached)
+		if(!length(empty_display.displaying_visuals))
+			qdel(empty_display)
 
 /atom/movable/screen/parallax_home/proc/regenerate_layers()
 	clear_layers()
@@ -282,8 +540,9 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/parallax_home)
 		parallax_layers_cached += generate_space_layer(space_layer)
 
 	if(draw_old_space)
-		parallax_layers_cached += new /atom/movable/screen/parallax_layer/old(null, null, owner)
+		parallax_layers_cached += new /atom/movable/screen/parallax_layer/old(null, null, src)
 
+	build_speed_layers()
 	display_layers()
 
 /atom/movable/screen/parallax_home/proc/clear_layers()
@@ -302,39 +561,50 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/parallax_layer)
 	blend_mode = BLEND_ADD
 	plane = PLANE_SPACE_PARALLAX
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	/// View size we're being rendered with
-	var/working_view = ""
+	/// Root datum we're currently being displayed on, if any
+	var/atom/movable/screen/parallax_home/root
+	/// List of parallax visuals we're currently displaying
+	var/list/obj/effect/abstract/parallax_display/displaying_visuals = list()
+	/// Do we draw multiple tiles of ourselves?
+	var/draw_tiles = TRUE
 
-/atom/movable/screen/parallax_layer/Initialize(mapload, datum/hud/hud_owner, client/owner, template = FALSE)
+/atom/movable/screen/parallax_layer/Initialize(mapload, datum/hud/hud_owner, atom/movable/screen/parallax_home/root, template = FALSE)
 	. = ..()
 	// Parallax layers are independent of hud, they care about client
 	// Not doing this will just create a bunch of hard deletes
 	set_new_hud(hud_owner = null)
 
+	// Makes organizing these things easier
+	layer = speed
 	if(template)
 		return
 
-	if(!owner) // If this typepath all starts to harddel your culprit is likely this
+	src.root = root
+	if(!root) // If this typepath all starts to harddel your culprit is likely this
 		return INITIALIZE_HINT_QDEL
-
-	// I do not want to know bestie
-	var/view = owner.view || world.view
-	update_o(view)
-	RegisterSignal(owner, COMSIG_VIEW_SET, PROC_REF(on_view_change))
-
-/atom/movable/screen/parallax_layer/proc/on_view_change(datum/source, new_size)
-	SIGNAL_HANDLER
-	update_o(new_size)
-
-/atom/movable/screen/parallax_layer/proc/update_o(new_view)
-	if(working_view == new_view)
-		return
-	working_view = new_view
+	// Regen overlays
 	update_appearance()
+	var/client/displaying_client = root.owner
+	set_default_position(get_turf(displaying_client.eye))
+
+/atom/movable/screen/parallax_layer/Destroy()
+	for(var/obj/effect/abstract/parallax_display/visual as anything in displaying_visuals)
+		visual.hide()
+	root.parallax_layers -= src
+	root.parallax_layers_cached -= src
+	root = null
+	return ..()
+
+/// For kids who want to set a more complex default position for themselves
+/atom/movable/screen/parallax_layer/proc/set_default_position()
+	return
 
 /atom/movable/screen/parallax_layer/update_overlays()
 	. = ..()
-	var/overlay_view = working_view
+	if(!draw_tiles)
+		return
+
+	var/overlay_view = root?.working_view
 	if (!overlay_view)
 		overlay_view = world.view
 	var/pixel_grid_size = ICON_SIZE_ALL * 15
@@ -357,26 +627,47 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/parallax_layer)
 /atom/movable/screen/parallax_layer/proc/tileable_appearance()
 	return mutable_appearance(icon, icon_state)
 
+/atom/movable/screen/parallax_layer/proc/display_visual(obj/effect/abstract/parallax_display/visual)
+	if(visual.displaying_on)
+		visual.hide()
+	visual.displaying_on = src
+	displaying_visuals += visual
+	vis_contents += visual
+	visual.update_position()
+
+/atom/movable/screen/parallax_layer/proc/hide_visual(obj/effect/abstract/parallax_display/visual)
+	displaying_visuals -= visual
+	vis_contents -= visual
+	visual.displaying_on = null
+
+/atom/movable/screen/parallax_layer/proc/update_visuals()
+	for(var/obj/effect/abstract/parallax_display/visual as anything in displaying_visuals)
+		visual.update_position()
+
+/atom/movable/screen/parallax_layer/empty
+	draw_tiles = FALSE
+	icon_state = "empty"
+
+/atom/movable/screen/parallax_layer/empty/proc/set_speed(new_speed)
+	speed = new_speed
+	layer = new_speed
+
 /atom/movable/screen/parallax_layer/layer_1
 	icon_state = "layer1"
 	speed = 0.6
-	layer = 1
 
 /atom/movable/screen/parallax_layer/layer_2
 	icon_state = "layer2"
 	speed = 1
-	layer = 2
 
 /atom/movable/screen/parallax_layer/layer_3
 	icon_state = "layer3"
 	speed = 1.4
-	layer = 3
 
 /atom/movable/screen/parallax_layer/old
 	icon = null
 	icon_state = null // dog there's gonna be so many overlays...
 	speed = 0.6
-	layer = 1 // Draws on its own
 
 /atom/movable/screen/parallax_layer/old/tileable_appearance()
 	var/mutable_appearance/copy = mutable_appearance(null, "")
@@ -404,11 +695,12 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/parallax_layer)
 	icon_state = "planet"
 	blend_mode = BLEND_OVERLAY
 	absolute = TRUE //Status of separation
+	draw_tiles = FALSE
 	speed = 3
-	layer = 30
 
-/atom/movable/screen/parallax_layer/planet/Initialize(mapload, datum/hud/hud_owner, client/owner)
+/atom/movable/screen/parallax_layer/planet/Initialize(mapload, datum/hud/hud_owner, atom/movable/screen/parallax_home/root)
 	. = ..()
+	var/client/owner = root.owner
 	if(!owner)
 		return
 	var/static/list/connections = list(
@@ -417,6 +709,13 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/parallax_layer)
 	)
 	AddComponent(/datum/component/connect_mob_behalf, owner, connections)
 	on_z_change(owner.mob)
+
+/// For kids who want to set a more complex default position for themselves
+/atom/movable/screen/parallax_layer/planet/set_default_position(atom/movable/posobj)
+	offset_x = -(posobj.x - SSparallax.planet_x_offset) * speed
+	offset_y = -(posobj.y - SSparallax.planet_y_offset) * speed
+	pixel_w = round(offset_x, 1)
+	pixel_z = round(offset_y, 1)
 
 /atom/movable/screen/parallax_layer/planet/proc/on_mob_logout(mob/source)
 	SIGNAL_HANDLER
@@ -430,6 +729,3 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/parallax_layer)
 	if(!posobj)
 		return
 	SetInvisibility(is_station_level(posobj.z) ? INVISIBILITY_NONE : INVISIBILITY_ABSTRACT, id=type)
-
-/atom/movable/screen/parallax_layer/planet/update_o()
-	return //Shit won't move

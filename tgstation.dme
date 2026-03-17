@@ -368,6 +368,7 @@
 #include "code\__DEFINES\dcs\signals\signals_operating_computer.dm"
 #include "code\__DEFINES\dcs\signals\signals_operatives.dm"
 #include "code\__DEFINES\dcs\signals\signals_painting.dm"
+#include "code\__DEFINES\dcs\signals\signals_parallax.dm"
 #include "code\__DEFINES\dcs\signals\signals_plane_master_group.dm"
 #include "code\__DEFINES\dcs\signals\signals_powernet.dm"
 #include "code\__DEFINES\dcs\signals\signals_proxmonitor.dm"
