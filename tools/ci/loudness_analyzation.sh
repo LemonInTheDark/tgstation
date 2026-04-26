@@ -18,13 +18,13 @@ shopt -s nullglob
 command -v ffmpeg > /dev/null 2>&1 || { echo "ffmpeg is not installed. Please install it."; exit 1; }
 
 # Iterate over .ogg files, handling filenames with spaces
-find "$DIRECTORY" -type f -name "*.ogg" -print0 | while IFS= read -r -d '' file; do
+files="$(find "$DIRECTORY" -iregex ".*\.ogg")"
+for file in $files; do
   echo "Checking LUFS for $file..."
 
   # Extract LUFS value using ffmpeg
   lufs_output=$(ffmpeg -i "$file" -filter_complex ebur128 -f null - 2>&1)
 
-	printf "$lufs_output" >> test.txt
   # Check if ffmpeg failed
   if [[ "$lufs_output" == *"error"* ]]; then
     echo "Error: Could not analyze LUFS for $file."
@@ -34,7 +34,6 @@ find "$DIRECTORY" -type f -name "*.ogg" -print0 | while IFS= read -r -d '' file;
 
   # Extract LUFS value
   lufs_text="$(echo "$lufs_output" | grep -z -Po "Summary:\n\n\s*Integrated loudness:\n\s*I:\s*([0-9\-\.]*)" | tr "\n" " " | tr "Summary:    Integrated loudness:     I:         " " ")"
-	echo $lufs_text
 	IFS=' ' read -ra lufs_values <<< "$lufs_text"
 
 	lufs_value="${lufs_values[1]}"
