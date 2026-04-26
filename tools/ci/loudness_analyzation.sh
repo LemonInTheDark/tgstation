@@ -24,6 +24,7 @@ find "$DIRECTORY" -type f -name "*.ogg" -print0 | while IFS= read -r -d '' file;
   # Extract LUFS value using ffmpeg
   lufs_output=$(ffmpeg -i "$file" -filter_complex ebur128 -f null - 2>&1)
 
+	printf "$lufs_output" >> test.txt
   # Check if ffmpeg failed
   if [[ "$lufs_output" == *"error"* ]]; then
     echo "Error: Could not analyze LUFS for $file."
@@ -32,8 +33,11 @@ find "$DIRECTORY" -type f -name "*.ogg" -print0 | while IFS= read -r -d '' file;
   fi
 
   # Extract LUFS value
-  lufs_value=$(echo "$lufs_output" | awk '/I:/{print $2; exit}')
+  lufs_text="$(echo "$lufs_output" | grep -z -Po "Summary:\n\n\s*Integrated loudness:\n\s*I:\s*([0-9\-\.]*)" | tr "\n" " " | tr "Summary:    Integrated loudness:     I:         " " ")"
+	echo $lufs_text
+	IFS=' ' read -ra lufs_values <<< "$lufs_text"
 
+	lufs_value="${lufs_values[1]}"
   # Debugging output
   echo "Extracted LUFS: $lufs_value"
 
