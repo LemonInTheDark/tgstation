@@ -35,7 +35,6 @@ export const APPEARANCE_FLAGS = {
   TILE_BOUND: 256,
   PIXEL_SCALE: 512,
   PASS_MOUSE: 1024,
-  TILE_MOVER: 2048,
 };
 
 export const VIS_FLAGS = {

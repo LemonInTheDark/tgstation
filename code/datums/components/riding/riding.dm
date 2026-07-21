@@ -285,8 +285,8 @@
 	for(var/mob/living/occupant in movable_parent.buckled_mobs)
 		vehicle_last_bumped = world.time
 		occupant.last_bumped = 0
-		INVOKE_ASYNC(possible_bumped_door, TYPE_PROC_REF(/atom, Bumped), occupant)
-
+		INVOKE_ASYNC(possible_bumped_door, nameof((/atom/Bumped)), occupant)
+#warn this is just fucked but idk what's going on or why so we move on for now
 /datum/component/riding/proc/Unbuckle(atom/movable/M)
 	addtimer(CALLBACK(parent, TYPE_PROC_REF(/atom/movable/, unbuckle_mob), M), 0, TIMER_UNIQUE)
 

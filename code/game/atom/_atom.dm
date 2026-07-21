@@ -407,7 +407,7 @@
 /atom/proc/return_analyzable_air()
 	return null
 
-/atom/proc/Bumped(atom/movable/bumped_atom)
+/atom/Bumped(atom/movable/bumped_atom)
 	set waitfor = FALSE
 	SEND_SIGNAL(src, COMSIG_ATOM_BUMPED, bumped_atom)
 

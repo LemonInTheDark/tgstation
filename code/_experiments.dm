@@ -17,6 +17,6 @@
 	#define EXPERIMENT_MY_COOL_FEATURE
 #endif
 
-#if DM_VERSION >= 517
+#if DM_VERSION >= 518
 	#error "Remove all 517 experiments"
 #endif

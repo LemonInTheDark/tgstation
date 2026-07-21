@@ -64,6 +64,7 @@
 	)
 	departmental_flags = DEPARTMENT_BITFLAG_ENGINEERING | DEPARTMENT_BITFLAG_SCIENCE
 
+#define MAX_CABLE_AMOUNT (SMALL_MATERIAL_AMOUNT * 0.1 * 210 ) //crying
 /datum/design/rwd
 	name = "Rapid Wiring Device"
 	id = "rwd"
@@ -71,7 +72,7 @@
 	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 5, /datum/material/glass = SHEET_MATERIAL_AMOUNT * 2.5)
 	//The cable coils don't count toward the total mats of the item to avoid a possible way to generate more iron and glass.
 	transfered_materials = list(
-		/obj/item/rwd/loaded = /obj/item/rwd::custom_materials,
+		/obj/item/rwd/loaded = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 5 - MAX_CABLE_AMOUNT, /datum/material/glass = SHEET_MATERIAL_AMOUNT * 2.5 - MAX_CABLE_AMOUNT),
 	)
 	build_path = /obj/item/rwd/loaded
 	category = list(
@@ -80,6 +81,7 @@
 	)
 	departmental_flags = DEPARTMENT_BITFLAG_ENGINEERING | DEPARTMENT_BITFLAG_SCIENCE
 	fixed_cost_efficiency = TRUE // The cable coils can be removed and recycled to generate more material than that spent printing it at higher stock part tiers.
+#undef MAX_CABLE_AMOUNT
 
 /datum/design/analyzer
 	name = "Gas Analyzer"
