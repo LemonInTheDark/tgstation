@@ -193,11 +193,6 @@
 		return FALSE
 	return TRUE
 
-// Needs to handle rejoining on a lower z level, so we NEED to readd old planes
-/atom/movable/screen/plane_master/parallax/check_outside_bounds()
-	// If we're outside bounds AND we're the 0th plane we still need to show cause parallax is hacked to hell
-	return offset != 0 && hidden_by_distance != NOT_HIDDEN
-
 /// Starts the narsie animation midway, so we can catch up to everyone else quickly
 /atom/movable/screen/plane_master/parallax/proc/narsie_start_midway(start_time)
 	var/time_elapsed = world.time - start_time
@@ -399,7 +394,11 @@
 	render_relay_planes = list(RENDER_PLANE_TURF_LIGHTING)
 	blend_mode = BLEND_ADD
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	critical = PLANE_CRITICAL_DISPLAY
+	// Space draws onto the lighting plane on all z layers for... reasons
+	// So we need to always catch it, and just not display if we're above
+	critical = PLANE_CRITICAL_ALWAYS_DISPLAY
+	// Then we'll just prevent it from rendering, and we vibe
+	allow_rendering_in_place = FALSE
 
 /// This will not work through multiz, because of a byond bug with BLEND_MULTIPLY
 /// Bug report is up, waiting on a fix

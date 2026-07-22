@@ -71,8 +71,8 @@
 	/// How far this plane master is from the z layer of our owner
 	/// + means it's higher, - means it's lower
 	var/distance_from_owner = 0
-	/// If this plane master has been hidden by its z layer distance
-	var/hidden_by_distance = NOT_HIDDEN
+	/// If this plane master has been hidden by its z layer distance (and how it has been hidden)
+	var/hidden_by_distance = PLANE_NOT_HIDDEN
 
 	/// Has this plane master had its offset made concrete? Avoids modifications/uses that are going to immediately break
 	var/offset_already_updated = FALSE
@@ -80,7 +80,6 @@
 /atom/movable/screen/plane_master/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset = 0)
 	. = ..()
 	src.offset = offset
-	true_alpha = alpha
 	real_plane = plane
 	update_offset()
 
@@ -273,21 +272,7 @@
 
 	our_client.screen += src
 	sync_relays(our_client)
-
-	// Alright, let's get this out of the way
-	// Mobs can move z levels without their client. If this happens, we need to ensure critical display settings are respected
-	// This is done here. Mild to severe pain but it's nessesary
-	// (We check to see if we use the critical system, then if we don't want some realys, then if we are actually outside bounds)
-	// If we want all our relays then there's no point doing this now is there
-	//if(!(critical & (PLANE_CRITICAL_DISPLAY|PLANE_CRITICAL_SOURCE)) || !(critical & PLANE_CRITICAL_NO_RELAY) || !check_outside_bounds())
-	//	our_client.screen += relays
-	#warn commented out for some reason?
 	return TRUE
-
-/// Hook to allow planes to work around is_outside_bounds
-/// Return false to allow a show, true otherwise
-/atom/movable/screen/plane_master/proc/check_outside_bounds()
-	return hidden_by_distance
 
 /// Hides a plane master from the passeed in mob
 /// Do your effect cleanup here
@@ -347,50 +332,56 @@
 /atom/movable/screen/plane_master/proc/set_distance_from_owner(mob/relevant, new_distance, multiz_boundary, lowest_possible_offset)
 	SHOULD_CALL_PARENT(TRUE)
 	distance_from_owner = new_distance
-	// If we are above our owner's z layer
-	#warn in order to make this work disabling a plane fully needs to disable any relays that draw at it
-	#warn otherwise this shit is fucked. so we need a linkback list.
-	#warn (do we need to disable all of them? I guess we would, and then prevent adding new ones without asking)
-	#warn this is gonna fuck up plane master handling real bad, need to make removing/readding relays efficent somehow
-	#warn group them by when we remove them maybe and then stick em in the vis_contents of screen objects?
-	#warn also we need hidden_by_distance to track what kind of hidden we are, so we can fullhide everything on the z layer below the bottom displayed
-	//if(distance_from_owner > 0)
-	//	if(hidden_by_distance || force_hidden)
-	//		return critical & PLANE_CRITICAL_SOURCE
-	//	hidden_by_distance = TRUE
-	//	// If critical, hold on
-	//	if(critical & PLANE_CRITICAL_SOURCE)
-	//		retain_hidden_plane(relevant)
-	//		return TRUE
-	//	// otherwise, hide that shit
-	//	hide_from(relevant)
-	//	return FALSE
+	#warn being unforce hid needs to rerun distance calcs
+	// If we are above our owner's z layer nuke er
+	if(distance_from_owner > 0)
+		// If critical, hold on
+		if(critical & PLANE_CRITICAL_SOURCE)
+			set_hidden_by_distance(relevant, PLANE_HIDDEN_RELAYS)
+			return TRUE
+		// otherwise, hide that shit
+		set_hidden_by_distance(relevant, PLANE_HIDDEN_COMPLETELY)
+		return FALSE
+	// If we're just not visible at all
+	else if(distance_from_owner < 0 && offset > lowest_possible_offset)
+		set_hidden_by_distance(relevant, PLANE_HIDDEN_COMPLETELY)
+		return FALSE
 	// If we are below the acceptable z level offset (set by pref)
-	// (Or if we're just not visible at all)
-	//else
-	if(distance_from_owner < 0 && (offset > lowest_possible_offset || \
-		(multiz_boundary != MULTIZ_PERFORMANCE_DISABLE && abs(distance_from_owner) > multiz_boundary)))
-		if(hidden_by_distance != NOT_HIDDEN || force_hidden)
-			return (critical & PLANE_CRITICAL_DISPLAY && offset < lowest_possible_offset) // yeah this is dumb I'm sorry
+	else if(distance_from_owner < 0 && (multiz_boundary != MULTIZ_PERFORMANCE_DISABLE && abs(distance_from_owner) > multiz_boundary))
 		// If it's critical to how lower layers look visually (mostly lighting)
 		// Keep the bare bones
-		if(critical & PLANE_CRITICAL_DISPLAY && (offset < lowest_possible_offset))
-			hidden_by_distance = HIDDEN_RELAYS
-			retain_hidden_plane(relevant)
+		if(critical & PLANE_CRITICAL_DISPLAY)
+			set_hidden_by_distance(relevant, PLANE_HIDDEN_RELAYS)
 			return TRUE
 		// Otherwise, yayeeet
-		hidden_by_distance = HIDDEN_COMPLETELY
-		hide_from(relevant)
+		set_hidden_by_distance(relevant, PLANE_HIDDEN_COMPLETELY)
 		return FALSE
-	else if(hidden_by_distance != NOT_HIDDEN)
-		// If we're currently being displayed then we must have just culled render relays
-		if(hidden_by_distance == HIDDEN_RELAYS)
-			restore_hidden_plane(relevant)
-			hidden_by_distance = NOT_HIDDEN
-			return TRUE
-		hidden_by_distance = NOT_HIDDEN
-		show_to(relevant)
+	// Otherwise, we must be visible, so make it so
+	set_hidden_by_distance(relevant, PLANE_NOT_HIDDEN)
 	return TRUE
+
+/atom/movable/screen/plane_master/proc/set_hidden_by_distance(mob/relevant, new_hidden_by_distance)
+	if(hidden_by_distance == new_hidden_by_distance)
+		return
+	var/old_hidden_by_distance = hidden_by_distance
+	hidden_by_distance = new_hidden_by_distance
+	if(hidden_by_distance == PLANE_NOT_HIDDEN)
+		if(old_hidden_by_distance == PLANE_HIDDEN_COMPLETELY)
+			show_to(relevant)
+		else if (hold_hidden_by_distance == PLANE_HIDDEN_RELAYS)
+			restore_hidden_plane(relevant)
+	else if(hidden_by_distance == PLANE_HIDDEN_COMPLETELY)
+		if(old_hidden_by_distance == PLANE_NOT_HIDDEN)
+			hide_from(relevant)
+		else if (hold_hidden_by_distance == PLANE_HIDDEN_RELAYS)
+			restore_hidden_plane(relevant)
+			hide_from(relevant)
+	else if(hidden_by_distance == PLANE_HIDDEN_RELAYS)
+		if(old_hidden_by_distance == PLANE_HIDDEN_COMPLETELY)
+			show_to(relevant)
+			retain_hidden_plane(relevant)
+		else if (hold_hidden_by_distance == PLANE_NOT_HIDDEN)
+			retain_hidden_plane(relevant)
 
 // idea is if no relays exist we'll want to render "in place" based off our plane var
 // if we do have relays, we should send to them instead

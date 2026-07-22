@@ -380,9 +380,10 @@
 #define PLANE_CRITICAL_ALWAYS_DISPLAY (PLANE_CRITICAL_DISPLAY|PLANE_CRITICAL_SOURCE)
 
 // Values for hidden_by_distance
-#define NOT_HIDDEN 0
-#define HIDDEN_RELAYS 1
-#define HIDDEN_COMPLETELY 2
+#define PLANE_NOT_HIDDEN 0
+#define PLANE_HIDDEN_RELAYS 1
+#define PLANE_HIDDEN_COMPLETELY 2
+
 //---------- Plane Master offsetting_flags -------------
 // Describes how different plane masters behave regarding being offset
 /// This plane master will not be offset itself, existing only once with an offset of 0

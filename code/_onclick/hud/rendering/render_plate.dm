@@ -321,12 +321,6 @@
 	add_filter("emissives", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(EMISSIVE_RENDER_TARGET, offset), flags = MASK_INVERSE))
 	set_light_cutoff(10)
 
-/atom/movable/screen/plane_master/rendering_plate/lighting/set_home(datum/plane_master_group/home)
-	. = ..()
-	if (home?.our_hud)
-		RegisterSignal(home.our_hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
-		offset_change(home.our_hud.current_plane_offset || 0)
-
 /atom/movable/screen/plane_master/rendering_plate/lighting/show_to(mob/mymob)
 	. = ..()
 	if(!.)
@@ -348,17 +342,6 @@
 	. = ..()
 	oldmob.clear_fullscreen("lighting_backdrop_lit_[home.key]#[offset]")
 	oldmob.clear_fullscreen("lighting_backdrop_unlit_[home.key]#[offset]")
-
-/atom/movable/screen/plane_master/rendering_plate/lighting/proc/on_offset_change(datum/source, old_offset, new_offset)
-	SIGNAL_HANDLER
-	offset_change(new_offset)
-
-/atom/movable/screen/plane_master/rendering_plate/lighting/proc/offset_change(mob_offset)
-	// Offsets stack down remember. This implies that we're above the mob's view plane, and shouldn't render
-	if(offset < mob_offset)
-		disable_alpha()
-	else
-		enable_alpha()
 
 /atom/movable/screen/plane_master/rendering_plate/lighting/proc/set_light_cutoff(light_cutoff, list/color_cutoffs)
 	var/list/new_cutoffs = list(light_cutoff)

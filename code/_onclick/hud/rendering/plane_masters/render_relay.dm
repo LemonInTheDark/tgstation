@@ -18,6 +18,7 @@
 	. = ..()
 	if(displayed)
 		source.relay_removed()
+		displayed = FALSE
 	source.render_relay_planes -= plane
 	source.relays -= src
 	if(source.home)
