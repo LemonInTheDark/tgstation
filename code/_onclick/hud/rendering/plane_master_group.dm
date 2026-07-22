@@ -34,10 +34,12 @@
 	if(our_hud)
 		our_hud.master_groups -= key
 		hide_hud()
+		detach_hud()
 	var/datum/hud/old_hud = our_hud
 	our_hud = new_hud
 	if(new_hud)
 		our_hud.master_groups[key] = src
+		attach_hud()
 		show_hud()
 		build_planes_offset(our_hud, active_offset)
 	SEND_SIGNAL(src, COMSIG_GROUP_HUD_CHANGED, old_hud, our_hud)
@@ -50,6 +52,7 @@
 
 	set_hud(viewing_hud)
 	our_hud.master_groups[key] = src
+	attach_hud()
 	show_hud()
 	build_planes_offset(our_hud, active_offset)
 
@@ -62,6 +65,7 @@
 /datum/plane_master_group/proc/rebuild_hud()
 	hide_hud()
 	rebuild_plane_masters()
+	attach_hud()
 	show_hud()
 	our_hud.update_parallax_pref()
 	build_planes_offset(our_hud, active_offset)
@@ -84,6 +88,22 @@
 /// This is mostly a proc so it can be overriden by popups, since they have unique behavior they want to do
 /datum/plane_master_group/proc/show_plane(atom/movable/screen/plane_master/plane)
 	plane.show_to(our_hud.mymob)
+
+/datum/plane_master_group/proc/attach_hud()
+	for(var/thing in plane_masters)
+		var/atom/movable/screen/plane_master/plane = plane_masters[thing]
+		attach_plane(plane)
+
+/datum/plane_master_group/proc/detach_hud()
+	for(var/thing in plane_masters)
+		var/atom/movable/screen/plane_master/plane = plane_masters[thing]
+		detach_plane(plane)
+
+/datum/plane_master_group/proc/attach_plane(atom/movable/screen/plane_master/plane)
+	plane.attach_viewer(our_hud.mymob)
+
+/datum/plane_master_group/proc/detach_plane(atom/movable/screen/plane_master/plane)
+	plane.detach_viewer(our_hud.mymob)
 
 /// Nice wrapper for the "[]"ing
 /datum/plane_master_group/proc/get_plane(plane)
@@ -216,3 +236,9 @@
 /// This is mostly a proc so it can be overriden by popups, since they have unique behavior they want to do
 /datum/plane_master_group/hudless/show_plane(atom/movable/screen/plane_master/plane)
 	plane.show_to(our_mob)
+
+/datum/plane_master_group/hudless/attach_plane(atom/movable/screen/plane_master/plane)
+	plane.attach_viewer(our_mob)
+
+/datum/plane_master_group/hudless/dettach_plane(atom/movable/screen/plane_master/plane)
+	plane.detach_viewer(our_mob)

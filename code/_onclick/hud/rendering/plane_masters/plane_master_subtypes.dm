@@ -12,16 +12,18 @@
 	// This is safe because we will ALWAYS be on the top z layer, so it DON'T MATTER
 	multiz_scaled = FALSE
 
-/atom/movable/screen/plane_master/field_of_vision_blocker/show_to(mob/mymob)
+/atom/movable/screen/plane_master/field_of_vision_blocker/attach_viewer(mob/mymob)
 	. = ..()
-	if(!. || !mymob)
-		return .
-	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled), override = TRUE)
-	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled), override = TRUE)
+	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled))
+	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled))
 	if(HAS_TRAIT(mymob, TRAIT_FOV_APPLIED))
 		fov_enabled(mymob)
 	else
 		fov_disabled(mymob)
+
+/atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/detach_viewer(mob/mymob)
+	. = ..()
+	UnregisterSignal(mymob, list(SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED)), PROC_REF(fov_enabled))
 
 /atom/movable/screen/plane_master/field_of_vision_blocker/proc/fov_enabled(mob/source)
 	SIGNAL_HANDLER
@@ -535,15 +537,16 @@
 	plane = RUNECHAT_PLANE
 	render_relay_planes = list(RENDER_PLANE_NON_GAME)
 
-/atom/movable/screen/plane_master/runechat/show_to(mob/mymob)
+/atom/movable/screen/plane_master/runechat/attach_viewer(mob/mymob)
 	. = ..()
-	if(!.)
-		return
-	remove_filter("AO")
 	if(istype(mymob) && mymob.canon_client?.prefs?.read_preference(/datum/preference/toggle/ambient_occlusion))
 		// We use outlines instead of drop shadow due to how extremely expensive it is, and there's no reason to use it for runechat
 		// which already has high drop shadow transparency at just 32 alpha, so outline does the job good enough
 		add_filter("AO", 1, outline_filter(size = 2, color = "#04080F20", flags = OUTLINE_SQUARE))
+
+/atom/movable/screen/plane_master/runechat/detach_viewer(mob/mymob)
+	. = ..()
+	remove_filter("AO")
 
 /atom/movable/screen/plane_master/balloon_chat
 	name = "Balloon chat"
@@ -584,7 +587,7 @@
 	render_relay_planes = list(RENDER_PLANE_MASTER)
 	offsetting_flags = BLOCKS_PLANE_OFFSETTING|OFFSET_RELAYS_MATCH_HIGHEST
 
-/atom/movable/screen/plane_master/escape_menu/show_to(mob/mymob)
+/atom/movable/screen/plane_master/escape_menu/set_home(datum/plane_master_group/home)
 	. = ..()
 	if(!.)
 		return
@@ -593,10 +596,16 @@
 	if(!our_hud)
 		return
 
-	RegisterSignal(our_hud, SIGNAL_ADDTRAIT(TRAIT_ESCAPE_MENU_OPEN), PROC_REF(escape_opened), override = TRUE)
-	RegisterSignal(our_hud, SIGNAL_REMOVETRAIT(TRAIT_ESCAPE_MENU_OPEN), PROC_REF(escape_closed), override = TRUE)
-	if(!HAS_TRAIT(our_hud, TRAIT_ESCAPE_MENU_OPEN))
-		escape_closed()
+	RegisterSignal(our_hud, SIGNAL_ADDTRAIT(TRAIT_ESCAPE_MENU_OPEN), PROC_REF(escape_opened))
+	RegisterSignal(our_hud, SIGNAL_REMOVETRAIT(TRAIT_ESCAPE_MENU_OPEN), PROC_REF(escape_closed))
+
+/atom/movable/screen/plane_master/escape_menu/show_to(mob/mymob)
+	. = ..()
+	if(!.)
+		return
+		
+	if(!isnull(home.our_hud) && !HAS_TRAIT(home.our_hud, TRAIT_ESCAPE_MENU_OPEN))
+		escape_closed(null)
 
 /atom/movable/screen/plane_master/escape_menu/proc/escape_opened(datum/source)
 	SIGNAL_HANDLER

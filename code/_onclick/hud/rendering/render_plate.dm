@@ -54,13 +54,14 @@
 	appearance_flags = PLANE_MASTER //should use client color
 	blend_mode = BLEND_OVERLAY
 
-/atom/movable/screen/plane_master/rendering_plate/game_world/show_to(mob/mymob)
+/atom/movable/screen/plane_master/rendering_plate/game_world/attach_viewer(mob/mymob)
 	. = ..()
-	if(!.)
-		return
-	remove_filter("AO")
 	if(istype(mymob) && mymob.canon_client?.prefs?.read_preference(/datum/preference/toggle/ambient_occlusion))
 		add_filter("AO", 1, drop_shadow_filter(x = 0, y = -2, size = 4, color = "#04080FAA"))
+
+/atom/movable/screen/plane_master/rendering_plate/game_world/detach_viewer(mob/mymob)
+	. = ..()
+	remove_filter("AO")
 
 /atom/movable/screen/plane_master/rendering_plate/unlit_game_plate
 	name = "Unlit Game rendering plate"
@@ -402,25 +403,33 @@
 	blend_mode = BLEND_MULTIPLY
 	render_relay_planes = list(RENDER_PLANE_GAME)
 
+/atom/movable/screen/plane_master/rendering_plate/light_mask/attach_viewer(mob/mymob)
+	. = ..()
+	RegisterSignal(mymob, COMSIG_MOB_SIGHT_CHANGE, PROC_REF(handle_sight), override = TRUE)
+
+/atom/movable/screen/plane_master/rendering_plate/light_mask/detach_viwer(mob/oldmob)
+	. = ..()
+	UnregisterSignal(oldmob, COMSIG_MOB_SIGHT_CHANGE)
+
 /atom/movable/screen/plane_master/rendering_plate/light_mask/show_to(mob/mymob)
 	. = ..()
 	if(!.)
 		return
-
-	RegisterSignal(mymob, COMSIG_MOB_SIGHT_CHANGE, PROC_REF(handle_sight), override = TRUE)
 	handle_sight(mymob, mymob.sight, NONE)
 
 /atom/movable/screen/plane_master/rendering_plate/light_mask/hide_from(mob/oldmob)
 	. = ..()
-	var/atom/movable/screen/plane_master/emissive = home.get_plane(GET_NEW_PLANE(RENDER_PLANE_EMISSIVE, offset))
-	emissive.remove_filter("lighting_mask")
-	remove_relay_from(GET_NEW_PLANE(RENDER_PLANE_GAME, offset))
-	UnregisterSignal(oldmob, COMSIG_MOB_SIGHT_CHANGE)
+	handle_sight(mymob, mymob.sight, NONE)
 
 /atom/movable/screen/plane_master/rendering_plate/light_mask/proc/handle_sight(datum/source, new_sight, old_sight)
 	// If we can see something that shows "through" blackness, and we can't see turfs, disable our draw to the game plane
 	// And instead mask JUST the overlay lighting plane, since that will look fuckin wrong
 	var/atom/movable/screen/plane_master/emissive = home.get_plane(GET_NEW_PLANE(RENDER_PLANE_EMISSIVE, offset))
+	if(!displayed)
+		emissive.remove_filter("lighting_mask")
+		remove_relay_from(GET_NEW_PLANE(RENDER_PLANE_GAME, offset))
+		return
+
 	if(new_sight & SEE_AVOID_TURF_BLACKNESS && !(new_sight & SEE_TURFS))
 		remove_relay_from(GET_NEW_PLANE(RENDER_PLANE_GAME, offset))
 		emissive.add_filter("lighting_mask", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(LIGHT_MASK_RENDER_TARGET, offset)))
@@ -457,16 +466,18 @@
 	SIGNAL_HANDLER
 	remove_filter("displacer")
 
-/atom/movable/screen/plane_master/rendering_plate/game_plate/show_to(mob/mymob)
+/atom/movable/screen/plane_master/rendering_plate/game_plate/attach_viewer(mob/mymob)
 	. = ..()
-	if(!. || !mymob)
-		return .
-	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled), override = TRUE)
-	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled), override = TRUE)
+	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled))
+	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled))
 	if(HAS_TRAIT(mymob, TRAIT_FOV_APPLIED))
 		fov_enabled(mymob)
 	else
 		fov_disabled(mymob)
+
+/atom/movable/screen/plane_master/rendering_plate/game_plate/detach_viewer(mob/mymob)
+	. = ..()
+	UnregisterSignal(mymob, list(SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED)), PROC_REF(fov_enabled))
 
 /atom/movable/screen/plane_master/rendering_plate/game_plate/proc/fov_enabled(mob/source)
 	SIGNAL_HANDLER
@@ -492,16 +503,18 @@
 	. = ..()
 	add_filter("fov_handled", 1, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(FIELD_OF_VISION_BLOCKER_RENDER_TARGET, offset), flags = MASK_INVERSE))
 
-/atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/show_to(mob/mymob)
+/atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/attach_viewer(mob/mymob)
 	. = ..()
-	if(!. || !mymob)
-		return .
-	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled), override = TRUE)
-	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled), override = TRUE)
+	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled))
+	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled))
 	if(HAS_TRAIT(mymob, TRAIT_FOV_APPLIED))
 		fov_enabled(mymob)
 	else
 		fov_disabled(mymob)
+
+/atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/detach_viewer(mob/mymob)
+	. = ..()
+	UnregisterSignal(mymob, list(SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED)), PROC_REF(fov_enabled))
 
 /atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/proc/fov_enabled(mob/source)
 	SIGNAL_HANDLER
@@ -527,16 +540,18 @@
 	add_filter("fov_handled_space", 2, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(FIELD_OF_VISION_BLOCKER_RENDER_TARGET, offset)))
 	add_filter("fov_matrix", 3, color_matrix_filter(list(0.5,-0.15,-0.15,0, -0.15,0.5,-0.15,0, -0.15,-0.15,0.5,0, 0,0,0,1, 0,0,0,0)))
 
-/atom/movable/screen/plane_master/rendering_plate/masked_game_plate/show_to(mob/mymob)
+/atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/attach_viewer(mob/mymob)
 	. = ..()
-	if(!. || !mymob)
-		return .
-	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled), override = TRUE)
-	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled), override = TRUE)
+	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled))
+	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled))
 	if(HAS_TRAIT(mymob, TRAIT_FOV_APPLIED))
 		fov_enabled(mymob)
 	else
 		fov_disabled(mymob)
+
+/atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/detach_viewer(mob/mymob)
+	. = ..()
+	UnregisterSignal(mymob, list(SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED)), PROC_REF(fov_enabled))
 
 /atom/movable/screen/plane_master/rendering_plate/masked_game_plate/proc/fov_enabled(mob/source)
 	SIGNAL_HANDLER
