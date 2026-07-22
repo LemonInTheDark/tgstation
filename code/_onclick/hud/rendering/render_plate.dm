@@ -95,17 +95,8 @@
 	if(!.)
 		return
 	home.AddComponent(/datum/component/hide_weather_planes, src)
-	RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
-	if (home.our_hud)
+	if (home?.our_hud)
 		attach_hud(home.our_hud)
-	update_state(home.our_hud?.mymob)
-
-/atom/movable/screen/plane_master/rendering_plate/particle_weather/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
-	SIGNAL_HANDLER
-	if (old_hud)
-		UnregisterSignal(old_hud, COMSIG_HUD_Z_CHANGED)
-	attach_hud(new_hud)
-	update_state(new_hud?.mymob)
 
 /atom/movable/screen/plane_master/rendering_plate/particle_weather/proc/attach_hud(datum/hud/new_hud)
 	RegisterSignal(new_hud, COMSIG_HUD_Z_CHANGED, PROC_REF(z_changed))
@@ -323,9 +314,9 @@
 
 /atom/movable/screen/plane_master/rendering_plate/lighting/set_home(datum/plane_master_group/home)
 	. = ..()
-	if(home)
-		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
-		hud_changed(null, null, home.our_hud)
+	if (home?.our_hud)
+		RegisterSignal(home.our_hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
+		offset_change(home.our_hud.current_plane_offset || 0)
 
 /atom/movable/screen/plane_master/rendering_plate/lighting/show_to(mob/mymob)
 	. = ..()
@@ -348,14 +339,6 @@
 	. = ..()
 	oldmob.clear_fullscreen("lighting_backdrop_lit_[home.key]#[offset]")
 	oldmob.clear_fullscreen("lighting_backdrop_unlit_[home.key]#[offset]")
-
-/atom/movable/screen/plane_master/rendering_plate/lighting/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
-	SIGNAL_HANDLER
-	if(old_hud)
-		UnregisterSignal(old_hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
-	if(new_hud)
-		RegisterSignal(new_hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
-	offset_change(new_hud?.current_plane_offset || 0)
 
 /atom/movable/screen/plane_master/rendering_plate/lighting/proc/on_offset_change(datum/source, old_offset, new_offset)
 	SIGNAL_HANDLER
@@ -583,17 +566,9 @@
 	// Non 0 offset render plates will relay up to the transparent plane above them, assuming they're not on the same z level as their target of course
 	if(offset == 0)
 		return
-	if(home)
-		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
-		hud_changed(null, null, home.our_hud)
-
-/atom/movable/screen/plane_master/rendering_plate/master/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
-	SIGNAL_HANDLER
-	if(old_hud)
-		UnregisterSignal(old_hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
-	if(new_hud)
-		RegisterSignal(new_hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
-	offset_change(new_hud?.current_plane_offset || 0)
+	if (home?.our_hud)
+		RegisterSignal(home.our_hud, COMSIG_HUD_OFFSET_CHANGED, PROC_REF(on_offset_change))
+		offset_change(home.our_hud.current_plane_offset || 0)
 
 /atom/movable/screen/plane_master/rendering_plate/master/proc/on_offset_change(datum/source, old_offset, new_offset)
 	SIGNAL_HANDLER

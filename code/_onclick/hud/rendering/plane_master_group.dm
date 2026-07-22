@@ -21,38 +21,26 @@
 	. = ..()
 	src.key = key
 	src.map = map
-	build_plane_masters(0, SSmapping.max_plane_offset)
 
 /datum/plane_master_group/Destroy()
 	set_hud(null)
 	QDEL_LIST_ASSOC_VAL(plane_masters)
 	return ..()
 
-/datum/plane_master_group/proc/set_hud(datum/hud/new_hud)
-	if(new_hud == our_hud)
-		return
-	if(our_hud)
-		our_hud.master_groups -= key
-		hide_hud()
-		detach_hud()
-	var/datum/hud/old_hud = our_hud
-	our_hud = new_hud
-	if(new_hud)
-		our_hud.master_groups[key] = src
-		attach_hud()
-		show_hud()
-		build_planes_offset(our_hud, active_offset)
-	SEND_SIGNAL(src, COMSIG_GROUP_HUD_CHANGED, old_hud, our_hud)
-
 /// Display a plane master group to some viewer, so show all our planes to it
+/// Should only be called once
 /datum/plane_master_group/proc/attach_to(datum/hud/viewing_hud)
+	if(our_hud)
+		stack_trace("Tried to attach a hud to a plane master which already had one, what went wrong???")
 	if(viewing_hud.master_groups[key])
 		stack_trace("Hey brother, our key [key] is already in use by a plane master group on the passed in hud, belonging to [viewing_hud.mymob]. Ya fucked up, why are there dupes")
 		return
 
-	set_hud(viewing_hud)
+	our_hud = viewing_hud
 	our_hud.master_groups[key] = src
+	build_plane_masters(0, SSmapping.max_plane_offset)
 	attach_hud()
+	SEND_SIGNAL(src, COMSIG_GROUP_HUD_ATTACHED, our_hud)
 	show_hud()
 	build_planes_offset(our_hud, active_offset)
 

@@ -8,6 +8,7 @@
 	// Hack to account for not having an actual hud
 	var/datum/plane_master_group/hudless/our_group = allocate(/datum/plane_master_group/hudless)
 	our_group.our_mob = judger
+	our_group.build_plane_masters(0, SSmapping.max_plane_offset)
 	our_group.show_hud()
 	// End hack
 

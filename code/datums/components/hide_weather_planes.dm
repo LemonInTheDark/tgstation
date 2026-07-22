@@ -28,7 +28,7 @@
 	if(home.our_hud)
 		attach_hud(home.our_hud)
 	else
-		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(new_hud_attached))
+		RegisterSignal(home, COMSIG_GROUP_HUD_ATTACHED, PROC_REF(new_hud_attached))
 
 /datum/component/hide_weather_planes/Destroy(force)
 	hide_planes()
@@ -55,7 +55,7 @@
 	else
 		care_about.hide_plane(our_lad)
 
-/datum/component/hide_weather_planes/proc/new_hud_attached(datum/source, datum/hud/old_hud, datum/hud/new_hud)
+/datum/component/hide_weather_planes/proc/new_hud_attached(datum/source, datum/hud/new_hud)
 	SIGNAL_HANDLER
 	attach_hud(new_hud)
 
