@@ -71,17 +71,9 @@
 
 /atom/movable/screen/plane_master/parallax_white/set_home(datum/plane_master_group/home)
 	. = ..()
-	if(home)
-		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
-		hud_changed(null, null, home.our_hud)
-
-/atom/movable/screen/plane_master/parallax_white/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
-	SIGNAL_HANDLER
-	if(old_hud)
-		UnregisterSignal(old_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
-	if(new_hud)
-		RegisterSignals(new_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
-		parallax_updated(new_hud)
+	if (home?.our_hud)
+		RegisterSignals(home.our_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
+		parallax_updated(home.our_hud)
 
 /atom/movable/screen/plane_master/parallax_white/proc/parallax_updated(datum/source)
 	SIGNAL_HANDLER
@@ -126,17 +118,9 @@
 
 /atom/movable/screen/plane_master/parallax/set_home(datum/plane_master_group/home)
 	. = ..()
-	if(home)
-		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
-		hud_changed(null, null, home.our_hud)
-
-/atom/movable/screen/plane_master/parallax/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
-	SIGNAL_HANDLER
-	if(old_hud)
-		UnregisterSignal(old_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
-	if(new_hud)
-		RegisterSignals(new_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
-		parallax_updated(new_hud)
+	if(home?.our_hud)
+		RegisterSignals(home.our_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_DISPLAYED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_DISPLAYED)), PROC_REF(parallax_updated))
+		parallax_updated(home.our_hud)
 
 /atom/movable/screen/plane_master/parallax/proc/parallax_updated(datum/source)
 	SIGNAL_HANDLER
@@ -331,12 +315,8 @@
 	if(!.)
 		return
 	home.AddComponent(/datum/component/hide_weather_planes, src)
-	RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
-	update_state(home.our_hud?.mymob)
-
-/atom/movable/screen/plane_master/weather/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
-	SIGNAL_HANDLER
-	update_state(new_hud?.mymob)
+	if (home?.our_hud)
+		update_state(home.our_hud?.mymob)
 
 /atom/movable/screen/plane_master/weather/proc/update_state(mob/mymob)
 	if(!istype(mymob))
@@ -478,17 +458,9 @@
 
 /atom/movable/screen/plane_master/camera_static/set_home(datum/plane_master_group/home)
 	. = ..()
-	if(home)
-		RegisterSignal(home, COMSIG_GROUP_HUD_CHANGED, PROC_REF(hud_changed))
-		hud_changed(null, null, home.our_hud)
-
-/atom/movable/screen/plane_master/camera_static/proc/hud_changed(datum/source, datum/hud/old_hud, datum/hud/new_hud)
-	SIGNAL_HANDLER
-	if(old_hud)
-		UnregisterSignal(old_hud, COMSIG_HUD_EYE_CHANGED, PROC_REF(eye_changed))
-	if(new_hud)
-		RegisterSignal(new_hud, COMSIG_HUD_EYE_CHANGED, PROC_REF(eye_changed))
-		eye_changed(new_hud, null, new_hud.mymob?.canon_client?.eye)
+	if(home?.our_hud)
+		RegisterSignal(home.our_hud, COMSIG_HUD_EYE_CHANGED, PROC_REF(eye_changed))
+		eye_changed(home.our_hud, null, home.our_hud.mymob?.canon_client?.eye)
 
 /atom/movable/screen/plane_master/camera_static/proc/eye_changed(datum/hud/source, atom/old_eye, atom/new_eye)
 	SIGNAL_HANDLER
@@ -603,7 +575,7 @@
 	. = ..()
 	if(!.)
 		return
-		
+
 	if(!isnull(home.our_hud) && !HAS_TRAIT(home.our_hud, TRAIT_ESCAPE_MENU_OPEN))
 		escape_closed(null)
 
