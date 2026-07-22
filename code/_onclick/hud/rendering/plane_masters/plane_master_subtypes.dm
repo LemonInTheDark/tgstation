@@ -551,6 +551,8 @@
 	. = ..()
 	remove_filter("AO")
 
+#warn cull filter based off depth?
+
 /atom/movable/screen/plane_master/balloon_chat
 	name = "Balloon chat"
 	documentation = "Holds ballon chat images, those little text bars that pop up for a second when you do some things. NOT runechat."
