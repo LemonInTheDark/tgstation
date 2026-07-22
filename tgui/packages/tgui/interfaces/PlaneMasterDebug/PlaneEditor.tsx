@@ -124,6 +124,18 @@ export function PlaneEditor() {
           >
             Edit Color Matrix
           </Button>
+          <Button
+            tooltip="Isolate this plane in your view"
+            mr="5px"
+            mb="5px"
+            onClick={() =>
+              act('isolate_plane', {
+                isolated_plane: currentPlane.plane,
+              })
+            }
+          >
+            Isolate Plane
+          </Button>
           <Slider
             value={currentPlane.alpha}
             minValue={0}

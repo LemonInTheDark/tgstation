@@ -29,18 +29,25 @@
 	//--rendering relay vars--
 	/// list of planes we will relay this plane's render to
 	var/list/render_relay_planes = list(RENDER_PLANE_UNLIT_GAME)
-	/// blend mode to apply to the render relay in case you dont want to use the plane_masters blend_mode
-	var/blend_mode_override
 	/// list of current relays this plane is utilizing to render
 	var/list/atom/movable/render_plane_relay/relays = list()
+	/// list in the form render_source -> list(interested_filters)
+	var/list/source_to_filters = list()
+
+	/// How many active relays do we have
+	var/active_relays = 0
+	/// Are we rendering in place
+	var/render_in_place = TRUE
+	/// Do we allow rendering in place
+	var/allow_rendering_in_place = TRUE
 	/// if render relays have already be generated
 	var/relays_generated = FALSE
 
 	/// If this plane master should be hidden from the player at roundstart
 	/// We do this so PMs can opt into being temporary, to reduce load on clients
 	var/start_hidden = FALSE
-	/// If we are currently being displayed to our viwer
-	var/dispalyed = FALSE
+	/// If we are MEANT TO BE currently being displayed to our viwer
+	var/displayed = FALSE
 
 	/// If this plane master is being forced to hide.
 	/// Hidden PMs will dump ANYTHING relayed or drawn onto them. Be careful with this
@@ -65,7 +72,7 @@
 	/// + means it's higher, - means it's lower
 	var/distance_from_owner = 0
 	/// If this plane master has been hidden by its z layer distance
-	var/hidden_by_distance = FALSE
+	var/hidden_by_distance = NOT_HIDDEN
 
 	/// Has this plane master had its offset made concrete? Avoids modifications/uses that are going to immediately break
 	var/offset_already_updated = FALSE
@@ -83,16 +90,17 @@
 		stack_trace("Plane master created without a description. Document how your thing works so people will know in future, and we can display it in the debug menu")
 	if(start_hidden)
 		hide_plane(home.our_hud?.mymob)
+	remember_render_relays()
 	generate_render_relays()
 
 /atom/movable/screen/plane_master/Destroy()
+	QDEL_LIST(relays)
 	if(home)
 		// NOTE! We do not clear ourselves from client screens
 		// We relay on whoever qdel'd us to reset our hud, and properly purge us
 		home.plane_masters -= "[plane]"
 		home = null
-	. = ..()
-	QDEL_LIST(relays)
+	return ..()
 
 /// Sets the plane group that owns us, it also determines what screen we render to
 /// Returns FALSE if the set_home fails, TRUE otherwise
@@ -103,9 +111,15 @@
 	if(home.map)
 		screen_loc = "[home.map]:[screen_loc]"
 		assigned_map = home.map
+
+	// setup rendering in place, now that we have a home
+	if(allow_rendering_in_place)
+		set_render_in_place(TRUE)
+	else
+		set_render_in_place(FALSE)
 	return TRUE
 
-/// Updates our "offset", basically what layer of multiz we're meant to render
+/// Setup proc, updates our "offset", basically what layer of multiz we're meant to render
 /// Top is 0, goes up as you go down
 /// It's taken into account by render targets and relays, so we gotta make sure they're on the same page
 /atom/movable/screen/plane_master/proc/update_offset()
@@ -113,8 +127,14 @@
 	SET_PLANE_W_SCALAR(src, real_plane, offset)
 	for(var/i in 1 to length(render_relay_planes))
 		render_relay_planes[i] = GET_NEW_PLANE(render_relay_planes[i], offset)
+
+	// Get our base render target
 	if(initial(render_target))
-		render_target = OFFSET_RENDER_TARGET(initial(render_target), offset)
+		render_target = initial(render_target)
+	else
+		render_target = get_plane_master_render_base(name)
+	// Figure out its offset
+	render_target = OFFSET_RENDER_TARGET(render_target, offset)
 	offset_already_updated = TRUE
 
 /atom/movable/screen/plane_master/proc/set_alpha(new_alpha)
@@ -130,6 +150,103 @@
 /atom/movable/screen/plane_master/proc/enable_alpha()
 	alpha_enabled = TRUE
 	alpha = true_alpha
+
+/atom/movable/screen/plane_master/proc/set_render_in_place(new_render_in_place = FALSE)
+	render_in_place = new_render_in_place
+	var/in_place = copytext(render_target, 1, 2) != "*"
+	if(render_in_place == in_place)
+		return
+
+	var/bare_render_target
+	var/old_render_target = render_target
+	if(render_in_place)
+		render_target = copytext(render_target, 2)
+		bare_render_target = render_target
+	else
+		render_target = "*[render_target]"
+		bare_render_target = old_render_target
+
+	// We assert that all initial render targets will have no *
+	#warn unit test for this
+	// Swapping em around
+	home.canon_source_to_reality -= render_target
+	home.canon_source_to_reality[old_render_target] = render_target
+
+	for(var/atom/movable/render_plane_relay/relay as anything in relays)
+		relay.render_source = render_target
+
+	SEND_SIGNAL(home, SIGNAL_RENDER_IN_PLACE_CHANGED(bare_render_target), old_render_target, render_target)
+
+// This is stupid, I AM sorry
+// plane masters can change their render targets to render in place
+// I want filters to be able to update to match that new target
+// So I'm gonna hook into a signal off the plane master group that alerts us to a render target change so we can rehook
+/atom/movable/screen/plane_master/add_filter(name, priority, list/params, update = TRUE)
+	var/source = params["render_source"]
+	if(!source)
+		return ..()
+	// If the source is different from its initial value, let's figure out what it SHOULD be you feel?
+	var/existing_source = home.canon_source_to_reality[source]
+	if(existing_source)
+		params["render_source"] = existing_source
+		source = existing_source
+	. = ..()
+	hook_into_source(source, name)
+
+/atom/movable/screen/plane_master/remove_filter(name_or_names, update = TRUE)
+	if(!filter_data)
+		return ..()
+
+	if(!islist(name_or_names))
+		name_or_names = list(name_or_names)
+	for(var/filter_name in name_or_names)
+		var/list/filter_info = filter_data[name]
+		if(!filter_info)
+			continue
+		var/source = filter_info["render_source"]
+		if(!source)
+			continue
+		clear_from_source(source, filter_name)
+	return ..()
+
+/atom/movable/screen/plane_master/proc/hook_into_source(source, filter_name)
+	// Trim off the * so we can hit the right hook here
+	if(copytext(source, 1, 2) == "*")
+		source = copytext(source, 2)
+
+	if(source_to_filters[source])
+		source_to_filters[source] += filter_name
+		return
+	RegisterSignal(home, SIGNAL_RENDER_IN_PLACE_CHANGED(source), PROC_REF(filter_source_changed))
+	source_to_filters[source] += list(filter_name)
+
+/atom/movable/screen/plane_master/proc/clear_from_source(source, filter_name)
+	if(copytext(source, 1, 2) == "*")
+		source = copytext(source, 2)
+
+	source_to_filters[source] -= filter_name
+	if(length(source_to_filters[source]))
+		return
+	UnregisterSignal(home, SIGNAL_RENDER_IN_PLACE_CHANGED(source))
+	source_to_filters -= source
+
+/atom/movable/screen/plane_master/proc/filter_source_changed(datum/source, old_source, new_source)
+	SIGNAL_HANDLER
+	if(old_source == new_source)
+		return
+
+	var/operating_source = new_source
+	if(copytext(operating_source, 1, 2) == "*")
+		operating_source = copytext(operating_source, 2)
+
+	var/updated = FALSE
+	var/list/interesting_names = source_to_filters[operating_source]
+	for(var/list/data in filter_data)
+		if(!isnull(data["render_source"]) && (data["name"] in interesting_names))
+			data["render_source"] = new_source
+			updated = TRUE
+	if(updated)
+		update_filters()
 
 /// Build a relationship with the mob viewing these PMs
 /// NOT making ourselves visible to them, just becoming related to them
@@ -150,19 +267,23 @@
 	if(force_hidden)
 		return FALSE
 
+	displayed = TRUE
 	var/client/our_client = mymob?.canon_client
 	if(!our_client)
 		return TRUE
 
 	displayed = TRUE
 	our_client.screen += src
+	sync_relays(our_client)
+
 	// Alright, let's get this out of the way
 	// Mobs can move z levels without their client. If this happens, we need to ensure critical display settings are respected
 	// This is done here. Mild to severe pain but it's nessesary
 	// (We check to see if we use the critical system, then if we don't want some realys, then if we are actually outside bounds)
 	// If we want all our relays then there's no point doing this now is there
-	if(!(critical & (PLANE_CRITICAL_DISPLAY|PLANE_CRITICAL_SOURCE)) || !(critical & PLANE_CRITICAL_NO_RELAY) || !check_outside_bounds())
-		our_client.screen += relays
+	//if(!(critical & (PLANE_CRITICAL_DISPLAY|PLANE_CRITICAL_SOURCE)) || !(critical & PLANE_CRITICAL_NO_RELAY) || !check_outside_bounds())
+	//	our_client.screen += relays
+	#warn commented out for some reason?
 	return TRUE
 
 /// Hook to allow planes to work around is_outside_bounds
@@ -174,13 +295,24 @@
 /// Do your effect cleanup here
 /atom/movable/screen/plane_master/proc/hide_from(mob/oldmob)
 	SHOULD_CALL_PARENT(TRUE)
+	displayed = FALSE
 	var/client/their_client = oldmob?.client
 	if(!their_client)
 		return
 	displayed = FALSE
 	their_client.screen -= src
-	their_client.screen -= relays
+	sync_relays(their_client)
 
+/atom/movable/screen/plane_master/proc/sync_relays(client/display)
+	for(var/atom/movable/render_plane_relay/relay as anything in relays)
+		relay.sync_relay(display)
+	for(var/atom/movable/render_plane_relay/relay as anything in home.relays["[plane]"])
+		relay.sync_relay(display)
+
+/// We have a relay pointing at the target plane
+/// Should we wipe it out? or keep a hold of it
+/atom/movable/screen/plane_master/proc/should_hide_relay(target_plane)
+	return TRUE
 
 /// Forces this plane master to hide, until unhide_plane is called
 /// This allows us to disable unused PMs without breaking anything else
@@ -240,49 +372,210 @@
 	// (Or if we're just not visible at all)
 	//else
 	if(distance_from_owner < 0 && (offset > lowest_possible_offset || \
-		multiz_boundary != MULTIZ_PERFORMANCE_DISABLE && abs(distance_from_owner) > multiz_boundary))
-		if(hidden_by_distance || force_hidden)
+		(multiz_boundary != MULTIZ_PERFORMANCE_DISABLE && abs(distance_from_owner) > multiz_boundary)))
+		if(hidden_by_distance != NOT_HIDDEN || force_hidden)
 			return (critical & PLANE_CRITICAL_DISPLAY && offset < lowest_possible_offset) // yeah this is dumb I'm sorry
-		hidden_by_distance = TRUE
 		// If it's critical to how lower layers look visually (mostly lighting)
 		// Keep the bare bones
 		if(critical & PLANE_CRITICAL_DISPLAY && (offset < lowest_possible_offset))
+			hidden_by_distance = HIDDEN_RELAYS
 			retain_hidden_plane(relevant)
 			return TRUE
 		// Otherwise, yayeeet
+		hidden_by_distance = HIDDEN_COMPLETELY
 		hide_from(relevant)
 		return FALSE
-	else if(hidden_by_distance)
-		hidden_by_distance = FALSE
-		if(critical & (PLANE_CRITICAL_SOURCE|PLANE_CRITICAL_DISPLAY))
+	else if(hidden_by_distance != NOT_HIDDEN)
+		// If we're currently being displayed then we must have just culled render relays
+		if(hidden_by_distance == HIDDEN_RELAYS)
 			restore_hidden_plane(relevant)
+			hidden_by_distance = NOT_HIDDEN
 			return TRUE
+		hidden_by_distance = NOT_HIDDEN
 		show_to(relevant)
 	return TRUE
 
-/// Hides a plane from either relays or render targets (or both), but does not actually remove it from the screen
+// idea is if no relays exist we'll want to render "in place" based off our plane var
+// if we do have relays, we should send to them instead
+// needs to account for existing filters
+/atom/movable/screen/plane_master/proc/relays_lost()
+	if(!allow_rendering_in_place)
+		return
+	if(render_in_place)
+		return
+	if(!render_target)
+		return
+	set_render_in_place(TRUE)
+
+/atom/movable/screen/plane_master/proc/relays_gained()
+	if(!allow_rendering_in_place)
+		return
+	if(!render_in_place)
+		return
+	if(!render_target)
+		return
+	set_render_in_place(FALSE)
+
 /// Lets us partially hide planes for performance reasons without fully disabling them
 /atom/movable/screen/plane_master/proc/retain_hidden_plane(mob/relevant)
-	// We here assume that your render target starts with *
-	if(critical & PLANE_CRITICAL_CUT_RENDER && render_target)
-		render_target = copytext_char(render_target, 2)
-	if(!(critical & PLANE_CRITICAL_NO_RELAY))
-		return
-	var/client/our_client = relevant.client
-	if(!our_client)
-		return
-	for(var/atom/movable/render_plane_relay/relay as anything in relays)
-		our_client.screen -= relay
+	return
 
 /// Restores a formerly partially hidden plane
 /atom/movable/screen/plane_master/proc/restore_hidden_plane(mob/relevant)
-	// We once again assume that your render target WANTS to start with *
-	if(critical & PLANE_CRITICAL_CUT_RENDER && render_target)
-		render_target = "*[render_target]"
-	if(!(critical & PLANE_CRITICAL_NO_RELAY))
-		return
-	var/client/our_client = relevant.client
-	if(!our_client)
-		return
+	return
+
+/// Called to inform relays that render onto us that we now like, exist and stuff
+/atom/movable/screen/plane_master/proc/remember_render_relays()
+	var/client/source = home?.our_hud?.mymob?.client
+	for(var/atom/movable/render_plane_relay/relay as anything in home.relays["[plane]"])
+		relay.target = src
+		if(source)
+			relay.sync_relay(source)
+
+/**
+ * Plane master proc called in Initialize() that creates relay objects, and sets them up as needed
+ * Sets:
+ * * layer from plane to avoid z-fighting
+ * * planes to relay the render to
+ * * render_source so that the plane will render on these objects
+ * * mouse opacity to ensure proper mouse hit tracking
+ * * name for debugging purposes
+ * Other vars such as alpha will automatically be applied with the render source
+ */
+/atom/movable/screen/plane_master/proc/generate_render_relays()
+	var/relay_loc = home?.relay_loc || "1,1"
+	// If we're using a submap (say for a popup window) make sure we draw onto it
+	if(home?.map)
+		relay_loc = "[home.map]:[relay_loc]"
+
+	var/list/generated_planes = list()
 	for(var/atom/movable/render_plane_relay/relay as anything in relays)
-		our_client.screen += relay
+		generated_planes += relay.plane
+
+	for(var/relay_plane in (render_relay_planes - generated_planes))
+		generate_relay_to(relay_plane, relay_loc)
+
+	relays_generated = TRUE
+
+/// Creates a connection between this plane master and the passed in plane
+/// Helper for out of system code, shouldn't be used in this file
+/// Build system to differenchiate between generated and non generated render relays
+/atom/movable/screen/plane_master/proc/add_relay_to(target_plane, blend_override, relay_layer, relay_color, relay_transform, relay_appearance_flags)
+	if(get_relay_to(target_plane))
+		return
+	if(target_plane == plane)
+		CRASH("Tried to draw a relay to ourself, stop it")
+	if(!offset_already_updated)
+		CRASH("Attempted to draw a render relay before our offset has been applied, this WILL break")
+	render_relay_planes += target_plane
+	var/client/display_lad = home?.our_hud?.mymob?.canon_client
+	var/atom/movable/render_plane_relay/relay = generate_relay_to(target_plane, show_to = display_lad, blend_override = blend_override, relay_layer = relay_layer)
+	relay.color = relay_color
+	if(relay_transform)
+		relay.transform = relay_transform
+	if(relay_appearance_flags)
+		relay.appearance_flags |= relay_appearance_flags
+
+/proc/get_plane_master_render_base(name)
+	return "*[name]: AUTOGENERATED RENDER TGT"
+
+/atom/movable/screen/plane_master/proc/generate_relay_to(target_plane, relay_loc, client/show_to, blend_override, relay_layer)
+	if(!relay_loc)
+		relay_loc = "1,1"
+		// If we're using a submap (say for a popup window) make sure we draw onto it
+		if(home?.map)
+			relay_loc = "[home.map]:[relay_loc]"
+	var/blend_to_use = blend_override
+	if(isnull(blend_to_use))
+		blend_to_use = initial(blend_mode)
+
+	var/atom/movable/render_plane_relay/relay = new()
+	relay.render_source = render_target
+	relay.plane = target_plane
+	relay.screen_loc = relay_loc
+	// There are two rules here
+	// 1: layer needs to be positive (negative layers are treated as float layers)
+	// 2: lower planes (including offset ones) need to be layered below higher ones (because otherwise they'll render fucky)
+	// By multiplying LOWEST_EVER_PLANE by 30, we give 30 offsets worth of room to planes before they start going negative
+	// Bet
+	// We allow for manuel override if requested. careful with this
+	relay.layer = relay_layer || (plane + abs(LOWEST_EVER_PLANE * 30)) //layer must be positive but can be a decimal
+	relay.blend_mode = blend_to_use
+	relay.mouse_opacity = mouse_opacity
+	relay.name = render_target
+	relays += relay
+	relay.source = src
+	var/atom/movable/screen/plane_master/target = home.plane_masters["[target_plane]"]
+	if(target)
+		relay.target = target
+	home.relays["[target_plane]"] += list(relay)
+
+	// Relays are sometimes generated early, before huds have a mob to display stuff to
+	// That's what this is for
+	if(show_to)
+		relay.sync_relay(show_to)
+	if(offsetting_flags & OFFSET_RELAYS_MATCH_HIGHEST && home.our_hud)
+		offset_relay(relay, home.our_hud.current_plane_offset)
+	return relay
+
+/// Breaks a connection between this plane master, and the passed in place
+/atom/movable/screen/plane_master/proc/remove_relay_from(target_plane)
+	var/atom/movable/render_plane_relay/existing_relay = get_relay_to(target_plane)
+	if(!existing_relay)
+		render_relay_planes -= target_plane
+		return
+	qdel(existing_relay)
+
+/// Gets the relay atom we're using to connect to the target plane, if one exists
+/atom/movable/screen/plane_master/proc/get_relay_to(target_plane)
+	for(var/atom/movable/render_plane_relay/relay in relays)
+		if(relay.plane == target_plane)
+			return relay
+	return null
+
+/atom/movable/screen/plane_master/proc/relay_activated()
+	if(active_relays == 0)
+		relays_gained()
+	active_relays += 1
+
+/atom/movable/screen/plane_master/proc/relay_removed()
+	active_relays -= 1
+	if(active_relays == 0)
+		relays_lost()
+
+/**
+ * Offsets our relays in place using the given parameter by adjusting their plane and
+ * layer values, avoiding changing the layer for relays with custom-set layers.
+ *
+ * Used in [proc/build_planes_offset] to make the relays for non-offsetting planes
+ * match the highest rendering plane that matches the target, to avoid them rendering
+ * on the highest level above things that should be visible.
+ *
+ * Parameters:
+ * - new_offset: the offset we will adjust our relays to
+ */
+/atom/movable/screen/plane_master/proc/offset_relays_in_place(new_offset)
+	for(var/atom/movable/render_plane_relay/rpr in relays)
+		offset_relay(rpr, new_offset)
+
+/**
+ * Offsets a given render relay using the given parameter by adjusting its plane and
+ * layer values, avoiding changing the layer if it has a custom-set layer.
+ *
+ * Parameters:
+ * - rpr: the render plane relay we will offset
+ * - new_offset: the offset we will adjust it by
+ */
+/atom/movable/screen/plane_master/proc/offset_relay(atom/movable/render_plane_relay/rpr, new_offset)
+	var/base_relay_plane = PLANE_TO_TRUE(rpr.plane)
+	var/old_offset = PLANE_TO_OFFSET(rpr.plane)
+	rpr.plane = GET_NEW_PLANE(base_relay_plane, new_offset)
+
+	var/old_offset_plane = real_plane - (PLANE_RANGE * old_offset)
+	var/old_layer = (old_offset_plane + abs(LOWEST_EVER_PLANE * 30))
+	if(rpr.layer != old_layer) // Avoid overriding custom-set layers
+		return
+
+	var/offset_plane = real_plane - (PLANE_RANGE * new_offset)
+	var/new_layer = (offset_plane + abs(LOWEST_EVER_PLANE * 30))
+	rpr.layer = new_layer

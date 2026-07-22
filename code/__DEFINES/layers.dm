@@ -6,7 +6,7 @@
 
 // Doesn't really layer, just throwing this in here cause it's the best place imo
 #define FIELD_OF_VISION_BLOCKER_PLANE -45
-#define FIELD_OF_VISION_BLOCKER_RENDER_TARGET "*FIELD_OF_VISION_BLOCKER_RENDER_TARGET"
+#define FIELD_OF_VISION_BLOCKER_RENDER_TARGET "FIELD_OF_VISION_BLOCKER_RENDER_TARGET"
 
 #define CLICKCATCHER_PLANE -40
 
@@ -14,10 +14,10 @@
 #define PLANE_SPACE_PARALLAX -20
 
 #define WEATHER_MASK_PLANE -13
-#define WEATHER_MASK_RENDER_TARGET "*WEATHER_MASK_RENDER_TARGET"
+#define WEATHER_MASK_RENDER_TARGET "WEATHER_MASK_RENDER_TARGET"
 
 #define DISPLACEMENT_PLANE -12
-#define DISPLACEMENT_RENDER_TARGET "*DISPLACEMENT_RENDER_TARGET"
+#define DISPLACEMENT_RENDER_TARGET "DISPLACEMENT_RENDER_TARGET"
 
 #define RENDER_PLANE_TRANSPARENT -11 //Transparent plane that shows openspace underneath the floor
 
@@ -55,7 +55,7 @@
 #define EMISSIVE_PLANE 13
 /// This plane masks out lighting to create an "emissive" effect, ie for glowing lights in otherwise dark areas.
 #define RENDER_PLANE_EMISSIVE 14
-#define EMISSIVE_RENDER_TARGET "*RENDER_PLANE_EMISSIVE"
+#define EMISSIVE_RENDER_TARGET "RENDER_PLANE_EMISSIVE"
 // Ensures all the render targets that point at the emissive plate layer correctly
 #define EMISSIVE_Z_BELOW_LAYER 1
 #define EMISSIVE_FLOOR_LAYER 2
@@ -63,11 +63,11 @@
 #define EMISSIVE_WALL_LAYER 4
 
 #define RENDER_PLANE_EMISSIVE_BLOOM_MASK 15
-#define EMISSIVE_BLOOM_MASK_RENDER_TARGET "*RENDER_PLANE_EMISSIVE_BLOOM_MASK"
+#define EMISSIVE_BLOOM_MASK_RENDER_TARGET "RENDER_PLANE_EMISSIVE_BLOOM_MASK"
 #define RENDER_PLANE_EMISSIVE_BLOOM 16
 
 #define RENDER_PLANE_SPECULAR_MASK 17
-#define SPECULAR_MASK_RENDER_TARGET "*RENDER_PLANE_SPECULAR_MASK"
+#define SPECULAR_MASK_RENDER_TARGET "RENDER_PLANE_SPECULAR_MASK"
 
 #define RENDER_PLANE_PARTICLE_WEATHER 18
 #define RENDER_PLANE_EMISSIVE_PARTICLE_WEATHER 19
@@ -85,7 +85,7 @@
 /// Masks the lighting plane with turfs, so we never light up the void
 /// Failing that, masks emissives and the overlay lighting plane
 #define RENDER_PLANE_LIGHT_MASK 23
-#define LIGHT_MASK_RENDER_TARGET "*RENDER_PLANE_LIGHT_MASK"
+#define LIGHT_MASK_RENDER_TARGET "RENDER_PLANE_LIGHT_MASK"
 
 /// We cannot render speculars to ABOVE_LIGHTING, as then they give it alpha and end up masking things in darkness
 /// So we need to render it directly to RENDER_PLANE_GAME above RENDER_PLANE_LIGHTING
@@ -379,6 +379,10 @@
 #define PLANE_CRITICAL_FUCKO_PARALLAX (PLANE_CRITICAL_DISPLAY|PLANE_CRITICAL_SOURCE|PLANE_CRITICAL_NO_RELAY|PLANE_CRITICAL_CUT_RENDER)
 #define PLANE_CRITICAL_ALWAYS_DISPLAY (PLANE_CRITICAL_DISPLAY|PLANE_CRITICAL_SOURCE)
 
+// Values for hidden_by_distance
+#define NOT_HIDDEN 0
+#define HIDDEN_RELAYS 1
+#define HIDDEN_COMPLETELY 2
 //---------- Plane Master offsetting_flags -------------
 // Describes how different plane masters behave regarding being offset
 /// This plane master will not be offset itself, existing only once with an offset of 0
@@ -387,7 +391,7 @@
 /// This plane master will have its relays offset to match the highest rendering plane that matches the target
 /// Required for making things like the blind fullscreen not render over runechat
 #define OFFSET_RELAYS_MATCH_HIGHEST (1<<1)
-
+#warn make sure this is properly implemented
 /// A value of /datum/preference/numeric/multiz_performance that disables the option
 #define MULTIZ_PERFORMANCE_DISABLE -1
 /// We expect at most 3 layers of multiz

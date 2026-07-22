@@ -43,6 +43,9 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	/// Goes from 0 to the max (z level stack size - 1)
 	var/current_plane_offset = 0
 
+	/// The lowest plane offset displayed on our z layer
+	var/current_lowest_plane_offset = 0
+
 	/// UI for screentips that appear when you mouse over things
 	/// Stored directly as it is used in very hot MouseEntered code
 	var/atom/movable/screen/screentip/screentip_text = null
@@ -243,11 +246,13 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	if(!eye_turf)
 		return
 	SEND_SIGNAL(src, COMSIG_HUD_Z_CHANGED, eye_turf.z)
+	var/new_lowest_offset = GET_LOWEST_STACK_OFFSET(eye_turf.z)
 	var/new_offset = GET_TURF_PLANE_OFFSET(eye_turf)
-	if(current_plane_offset == new_offset)
+	if(current_plane_offset == new_offset && current_lowest_plane_offset == new_lowest_offset)
 		return
 	var/old_offset = current_plane_offset
 	current_plane_offset = new_offset
+	current_lowest_plane_offset = new_lowest_offset
 
 	SEND_SIGNAL(src, COMSIG_HUD_OFFSET_CHANGED, old_offset, new_offset)
 	for(var/group_key in master_groups)

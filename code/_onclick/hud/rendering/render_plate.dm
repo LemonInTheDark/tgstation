@@ -1,21 +1,3 @@
-/*!
- * Custom rendering solution to allow for advanced effects
- * We (ab)use plane masters and render source/target to cheaply render 2+ planes as 1
- * if you want to read more read the _render_readme.md
- */
-
-
-/**
- * Render relay object assigned to a plane master to be able to relay its render onto other planes that are not its own
- */
-/atom/movable/render_plane_relay
-	screen_loc = "CENTER"
-	layer = -1
-	plane = 0
-	appearance_flags = PASS_MOUSE | NO_CLIENT_COLOR | KEEP_TOGETHER
-	/// If we render into a critical plane master, or not
-	var/critical_target = FALSE
-
 /**
  * ## Rendering plate
  *
@@ -62,7 +44,7 @@
 	. = ..()
 	remove_filter("AO")
 
-/atom/movable/screen/plane_master/rendering_plate/game_world/set_distance_from_owner(mob/relevant, new_distance)
+/atom/movable/screen/plane_master/rendering_plate/game_world/set_distance_from_owner(mob/relevant, new_distance, multiz_boundary, lowest_possible_offset)
 	. = ..()
 	// if it's hidden, no sense in fucking with it
 	if(!.)
@@ -181,6 +163,7 @@
 	render_relay_planes = list(RENDER_PLANE_LIGHTING)
 	blend_mode = BLEND_ADD
 	critical = PLANE_CRITICAL_DISPLAY
+	allow_rendering_in_place = FALSE
 
 /atom/movable/screen/plane_master/rendering_plate/turf_lighting/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
 	. = ..()
@@ -209,6 +192,7 @@
 	render_target = EMISSIVE_RENDER_TARGET
 	render_relay_planes = list()
 	critical = PLANE_CRITICAL_DISPLAY
+	allow_rendering_in_place = FALSE
 
 /atom/movable/screen/plane_master/rendering_plate/emissive_slate/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
 	. = ..()
@@ -225,6 +209,7 @@
 	render_relay_planes = list()
 	render_target = EMISSIVE_BLOOM_MASK_RENDER_TARGET
 	critical = PLANE_CRITICAL_DISPLAY
+	allow_rendering_in_place = FALSE
 
 /atom/movable/screen/plane_master/rendering_plate/emissive_bloom
 	name = "Emissive bloom plate"
@@ -236,6 +221,7 @@
 	blend_mode = BLEND_ADD
 	render_relay_planes = list(RENDER_PLANE_O_LIGHTING)
 	critical = PLANE_CRITICAL_DISPLAY
+	allow_rendering_in_place = FALSE
 
 /atom/movable/screen/plane_master/rendering_plate/emissive_bloom/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
 	. = ..()
@@ -256,6 +242,7 @@
 	render_target = SPECULAR_MASK_RENDER_TARGET
 	render_relay_planes = list()
 	critical = PLANE_CRITICAL_DISPLAY
+	allow_rendering_in_place = FALSE
 
 /atom/movable/screen/plane_master/rendering_plate/overlay_light
 	name = "Overlight plate"
@@ -267,6 +254,7 @@
 	blend_mode = BLEND_ADD
 	render_relay_planes = list(RENDER_PLANE_LIGHTING)
 	critical = PLANE_CRITICAL_DISPLAY
+	allow_rendering_in_place = FALSE
 
 /atom/movable/screen/plane_master/rendering_plate/overlay_light/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
 	. = ..()
@@ -311,7 +299,7 @@
 		<br>Masks us out so it has the breathing room to apply its effect.\
 		<br>Oh and we quite often have our alpha changed to achive night vision effects, or things of that sort."
 	plane = RENDER_PLANE_LIGHTING
-	blend_mode_override = BLEND_MULTIPLY
+	blend_mode = BLEND_MULTIPLY
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	critical = PLANE_CRITICAL_DISPLAY
 	render_relay_planes = list(RENDER_PLANE_GAME)
@@ -403,6 +391,7 @@
 	color = list(255,255,255,255, 255,255,255,255, 255,255,255,255, 255,255,255,255, 0,0,0,0)
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	render_target = LIGHT_MASK_RENDER_TARGET
+	allow_rendering_in_place = FALSE
 	// We blend against the game plane, so she's gotta multiply!
 	blend_mode = BLEND_MULTIPLY
 	render_relay_planes = list(RENDER_PLANE_GAME)
@@ -411,7 +400,7 @@
 	. = ..()
 	RegisterSignal(mymob, COMSIG_MOB_SIGHT_CHANGE, PROC_REF(handle_sight), override = TRUE)
 
-/atom/movable/screen/plane_master/rendering_plate/light_mask/detach_viwer(mob/oldmob)
+/atom/movable/screen/plane_master/rendering_plate/light_mask/detach_viewer(mob/oldmob)
 	. = ..()
 	UnregisterSignal(oldmob, COMSIG_MOB_SIGHT_CHANGE)
 
@@ -423,7 +412,7 @@
 
 /atom/movable/screen/plane_master/rendering_plate/light_mask/hide_from(mob/oldmob)
 	. = ..()
-	handle_sight(mymob, mymob.sight, NONE)
+	handle_sight(oldmob, oldmob.sight, NONE)
 
 /atom/movable/screen/plane_master/rendering_plate/light_mask/proc/handle_sight(datum/source, new_sight, old_sight)
 	// If we can see something that shows "through" blackness, and we can't see turfs, disable our draw to the game plane
@@ -544,7 +533,7 @@
 	add_filter("fov_handled_space", 2, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(FIELD_OF_VISION_BLOCKER_RENDER_TARGET, offset)))
 	add_filter("fov_matrix", 3, color_matrix_filter(list(0.5,-0.15,-0.15,0, -0.15,0.5,-0.15,0, -0.15,-0.15,0.5,0, 0,0,0,1, 0,0,0,0)))
 
-/atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/attach_viewer(mob/mymob)
+/atom/movable/screen/plane_master/rendering_plate/masked_game_plate/attach_viewer(mob/mymob)
 	. = ..()
 	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled))
 	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled))
@@ -600,140 +589,3 @@
 		remove_relay_from(GET_NEW_PLANE(RENDER_PLANE_TRANSPARENT, offset - 1))
 	else // Otherwise, regenerate the relay
 		add_relay_to(GET_NEW_PLANE(RENDER_PLANE_TRANSPARENT, offset - 1))
-
-/**
- * Plane master proc called in Initialize() that creates relay objects, and sets them up as needed
- * Sets:
- * * layer from plane to avoid z-fighting
- * * planes to relay the render to
- * * render_source so that the plane will render on these objects
- * * mouse opacity to ensure proper mouse hit tracking
- * * name for debugging purposes
- * Other vars such as alpha will automatically be applied with the render source
- */
-/atom/movable/screen/plane_master/proc/generate_render_relays()
-	var/relay_loc = home?.relay_loc || "1,1"
-	// If we're using a submap (say for a popup window) make sure we draw onto it
-	if(home?.map)
-		relay_loc = "[home.map]:[relay_loc]"
-
-	var/list/generated_planes = list()
-	for(var/atom/movable/render_plane_relay/relay as anything in relays)
-		generated_planes += relay.plane
-
-	for(var/relay_plane in (render_relay_planes - generated_planes))
-		generate_relay_to(relay_plane, relay_loc)
-
-	if(blend_mode != BLEND_MULTIPLY)
-		blend_mode = BLEND_DEFAULT
-	relays_generated = TRUE
-
-/// Creates a connection between this plane master and the passed in plane
-/// Helper for out of system code, shouldn't be used in this file
-/// Build system to differenchiate between generated and non generated render relays
-/atom/movable/screen/plane_master/proc/add_relay_to(target_plane, blend_override, relay_layer, relay_color)
-	if(get_relay_to(target_plane))
-		return
-	if(!offset_already_updated)
-		CRASH("Attempted to draw a render relay before our offset has been applied, this WILL break")
-	render_relay_planes += target_plane
-	var/client/display_lad = home?.our_hud?.mymob?.canon_client
-	var/atom/movable/render_plane_relay/relay = generate_relay_to(target_plane, show_to = display_lad, blend_override = blend_override, relay_layer = relay_layer)
-	relay.color = relay_color
-
-/proc/get_plane_master_render_base(name)
-	return "*[name]: AUTOGENERATED RENDER TGT"
-
-/atom/movable/screen/plane_master/proc/generate_relay_to(target_plane, relay_loc, client/show_to, blend_override, relay_layer)
-	if(!length(relays) && !initial(render_target))
-		render_target = OFFSET_RENDER_TARGET(get_plane_master_render_base(name), offset)
-	if(!relay_loc)
-		relay_loc = "1,1"
-		// If we're using a submap (say for a popup window) make sure we draw onto it
-		if(home?.map)
-			relay_loc = "[home.map]:[relay_loc]"
-	var/blend_to_use = blend_override
-	if(isnull(blend_to_use))
-		blend_to_use = blend_mode_override || initial(blend_mode)
-
-	var/atom/movable/render_plane_relay/relay = new()
-	relay.render_source = render_target
-	relay.plane = target_plane
-	relay.screen_loc = relay_loc
-	// There are two rules here
-	// 1: layer needs to be positive (negative layers are treated as float layers)
-	// 2: lower planes (including offset ones) need to be layered below higher ones (because otherwise they'll render fucky)
-	// By multiplying LOWEST_EVER_PLANE by 30, we give 30 offsets worth of room to planes before they start going negative
-	// Bet
-	// We allow for manuel override if requested. careful with this
-	relay.layer = relay_layer || (plane + abs(LOWEST_EVER_PLANE * 30)) //layer must be positive but can be a decimal
-	relay.blend_mode = blend_to_use
-	relay.mouse_opacity = mouse_opacity
-	relay.name = render_target
-	relay.critical_target = PLANE_IS_CRITICAL(target_plane)
-	relays += relay
-	// Relays are sometimes generated early, before huds have a mob to display stuff to
-	// That's what this is for
-	if(show_to)
-		show_to.screen += relay
-	if(offsetting_flags & OFFSET_RELAYS_MATCH_HIGHEST && home.our_hud)
-		offset_relay(relay, home.our_hud.current_plane_offset)
-	return relay
-
-/// Breaks a connection between this plane master, and the passed in place
-/atom/movable/screen/plane_master/proc/remove_relay_from(target_plane)
-	render_relay_planes -= target_plane
-	var/atom/movable/render_plane_relay/existing_relay = get_relay_to(target_plane)
-	if(!existing_relay)
-		return
-	relays -= existing_relay
-	if(!length(relays) && !initial(render_target))
-		render_target = null
-	var/client/lad = home?.our_hud?.mymob?.canon_client
-	if(lad)
-		lad.screen -= existing_relay
-
-/// Gets the relay atom we're using to connect to the target plane, if one exists
-/atom/movable/screen/plane_master/proc/get_relay_to(target_plane)
-	for(var/atom/movable/render_plane_relay/relay in relays)
-		if(relay.plane == target_plane)
-			return relay
-
-	return null
-
-/**
- * Offsets our relays in place using the given parameter by adjusting their plane and
- * layer values, avoiding changing the layer for relays with custom-set layers.
- *
- * Used in [proc/build_planes_offset] to make the relays for non-offsetting planes
- * match the highest rendering plane that matches the target, to avoid them rendering
- * on the highest level above things that should be visible.
- *
- * Parameters:
- * - new_offset: the offset we will adjust our relays to
- */
-/atom/movable/screen/plane_master/proc/offset_relays_in_place(new_offset)
-	for(var/atom/movable/render_plane_relay/rpr in relays)
-		offset_relay(rpr, new_offset)
-
-/**
- * Offsets a given render relay using the given parameter by adjusting its plane and
- * layer values, avoiding changing the layer if it has a custom-set layer.
- *
- * Parameters:
- * - rpr: the render plane relay we will offset
- * - new_offset: the offset we will adjust it by
- */
-/atom/movable/screen/plane_master/proc/offset_relay(atom/movable/render_plane_relay/rpr, new_offset)
-	var/base_relay_plane = PLANE_TO_TRUE(rpr.plane)
-	var/old_offset = PLANE_TO_OFFSET(rpr.plane)
-	rpr.plane = GET_NEW_PLANE(base_relay_plane, new_offset)
-
-	var/old_offset_plane = real_plane - (PLANE_RANGE * old_offset)
-	var/old_layer = (old_offset_plane + abs(LOWEST_EVER_PLANE * 30))
-	if(rpr.layer != old_layer) // Avoid overriding custom-set layers
-		return
-
-	var/offset_plane = real_plane - (PLANE_RANGE * new_offset)
-	var/new_layer = (offset_plane + abs(LOWEST_EVER_PLANE * 30))
-	rpr.layer = new_layer

@@ -9,6 +9,17 @@
 	var/datum/hud/our_hud
 	/// List in the form "[plane]" = object, the plane masters we own
 	var/list/atom/movable/screen/plane_master/plane_masters = list()
+	/// List in the form "[target_plane]" = list(relays targeting this plane)
+	/// We need a way to handle async relay additions
+	var/list/relays = list()
+	/// list in the form invalid_render_source -> actual_render_source
+	/// We need to be able to correct invalid render sources in filters and shit
+	var/list/canon_source_to_reality = list()
+
+	/// Plane of the PM we are currently isolating
+	/// It's a debugging tool that draws this plane and its subtypes, and alphas out everything else
+	var/isolated_plane = null
+
 	/// The visual offset we are currently using
 	var/active_offset = 0
 	/// What, if any, submap we render onto
@@ -23,7 +34,10 @@
 	src.map = map
 
 /datum/plane_master_group/Destroy()
-	set_hud(null)
+	hide_hud()
+	detach_hud()
+	our_hud.master_groups -= key
+	our_hud = null
 	QDEL_LIST_ASSOC_VAL(plane_masters)
 	return ..()
 
@@ -32,6 +46,7 @@
 /datum/plane_master_group/proc/attach_to(datum/hud/viewing_hud)
 	if(our_hud)
 		stack_trace("Tried to attach a hud to a plane master which already had one, what went wrong???")
+		return
 	if(viewing_hud.master_groups[key])
 		stack_trace("Hey brother, our key [key] is already in use by a plane master group on the passed in hud, belonging to [viewing_hud.mymob]. Ya fucked up, why are there dupes")
 		return
@@ -51,6 +66,7 @@
 
 /// Fully regenerate our group, resetting our planes to their compile time values
 /datum/plane_master_group/proc/rebuild_hud()
+	set_isolated(null)
 	hide_hud()
 	rebuild_plane_masters()
 	attach_hud()
@@ -100,6 +116,30 @@
 /// Returns a list of all the plane master types we want to create
 /datum/plane_master_group/proc/get_plane_types()
 	return subtypesof(/atom/movable/screen/plane_master) - /atom/movable/screen/plane_master/rendering_plate
+
+/datum/plane_master_group/proc/set_isolated(new_isolated_plane)
+	if(isolated_plane == new_isolated_plane)
+		return
+	var/old_isolated_plane = isolated_plane
+	isolated_plane = new_isolated_plane
+	if(!isnull(old_isolated_plane))
+		var/atom/movable/screen/plane_master/old_lad = get_plane(old_isolated_plane)
+		old_lad.sync_relays(our_hud?.mymob?.client)
+	if(!isnull(isolated_plane))
+		var/atom/movable/screen/plane_master/new_lad = get_plane(isolated_plane)
+		new_lad.sync_relays(our_hud?.mymob?.client)
+
+	for(var/plane_key in plane_masters)
+		var/atom/movable/screen/plane_master/plane = plane_masters[plane_key]
+		if(!plane.render_in_place)
+			continue
+		if(isnull(isolated_plane))
+			plane.alpha = 255
+			continue
+		if(plane.plane == isolated_plane)
+			plane.alpha = 255
+		else
+			plane.alpha = 0
 
 /// Actually generate our plane masters, in some offset range (where offset is the z layers to render to, because each "layer" in a multiz stack gets its own plane master cube)
 /datum/plane_master_group/proc/build_plane_masters(starting_offset, ending_offset)
@@ -228,5 +268,5 @@
 /datum/plane_master_group/hudless/attach_plane(atom/movable/screen/plane_master/plane)
 	plane.attach_viewer(our_mob)
 
-/datum/plane_master_group/hudless/dettach_plane(atom/movable/screen/plane_master/plane)
+/datum/plane_master_group/hudless/detach_plane(atom/movable/screen/plane_master/plane)
 	plane.detach_viewer(our_mob)
