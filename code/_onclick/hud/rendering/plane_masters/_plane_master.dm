@@ -40,7 +40,7 @@
 	/// We do this so PMs can opt into being temporary, to reduce load on clients
 	var/start_hidden = FALSE
 	/// If we are currently being displayed to our viwer
-	var/dispalyed = FALSE
+	var/displayed = FALSE
 
 	/// If this plane master is being forced to hide.
 	/// Hidden PMs will dump ANYTHING relayed or drawn onto them. Be careful with this
@@ -65,7 +65,7 @@
 	/// + means it's higher, - means it's lower
 	var/distance_from_owner = 0
 	/// If this plane master has been hidden by its z layer distance
-	var/hidden_by_distance = FALSE
+	var/hidden_by_distance = NOT_HIDDEN
 
 	/// Has this plane master had its offset made concrete? Avoids modifications/uses that are going to immediately break
 	var/offset_already_updated = FALSE
@@ -240,23 +240,26 @@
 	// (Or if we're just not visible at all)
 	//else
 	if(distance_from_owner < 0 && (offset > lowest_possible_offset || \
-		multiz_boundary != MULTIZ_PERFORMANCE_DISABLE && abs(distance_from_owner) > multiz_boundary))
-		if(hidden_by_distance || force_hidden)
+		(multiz_boundary != MULTIZ_PERFORMANCE_DISABLE && abs(distance_from_owner) > multiz_boundary)))
+		if(hidden_by_distance != NOT_HIDDEN || force_hidden)
 			return (critical & PLANE_CRITICAL_DISPLAY && offset < lowest_possible_offset) // yeah this is dumb I'm sorry
-		hidden_by_distance = TRUE
 		// If it's critical to how lower layers look visually (mostly lighting)
 		// Keep the bare bones
 		if(critical & PLANE_CRITICAL_DISPLAY && (offset < lowest_possible_offset))
+			hidden_by_distance = HIDDEN_RELAYS
 			retain_hidden_plane(relevant)
 			return TRUE
 		// Otherwise, yayeeet
+		hidden_by_distance = HIDDEN_COMPLETELY
 		hide_from(relevant)
 		return FALSE
-	else if(hidden_by_distance)
-		hidden_by_distance = FALSE
-		if(critical & (PLANE_CRITICAL_SOURCE|PLANE_CRITICAL_DISPLAY))
+	else if(hidden_by_distance != NOT_HIDDEN)
+		// If we're currently being displayed then we must have just culled render relays
+		if(hidden_by_distance == HIDDEN_RELAYS)
 			restore_hidden_plane(relevant)
+			hidden_by_distance = NOT_HIDDEN
 			return TRUE
+		hidden_by_distance = NOT_HIDDEN
 		show_to(relevant)
 	return TRUE
 

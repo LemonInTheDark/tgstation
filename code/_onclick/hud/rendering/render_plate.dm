@@ -62,7 +62,7 @@
 	. = ..()
 	remove_filter("AO")
 
-/atom/movable/screen/plane_master/rendering_plate/game_world/set_distance_from_owner(mob/relevant, new_distance)
+/atom/movable/screen/plane_master/rendering_plate/game_world/set_distance_from_owner(mob/relevant, new_distance, multiz_boundary, lowest_possible_offset)
 	. = ..()
 	// if it's hidden, no sense in fucking with it
 	if(!.)
@@ -411,7 +411,7 @@
 	. = ..()
 	RegisterSignal(mymob, COMSIG_MOB_SIGHT_CHANGE, PROC_REF(handle_sight), override = TRUE)
 
-/atom/movable/screen/plane_master/rendering_plate/light_mask/detach_viwer(mob/oldmob)
+/atom/movable/screen/plane_master/rendering_plate/light_mask/detach_viewer(mob/oldmob)
 	. = ..()
 	UnregisterSignal(oldmob, COMSIG_MOB_SIGHT_CHANGE)
 
@@ -423,7 +423,7 @@
 
 /atom/movable/screen/plane_master/rendering_plate/light_mask/hide_from(mob/oldmob)
 	. = ..()
-	handle_sight(mymob, mymob.sight, NONE)
+	handle_sight(oldmob, oldmob.sight, NONE)
 
 /atom/movable/screen/plane_master/rendering_plate/light_mask/proc/handle_sight(datum/source, new_sight, old_sight)
 	// If we can see something that shows "through" blackness, and we can't see turfs, disable our draw to the game plane
@@ -544,7 +544,7 @@
 	add_filter("fov_handled_space", 2, alpha_mask_filter(render_source = OFFSET_RENDER_TARGET(FIELD_OF_VISION_BLOCKER_RENDER_TARGET, offset)))
 	add_filter("fov_matrix", 3, color_matrix_filter(list(0.5,-0.15,-0.15,0, -0.15,0.5,-0.15,0, -0.15,-0.15,0.5,0, 0,0,0,1, 0,0,0,0)))
 
-/atom/movable/screen/plane_master/rendering_plate/unmasked_game_plate/attach_viewer(mob/mymob)
+/atom/movable/screen/plane_master/rendering_plate/masked_game_plate/attach_viewer(mob/mymob)
 	. = ..()
 	RegisterSignal(mymob, SIGNAL_ADDTRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_enabled))
 	RegisterSignal(mymob, SIGNAL_REMOVETRAIT(TRAIT_FOV_APPLIED), PROC_REF(fov_disabled))
@@ -634,6 +634,8 @@
 /atom/movable/screen/plane_master/proc/add_relay_to(target_plane, blend_override, relay_layer, relay_color)
 	if(get_relay_to(target_plane))
 		return
+	if(target_plane == plane)
+		CRASH("Tried to draw a relay to ourself, stop it")
 	if(!offset_already_updated)
 		CRASH("Attempted to draw a render relay before our offset has been applied, this WILL break")
 	render_relay_planes += target_plane

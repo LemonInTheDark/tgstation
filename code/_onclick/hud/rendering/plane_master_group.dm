@@ -23,7 +23,10 @@
 	src.map = map
 
 /datum/plane_master_group/Destroy()
-	set_hud(null)
+	hide_hud()
+	detach_hud()
+	our_hud.master_groups -= key
+	our_hud = null
 	QDEL_LIST_ASSOC_VAL(plane_masters)
 	return ..()
 
@@ -32,6 +35,7 @@
 /datum/plane_master_group/proc/attach_to(datum/hud/viewing_hud)
 	if(our_hud)
 		stack_trace("Tried to attach a hud to a plane master which already had one, what went wrong???")
+		return
 	if(viewing_hud.master_groups[key])
 		stack_trace("Hey brother, our key [key] is already in use by a plane master group on the passed in hud, belonging to [viewing_hud.mymob]. Ya fucked up, why are there dupes")
 		return
@@ -228,5 +232,5 @@
 /datum/plane_master_group/hudless/attach_plane(atom/movable/screen/plane_master/plane)
 	plane.attach_viewer(our_mob)
 
-/datum/plane_master_group/hudless/dettach_plane(atom/movable/screen/plane_master/plane)
+/datum/plane_master_group/hudless/detach_plane(atom/movable/screen/plane_master/plane)
 	plane.detach_viewer(our_mob)

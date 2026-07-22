@@ -144,8 +144,10 @@
 			// Overlay so we don't multiply twice, and thus fuck up our rendering
 			add_relay_to(GET_NEW_PLANE(plane, offset), BLEND_OVERLAY)
 
-/atom/movable/screen/plane_master/parallax/set_distance_from_owner(mob/relevant, new_offset, multiz_boundary)
+/atom/movable/screen/plane_master/parallax/set_distance_from_owner(mob/relevant, new_distance, multiz_boundary, lowest_possible_offset)
 	. = ..()
+	if(offset == 0)
+		return
 	if(.)
 		// if we're rendering, always readd.
 		// just in case we lost it
@@ -175,7 +177,7 @@
 // Needs to handle rejoining on a lower z level, so we NEED to readd old planes
 /atom/movable/screen/plane_master/parallax/check_outside_bounds()
 	// If we're outside bounds AND we're the 0th plane we still need to show cause parallax is hacked to hell
-	return offset != 0 && hidden_by_distance
+	return offset != 0 && hidden_by_distance != NOT_HIDDEN
 
 /// Starts the narsie animation midway, so we can catch up to everyone else quickly
 /atom/movable/screen/plane_master/parallax/proc/narsie_start_midway(start_time)

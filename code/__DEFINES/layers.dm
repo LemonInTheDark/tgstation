@@ -379,6 +379,10 @@
 #define PLANE_CRITICAL_FUCKO_PARALLAX (PLANE_CRITICAL_DISPLAY|PLANE_CRITICAL_SOURCE|PLANE_CRITICAL_NO_RELAY|PLANE_CRITICAL_CUT_RENDER)
 #define PLANE_CRITICAL_ALWAYS_DISPLAY (PLANE_CRITICAL_DISPLAY|PLANE_CRITICAL_SOURCE)
 
+// Values for hidden_by_distance
+#define NOT_HIDDEN 0
+#define HIDDEN_RELAYS 1
+#define HIDDEN_COMPLETELY 2
 //---------- Plane Master offsetting_flags -------------
 // Describes how different plane masters behave regarding being offset
 /// This plane master will not be offset itself, existing only once with an offset of 0
