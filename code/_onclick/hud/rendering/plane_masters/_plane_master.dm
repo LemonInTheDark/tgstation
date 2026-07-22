@@ -39,6 +39,9 @@
 	/// If this plane master should be hidden from the player at roundstart
 	/// We do this so PMs can opt into being temporary, to reduce load on clients
 	var/start_hidden = FALSE
+	/// If we are currently being displayed to our viwer
+	var/dispalyed = FALSE
+
 	/// If this plane master is being forced to hide.
 	/// Hidden PMs will dump ANYTHING relayed or drawn onto them. Be careful with this
 	/// Remember: a hidden plane master will dump anything drawn directly to it onto the output render. It does NOT hide its contents
@@ -125,6 +128,17 @@
 	alpha_enabled = TRUE
 	alpha = true_alpha
 
+/// Build a relationship with the mob viewing these PMs
+/// NOT making ourselves visible to them, just becoming related to them
+/atom/movable/screen/plane_master/proc/attach_viewer(mob/viewer)
+	SHOULD_CALL_PARENT(TRUE)
+	return
+
+/// Break the relationship with the mob viewing these PMs
+/atom/movable/screen/plane_master/proc/detach_viewer(mob/viewer)
+	SHOULD_CALL_PARENT(TRUE)
+	return
+
 /// Shows a plane master to the passed in mob
 /// Override this to apply unique effects and such
 /// Returns TRUE if the call is allowed, FALSE otherwise
@@ -143,6 +157,7 @@
 		if(!our_client)
 			return TRUE
 		our_client.screen += src
+		displayed = TRUE
 
 		if(!(critical & PLANE_CRITICAL_NO_RELAY))
 			our_client.screen += relays
@@ -152,6 +167,7 @@
 	if(!our_client)
 		return TRUE
 
+	displayed = TRUE
 	our_client.screen += src
 	our_client.screen += relays
 	return TRUE
@@ -168,6 +184,7 @@
 	var/client/their_client = oldmob?.client
 	if(!their_client)
 		return
+	displayed = FALSE
 	their_client.screen -= src
 	their_client.screen -= relays
 
