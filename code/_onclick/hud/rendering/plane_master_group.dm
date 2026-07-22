@@ -16,6 +16,10 @@
 	/// We need to be able to correct invalid render sources in filters and shit
 	var/list/canon_source_to_reality = list()
 
+	/// Plane of the PM we are currently isolating
+	/// It's a debugging tool that draws this plane and its subtypes, and alphas out everything else
+	var/isolated_plane = null
+
 	/// The visual offset we are currently using
 	var/active_offset = 0
 	/// What, if any, submap we render onto
@@ -62,6 +66,7 @@
 
 /// Fully regenerate our group, resetting our planes to their compile time values
 /datum/plane_master_group/proc/rebuild_hud()
+	set_isolated(null)
 	hide_hud()
 	rebuild_plane_masters()
 	attach_hud()
@@ -111,6 +116,30 @@
 /// Returns a list of all the plane master types we want to create
 /datum/plane_master_group/proc/get_plane_types()
 	return subtypesof(/atom/movable/screen/plane_master) - /atom/movable/screen/plane_master/rendering_plate
+
+/datum/plane_master_group/proc/set_isolated(new_isolated_plane)
+	if(isolated_plane == new_isolated_plane)
+		return
+	var/old_isolated_plane = isolated_plane
+	isolated_plane = new_isolated_plane
+	if(!isnull(old_isolated_plane))
+		var/atom/movable/screen/plane_master/old_lad = get_plane(old_isolated_plane)
+		old_lad.sync_relays(our_hud?.mymob?.client)
+	if(!isnull(isolated_plane))
+		var/atom/movable/screen/plane_master/new_lad = get_plane(isolated_plane)
+		new_lad.sync_relays(our_hud?.mymob?.client)
+
+	for(var/plane_key in plane_masters)
+		var/atom/movable/screen/plane_master/plane = plane_masters[plane_key]
+		if(!plane.render_in_place)
+			continue
+		if(isnull(isolated_plane))
+			plane.alpha = 255
+			continue
+		if(plane.plane == isolated_plane)
+			plane.alpha = 255
+		else
+			plane.alpha = 0
 
 /// Actually generate our plane masters, in some offset range (where offset is the z layers to render to, because each "layer" in a multiz stack gets its own plane master cube)
 /datum/plane_master_group/proc/build_plane_masters(starting_offset, ending_offset)

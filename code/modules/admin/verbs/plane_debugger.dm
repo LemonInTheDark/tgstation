@@ -221,6 +221,9 @@
 			filtered_plane.remove_filter(params["name"])
 			return TRUE
 
+		if("isolate_plane")
+			group.set_isolated(params["isolated_plane"])
+			
 		if("vv_plane")
 			var/plane_edit = params["edit"]
 			var/atom/movable/screen/plane_master/edit = our_planes["[plane_edit]"]

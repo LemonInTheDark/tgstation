@@ -273,10 +273,7 @@
 		return TRUE
 
 	our_client.screen += src
-	for(var/atom/movable/render_plane_relay/relay as anything in relays)
-		relay.sync_relay(our_client)
-	for(var/atom/movable/render_plane_relay/relay as anything in home.relays["[plane]"])
-		relay.sync_relay(our_client)
+	sync_relays(our_client)
 
 	// Alright, let's get this out of the way
 	// Mobs can move z levels without their client. If this happens, we need to ensure critical display settings are respected
@@ -302,10 +299,13 @@
 	if(!their_client)
 		return
 	their_client.screen -= src
+	sync_relays(their_client)
+
+/atom/movable/screen/plane_master/proc/sync_relays(client/display)
 	for(var/atom/movable/render_plane_relay/relay as anything in relays)
-		relay.sync_relay(their_client)
+		relay.sync_relay(display)
 	for(var/atom/movable/render_plane_relay/relay as anything in home.relays["[plane]"])
-		relay.sync_relay(their_client)
+		relay.sync_relay(display)
 
 /// We have a relay pointing at the target plane
 /// Should we wipe it out? or keep a hold of it

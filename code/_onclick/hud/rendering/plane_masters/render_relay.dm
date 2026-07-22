@@ -29,7 +29,7 @@
 	target = null
 
 /atom/movable/render_plane_relay/proc/sync_relay(client/owner)
-	if(!source.displayed || (target && !target.displayed && source.should_hide_relay(plane)))
+	if(!source.displayed || (target && !target.displayed && source.should_hide_relay(plane)) || source.home.isolated_plane == source.plane)
 		if(displayed)
 			source.relay_removed()
 		displayed = FALSE
