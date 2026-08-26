@@ -11,6 +11,12 @@
 /// Nonesensical value for light color, used for null checks.
 #define NONSENSICAL_VALUE -99999
 
+/// light_overlay flags
+///For switchable lights, is it on and currently emitting light?
+#define LIGHTING_ON (1<<0)
+///Is the parent attached to something else, its loc? Then we need to keep an eye of this.
+#define LIGHTING_ATTACHED (1<<1)
+
 // Light systems that use the overlay light component
 #define IS_OVERLAY_LIGHT_SYSTEM(system) (system == OVERLAY_LIGHT || system == OVERLAY_LIGHT_DIRECTIONAL || system == OVERLAY_LIGHT_BEAM)
 // Light systems that use the cone image of the overlay light component
