@@ -116,6 +116,49 @@
 		)
 
 	luminosity = set_luminosity
+	var/list/hanger_overlays = list()
+	SEND_SIGNAL(affected_turf, COMSIG_LIGHTING_OBJECT_UPDATE, hanger_overlays)
+	overlays = hanger_overlays
+
+// Begin dummy code
+/obj/dummy_example
+
+/obj/dummy_example/Initialize(mapload)
+	. = ..()
+	var/turf/shadow_turf = get_turf(src)
+	RegisterSignal(shadow_turf, COMSIG_LIGHTING_OBJECT_UPDATE, PROC_REF(recalc_shadow_mask))
+	var/atom/movable/lighting_object/to_update = shadow_turf.lighting_object
+	if(to_update && !to_update.needs_update)
+		SSlighting.objects_queue += shadow_turf.lighting_object
+		to_update.needs_update = TRUE
+
+/obj/dummy_example/proc/recalc_shadow_mask(turf/source, list/overlays_to_fill)
+	SIGNAL_HANDLER
+	var/turf/shadow_turf = get_turf(src)
+
+	var/static/datum/lighting_corner/dummy/dummy_lighting_corner = new
+
+	var/datum/lighting_corner/sw_corner = shadow_turf.lighting_corner_SW || dummy_lighting_corner
+	var/datum/lighting_corner/se_corner = shadow_turf.lighting_corner_SE || dummy_lighting_corner
+	var/datum/lighting_corner/nw_corner = shadow_turf.lighting_corner_NW || dummy_lighting_corner
+	var/datum/lighting_corner/ne_corner = shadow_turf.lighting_corner_NE || dummy_lighting_corner
+
+	var/sw_below = 1 - sw_corner.get_ratio_above()
+	var/se_below = 1 - se_corner.get_ratio_above()
+	var/nw_below = 1 - nw_corner.get_ratio_above()
+	var/ne_below = 1 - ne_corner.get_ratio_above()
+
+	var/mutable_appearance/dark_overlay = mutable_appearance(LIGHTING_ICON, null, offset_spokesman = shadow_turf, plane = HIGH_GAME_PLANE, appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM)
+	dark_overlay.color = list(
+		00, 00, 00, sw_below,
+		00, 00, 00, se_below,
+		00, 00, 00, nw_below,
+		00, 00, 00, ne_below,
+		00, 00, 00, 00
+	)
+	overlays_to_fill += dark_overlay
+
+// End dummy code
 
 // Variety of overrides so the overlays don't get affected by weird things.
 
